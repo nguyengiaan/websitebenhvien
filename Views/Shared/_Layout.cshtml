@@ -1,0 +1,848 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - websitebenhvien</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/trangchu.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/websitebenhvien.styles.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="row align-items-center py-3">
+                <!-- Logo -->
+                <div class="col-12 col-md-4 text-center text-md-start mb-3 mb-md-0">
+                    <img src="~/image/Logo-rm.png" alt="Logo" class="img-fluid" style="max-height: 80px;">
+                </div>
+                
+                <!-- Emergency Contact -->
+                <div class="col-12 col-md-8">
+                    <div class="d-flex flex-column align-items-center align-items-md-end">
+                        <!-- Emergency Number -->
+                        <div class="d-none d-md-flex align-items-center mb-2">
+                            <img src="~/image/Header-logo.png" alt="Emergency" class="me-2" style="height: 35px;">
+                            <p class="m-0 text-danger fw-bold mt-1">
+                                <i class="fas fa-ambulance fa-lg me-2"></i>Cấp cứu 24/7: 0274 3535 11
+                            </p>
+                        </div>
+                        
+                        <!-- Navigation Links -->
+                        <div class="d-none d-md-flex flex-wrap justify-content-center justify-content-md-end gap-3">
+                            <a href="#" class="text-decoration-none text-dark" style=" font-family: ''Montserrat', sans-serif';font-weight: bold;">
+                                   <img src="~/image/icon-user.png" alt="Emergency" class="me-2" style="height: 25px;"> Dành cho khách hàng
+                            </a>
+                            <a href="#" class="text-decoration-none text-dark" style=" font-family: ''Montserrat', sans-serif';font-weight: bold;">
+                                  <img src="~/image/icon-hoidap.png" alt="Emergency" class="me-2" style="height: 25px;"> Hỏi đáp
+                            </a>
+                            <a href="#" class="text-decoration-none text-dark" style=" font-family: ''Montserrat', sans-serif';font-weight: bold;">
+                                <img src="~/image/icon-cacu.png" alt="Emergency" class="me-2" style="height: 25px;">Đặt lịch khám
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+    </header>
+      <nav class="navbar navbar-expand-lg" style="background-color: #14a1ff; width: 100%;">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav w-100 justify-content-between">
+                        <li class="nav-item px-2">
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-home me-2"></i>TRANG CHỦ</a>
+                        </li>
+                        <li class="nav-item px-2">
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-info-circle me-2"></i>GIỚI THIỆU</a>
+                        </li>
+                        <li class="nav-item px-2">
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-user-md me-2"></i>CHUYÊN GIA-BÁC SĨ</a>
+                        </li>
+                        <li class="nav-item px-2">
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-procedures me-2"></i>DỊCH VỤ ĐẶC BIỆT</a>
+                        </li>
+                        <li class="nav-item px-2">
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-hospital me-2"></i>TIỆN NGHI</a>
+                        </li>
+                        <li class="nav-item px-2">
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-trophy me-2"></i>THÀNH TỰU</a>
+                        </li>
+                        <li class="nav-item px-2">
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-newspaper me-2"></i>TIN TỨC</a>
+                        </li>
+                        <li class="nav-item px-2">
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-phone-alt me-2"></i>LIÊN HỆ</a>
+                        </li>
+                        <li class="nav-item px-2">
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-search me-2"></i>TÌM KIẾM</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="~/image/hinh2.png" class="d-block w-100 img-fluid" alt="Slide 1" style="max-height: 500px; object-fit: cover;">
+            </div>
+            <div class="carousel-item">
+                <img src="~/image/hinh3.png" class="d-block w-100 img-fluid" alt="Slide 2" style="max-height: 500px; object-fit: cover;">
+            </div>
+            <div class="carousel-item">
+                <img src="~/image/hinh4.png" class="d-block w-100 img-fluid" alt="Slide 3" style="max-height: 500px; object-fit: cover;">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <div class="container" >
+        <div class="row mt-4 " >
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-center text-primary mb-4">ĐẶT LỊCH KHÁM BỆNH</h5>
+                        <form>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" placeholder="Họ và tên bệnh nhân">
+                            </div>
+                            <div class="mb-3">
+                                <input type="tel" class="form-control" placeholder="Số điện thoại">
+                            </div>
+                            <div class="mb-3">
+                                <input type="email" class="form-control" placeholder="Email">
+                            </div>
+                            <div class="mb-3">
+                                <select class="form-select">
+                                    <option selected disabled>Chọn chuyên khoa</option>
+                                    <option>Khoa Nội</option>
+                                    <option>Khoa Ngoại</option>
+                                    <option>Khoa Sản</option>
+                                    <option>Khoa Nhi</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <input type="date" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <textarea class="form-control" rows="3" placeholder="Triệu chứng"></textarea>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary px-4">ĐẶT LỊCH</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                     <h5 class="card-title text-center text-primary mb-4">BỆNH VIỆN ĐA KHOA MỸ PHƯỚC</h5>
+                        <h6 class="card-title text-center text-primary mb-4">Uy tín - Chất lượng - Tận tâm</h6>
+                    <div class="col-6 mb-4">
+                        <div class="card text-center p-3">
+                            <i class="fas fa-user-md fa-3x text-primary mb-2"></i>
+                            <h6>KHÁM CHỮA BỆNH</h6>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-4">
+                        <div class="card text-center p-3">
+                            <i class="fas fa-stethoscope fa-3x text-primary mb-2"></i>
+                            <h6>CHUYÊN KHOA</h6>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card text-center p-3">
+                            <i class="fas fa-tint fa-3x text-primary mb-2"></i>
+                            <h6>XÉT NGHIỆM</h6>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card text-center p-3">
+                            <i class="fas fa-clipboard-list fa-3x text-primary mb-2"></i>
+                            <h6>KẾT QUẢ</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="text-center">
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                        <h2 class="text-primary fw-bold mb-3 d-inline-block me-3">HỆ THỐNG BỆNH VIỆN CAO CẤP</h2>
+    
+                            <p class="lead">
+                                Hệ thống Bệnh Viện Đa Khoa Mỹ Phước với hệ thống y tế đa khoa hiện đại, với đội ngũ chuyên gia - bác sĩ hàng đầu, trang thiết bị hiện đại, cung cấp dịch vụ chăm sỹ sức khỏe, khám bệnh, điều trị bệnh đạt tiêu chuẩn quốc tế, phòng bệnh cao cấp, khám bệnh theo dõi sức khỏe định kỳ.
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="video-container">
+                                <video class="shadow rounded" width="100%" height="auto" controls>
+                                    <source src="~/image/video.mp4" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <section class="features-section py-5">
+            <div class="container">
+                <div class="text-center mb-4">
+                    <h2 class="text-primary fw-bold">GIÁ TRỊ KHÁC BIỆT CỦA TẦM NHÌN</h2>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md mb-4">
+                        <div class="feature-item text-center p-3 shadow rounded" style="height: 200px; transform: perspective(1000px) rotateY(10deg); transition: transform 0.3s;">
+                            <i class="fas fa-user-md fa-3x text-primary mb-3"></i>
+                            <p class="small">ĐÁNH GIÁ SỐ - ĐỘI NGŨ Y BÁC SĨ - CHUYÊN VIÊN GIÀU KINH NGHIỆM</p>
+                        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                        <div class="feature-item text-center p-3 shadow rounded" style="height: 200px; transform: perspective(1000px) rotateY(10deg); transition: transform 0.3s;">
+                            <i class="fas fa-microscope fa-3x text-primary mb-3"></i>
+                            <p class="small">TRANG THIẾT BỊ HIỆN ĐẠI-CHÍNH XÁC</p>
+                        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                        <div class="feature-item text-center p-3 shadow rounded" style="height: 200px; transform: perspective(1000px) rotateY(10deg); transition: transform 0.3s;">
+                            <i class="fas fa-heartbeat fa-3x text-primary mb-3"></i>
+                            <p class="small">HIỆU QUẢ ĐIỀU TRỊ CAO - THÀNH TỰU NỔI BẬT</p>
+                        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                        <div class="feature-item text-center p-3 shadow rounded" style="height: 200px; transform: perspective(1000px) rotateY(10deg); transition: transform 0.3s;">
+                            <i class="fas fa-procedures fa-3x text-primary mb-3"></i>
+                            <p class="small">QUY TRÌNH KHÁM CHUYÊN NGHIỆP-KHOA HỌC-CHUYÊN NGHIỆP</p>
+                        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                        <div class="feature-item text-center p-3 shadow rounded" style="height: 200px; transform: perspective(1000px) rotateY(10deg); transition: transform 0.3s;">
+                            <i class="fas fa-handshake fa-3x text-primary mb-3"></i>
+                            <p class="small">HỢP TÁC PHÁT LẬP CHI PHÍ HỢP LÝ</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+          <section class="features-section py-5">
+            <div class="container">
+                <div class="text-center mb-4">
+                    <h2 class="text-primary fw-bold">Chuyên gia đầu ngành - bác sĩ giỏi - chuyên viên giàu kinh nghiệm</h2>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md mb-4">
+                        <div class="feature-item text-center p-3 shadow rounded" style="height: 200px; transform: perspective(1000px) rotateY(10deg); transition: transform 0.3s;">
+                            <h3 class="display-4 fw-bold text-primary mb-2">999</h3>
+                            <p class="small text-uppercase fw-bold">GIÁO SƯ-PHÓ GIÁO SƯ</p>
+                        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                        <div class="feature-item text-center p-3 shadow rounded" style="height: 200px; transform: perspective(1000px) rotateY(10deg); transition: transform 0.3s;">
+                            <h3 class="display-4 fw-bold text-primary mb-2">999</h3>
+                            <p class="small text-uppercase fw-bold">TIẾN SĨ-BÁC SĨ CKII</p>
+                        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                        <div class="feature-item text-center p-3 shadow rounded" style="height: 200px; transform: perspective(1000px) rotateY(10deg); transition: transform 0.3s;">
+                            <h3 class="display-4 fw-bold text-primary mb-2">999</h3>
+                            <p class="small text-uppercase fw-bold">THẠC SĨ-BÁC SĨ CKI</p>
+                        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                        <div class="feature-item text-center p-3 shadow rounded" style="height: 200px; transform: perspective(1000px) rotateY(10deg); transition: transform 0.3s;">
+                            <h3 class="display-4 fw-bold text-primary mb-2">999</h3>
+                            <p class="small text-uppercase fw-bold">BÁC SĨ</p>
+                        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                        <div class="feature-item text-center p-3 shadow rounded" style="height: 200px; transform: perspective(1000px) rotateY(10deg); transition: transform 0.3s;">
+                            <h3 class="display-4 fw-bold text-primary mb-2">999</h3>
+                            <p class="small text-uppercase fw-bold">KỸ THUẬT VIÊN</p>
+                        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                        <div class="feature-item text-center p-3 shadow rounded" style="height: 200px; transform: perspective(1000px) rotateY(10deg); transition: transform 0.3s;">
+                            <h3 class="display-4 fw-bold text-primary mb-2">999</h3>
+                            <p class="small text-uppercase fw-bold">ĐIỀU DƯỠNG</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+<section class="equipment-section">
+     <div class="container">
+    <h2>Trang thiết bị hiện đại bậc nhất</h2>
+    <p>Sở hữu hệ thống trang thiết bị cao cấp, hàng đầu thế giới trong chẩn đoán và điều trị.</p>
+    <div class="row g-3">
+      <!-- Item 1 -->
+      <div class="col-md-4">
+        <div class="equipment-item">
+          <img src="~/image/hinh5.jpg" alt="Equipment 1">
+          <div class="overlay">
+            <h4>Máy chụp cộng hưởng từ (MRI)</h4>
+            <p>Máy chụp cộng hưởng từ hiện đại với độ phân giải cao, giúp chẩn đoán chính xác các bệnh lý về não, cột sống và các cơ quan nội tạng.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Item 2 -->
+      <div class="col-md-4">
+        <div class="equipment-item">
+          <img src="~/image/hinh5.jpg" alt="Equipment 2">
+          <div class="overlay">
+            <h4>Máy chụp CT Scanner</h4>
+            <p>Hệ thống CT Scanner 128 lát cắt cho phép chụp nhanh, giảm liều tia X và cho hình ảnh 3D chi tiết.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Item 3 -->
+      <div class="col-md-4">
+        <div class="equipment-item">
+          <img src="~/image/hinh5.jpg" alt="Equipment 3">
+          <div class="overlay">
+            <h4>Máy siêu âm 4D</h4>
+            <p>Máy siêu âm 4D thế hệ mới cho hình ảnh rõ nét, giúp chẩn đoán chính xác trong thai sản và các bệnh lý khác.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Item 4 -->
+      <div class="col-md-4">
+        <div class="equipment-item">
+          <img src="~/image/hinh5.jpg" alt="Equipment 4">
+          <div class="overlay">
+            <h4>Hệ thống nội soi</h4>
+            <p>Hệ thống nội soi tiên tiến giúp chẩn đoán và điều trị các bệnh lý đường tiêu hóa một cách chính xác.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Item 5 -->
+      <div class="col-md-4">
+        <div class="equipment-item">
+          <img src="~/image/hinh5.jpg" alt="Equipment 5">
+          <div class="overlay">
+            <h4>Máy xét nghiệm tự động</h4>
+            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Item 6 -->
+      <div class="col-md-4">
+        <div class="equipment-item">
+          <img src="~/image/hinh5.jpg" alt="Equipment 6">
+          <div class="overlay">
+            <h4>Robot phẫu thuật</h4>
+            <p>Hệ thống robot phẫu thuật tiên tiến giúp thực hiện các ca phẫu thuật phức tạp với độ chính xác cao.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+     <section class="features-section py-5">
+            <div class="container">
+                <div class="text-center mb-4">
+                    <h2 class="text-primary fw-bold">Hiệu quả điều trị cao - Thành tựu nổi bật</h2>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md mb-4">
+                        <div class="equipment-item">
+          <img src="~/image/hinh6.jpg" alt="Equipment 5" style=" height: 200px; object-fit: cover;">
+          <div class="overlay">
+            <h4>Máy xét nghiệm tự động</h4>
+            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
+          </div>
+        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                         <div class="equipment-item">
+          <img src="~/image/hinh5.jpg" alt="Equipment 5" style="height: 200px; object-fit: cover;">
+          <div class="overlay">
+            <h4>Máy xét nghiệm tự động</h4>
+            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
+          </div>
+        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                         <div class="equipment-item">
+          <img src="~/image/hinh5.jpg" alt="Equipment 5" style="height: 200px; object-fit: cover;">
+          <div class="overlay">
+            <h4>Máy xét nghiệm tự động</h4>
+            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
+          </div>
+        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                      <div class="equipment-item">
+          <img src="~/image/hinh5.jpg" alt="Equipment 5" style=" height: 200px; object-fit: cover;">
+          <div class="overlay">
+            <h4>Máy xét nghiệm tự động</h4>
+            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
+          </div>
+        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary btn-lg">Xem các thành tựu</button>
+                </div>
+            </div>
+        </section>
+           <section class="features-section py-5">
+            <div class="container">
+                <div class="text-center mb-4">
+                    <h2 class="text-primary fw-bold">Quy trình khoa học - Toàn diện - Chuyên nghiệp</h2>
+                      <div class="divider"></div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md mb-4">
+                        <div class="equipment-item">
+          <img src="~/image/hinh6.jpg" alt="Equipment 5" style=" height: 200px; object-fit: cover;">
+          <div class="overlay">
+            <h4>Máy xét nghiệm tự động</h4>
+            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
+          </div>
+        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                         <div class="equipment-item">
+          <img src="~/image/hinh5.jpg" alt="Equipment 5" style="height: 200px; object-fit: cover;">
+          <div class="overlay">
+            <h4>Máy xét nghiệm tự động</h4>
+            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
+          </div>
+        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                         <div class="equipment-item">
+          <img src="~/image/hinh5.jpg" alt="Equipment 5" style="height: 200px; object-fit: cover;">
+          <div class="overlay">
+            <h4>Máy xét nghiệm tự động</h4>
+            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
+          </div>
+        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                      <div class="equipment-item">
+          <img src="~/image/hinh5.jpg" alt="Equipment 5" style=" height: 200px; object-fit: cover;">
+          <div class="overlay">
+            <h4>Máy xét nghiệm tự động</h4>
+            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
+          </div>
+        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary btn-lg">Xem hướng dẫn khám bệnh</button>
+                </div>
+            </div>
+        </section>
+             <section class="features-section py-5">
+            <div class="container">
+                    <div class="text-center mb-5">
+            <h2 class="fw-bold" style="color: #2d3436;">Dịch vụ cao cấp và hợp lý</h2>
+            <div class="divider" style="background-color: #0984e3;"></div>
+        </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md mb-4">
+                        <div class="equipment-item">
+          <img src="~/image/hinh7.png" alt="Equipment 5" style=" height: 200px; object-fit: cover;">
+          <div class="overlay">
+            <h4>Máy xét nghiệm tự động</h4>
+            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
+          </div>
+        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                         <div class="equipment-item">
+          <img src="~/image/hinh8.jpg" alt="Equipment 5" style="height: 200px; object-fit: cover;">
+          <div class="overlay">
+            <h4>Máy xét nghiệm tự động</h4>
+            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
+          </div>
+        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                         <div class="equipment-item">
+          <img src="~/image/hinh9.jpg" alt="Equipment 5" style="height: 200px; object-fit: cover;">
+          <div class="overlay">
+            <h4>Máy xét nghiệm tự động</h4>
+            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
+          </div>
+        </div>
+                    </div>
+                    <div class="col-md mb-4">
+                      <div class="equipment-item">
+          <img src="~/image/hinh.jpg" alt="Equipment 5" style=" height: 200px; object-fit: cover;">
+          <div class="overlay">
+            <h4>Máy xét nghiệm tự động</h4>
+            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
+          </div>
+        </div>
+                    </div>
+                </div>
+                <div class="text-center mt-4">
+                    <button class="btn btn-primary btn-lg">Xem các dịch vụ</button>
+                </div>
+            </div>
+        </section>
+
+<section class="specialty-section">
+   <div class="text-center mb-4"><h2 class="text-primary fw-bold">Chuyên khoa</h2>
+  <div class="divider"></div>
+  <div class="container">
+    <div id="specialtyCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+          <div class="row text-center">
+            <div class="col-md-3">
+              <div class="specialty-item">
+                <i class="fas fa-hospital-user fa-3x mb-3"></i>
+                <h4>Khoa Ngoại Vú Đầu Cổ</h4>
+                <p>Chuyên điều trị các bệnh lý liên quan đến tuyến vú và vùng đầu cổ.</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="specialty-item">
+                <i class="fas fa-procedures fa-3x mb-3"></i>
+                <h4>Khoa Hồi Sức Cấp Cứu (ICU)</h4>
+                <p>Cung cấp dịch vụ chăm sóc đặc biệt với hệ thống thiết bị hiện đại.</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="specialty-item">
+                <i class="fas fa-heartbeat fa-3x mb-3"></i>
+                <h4>Khoa Ngoại Lồng Ngực - Mạch Máu</h4>
+                <p>Điều trị các bệnh lý liên quan đến lồng ngực và mạch máu.</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="specialty-item">
+                <i class="fas fa-weight fa-3x mb-3"></i>
+                <h4>Trung Tâm Kiểm Soát Cân Nặng</h4>
+                <p>Hỗ trợ kiểm soát cân nặng và điều trị béo phì hiệu quả.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Slide 2 -->
+        <div class="carousel-item">
+          <div class="row text-center">
+            <div class="col-md-3">
+              <div class="specialty-item">
+                <i class="fas fa-brain fa-3x mb-3"></i>
+                <h4>Khoa Thần Kinh</h4>
+                <p>Chẩn đoán và điều trị các bệnh lý về thần kinh.</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="specialty-item">
+                <i class="fas fa-bone fa-3x mb-3"></i>
+                <h4>Khoa Chấn Thương Chỉnh Hình</h4>
+                <p>Điều trị các bệnh lý về xương khớp và chấn thương.</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="specialty-item">
+                <i class="fas fa-eye fa-3x mb-3"></i>
+                <h4>Khoa Mắt</h4>
+                <p>Chăm sóc và điều trị các vấn đề về thị giác.</p>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="specialty-item">
+                <i class="fas fa-tooth fa-3x mb-3"></i>
+                <h4>Khoa Răng Hàm Mặt</h4>
+                <p>Điều trị các bệnh lý về răng miệng và hàm mặt.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Navigation -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#specialtyCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#specialtyCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+</section>
+<section class="news-section py-5" style="background-color: #f8f9fa;">
+    <div class="container">
+        <div class="text-center mb-5">
+               <div class="text-center mb-4"><h2 class="text-primary fw-bold">Tin tức & Sự kiện</h2>
+            <div class="divider" style="background-color: #0984e3;"></div>
+        </div>
+        <div class="row g-4">
+            <!-- Tin tức nổi bật -->
+            <div class="col-lg-6">
+                <div class="card h-100 border-0 shadow-sm" style="transition: transform 0.3s ease; transform-style: preserve-3d;">
+                    <div class="row g-0">
+                        <div class="col-md-6">
+                            <div class="position-relative">
+                                <img src="~/image/hinh6.jpg" alt="Tin tức nổi bật" class="img-fluid rounded-start h-100" style="object-fit: cover;">
+                                <div class="position-absolute top-0 start-0 m-3">
+                                    <span class="badge bg-danger">HOT</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-body d-flex flex-column h-100">
+                                <div class="mb-3">
+                                    <span class="badge bg-primary me-2">Tin mới</span>
+                                    <small class="text-muted"><i class="far fa-clock me-1"></i>20/11/2023</small>
+                                </div>
+                                <h3 class="card-title h4 fw-bold mb-3">Thông tin quan trọng cần biết khi đi khám bệnh</h3>
+                                <p class="card-text text-muted flex-grow-1">Để việc thăm khám được thuận lợi và hiệu quả, quý khách vui lòng tham khảo những thông tin thiết yếu về quy trình khám chữa bệnh tại bệnh viện...</p>
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <a href="#" class="btn btn-primary">Xem chi tiết <i class="fas fa-arrow-right ms-2"></i></a>
+                                    <div class="d-flex align-items-center">
+                                        <i class="far fa-eye me-1"></i>
+                                        <small class="text-muted">2.5k lượt xem</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Danh sách tin tức -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <!-- Tin tức 1 -->
+                        <div class="d-flex p-3 border-bottom hover-bg-light transition">
+                            <img src="~/image/hinh6.jpg" alt="Tin tức" class="rounded" style="width: 100px; height: 70px; object-fit: cover;">
+                            <div class="ms-3">
+                                <h6 class="mb-1">Bệnh viện triển khai dịch vụ tư vấn sức khỏe từ xa</h6>
+                                <div class="d-flex align-items-center text-muted">
+                                    <i class="far fa-calendar-alt me-2"></i>
+                                    <small>20/11/2023</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tin tức 2 -->
+                        <div class="d-flex p-3 border-bottom hover-bg-light transition">
+                            <img src="~/image/hinh6.jpg" alt="Tin tức" class="rounded" style="width: 100px; height: 70px; object-fit: cover;">
+                            <div class="ms-3">
+                                <h6 class="mb-1">Chương trình khám sức khỏe định kỳ cho người cao tuổi</h6>
+                                <div class="d-flex align-items-center text-muted">
+                                    <i class="far fa-calendar-alt me-2"></i>
+                                    <small>18/11/2023</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tin tức 3 -->
+                        <div class="d-flex p-3 hover-bg-light transition">
+                            <img src="~/image/hinh6.jpg" alt="Tin tức" class="rounded" style="width: 100px; height: 70px; object-fit: cover;">
+                            <div class="ms-3">
+                                <h6 class="mb-1">Hướng dẫn đăng ký khám bệnh trực tuyến</h6>
+                                <div class="d-flex align-items-center text-muted">
+                                    <i class="far fa-calendar-alt me-2"></i>
+                                    <small>15/11/2023</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="partners-section py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="text-primary fw-bold">Đối tác của chúng tôi</h2>
+            <div class="divider mx-auto"></div>
+        </div>
+
+        <div id="partnersCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row g-4">
+                        <div class="col-md-3">
+                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
+                                <img src="~/image/dt1.png" alt="Bệnh viện Bạch Mai" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
+                                <h5 class="fw-bold">Bệnh viện Bạch Mai</h5>
+                                <p class="text-muted small">Đối tác chiến lược hàng đầu</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
+                                <img src="~/image/dt1.png" alt="Bệnh viện Việt Đức" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
+                                <h5 class="fw-bold">Bệnh viện Việt Đức</h5>
+                                <p class="text-muted small">Hợp tác chuyên môn</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
+                                <img src="~/image/dt1.png" alt="Bệnh viện Chợ Rẫy" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
+                                <h5 class="fw-bold">Bệnh viện Chợ Rẫy</h5>
+                                <p class="text-muted small">Đối tác nghiên cứu</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
+                                <img src="~/image/dt1.png" alt="Bệnh viện 108" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
+                                <h5 class="fw-bold">Bệnh viện 108</h5>
+                                <p class="text-muted small">Đối tác đào tạo</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="carousel-item">
+                    <div class="row g-4">
+                        <div class="col-md-3">
+                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
+                                <img src="~/image/dt1.png" alt="Bệnh viện 103" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
+                                <h5 class="fw-bold">Bệnh viện 103</h5>
+                                <p class="text-muted small">Đối tác chiến lược</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
+                                <img src="~/image/dt1.png" alt="Bệnh viện E" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
+                                <h5 class="fw-bold">Bệnh viện E</h5>
+                                <p class="text-muted small">Đối tác y tế</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
+                                <img src="~/image/dt1.png" alt="Bệnh viện K" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
+                                <h5 class="fw-bold">Bệnh viện K</h5>
+                                <p class="text-muted small">Đối tác chuyên khoa</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
+                                <img src="~/image/dt1.png" alt="Bệnh viện Nhi" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
+                                <h5 class="fw-bold">Bệnh viện Nhi</h5>
+                                <p class="text-muted small">Đối tác nhi khoa</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#partnersCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#partnersCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</section>
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+<footer class="bg-white py-5 border-top">
+    <div class="container">
+        <div class="row">
+            <!-- Logo và thông tin liên hệ -->
+            <div class="col-lg-4 mb-4">
+                <img src="~/image/Logo-rm.png" alt="Logo bệnh viện" class="mb-3" style="height: 60px;">
+                <ul class="list-unstyled text-muted">
+                    <li class="mb-2">
+                        <i class="fas fa-map-marker-alt me-2 text-primary"></i>
+                        123 Đường ABC, Quận XYZ, TP.HCM
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-phone me-2 text-primary"></i>
+                        (028) 1234 5678
+                    </li>
+                    <li>
+                        <i class="fas fa-envelope me-2 text-primary"></i>
+                        info@benhvien.com
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Về chúng tôi -->
+            <div class="col-lg-2 mb-4">
+                <h5 class="fw-bold text-uppercase mb-3">Về chúng tôi</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Giới thiệu</a></li>
+                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Tầm nhìn & Sứ mệnh</a></li>
+                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Đội ngũ bác sĩ</a></li>
+                    <li><a href="#" class="text-muted text-decoration-none">Cơ sở vật chất</a></li>
+                </ul>
+            </div>
+
+            <!-- Dịch vụ -->
+            <div class="col-lg-2 mb-4">
+                <h5 class="fw-bold text-uppercase mb-3">Dịch vụ</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Đặt lịch khám</a></li>
+                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Dịch vụ khám</a></li>
+                    <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Gói khám sức khỏe</a></li>
+                    <li><a href="#" class="text-muted text-decoration-none">Hướng dẫn khám</a></li>
+                </ul>
+            </div>
+
+            <!-- Đăng ký nhận tin -->
+            <div class="col-lg-4 mb-4">
+                <h5 class="fw-bold text-uppercase mb-3">Đăng ký nhận tin</h5>
+                <p class="text-muted">Nhận thông tin mới nhất về sức khỏe và các chương trình ưu đãi.</p>
+                <div class="input-group mb-3">
+                    <input type="email" class="form-control" placeholder="Nhập email của bạn">
+                    <button class="btn btn-primary" type="button">Đăng ký</button>
+                </div>
+                <div class="social-links mt-3">
+                    <a href="#" class="text-primary me-3"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="#" class="text-info me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="#" class="text-danger"><i class="fab fa-youtube fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bản quyền -->
+        <div class="text-center text-muted mt-4">
+            <small>&copy; 2024 Bệnh viện Mỹ Phước. All rights reserved.</small>
+        </div>
+    </div>
+</footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

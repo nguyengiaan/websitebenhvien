@@ -1,0 +1,280 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f8fa;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+header{
+  background-color: #ffffff;
+  color: white;
+  height: 105px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header-div{
+  height: 72px;
+  width: 975px;
+  display: flex;
+  flex-direction: row;  
+
+}
+#logo-img{
+  height: 83px;
+  width: 185px;
+}
+.header-text{
+  height: 72px;
+  width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+}
+
+.header-text-div{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+#icon-dang-dien-ra{
+  height: 39px;
+  width: 143px;
+  margin-right: 10px;
+}
+.header-text-div p{
+  font-weight: 700;
+  font-size: 20px;
+  color: #000000;
+  font-family: 'Roboto';
+  margin: 10px;
+}
+.nav-link-1{
+  color: #000000;
+  font-size: 20px;
+  font-family: 'San Francisco';
+  margin-right: 10px;
+  
+}
+span i{
+  color: #14a1ff;
+}
+.equipment-section {
+  background-color: #14a1ff; /* Nền xanh */
+  padding: 50px 20px;
+}
+
+.equipment-section h2, 
+.equipment-section p {
+  color: #fff;
+  text-align: center;
+}
+
+.equipment-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.equipment-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.3s ease-in-out;
+}
+
+.equipment-item:hover img {
+  transform: scale(1.1); /* Phóng to ảnh khi hover */
+  cursor: pointer;
+}
+
+.equipment-item .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Màu đen mờ */
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.equipment-item:hover .overlay {
+  opacity: 1; /* Hiện overlay khi hover */
+  cursor: pointer;
+}
+
+.overlay h4 {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.overlay p {
+  font-size: 14px;
+  text-align: center;
+  padding: 0 10px;
+}
+.specialty-section {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.specialty-section h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4a4a4a;
+  margin-bottom: 20px;
+}
+
+.specialty-section .divider {
+  width: 60px;
+  height: 4px;
+  background-color: #007bff; /* Màu xanh chủ đạo */
+  margin: 10px auto 20px;
+}
+
+.specialty-item {
+  text-align: center;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.specialty-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.specialty-item img {
+  max-width: 80px;
+  margin-bottom: 15px;
+}
+
+.specialty-item h4 {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.specialty-item p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.view-more-btn {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 10px 20px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.view-more-btn:hover {
+  background-color: #0056b3;
+}
+.specialty-section {
+  padding: 50px 20px;
+}
+
+.specialty-section h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4a4a4a;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.divider {
+  width: 60px;
+  height: 4px;
+  background-color: #007bff; /* Màu xanh chủ đạo */
+  margin: 10px auto 30px;
+}
+
+.specialty-item {
+  text-align: center;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  height: 257px;
+}
+
+.specialty-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.specialty-item i {
+  color: #007bff;
+}
+
+.specialty-item h4 {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.specialty-item p {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Custom navigation buttons */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: #007bff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.carousel-control-prev-icon:hover,
+.carousel-control-next-icon:hover {
+  background-color: #0056b3;
+}
