@@ -1,0 +1,30 @@
+{
+    "backends": {
+        "default": {
+            "name": "default",
+            "adapter": "local",
+            "baseUrl": "/Uploads/",
+            "root": "/wwwroot/Uploads/",
+            "chmodFiles": 644,
+            "chmodFolders": 755
+        }
+    },
+    "resourceTypes": [
+        {
+            "name": "Images",
+            "url": "/Uploads/Images",
+            "directory": "/Images",
+            "maxSize": 10485760,
+            "allowedExtensions": [ "bmp", "gif", "jpeg", "jpg", "png" ],
+            "deniedExtensions": []
+        },
+        {
+            "name": "Files",
+            "url": "/Uploads/Files",
+            "directory": "/Files",
+            "maxSize": 52428800,
+            "allowedExtensions": [ "doc", "docx", "pdf", "txt", "zip" ],
+            "deniedExtensions": []
+        }
+    ]
+}

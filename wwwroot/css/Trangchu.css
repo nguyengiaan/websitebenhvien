@@ -278,3 +278,21 @@ span i{
 .carousel-control-next-icon:hover {
   background-color: #0056b3;
 }
+.carousel-inner .carousel-item {
+  transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+}
+
+.carousel-item img {
+  animation: zoom 12s infinite;
+  object-fit: cover;
+  max-height: 500px;
+}
+.carousel-fade .carousel-item {
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+.carousel-fade .carousel-item.active {
+  opacity: 1;
+  transition: opacity 1.5s ease-in-out;
+}

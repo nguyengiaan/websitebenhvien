@@ -1,0 +1,171 @@
+   <div class="container py-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Cấu hình đầu trang</h5>
+            </div>
+            <div class="card-body">
+                <form>
+                    <!-- Logo -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Logo</label>
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="~/image/Logo-rm.png" alt="Logo" class="img-thumbnail" style="height: 60px;" name="logo">
+                            <div class="w-100">
+                                <div class="input-group">
+                                    <label class="input-group-text bg-primary text-white" for="logo-upload">
+                                        <i class="fas fa-upload me-2"></i>Chọn file
+                                    </label>
+                                    <input type="file" class="form-control" id="logo-upload" style="display: none;" id="logo">
+                                    <input type="text" class="form-control" readonly placeholder="Chưa chọn file nào" id="file-name">
+                             
+                                </div>
+                                <div class="form-text">Kích thước tối ưu: 80px</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Thông tin cấp cứu -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Số điện thoại cấp cứu</label>
+                        <input type="text" class="form-control" name="telephone" id="telephone">
+                    </div>
+
+                    <hr>
+
+                    <!-- Liên kết -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Liên kết nhanh</label>
+                        <div id="titleheader" class="d-flex flex-row">
+                   
+                        </div>
+
+                    
+                    </div>
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary px-4" id="btn-save">
+                            <i class="fas fa-save me-2"></i>Lưu
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    @section Scripts{
+        <script>
+             document.getElementById('logo-upload').addEventListener('change', function() {
+             document.getElementById('file-name').value = this.files[0].name;
+             });
+            $(document).ready(function () {
+                   Header();
+                   $("#btn-save").click(function(e){
+                     e.preventDefault();
+                    Editheader();
+                   });
+            });
+            function Header() {
+            $.ajax({
+                url: "/Pagemain/GetTitleheader",
+                type: "GET",
+                success: function (res) {
+                    if (res.success) {
+                        console.log(res.data);
+                        $("#telephone").val(res.data[0].telephone);
+                                           $("img[name='logo']").attr("src", "/Resources/" + res.data[0].logo);
+
+
+                        var html = "";
+                        $("#titleheader").empty();
+                        $.each(res.data[0].titleheader, function(index, item){
+                            html += `<div class="col-md-4">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <label data-id="${item.id_titleheader}">Tiêu đề 1</label>
+                                                <input type="text" class="form-control mb-2" value="${item.title}" name="title">
+                                                <input type="text" class="form-control mb-2" placeholder="Nhập link liên kết" name="link" value="${item.link}">
+                                            </div>
+                                        </div>
+                                    </div>`;
+                        });
+                        $("#titleheader").html(html);
+                    } else {
+                        console.error("Dữ liệu không hợp lệ:", res.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Có lỗi xảy ra:", error);
+                }
+            });
+      }
+           function Editheader() {
+    // Khởi tạo FormData
+    var form = new FormData();
+
+    // Lấy logo và số điện thoại
+    var logo = $("#logo-upload")[0]?.files[0]; // Kiểm tra có file không
+    if (logo) {
+        form.append("formFile", logo); // Thêm logo vào FormData
+    }
+    form.append("telephone", $("#telephone").val()); // Thêm số điện thoại vào FormData
+
+    // Tạo mảng titleheaderList chứa các tiêu đề
+    var titleheaderList = [];
+    $("#titleheader .card-body").each(function () {
+        var id = $(this).find("label").data("id");
+        var title = $(this).find("input[name='title']").val();
+        var link = $(this).find("input[name='link']").val();
+        if (id && title && link) { // Kiểm tra giá trị hợp lệ trước khi thêm vào mảng
+            titleheaderList.push({
+                Id_titleheader: id,
+                title: title,
+                link: link
+            });
+        }
+    });
+    // Chuyển titleheaderList thành JSON và thêm vào FormData
+    form.append("titlelist", JSON.stringify(titleheaderList));
+    // Gửi dữ liệu lên server bằng AJAX
+    $.ajax({
+        url: "/Pagemain/Editheader", // Đường dẫn API xử lý
+        type: "POST",
+        data: form, // Gửi trực tiếp FormData
+        contentType: false, // Đặt false để jQuery không đặt content type
+        processData: false, // Đặt false để jQuery không tuần tự hóa FormData
+        success: function (res) {
+            // Xử lý phản hồi từ server
+            if (res.status === 1) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Cập nhật thành công!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                Header(); // Refresh data after successful update
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cập nhật thất bại!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            // Xử lý lỗi trong quá trình gửi AJAX
+            console.error("Lỗi khi gửi dữ liệu:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Có lỗi xảy ra!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    });
+}
+
+
+        </script>
+    }   

@@ -1,0 +1,358 @@
+@{
+}
+<!-- Modal thêm logo -->
+<div class="modal fade" id="addLogoModal" tabindex="-1" role="dialog" aria-labelledby="addLogoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addLogoModalLabel">Thêm Logo Khách Hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addLogoForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>Tên khách hàng</label>
+                        <input type="text" class="form-control" id="CustomerName" name="CustomerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Logo</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="formFile" name="formFile" accept="image/*" required>
+                            <label class="custom-file-label" for="logoImage">Chọn file...</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <img id="previewImage" src="" class="img-fluid d-none" alt="Preview">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="btnAddLogo">Thêm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal sửa logo -->
+<div class="modal fade" id="editLogoModal" tabindex="-1" role="dialog" aria-labelledby="editLogoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editLogoModalLabel">Sửa Logo Khách Hàng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editLogoForm" enctype="multipart/form-data">
+                    <input type="hidden" id="Id_logo" name="Id_logo">
+                    <div class="form-group">
+                        <label>Tên khách hàng</label>
+                        <input type="text" class="form-control" id="CustomerName" name="CustomerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Logo</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="formFile" name="formFile" accept="image/*">
+                            <label class="custom-file-label" for="editLogoImage">Chọn file...</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <img id="editPreviewImage" src="" class="img-fluid" alt="Preview">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="btnUpdateLogo">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Danh sách logo -->
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="m-0 font-weight-bold text-primary">Quản lý Logo Khách Hàng</h5>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addLogoModal">
+                            <i class="fas fa-plus"></i> Thêm Logo
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th width="10%">STT</th>
+                                    <th width="30%">Logo</th>
+                                    <th width="40%">Tên khách hàng</th>
+                                    <th width="10%">Trạng thái</th>
+                                    <th width="20%">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logoList">
+                                <!-- Dữ liệu sẽ được thêm vào đây bằng JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Phân trang -->
+                    <div class="d-flex justify-content-center mt-4">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination" id="pagination">
+                                <!-- Các nút phân trang sẽ được thêm vào đây bằng JavaScript -->
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+
+            Hienthidslogo(1,10);
+            // Xử lý preview ảnh khi chọn file
+            function readURL(input, previewId) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        $(previewId).attr('src', e.target.result).removeClass('d-none');
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            // Preview ảnh khi thêm mới
+            $('#formFile').change(function() {
+                readURL(this, '#previewImage');
+                var fileName = $(this).val().split('\\').pop();
+                $(this).next('.custom-file-label').html(fileName);
+            });
+            
+            // Preview ảnh khi sửa
+            $('#editLogoForm').find('#formFile').change(function() {
+                readURL(this, '#editPreviewImage');
+                var fileName = $(this).val().split('\\').pop();
+                $(this).next('.custom-file-label').html(fileName);
+            });
+
+            // Xử lý xóa logo
+            $(document).on('click', '#btnDeleteLogo', function() {
+                var logoId = $(this).data('id');
+                Xoalogo(logoId);
+            });
+              $(document).on('click', '#btnUpdateLogo', function() {
+                      Capnhatlogo()
+             });
+			$('#btnAddLogo').click(function() {
+				Themlogo();
+			});
+        });
+        function Themlogo()
+        {
+            $.ajax({
+                url: '/Pagemain/AddLogoCustomer',
+				type: 'POST',
+				data: new FormData($('#addLogoForm')[0]),
+				processData: false,
+				contentType: false,
+				success: function(response) {
+					if (response.status == 1) {
+						$('#addLogoModal').modal('hide');
+						Swal.fire(
+							'Thành công!',
+							'Logo đã được thêm thành công.',
+							'success'
+						);
+                        Hienthidslogo(1,10);
+					} else {
+						Swal.fire(
+							'Thất bại!',
+							'Có lỗi xảy ra khi thêm logo.',
+							'error'
+						);
+					}
+				}
+            })
+        }
+        function Hienthidslogo(page, pagesize) {
+            $.ajax({
+                url: '/Pagemain/Getlistlogo',
+                type: 'POST', 
+                data: { page: page, pagesize: pagesize },
+                success: function(response) {
+                    if (response.success) {
+                        var html = '';
+                        $('#logoList').empty();
+                 
+                        
+                        $.each(response.data, function(index, item) {
+                            html += `<tr>
+                                <td>${index + 1}</td>
+                                <td>
+                                    <img src="/Resources/${item.logo}" alt="${item.customerName}" class="img-fluid" style="max-height: 100px">
+                                </td>
+                                <td>${item.customerName}</td>
+                                <td>
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input status-switch" 
+                                               id="status_${item.id_logocustomer}"
+                                               data-id="${item.id_logocustomer}" 
+                                               ${item.status ? 'checked' : ''}
+                                               onchange="Capnhatstatus('${item.id_logocustomer}')">
+                                        <label class="custom-control-label" for="status_${item.id_logocustomer}"></label>
+                                        <span style="display: ${item.status ? 'inline' : 'none'}">Hiện</span>
+                                        <span style="display: ${!item.status ? 'inline' : 'none'}">Ẩn</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm edit-logo" data-id="${item.id_logocustomer}" title="Sửa" onclick="Hienthimodalsua('${item.id_logocustomer}', '${item.customerName}', '${item.logo}')">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm delete-logo" data-id="${item.id_logocustomer}" title="Xóa" id="btnDeleteLogo">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>`;
+                        });
+                        $('#logoList').html(html);
+                        updatePagination(response.totalpages,response.page);
+
+                    
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }
+        function updatePagination(totalPages, currentPage) {
+                    if (totalPages > 0) {
+                        var str = `<nav aria-label="Page navigation example">
+                                                                                            <ul class="pagination">`;
+                        if (totalPages > 1) {
+                            if (currentPage > 1) {
+                                str += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="Hienthidslogo(${currentPage - 1}, 10)">Previous</a></li>`;
+                            }
+                            for (let i = 1; i <= totalPages; i++) {
+                                if (currentPage === i) {
+                                    str += `<li class="page-item active"><a class="page-link" href="javascript:void(0)">${i}</a></li>`;
+                                } else {
+                                    str += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="Hienthidslogo(${i}, 10)">${i}</a></li>`;
+                                }
+                            }
+                            if (currentPage < totalPages) {
+                                str += `<li class="page-item"><a class="page-link" href="javascript:void(0)" onclick="Hienthidslogo(${currentPage + 1}, 10)">Next</a></li>`;
+                            }
+                        }
+                        str += `</ul></nav>`;
+                        $('#pagination').html(str);
+                    }
+        }
+        function Xoalogo(logoId) {
+   
+            Swal.fire({
+                title: 'Bạn có chắc chắn?',
+                text: "Logo này sẽ bị xóa vĩnh viễn!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Pagemain/DeleteLogoCustomer',
+                        type: 'POST',
+                        data: { id_logocustomer: logoId },
+                        success: function(response) {
+                            if (response.status == 1) {
+                                Swal.fire(
+                                    'Đã xóa!',
+                                    'Logo đã được xóa thành công.',
+                                    'success'
+                                );
+                                Hienthidslogo(1, 10);
+                            } else {
+                                Swal.fire(
+                                    'Lỗi!',
+                                    'Có lỗi xảy ra khi xóa logo.',
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error:", error);
+                            Swal.fire(
+                                'Lỗi!',
+                                'Có lỗi xảy ra khi xóa logo.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
+        function Capnhatstatus(id_logocustomer)
+        {
+        $.ajax({
+            url: '/Pagemain/UpdateStatuslogo',
+            type: 'POST',
+            data: { id_logocustomer: id_logocustomer },
+            success: function(response) {
+                if (response.status == 1) {
+                    Hienthidslogo(1,10);
+                }
+            }
+        });
+        
+         }
+        function Hienthimodalsua(id_logocustomer, customerName, logo)
+         {
+        $('#editLogoModal').modal('show');
+            $('#editLogoForm').find('#Id_logo').val(id_logocustomer);
+            $('#editLogoForm').find('#CustomerName').val(customerName);
+            $('#editLogoForm').find('#editPreviewImage').attr('src', `/Resources/${logo}`);
+    }
+	function Capnhatlogo()
+    {
+                
+					$.ajax({
+						url: '/Pagemain/UpdateLogoCustomer',
+						type: 'POST',
+						data: new FormData($('#editLogoForm')[0]),
+						processData: false,
+						contentType: false,
+						success: function(response) {
+							if (response.status == 1) {
+								$('#editLogoModal').modal('hide');
+								Swal.fire(
+									'Thành công!',
+									'Logo đã được cập nhật thành công.',
+									'success'
+								);
+								Hienthidslogo(1,10);
+							} else {
+								Swal.fire(
+									'Thất bại!',
+									'Có lỗi xảy ra khi cập nhật logo.',
+									'error'
+								);
+							}
+						}
+					});
+            }
+   
+   </script>
+}
+
+

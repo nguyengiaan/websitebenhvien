@@ -1,0 +1,688 @@
+<!--update menu cha-->
+<div class="modal" id="menuContentModalupdate" role="dialog" aria-labelledby="menuContentModalLabel" aria-hidden="true" >
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold text-primary" id="menuContentModalLabel">Tạo menu cha</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="menuContentFormupdate">
+                    <input type="hidden" id="Id_menu" name="Id_menu" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Tiêu đề menu</label>
+                                <input type="text" class="form-control" id="Title_menu" name="Title_menu"  onchange="generateAlias(this.value)" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Thứ tự hiển thị</label>
+                                <input type="number" class="form-control" id="Order_menu" name="Order_menu" min="1" value="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Link alias</label>
+                        <input type="text" class="form-control" id="Link_menu" name="Link_menu" required>
+                    </div>
+                  
+                    <div class="form-group">
+                        <label class="font-weight-bold">Nội dung</label>
+                        <textarea id="Content" name="Content" class="summernote" value="#"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" id="btnSaveMenuContentUP" class="btn btn-primary">
+                    <i class="fas fa-save mr-1"></i> Lưu thay đổi
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal" id="menuContentModal" role="dialog" aria-labelledby="menuContentModalLabel" aria-hidden="true" >
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold text-primary" id="menuContentModalLabel">Tạo menu cha</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="menuContentForm">
+                    <input type="hidden" id="Id_menu_1" name="Id_menu_1" />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Tiêu đề menu</label>
+                                <input type="text" class="form-control" id="Title_menu" name="Title_menu"  onchange="generateAlias(this.value)" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Thứ tự hiển thị</label>
+                                <input type="number" class="form-control" id="Order_menu" name="Order_menu" min="1" value="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Link alias</label>
+                        <input type="text" class="form-control" id="Link_menu" name="Link_menu" required>
+                    </div>
+                  
+                    <div class="form-group">
+                        <label class="font-weight-bold">Nội dung</label>
+                        <textarea id="Content" name="Content" class="summernote" value="#"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" id="btnSaveMenuContent" class="btn btn-primary">
+                    <i class="fas fa-save mr-1"></i> Lưu thay đổi
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    var summenote = new websitebenhvien.Models.EnitityVM.Summenote(".summernote");
+}
+<partial name="_Summernote" model="summenote" />
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="m-0 font-weight-bold text-primary">Quản lý Menu</h5>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#menuContentModal">
+                        <i class="fas fa-plus mr-1"></i> Thêm Menu cha
+                    </button>
+                </div>
+                <div class="card-body">
+                    <!-- Form thêm/sửa menu -->
+                    <form id="menuForm">
+                        <input type="hidden" id="Id_MenuChild" name="Id_MenuChild" />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Tên menu</label>
+                                    <input type="text" class="form-control" id="Title_MenuChild" name="Title_MenuChild" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">URL</label>
+                                    <input type="text" class="form-control" id="Link_MenuChild" name="Link_MenuChild">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group" id="menuParent">
+                                    <label class="font-weight-bold">Menu cha</label>
+                                    <select class="form-control" id="Id_menu" name="Id_menu">
+                                       
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Thứ tự hiển thị</label>
+                                    <input type="number" class="form-control" id="Order_menu" name="Order_menu" min="0" value="0">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right mt-3">
+                            <button type="button" id="btnSaveMenu" class="btn btn-primary">
+                                <i class="fas fa-save mr-1"></i> Lưu
+                            </button>
+                            <button type="button" id="btnCancelEdit" class="btn btn-secondary" style="display:none">
+                                <i class="fas fa-times mr-1"></i> Hủy
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Bảng danh sách menu -->
+                    <div class="table-responsive mt-4">
+                        <table class="table table-bordered" width="100%">
+                            <thead>
+                                <tr>
+                                    <th width="5%">STT</th>
+                                    <th width="25%">Tên menu</th>
+                                    <th width="25%">URL</th>
+                                    <th width="10%">Thứ tự</th>
+                                    <th width="10%">Trạng thái</th>
+                                    <th width="10%">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="menuTableBody">
+                               
+                         
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Phân trang -->
+                    <div class="d-flex justify-content-center mt-4">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination" id="pagination">
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            danhsachmenu();
+            dsmenusl();
+            $('#btnSaveMenuContent').click(function() {
+                saveMenu();
+            });
+
+            $('#btnCancelEdit').click(function() {
+                cancelEdit();
+            });
+              $('#btnSaveMenu').click(function() {
+                themmenucon();
+            });
+		$('#btnSaveMenuContentUP').click(function() {
+						UpdateMenu();
+		});
+        });
+
+        function loadMenuList(page, pageSize) {
+            // TODO: Implement API call to load menu list
+            // Example structure:
+            /*
+            $.ajax({
+                url: '/Pagemain/ListMenu',
+                type: 'POST',
+                data: { page: page, pagesize: pageSize },
+                success: function(response) {
+                    if (response.success) {
+                        renderMenuList(response.data);
+                        renderPagination(response.totalPages, page);
+                    }
+                }
+            });
+            */
+        }
+
+        function saveMenu() {
+            var form = $('#menuContentForm')[0];   
+
+            var title = $('#menuContentForm').find('#Title_menu').val();
+            var link = $('#menuContentForm').find('#Link_menu').val();
+            var order = $('#menuContentForm').find('#Order_menu').val();
+            var content = $('#menuContentForm').find('#Content').summernote('code');
+            var formData =new FormData();
+            formData.append('Title_menu', title);
+            formData.append('Link_menu', link);
+            formData.append('Order_menu', order);
+            formData.append('Content', content);
+            if (!title || title.trim() === '') {
+                Swal.fire({
+                    title: 'Lỗi!', 
+                    text: 'Vui lòng nhập tiêu đề menu',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return false;
+            }
+            $.ajax({
+                url: '/Pagemain/AddMenu',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.status==1) {
+                        Swal.fire({
+                            title: 'Thành công!',
+                            text: 'Lưu menu thành công',
+                            icon: 'success',
+                        })
+
+                        form.reset();
+                       $('#menuContentForm').find('.summernote').summernote('code', '');
+                        dsmenusl();
+                        danhsachmenu(); 
+                    } else {
+                        Swal.fire({
+                            title: 'Lỗi!',
+                            text: response.message || 'Có lỗi xảy ra khi lưu menu',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi kết nối với server',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+
+        function editMenuSub(id,) {
+            // TODO: Implement edit menu functionality
+            
+            $('#btnCancelEdit').show();
+            // Load menu data and populate form
+        }
+
+        function deleteMenu(id) {
+            Swal.fire({
+                title: 'Xác nhận xóa?',
+                text: "Bạn có chắc chắn muốn xóa menu này?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // TODO: Implement API call to delete menu
+                    $.ajax({
+                        url: '/Pagemain/DeleteMenu',
+                        type: 'POST',
+                        data: { id_menu: id },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Thành công!',
+                                    text: response.message,
+                                    icon: 'success'
+                                });
+                                dsmenusl();
+                                danhsachmenu();
+                            } else {
+                                Swal.fire({
+                                    title: 'Lỗi!', 
+                                    text: response.message || 'Có lỗi xảy ra khi xóa menu',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: 'Có lỗi xảy ra khi kết nối với server',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        function cancelEdit() {
+            $('#menuId').val('');
+            $('#menuForm')[0].reset();
+            $('#Id_MenuChild').val('');
+        
+            $('#btnCancelEdit').hide();
+        }
+
+        function updateMenuStatus(id) {
+            // TODO: Implement API call to update menu status
+        }
+function generateAlias(str) {
+            // Chuyển về chữ thường
+            str = str.toLowerCase();
+            
+            // Xóa dấu
+            str = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            
+            // Thay thế ký tự đặc biệt bằng dấu gạch ngang
+            str = str.replace(/[^a-z0-9 -]/g, '')
+                    .replace(/\s+/g, '-')     // Thay khoảng trắng bằng dấu gạch ngang
+                    .replace(/-+/g, '-');      // Xóa nhiều dấu gạch ngang liên tiếp
+            
+            // Xóa dấu gạch ngang ở đầu và cuối
+            str = str.replace(/^-+|-+$/g, '');
+            
+             $('#menuContentForm').find('#Link_menu').val('/' + str);
+            return '/' + str;
+        }
+function dsmenusl() {
+            $.ajax({
+                url: '/Pagemain/Menu', // URL endpoint
+                type: 'GET',
+                success: function (response) {
+                    // Kiểm tra response thành công
+                    if (response && response.success && Array.isArray(response.data)) {
+						$('#menuParent').find('#Id_menu').html(''); // Xóa hết option cũ
+					
+                        let html = "";
+                        response.data.forEach(menu => {
+                            html += `<option value="${menu.id_menu}">${menu.title_menu}</option>`;
+                        });
+                        $('#menuParent').find('#Id_menu').html(html); // Cập nhật HTML
+                    } else {
+                        console.error("Lỗi: Không lấy được dữ liệu menu hoặc dữ liệu không hợp lệ.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Lỗi khi gọi API:", error);
+                }
+            });
+        }
+
+        // save menu con 
+function themmenucon() {
+            var form = $('#menuForm')[0];
+            var formData = new FormData(form);
+            $.ajax({
+                url: '/Pagemain/AddSubMenu',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'Thành công!',
+                            text: 'Lưu menu thành công',
+                            icon: 'success',
+                        })
+
+                        form.reset();
+                        dsmenusl();
+                        danhsachmenu();
+                    } else {
+                        Swal.fire({
+                            title: 'Lỗi!',
+                            text: response.message || 'Có lỗi xảy ra khi lưu menu',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi kết nối với server',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+  
+function danhsachmenu() {
+            $.ajax({
+                url: '/Pagemain/ListMenu', // URL API lấy danh sách menu
+                type: 'GET',
+                success: function (response) {
+                    if (response.success) {
+                        console.log(response.data); 
+                        let data = response.data; // Dữ liệu từ server
+                        
+                        // Sắp xếp menu cha theo order_menu
+                        data.sort((a, b) => a.order_menu - b.order_menu);
+                        
+                        let html = "";
+
+                        // Lặp qua từng menu cha
+                        data.forEach((menu, index) => {
+
+           
+                 
+
+                            html += `
+                                <tr class="table-secondary">
+                                    <td>${index + 1}</td>
+                                    <td><strong>${menu.title_menu || ''}</strong></td>
+                                    <td>${menu.link_menu || '/'}</td>
+                                    <td>${menu.order_menu || 0}</td>
+                                    <td>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="status_${menu.id_menu}" ${menu.status ? 'checked' : ''} onchange="UpdateStatusMenu('${menu.id_menu}')">
+                                            <label class="custom-control-label" for="status_${menu.id_menu}">${menu.status ? 'Hiện' : 'Ẩn'}</label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary mr-1" onclick="editMenuParent('${menu.id_menu || ''}')">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteMenu('${menu.id_menu || ''}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>`;
+
+                            // Sắp xếp và thêm các menu con (dòng nhạt)
+                            if (menu.menu && menu.menu.length > 0) {
+                                // Sắp xếp menu con theo order_menu
+                                menu.menu.sort((a, b) => a.order_menu - b.order_menu);
+                                
+                                menu.menu.forEach((submenu, subIndex) => {
+                                    html += `
+                                        <tr class="table-light">
+                                            <td>${index + 1}.${subIndex + 1}</td>
+                                            <td>${submenu.title_MenuChild}</td>
+                                            <td>${submenu.link_MenuChild || "#"}</td>
+                                            <td>${submenu.order_menu}</td>
+                                            <td>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" id="status${submenu.id_MenuChild}" ${submenu.status ? "checked" : ""}   onchange="UpdateStatusMenu('${submenu.id_MenuChild}')" >
+                                                    <label class="custom-control-label" for="status${submenu.id_MenuChild}">${submenu.status ? "Hiện" : "Ẩn"}</label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary mr-1" onclick="editMenuSub('${submenu.id_MenuChild}', '${submenu.title_MenuChild}', '${submenu.link_MenuChild}', '${submenu.order_menu}', '${submenu.id_menu}')">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" onclick="DeleteMenuSub('${submenu.id_MenuChild}')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>`;
+                                });
+                            }
+                        });
+
+                        // Gắn HTML vào bảng
+                        $("#menuTableBody").html(html);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Lỗi khi tải menu:", error);
+                }
+            });
+        }
+        // xoá menu con
+        
+function DeleteMenuSub(id) {
+            Swal.fire({
+                title: 'Xác nhận xóa?',
+                text: "Bạn có chắc chắn muốn xóa menu này?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // TODO: Implement API call to delete menu
+                    $.ajax({
+                        url: '/Pagemain/DeleteMenuSub',
+                        type: 'POST',
+                        data: { id_menu: id },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'Thành công!',
+                                    text: response.message,
+                                    icon: 'success'
+                                });
+                                dsmenusl();
+                                danhsachmenu();
+                            } else {
+                                Swal.fire({
+                                    title: 'Lỗi!', 
+                                    text: response.message || 'Có lỗi xảy ra khi xóa menu',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: 'Có lỗi xảy ra khi kết nối với server',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        // edit menu sub
+function editMenuSub(Id_MenuChild, Title_MenuChild, Link_MenuChild, Order_menu, Id_menu)
+        {
+            console.log(Id_menu);    
+				$('#Id_MenuChild').val(Id_MenuChild);
+				$('#Title_MenuChild').val(Title_MenuChild);
+				$('#Link_MenuChild').val(Link_MenuChild);
+				$('#Id_menu').val(Id_menu)
+				$('#Order_menu').val(Order_menu);
+				$('#btnCancelEdit').show();
+        }
+function editMenuParent(id_menu) {
+    // Gọi API để lấy thông tin menu
+    $.ajax({
+        url: '/Pagemain/GetMenuvm',
+        type: 'POST',
+        data: { id_menu: id_menu },
+        success: function(response) {
+            if (response.success) {
+                var data = response.data;
+                // Điền dữ liệu vào form update
+                $('#menuContentFormupdate #Id_menu').val(data.id_menu);
+                $('#menuContentFormupdate #Title_menu').val(data.title_menu);
+                $('#menuContentFormupdate #Link_menu').val(data.link_menu);
+                $('#menuContentFormupdate #Order_menu').val(data.order_menu);
+                $('#menuContentFormupdate #Content').summernote('code', data.content);
+
+                // Hiển thị modal update
+                $('#menuContentModalupdate').modal('show');
+            } else {
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: response.message || 'Có lỗi xảy ra khi lấy thông tin menu',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        },
+        error: function(xhr, status, error) {
+            Swal.fire({
+                title: 'Lỗi!',
+                text: 'Có lỗi xảy ra khi kết nối với server',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    });
+}
+function UpdateMenu() {
+              var form = $('#menuContentFormupdate')[0];
+			var formData = new FormData(form);
+			$.ajax({
+                   url: '/Pagemain/Updatemenu',
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function(response) {
+					if (response.success) {
+						Swal.fire({
+							title: 'Thành công!',
+							text: 'Lưu menu thành công',
+							icon: 'success',
+						})
+						dsmenusl();
+						danhsachmenu();
+					} else {
+						Swal.fire({
+							title: 'Lỗi!',
+							text: response.message || 'Có lỗi xảy ra khi lưu menu',
+							icon: 'error',
+							confirmButtonText: 'OK'
+						});
+					}
+				},
+				error: function(xhr, status, error) {
+					Swal.fire({
+						title: 'Lỗi!',
+						text: 'Có lỗi xảy ra khi kết nối với server',
+						icon: 'error',
+						confirmButtonText: 'OK'
+					});
+				}
+			});
+		}
+  
+// sửa trạng thái menu 
+function UpdateStatusMenu(id_menu)
+     {
+        $.ajax({
+            url: '/Pagemain/UpdateStatusMenu',
+            type: 'POST', 
+            data: { id: id_menu },
+            success: function(response) {
+                if (response.success) {
+                    danhsachmenu();
+                } else {
+                    Swal.fire({
+                        title: 'Lỗi!', 
+                        text: response.message || 'Có lỗi xảy ra khi cập nhật trạng thái',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            },
+            error: function(xhr, status, error) {
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Có lỗi xảy ra khi kết nối với server',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    }
+
+
+
+
+</script>
+}

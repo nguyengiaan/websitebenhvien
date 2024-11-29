@@ -1,0 +1,407 @@
+﻿@{
+}
+<!-- modal sửa thêm chi tiết -->
+<div class="modal fade" id="EditSlideModal" tabindex="-1" role="dialog" aria-labelledby="addSlideModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSlideModalLabel">Sửa Slide</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addSlideFormEdit" enctype="multipart/form-data">
+                    <input type="hidden" id="id_slidepageEdit" name="id_slidepage">
+                    <div class="form-group">
+                        <label>Tiêu đề</label>
+                        <input type="text" class="form-control" id="slideTitleEdit" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Link</label>
+                        <input type="text" class="form-control" id="slideLinkEdit" name="link" value="#">
+                    </div>
+                    <div class="form-group">
+                        <label>Thứ tự</label>
+                        <input type="number" class="form-control" id="slideSortEdit" name="sort" required min="1" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Chọn hình ảnh</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="slideImageEdit" name="formFile" accept="image/*">
+                            <label class="custom-file-label" for="slideImageEdit">Chọn file...</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <img id="previewImageEdit" src="" class="img-fluid d-none" alt="Preview">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="btnEditSlide">Sửa</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--modal sửa-->
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="m-0 font-weight-bold text-primary">Quản lý Slide</h5>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addSlideModal">
+                            <i class="fas fa-plus"></i> Thêm Slide
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th width="5%">STT</th>
+                                    <th width="20%">Hình ảnh</th>
+                                    <th width="25%">Tiêu đề</th>
+                                    <th width="20%">Link</th>
+                                    <th width="10%">Sắp xếp</th>
+                                    <th width="10%">Trạng thái</th>
+                                    <th width="10%">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="slideList">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm Slide -->
+<div class="modal fade" id="addSlideModal" tabindex="-1" role="dialog" aria-labelledby="addSlideModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSlideModalLabel">Thêm Slide Mới</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addSlideForm" enctype="multipart/form-data" onsubmit="return false;">
+                    <div class="form-group">
+                        <label>Tiêu đề</label>
+                        <input type="text" class="form-control" id="slideTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Link</label>
+                        <input type="text" class="form-control" id="slideLink" name="link" value="#">
+                    </div>
+                    <div class="form-group">
+                        <label>Thứ tự</label>
+                        <input type="number" class="form-control" id="slideSort" name="sort" required min="1" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Chọn hình ảnh</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="slideImage" name="formFile" accept="image/*" required>
+                            <label class="custom-file-label" for="slideImage">Chọn file...</label>
+                            <small class="form-text text-muted">
+                                Vui lòng chọn file hình ảnh (jpg, jpeg, png, gif). Kích thước tối đa 5MB.
+                            </small>
+                            <div id="imageError" class="invalid-feedback">
+                                Vui lòng chọn file hình ảnh hợp lệ
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <img id="previewImage" src="" class="img-fluid d-none" alt="Preview">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" title="Lưu" id="btnSaveSlide">Lưu </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Load slides khi trang được tải
+            loadSlides();
+
+            // Xử lý hiển thị tên file khi chọn
+            $('#slideImage').on('change', function(e) {
+                e.preventDefault(); // Ngăn chặn sự kiện mặc định
+                var fileName = $(this).val().split('\\').pop();
+                $(this).next('.custom-file-label').html(fileName);
+
+                // Preview image
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#previewImage').attr('src', e.target.result).removeClass('d-none');
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            // Xử lý hiển thị tên file khi chọn cho form edit
+            $('#slideImageEdit').on('change', function(e) {
+                e.preventDefault(); // Ngăn chặn sự kiện mặc định
+                var fileName = $(this).val().split('\\').pop();
+                $(this).next('.custom-file-label').html(fileName);
+
+                // Preview image
+                if (this.files && this.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#previewImageEdit').attr('src', e.target.result).removeClass('d-none');
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            // Xử lý sự kiện submit form thêm mới
+            $('#btnSaveSlide').on('click', function(e) {
+                e.preventDefault(); // Ngăn chặn form submit
+                e.stopPropagation(); // Ngăn chặn sự kiện nổi bọt
+                Themslide();
+            });
+
+            // Xử lý sự kiện submit form edit
+            $('#btnEditSlide').on('click', function(e) {
+                e.preventDefault(); // Ngăn chặn form submit
+                e.stopPropagation(); // Ngăn chặn sự kiện nổi bọt
+                EditSlide();
+            });
+        });
+
+        // Hàm xóa slide
+        function deleteSlide(id) {
+            Swal.fire({
+                title: 'Bạn có chắc chắn?',
+                text: "Bạn không thể hoàn tác sau khi xóa!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Pagemain/DeleteSlide',
+                        type: 'POST',
+                        data: { id_slidepage: id },
+                        success: function(res) {
+                            if (res.status === 1) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Xóa thành công!',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                loadSlides();
+                            }
+                        }
+                    });
+                }
+            });
+            return false; // Ngăn chặn hành vi mặc định
+        }
+
+        // Hàm toggle trạng thái slide
+        function toggleStatus(id) {
+            $.ajax({
+                url: '/Pagemain/UpdateStatus',
+                type: 'POST',
+                data: { id_slidepage: id },
+                success: function(res) {
+                    if (res.status === 1) {
+                        loadSlides();
+                    }
+                }
+            });
+            return false; // Ngăn chặn hành vi mặc định
+        }
+
+        function Themslide() {
+            var form = $('#addSlideForm')[0];
+            var formFile = new FormData(form);
+
+            $.ajax({
+                url: '/Pagemain/Addslide',
+                type: 'POST',
+                data: formFile,
+                processData: false,
+                contentType: false,
+                success: function(res) {
+                    if (res.status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thêm slide thành công!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        loadSlides();
+                        $("#addSlideModal").modal("hide");
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Có lỗi xảy ra!',
+                            text: res.message
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Có lỗi xảy ra!',
+                        text: 'Vui lòng thử lại sau'
+                    });
+                }
+            });
+            return false; // Ngăn chặn hành vi mặc định
+        }
+
+        function loadSlides() {
+            $.ajax({
+                url: '/Pagemain/GetSlides',
+                type: 'GET',
+                success: function(res) {
+                    if (res.success) {
+                        var html = '';
+                        $.each(res.data, function(index, item) {
+                            html += `
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>
+                                        <img src="/Resources/${item.slide}" alt="Slide ${index + 1}" style="max-width: 200px;" class="img-thumbnail">
+                                    </td>
+                                    <td>
+                                        <span class="form-control-plaintext">${item.title}</span>
+                                    </td>
+                                    <td>
+                                        <span class="form-control-plaintext">${item.link}</span>
+                                    </td>
+                                    <td>
+                                        <span class="form-control-plaintext">${item.sort}</span>
+                                    </td>
+                                    <td>
+                                        <div class="custom-control custom-switch">
+                                            <input type="checkbox" class="custom-control-input" id="status${item.id_slidepage}"
+                                                   ${item.status ? 'checked' : ''}
+                                                   onchange="toggleStatus('${item.id_slidepage}')">
+                                            <label class="custom-control-label" for="status${item.id_slidepage}">
+                                                ${item.status ? 'Hiển thị' : 'Ẩn'}
+                                            </label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteSlide('${item.id_slidepage}')" title="Xóa">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-primary btn-sm" onclick="editSlide('${item.id_slidepage}')" title="Sửa">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>`;
+                        });
+                        $('#slideList').html(html);
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Có lỗi xảy ra!',
+                        text: 'Không thể tải danh sách slide'
+                    });
+                }
+            });
+        }
+
+        function editSlide(id_slidepage) {
+            $.ajax({
+                url: '/Pagemain/GetSlideByTitle',
+                type: 'POST',
+                data: { id_slidepage: id_slidepage },
+                success: function(res) {
+                    if (res.success) {
+                        $('#slideTitleEdit').val(res.data.title);
+                        $('#slideLinkEdit').val(res.data.link);
+                        $('#slideSortEdit').val(res.data.sort);
+                        $('#id_slidepageEdit').val(res.data.id_slidepage);
+                        if (res.data.slide) {
+                            $('#previewImageEdit').attr('src', '/Resources/' + res.data.slide).removeClass('d-none');
+                        }
+                        $("#EditSlideModal").modal("show");
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Có lỗi xảy ra!',
+                            text: res.message
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Có lỗi xảy ra!',
+                        text: 'Không thể tải thông tin slide'
+                    });
+                }
+            });
+            return false; // Ngăn chặn hành vi mặc định
+        }
+
+        function EditSlide() {
+            var form = $('#addSlideFormEdit')[0];
+            var formFile = new FormData(form);
+
+            $.ajax({
+                url: '/Pagemain/EditSlide',
+                type: 'POST',
+                data: formFile,
+                processData: false,
+                contentType: false,
+                success: function(res) {
+                    if (res.status === 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Cập nhật thành công!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        loadSlides();
+                        $("#EditSlideModal").modal("hide");
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Có lỗi xảy ra!',
+                            text: res.message
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Có lỗi xảy ra!',
+                        text: 'Vui lòng thử lại sau'
+                    });
+                }
+            });
+            return false; // Ngăn chặn hành vi mặc định
+        }
+    </script>
+}

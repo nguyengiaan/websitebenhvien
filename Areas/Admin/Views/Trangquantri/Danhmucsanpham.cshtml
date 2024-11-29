@@ -1,0 +1,303 @@
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h5 class="mb-0 fw-bold">Quản lý danh mục sản phẩm</h5>
+            <button class="btn btn-primary rounded-pill px-4" onclick="openCategoryModal()">
+                <i class="fas fa-plus me-2"></i>Thêm danh mục
+            </button>
+        </div>
+
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm..." onkeypress="if(event.keyCode==13) searchCategories()">
+                        <button class="btn btn-outline-secondary" onclick="searchCategories()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4" style="width: 5%">STT</th>
+                            <th style="width: 20%">Tiêu đề</th>
+                            <th style="width: 15%">Hình ảnh</th>
+                            <th style="width: 20%">Đường dẫn</th>
+                            <th style="width: 20%">Ngày tạo</th>
+                            <th style="width: 20%" class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoryTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-footer bg-white py-3">
+            <nav>
+                <ul class="pagination justify-content-center mb-0" id="pagination">
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title fw-bold" id="modalTitle">Thêm danh mục sản phẩm</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="categoryForm">
+                    <input type="hidden" id="id_Categoryproduct" name="id_Categoryproduct">
+                    <div class="mb-3">
+                        <label class="form-label">Tiêu đề</label>
+                        <input type="text" class="form-control" id="title" name="title" required onchange="generateCategoryAlias(this.value)">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Đường dẫn</label>
+                        <input type="text" class="form-control" id="alias_url" name="alias_url" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Hình ảnh</label>
+                        <div class="input-group">
+                            <input type="file" class="form-control" id="formFile" name="formFile" required>
+                            <button class="btn btn-outline-secondary" type="button" onclick="openElfinder()">
+                                <i class="fas fa-folder-open"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mô tả</label>
+                        <textarea id="description" name="description" class="summernote"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top-0">
+                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary rounded-pill px-4" onclick="saveCategory()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    var summenote = new websitebenhvien.Models.EnitityVM.Summenote(".summernote");
+}
+<partial name="_Summernote" model="summenote" />
+
+@section Scripts {
+    <script>
+        let currentPage = 1;
+        const pageSize = 20;
+
+        $(document).ready(function() {
+            $('#categoryModal').on('hidden.bs.modal', function () {
+                $('#categoryForm')[0].reset();
+                $('#description').summernote('code', '');
+                $('#id_Categoryproduct').val('');
+                $('#modalTitle').text('Thêm danh mục sản phẩm');
+            });
+            loadCategories();
+        });
+
+        function openElfinder() {
+            var fm = $('<div/>').dialogelfinder({
+                url: '@Url.Action("Connector", "Filemanager")',
+                lang: 'vi',
+                width: 850,
+                height: 450,
+                destroyOnClose: true,
+                getFileCallback: function(files, fm) {
+                    const fileUrl = files.url;
+                    fetch(fileUrl)
+                        .then(response => response.blob())
+                        .then(blob => {
+                            const file = new File([blob], files.name, { type: blob.type });
+                            const dataTransfer = new DataTransfer();
+                            dataTransfer.items.add(file);
+                            document.getElementById('formFile').files = dataTransfer.files;
+                        });
+                }
+            }).dialogelfinder('instance');
+        }
+
+        function generateCategoryAlias(title) {
+            const alias = title.toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[đĐ]/g, 'd')
+                .replace(/([^0-9a-z-\s])/g, '')
+                .replace(/(\s+)/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            $('#alias_url').val(alias);
+        }
+
+        function openCategoryModal() {
+            $('#categoryModal').modal('show');
+        }
+
+        function saveCategory() {
+            const formData = new FormData($('#categoryForm')[0]);
+            $.ajax({
+                url: '/Allinone/AddCatogeryProduct',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response.status) {
+                        $('#categoryModal').modal('hide');
+                        loadCategories();
+                        swal.fire("Thành công!", response.message, "success");
+                    } else {
+                        swal.fire("Thất bại!", response.message, "error");
+                    }
+                }
+            });
+        }
+
+        function loadCategories(page = 1) {
+            $.ajax({
+                url: '/Allinone/ListCatogeryProduct',
+                type: 'GET',
+                success: function(response) {
+                    if (response.status) {
+                        currentPage = page;
+                        const allData = response.data;
+                        
+                        // Tìm kiếm
+                        const searchTerm = $('#searchInput').val().toLowerCase();
+                        let filteredData = allData;
+                        if (searchTerm) {
+                            filteredData = filteredData.filter(item => 
+                                item.title.toLowerCase().includes(searchTerm) ||
+                                item.description?.toLowerCase().includes(searchTerm) ||
+                                item.alias_url.toLowerCase().includes(searchTerm)
+                            );
+                        }
+
+                        // Phân trang
+                        const totalItems = filteredData.length;
+                        const totalPages = Math.ceil(totalItems / pageSize);
+                        const startIndex = (page - 1) * pageSize;
+                        const endIndex = Math.min(startIndex + pageSize, totalItems);
+                        const paginatedData = filteredData.slice(startIndex, endIndex);
+
+                        renderCategories(paginatedData);
+                        renderPagination(totalPages, page);
+                    }
+                }
+            });
+        }
+
+        function renderCategories(data) {
+            console.log(data);  
+            const tbody = $('#categoryTableBody');
+            tbody.empty();
+            
+            data.forEach((item, index) => {
+                const startIndex = (currentPage - 1) * pageSize;
+                tbody.append(`
+                    <tr>
+                        <td class="ps-4">${startIndex + index + 1}</td>
+                        <td>${item.title}</td>
+                        <td>
+                            <img src="/Resources/${item.url}" alt="${item.title}" class="img-thumbnail" style="max-height: 50px">
+                        </td>
+                        <td>${item.alias_url}</td>
+                        <td>${new Date(item.createat).toLocaleDateString('vi-VN')}</td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-primary me-2" onclick="editCategory('${item.id_Categoryproduct}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory('${item.id_Categoryproduct}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `);
+            });
+        }
+
+        function renderPagination(totalPages, currentPage) {
+            const pagination = $('#pagination');
+            pagination.empty();
+
+            for (let i = 1; i <= totalPages; i++) {
+                pagination.append(`
+                    <li class="page-item ${i === currentPage ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="loadCategories(${i})">${i}</a>
+                    </li>
+                `);
+            }
+        }
+
+        function searchCategories() {
+            loadCategories(1);
+        }
+
+        function deleteCategory(id) {
+            Swal.fire({
+                title: 'Xác nhận xóa?',
+                text: 'Bạn có chắc chắn muốn xóa danh mục này?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/Allinone/DeleteCatogeryProduct',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function(response) {
+                            if (response.status) {
+                                loadCategories();
+                                Swal.fire({
+                                    title: 'Thành công!',
+                                    text: response.message,
+                                    icon: 'success'
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Thất bại!',
+                                    text: response.message,
+                                    icon: 'error'
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        function editCategory(id) {
+            $.ajax({
+                url: '/Allinone/GetCatogeryProductById',
+                type: 'POST',
+                data: { id: id },
+                success: function(response) {
+                    if (response.status) {
+                        const data = response.data;
+                        $('#id_Categoryproduct').val(data.id_Categoryproduct);
+                        $('#title').val(data.title);
+                        $('#alias_url').val(data.alias_url);
+                        $('#description').summernote('code', data.description);
+                        $('#modalTitle').text('Cập nhật danh mục sản phẩm');
+                        $('#categoryModal').modal('show');
+                    }
+                }
+            });
+        }
+    </script>
+}
