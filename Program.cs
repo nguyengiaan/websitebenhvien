@@ -10,6 +10,7 @@ using websitebenhvien.Service.Interface;
 using websitebenhvien.Service.Reponser;
 using websitebenhvien.Config;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +32,29 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 builder.Services.AddRazorPages();
 builder.Services.AddScoped<IPageMain,PageMainReponser>();
 builder.Services.AddScoped<IAllinone, AllinoneReponser>();  
+builder.Services.AddScoped<IUser, UserReponser>();
 builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));
+builder.Services.AddAuthorization(options =>
+{
+
+    options.AddPolicy("admin", policy => policy.RequireRole("admin"));
+    options.AddPolicy("user", policy => policy.RequireRole("user"));
+});
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/trang-quan-tri/dang-nhap";
+    options.AccessDeniedPath = "/trang-quan-tri/dang-nhap";
+});
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+        .AddCookie(options =>
+        {
+            options.LoginPath = "/trang-quan-tri/dang-nhapp";
+            options.LogoutPath = "/trang-quan-tri/dang-nhap";
+            options.Cookie.HttpOnly = true;
+            options.Cookie.Expiration = TimeSpan.FromDays(1);
+            options.SlidingExpiration = true;
+        });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -62,7 +85,7 @@ app.UseAuthorization();
 // Route cho Areas
 app.MapControllerRoute(
     name: "areas",
-    pattern: "{area:exists}/{controller=Trangquantri}/{action=Index}/{id?}");
+    pattern: "{area:exists}/{controller=Trangquantri}/{action=Dangnhap}/{id?}");
 
 // Route mặc định
 app.MapControllerRoute(

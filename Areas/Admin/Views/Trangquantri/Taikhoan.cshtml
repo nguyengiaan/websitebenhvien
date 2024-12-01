@@ -1,0 +1,353 @@
+@{
+    ViewBag.Title = "Quản lý tài khoản";
+
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Danh sách tài khoản</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add">
+                            <i class="fas fa-plus"></i> Thêm mới
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="searchButton">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-control" id="roleFilter">
+                                <option value="">Tất cả quyền</option>
+                                <option value="admin">Admin</option>
+                                <option value="user">User</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Họ tên</th>
+                                <th>Tên đăng nhập</th>
+                                <th>Quyền</th>
+                  
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userList">
+                        </tbody>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-5">
+                            <div class="dataTables_info" id="example2_info" role="status" aria-live="polite">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-7">
+                            <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+                                <ul class="pagination" id="pagination">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Add/Edit -->
+<div class="modal fade" id="modal-add">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Thêm/Sửa tài khoản</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="userForm">
+                    <input type="hidden" id="Id" name="Id">
+                    <div class="form-group">
+                        <label>Họ tên</label>
+                        <input type="text" class="form-control" id="fullName" name="fullName" required>
+                        <div class="invalid-feedback">Vui lòng nhập tên người dùng</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Tên đăng nhập</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                        <div class="invalid-feedback">Vui lòng nhập tài khoản người dùng</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Mật khẩu</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                        <div class="invalid-feedback">Vui lòng nhập mật khẩu người dùng</div>
+                        <small class="form-text text-muted">Để trống nếu không muốn thay đổi mật khẩu</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Quyền</label>
+                        <select class="form-control" id="role" name="role" required>
+                            <option value="">Chọn quyền</option>
+                            <option value="admin">Admin</option>
+                            <option value="user">User</option>
+                        </select>
+                        <div class="invalid-feedback">Vui lòng chọn quyền người dùng</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="saveUser">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function() {
+            // Reset form khi đóng modal
+            $('#modal-add').on('hidden.bs.modal', function() {
+                $('#userForm')[0].reset();
+                $('#userId').val('');
+       
+            });
+            let currentPage = 1;
+            loadUsers();
+            loadUsers(currentPage);
+
+            function loadUsers(page = currentPage, search = '', role = '') {
+                const pageSize = 10;
+                currentPage = page;
+                
+                $.ajax({
+                    url: '/User/GetRegisterUsers',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: search,
+                        role: role
+                    },
+                    success: function(response) {
+                        if (response.status) {
+                            let filteredData = response.data;
+                            
+                            // Lọc theo từ khóa tìm kiếm
+                            if (search) {
+                                filteredData = filteredData.filter(item => 
+                                    item.fullName.toLowerCase().includes(search.toLowerCase()) ||
+                                    item.username.toLowerCase().includes(search.toLowerCase())
+                                );
+                            }
+                            
+                            // Lọc theo role
+                            if (role) {
+                                filteredData = filteredData.filter(item => 
+                                    item.role.toLowerCase() === role.toLowerCase()
+                                );
+                            }
+
+                            // Phân trang dữ liệu
+                            const startIndex = (page - 1) * pageSize;
+                            const paginatedData = filteredData.slice(startIndex, startIndex + pageSize);
+                            
+                            renderUsers(paginatedData);
+                            
+                            // Tính tổng số trang
+                            const totalPages = Math.ceil(filteredData.length / pageSize);
+                            renderPagination(totalPages, page);
+                        }
+                    }
+                });
+            }
+
+            function renderUsers(users) {
+                let html = '';
+                users.forEach(function(item, index) {
+                    html += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${item.fullName}</td>
+                            <td>${item.username}</td>
+                            <td>${item.role}</td>
+                   
+                            <td>
+                                <button class="btn btn-info btn-sm edit-user" data-id="${item.id}" data-fullname="${item.fullName}" data-username="${item.username}" data-role="${item.role}" data-password="${item.password}">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm delete-user" data-id="${item.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                $('#userList').html(html);
+
+                // Thêm sự kiện onchange cho các checkbox status
+                $('.custom-control-input').on('change', function() {
+                    const userId = this.id.split('_')[1];
+                    updateStatus(userId);
+                });
+
+                // Thêm sự kiện click cho nút edit
+                $('.edit-user').on('click', function() {
+                    const id = $(this).data('id');
+                    const fullName = $(this).data('fullname');
+                    const username = $(this).data('username'); 
+                    const role = $(this).data('role');
+                    const password = $(this).data('password');  
+                    // Điền thông tin vào form
+                    $('#Id').val(id);
+                    $('#fullName').val(fullName);
+                    $('#username').val(username);
+                    $('#role').val(role);
+                    $('#password').val(password);
+                    // Hiển thị modal
+                    $('#modal-add').modal('show');
+                    
+             
+                });
+            }
+            function renderPagination(totalPages, currentPage) {
+                let html = '';
+                
+                // Nút Previous
+                html += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a>
+                </li>`;
+
+                // Các nút số trang
+                for (let i = 1; i <= totalPages; i++) {
+                    html += `<li class="page-item ${currentPage === i ? 'active' : ''}">
+                        <a class="page-link" href="#" data-page="${i}">${i}</a>
+                    </li>`;
+                }
+
+                // Nút Next
+                html += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" data-page="${currentPage + 1}">Next</a>
+                </li>`;
+
+                $('#pagination').html(html);
+
+                // Xử lý sự kiện click phân trang
+                $('.page-link').click(function(e) {
+                    e.preventDefault();
+                    const page = $(this).data('page');
+                    if (page >= 1 && page <= totalPages) {
+                        loadUsers(page, $('#searchInput').val(), $('#roleFilter').val());
+                    }
+                });
+            }
+
+            // Xử lý tìm kiếm
+            $('#searchButton').click(function() {
+                loadUsers(1, $('#searchInput').val(), $('#roleFilter').val());
+            });
+
+            // Xử lý tìm kiếm khi nhấn Enter
+            $('#searchInput').keypress(function(e) {
+                if(e.which == 13) {
+                    loadUsers(1, $(this).val(), $('#roleFilter').val());
+                }
+            });
+
+            // Xử lý lọc theo role
+            $('#roleFilter').change(function() {
+                loadUsers(1, $('#searchInput').val(), $(this).val());
+            });
+
+
+
+            // Xử lý thêm/sửa user
+            $('#saveUser').click(function() {
+                let formData = new FormData($('#userForm')[0]);
+                $.ajax({
+                    url: '/User/RegisterUser',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.status) {
+                            loadUsers(currentPage, $('#searchInput').val(), $('#roleFilter').val());
+                            $('#modal-add').modal('hide');
+                            $('#userForm')[0].reset();
+                            swal.fire("Thành công", response.message, "success");
+                        } else {
+                            swal.fire("Thất bại", response.message, "error");
+                        }
+                    }
+                });
+            });
+
+            // Xử lý xóa user
+            $(document).on('click', '.delete-user', function() {
+                Swal.fire({
+                    title: 'Bạn có chắc chắn muốn xóa?',
+                    text: "Bạn sẽ không thể khôi phục lại dữ liệu này!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Đồng ý',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let id = $(this).data('id');
+                        $.ajax({
+                            url: '/User/DeleteUser',
+                            type: 'POST',
+                            data: { id: id },
+                            success: function(response) {
+                                if (response.status) {
+                                    loadUsers(currentPage, $('#searchInput').val(), $('#roleFilter').val());
+                                    Swal.fire(
+                                        'Đã xóa!',
+                                        response.message,
+                                        'success'
+                                    );
+                                } else {
+                                    Swal.fire(
+                                        'Lỗi!',
+                                        response.message,
+                                        'error'
+                                    );
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        });
+
+        function updateStatus(userId) {
+            $.ajax({
+                url: '/Allinone/UpdateUserStatus',
+                type: 'POST',
+                data: { id: userId },
+                success: function(response) {
+                    if (response.status) {
+                        loadUsers(currentPage, $('#searchInput').val(), $('#roleFilter').val());
+                    }
+                }
+            });
+        }
+    </script>
+}

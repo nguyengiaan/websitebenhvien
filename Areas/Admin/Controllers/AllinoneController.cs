@@ -11,7 +11,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         public AllinoneController(IAllinone allinone)
 
         {
-            _allinone= allinone;
+            _allinone = allinone;
         }
         // controller danh mục sản phẩm
         [HttpPost]
@@ -25,7 +25,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                     var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
                     return Json(new { status = false, message = string.Join(", ", errors), errors });
                 }
-                var data= await _allinone.AddCatogery(categorynews);
+                var data = await _allinone.AddCatogery(categorynews);
                 if (data)
                 {
                     return Json(new { status = true, message = "Thêm danh mục thành công" });
@@ -83,7 +83,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 }
                 return Json(new { status = false, message = "Thêm tin tức thất bại" });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Json(new { status = false, message = ex.Message });
             }
@@ -190,6 +190,81 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+        // sản phẩm 
+        [HttpPost]
+        public async Task<IActionResult> AddProduct(ProductVM product)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                    return Json(new { status = false, message = string.Join(", ", errors), errors });
+                }
+                var data = await _allinone.AddProduct(product);
+                if (data)
+                {
+                    return Json(new { status = true, message = "Thêm sản phẩm thành công" });
+                }
+                return Json(new { status = false, message = "Thêm sản phẩm thất bại" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> ListProduct()
+        {
+            try
+            {
+                var data = await _allinone.ListProduct();
+                return Json(new { status = true, data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> DeleteProduct(string id)
+        {
+            try
+            {
+                var data = await _allinone.DeleteProduct(id);
+                return Json(new { status = true, message = "Xóa sản phẩm thành công" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetProductById(string id)
+        {
+            try
+            {
+                var data = await _allinone.GetProductById(id);
+                return Json(new { status = true, data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> UpdatestatusPro(string id)
+        {
+            try
+            {
+                var data = await _allinone.UpdatestatusPro(id);
+                return Json(new { status = true, message = "Cập nhật trạng thái thành công" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
     }
 }

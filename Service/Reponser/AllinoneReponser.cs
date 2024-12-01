@@ -383,5 +383,198 @@ namespace websitebenhvien.Service.Reponser
                 return null;
             }
         }
+
+        public async Task<bool> AddProduct(ProductVM product)
+        {
+            try
+            {
+                 if(product.Id_product != null)
+                {
+                    var data =await _context.Products.FindAsync(product.Id_product);
+                    if (product.ImageThumnail != null)
+                    {
+                        var result = SaveMedia(product.ImageThumnail);
+                        if (result.Item1 == 1)
+                        {
+                            if (data.url != null)
+                            {
+                                DeleteMedia(data.url);
+                            }
+                            data.url = result.Item2;
+                        }
+                    }
+                    if (product.Images != null)
+                    {
+                        // Xóa ảnh cũ
+                        var existingImages = await _context.Proimages
+                            .Where(x => x.Id_product == product.Id_product)
+                            .ToListAsync();
+                            
+                        foreach (var img in existingImages)
+                        {
+                            DeleteMedia(img.url);
+                        }
+                        _context.Proimages.RemoveRange(existingImages);
+
+                        // Thêm ảnh mới
+                        var newImages = product.Images
+                            .Select(img => SaveMedia(img))
+                            .Where(result => result.Item1 == 1)
+                            .Select(result => new Proimages
+                            {
+                                Id_proimages = Guid.NewGuid().ToString(),
+                                Id_product = product.Id_product,
+                                url = result.Item2
+                            });
+
+                        await _context.Proimages.AddRangeAsync(newImages);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    data.Product_Id = product.Product_Id;
+                    data.Title = product.Title;
+                    data.Alias_url = product.Alias_url;
+                    data.Description = product.Description;
+                    data.Id_Categoryproduct = product.Id_Categoryproduct;
+                    await _context.SaveChangesAsync();
+                    return true;
+
+                }
+
+                else
+                {
+                    var data = new Product()
+                    {
+                        Id_product = Guid.NewGuid().ToString(),
+                        Product_Id = product.Product_Id,
+                        Title = product.Title,
+                        Alias_url = product.Alias_url,
+                        Description = product.Description,
+                        Createat = DateTime.Now,
+                        Id_Categoryproduct = product.Id_Categoryproduct
+                    };
+                    if (product.ImageThumnail != null)
+                    {
+                        var result = SaveMedia(product.ImageThumnail);
+                        if (result.Item1 == 1)
+                        {
+                            data.url = result.Item2;
+                        }
+                    }
+                    if (product.Images != null)
+                    {
+                        foreach (var item in product.Images)
+                        {
+                            var result = SaveMedia(item);
+                            if (result.Item1 == 1)
+                            {
+                                var data1 = new Proimages()
+                                {
+                                    Id_proimages = Guid.NewGuid().ToString(),
+                                    Id_product = data.Id_product,
+                                    url = result.Item2
+                                };
+                                _context.Proimages.Add(data1);
+                            }
+                        }
+                    }
+                    _context.Products.Add(data);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<List<ProductVM>> ListProduct()
+        {
+            try
+            {
+                var data = await _context.Products
+                    .Select(p => new ProductVM
+                    {
+                        Id_product = p.Id_product,
+                        Title = p.Title,
+                        Description = p.Description,
+                        Alias_url = p.Alias_url,
+                        Id_Categoryproduct = p.Id_Categoryproduct,
+                        Createat = p.Createat,
+                        url = p.url,
+                        ImagesDelete = p.Proimages.Select(x => x.url).ToList(),
+                        status = p.status,
+                        Product_Id = p.Product_Id,
+                    })
+                    .OrderByDescending(x => x.Createat)
+                    .ToListAsync();
+              return data;
+            }catch(Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<bool> DeleteProduct(string id)
+        {
+            try
+            {
+                var data = await _context.Products.FindAsync(id);
+                _context.Products.Remove(data);
+                await _context.SaveChangesAsync();
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<ProductVM> GetProductById(string id)
+        {
+          try
+          {
+                   var data = await _context.Products
+                    .Select(p => new ProductVM
+                    {
+                        Id_product = p.Id_product,
+                        Title = p.Title,
+                        Description = p.Description,
+                        Alias_url = p.Alias_url,
+                        Id_Categoryproduct = p.Id_Categoryproduct,
+                        Createat = p.Createat,
+                        url = p.url,
+                        ImagesDelete = p.Proimages.Select(x => x.url).ToList(),
+                        status = p.status,
+                        Product_Id = p.Product_Id
+                    })
+                    .OrderByDescending(x => x.Createat)
+                    .FirstOrDefaultAsync(x => x.Id_product == id);
+              return data;
+
+          }
+          catch(Exception ex)
+          {
+            return null;
+          }
+        }
+
+        public async Task<bool> UpdatestatusPro(string id)
+        {
+            try
+            {
+                var data = await _context.Products.FindAsync(id);
+                data.status = !data.status;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

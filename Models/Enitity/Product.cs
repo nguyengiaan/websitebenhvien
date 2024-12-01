@@ -22,6 +22,8 @@
 
         public string Id_Categoryproduct { get; set; }
 
+        public string Product_Id { get; set; }
+
         public Categoryproduct Categoryproduct { get; set; }
 
         public List<Proimages> Proimages { get; set; }  

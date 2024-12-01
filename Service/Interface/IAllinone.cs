@@ -23,6 +23,17 @@ namespace websitebenhvien.Service.Interface
         public Task<List<CategoryproductVM>> ListCatogeryProduct();
         public Task<bool> DeleteCatogeryProduct(string id);
         public Task<CategoryproductVM> GetCatogeryProductById(string id);
+        // sản phẩm 
+        public Task<bool> AddProduct(ProductVM product);
+        public Task<List<ProductVM>> ListProduct();
+        public Task<bool> DeleteProduct(string id);
+        public Task<ProductVM> GetProductById(string id);
+
+        public Task<bool> UpdatestatusPro(string id);
+
+
+
+
 
     }
 }

@@ -18,13 +18,13 @@ namespace websitebenhvien.Data
 
             public DbSet<Footer> Footers { get; set; }
 
-            public DbSet<Logocustomer> Logocustomer { get; set; }   
+        public DbSet<Logocustomer> Logocustomer { get; set; }   
 
-            public DbSet<Sharecustomer> Sharecustomers { get; set; }
+        public DbSet<Sharecustomer> Sharecustomers { get; set; }
 
-            public DbSet<TimeWork> TimeWork { get; set; }
+        public DbSet<TimeWork> TimeWork { get; set; }
 
-            public DbSet<Menu> Menus { get; set; }
+        public DbSet<Menu> Menus { get; set; }
         public DbSet<Menuchild> Menuchilds { get; set; }
 
         public DbSet<Categorynews> Categorynews { get; set; }
@@ -36,6 +36,10 @@ namespace websitebenhvien.Data
         public DbSet<Product> Products { get; set; }
 
         public DbSet<Proimages> Proimages { get; set; }
+
+
+
+       
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

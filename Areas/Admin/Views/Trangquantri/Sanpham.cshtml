@@ -1,0 +1,693 @@
+@{
+    ViewData["Title"] = "Quản lý sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Danh sách sản phẩm</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add">
+                            Thêm mới
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <select class="form-control" id="categoryFilter">
+                                <option value="">Tất cả danh mục</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm sản phẩm...">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="searchButton">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Mã sản phẩm</th>
+                                <th>Hình ảnh</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Danh mục</th>
+                                <th>Ngày tạo</th>
+                                <th>Url</th>
+                                <th>Sản phẩm nổi bật</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productList">
+                        </tbody>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-5">
+                            <div class="dataTables_info" id="example2_info" role="status" aria-live="polite">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-7">
+                            <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+                                <ul class="pagination" id="pagination">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Add/Edit -->
+<div class="modal fade" id="modal-add">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Thêm/Sửa sản phẩm</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm">
+                  <input class="form-control" id="Id_product" name="Id_product" type="hidden">
+                    <div class="form-group">
+                        <label>Mã sản phẩm</label>
+                        <input type="text" class="form-control" id="Product_Id" name="Product_Id" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tên sản phẩm</label>
+                        <input type="text" class="form-control" id="Title" name="Title" required onchange="generateProductAlias(this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Danh mục</label>
+                        <select class="form-control" id="Id_Categoryproduct" name="Id_Categoryproduct" required onchange="generateProductAlias($('#Title').val())">
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Đường dẫn</label>
+                        <input type="text" class="form-control" id="Alias_url" name="Alias_url" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả</label>
+                        <textarea id="Description" name="Description" class="summernote" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Hình ảnh đại diện</label>
+                        <div class="input-group">
+                            <input type="file" class="form-control" id="ImageThumnail" name="ImageThumnail" required onchange="previewImagesThumb(this)">
+                            <button class="btn btn-outline-secondary" type="button" onclick="openElfinderThumb()">
+                                <i class="fas fa-folder-open"></i>
+                            </button>
+                        </div>
+                        <div id="imagePreviewThumbContainer" class="d-flex flex-wrap gap-2 mt-2">
+                            <!-- Preview images will be displayed here -->
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Hình ảnh khác</label>
+                        <div class="input-group mb-3">
+                            <input type="file" class="form-control" id="Images" name="Images" multiple onchange="previewImages(this)">
+                            <button class="btn btn-outline-secondary" type="button" onclick="openElfinderImages()">
+                                <i class="fas fa-folder-open"></i>
+                            </button>
+                        </div>
+                        <div id="imagePreviewContainer" class="d-flex flex-wrap gap-2">
+                            <!-- Preview images will be displayed here -->
+                        </div>
+                        <div id="selectedImagesContainer" class="d-flex flex-wrap gap-2 mt-2">
+                            <!-- Selected images will be displayed here -->
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="saveProduct">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+@{
+    var summenote = new websitebenhvien.Models.EnitityVM.Summenote(".summernote");
+}
+<partial name="_Summernote" model="summenote" />
+
+@section Scripts {
+
+    <script>
+        function openElfinderThumb() {
+            var fm = $('<div/>').dialogelfinder({
+                url: '/file-manager-connector',
+                lang: 'vi',
+                width: 850,
+                height: 450,
+                destroyOnClose: true,
+                getFileCallback: function(files, fm) {
+                    const fileUrl = files.url;
+                    fetch(fileUrl)
+                        .then(response => response.blob())
+                        .then(blob => {
+                            const file = new File([blob], files.name, { type: blob.type });
+                            const dataTransfer = new DataTransfer();
+                            dataTransfer.items.add(file);
+                            document.getElementById('ImageThumnail').files = dataTransfer.files;
+                            previewImagesThumb(document.getElementById('ImageThumnail'));
+                        });
+                }
+            }).dialogelfinder('instance');
+        }
+
+        function openElfinderImages() {
+            var fm = $('<div/>').dialogelfinder({
+                url: '/file-manager-connector', 
+                lang: 'vi',
+                width: 850,
+                height: 450,
+                destroyOnClose: true,
+                getFileCallback: function(files, fm) {
+                    const fileUrls = Array.isArray(files) ? files : [files];
+                    const dataTransfer = new DataTransfer();
+                    
+                    Promise.all(fileUrls.map(file => 
+                        fetch(file.url)
+                            .then(response => response.blob())
+                            .then(blob => new File([blob], file.name, { type: blob.type }))
+                    )).then(fileObjects => {
+                        fileObjects.forEach(file => {
+                            dataTransfer.items.add(file);
+                        });
+                        document.getElementById('Images').files = dataTransfer.files;
+                        previewImages(document.getElementById('Images'));
+                    });
+                },
+                commandsOptions: {
+                    getfile: {
+                        multiple: true,
+                        oncomplete: 'close'
+                    }
+                }
+            }).dialogelfinder('instance');
+        }
+
+        function previewImagesThumb(input) {
+            const previewContainer = document.getElementById('imagePreviewThumbContainer');
+            previewContainer.innerHTML = '';
+
+            if (input.files && input.files.length > 0) {
+                const reader = new FileReader();
+                const file = input.files[0];
+
+                reader.onload = function(e) {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'position-relative';
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'img-thumbnail me-2 mb-2';
+                    img.style.maxHeight = '100px';
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0';
+                    deleteBtn.innerHTML = '×';
+                    deleteBtn.onclick = function() {
+                        input.value = '';
+                        previewContainer.innerHTML = '';
+                    };
+                    
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(deleteBtn);
+                    previewContainer.appendChild(imgContainer);
+                }
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function previewImages(input) {
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            previewContainer.innerHTML = '';
+
+            if (input.files && input.files.length > 0) {
+                const dataTransfer = new DataTransfer();
+                
+                Array.from(input.files).forEach((file, index) => {
+                    const reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        const imgContainer = document.createElement('div');
+                        imgContainer.className = 'position-relative';
+                        
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'img-thumbnail me-2 mb-2';
+                        img.style.maxHeight = '100px';
+                        
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0';
+                        deleteBtn.innerHTML = '×';
+                        deleteBtn.onclick = function() {
+                            imgContainer.remove();
+                            
+                            // Remove file from input
+                            const remainingFiles = Array.from(input.files).filter((_, i) => i !== index);
+                            const newDataTransfer = new DataTransfer();
+                            remainingFiles.forEach(file => newDataTransfer.items.add(file));
+                            input.files = newDataTransfer.files;
+                        };
+                        
+                        imgContainer.appendChild(img);
+                        imgContainer.appendChild(deleteBtn);
+                        previewContainer.appendChild(imgContainer);
+                    }
+
+                    reader.readAsDataURL(file);
+                    dataTransfer.items.add(file);
+                });
+                
+                input.files = dataTransfer.files;
+            }
+        }
+        function generateProductAlias(title) {
+            const alias = title.toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[đĐ]/g, 'd')
+                .replace(/([^0-9a-z-\s])/g, '')
+                .replace(/(\s+)/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            const categoryAlias = $('#Id_Categoryproduct option:selected').text().toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/[đĐ]/g, 'd')
+                .replace(/([^0-9a-z-\s])/g, '')
+                .replace(/(\s+)/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-+|-+$/g, '');
+            $('#Alias_url').val('/' + categoryAlias + '/' + alias);
+        }
+
+        $(document).ready(function () {
+            // Reset form khi đóng modal
+            $('#modal-add').on('hidden.bs.modal', function () {
+                $('#productForm')[0].reset();
+                $('#imagePreviewThumbContainer').empty();
+                $('#imagePreviewContainer').empty();
+                $('#selectedImagesContainer').empty();
+                $('.summernote').summernote('reset');
+                
+                // Reset file inputs
+                const emptyDataTransfer = new DataTransfer();
+                document.getElementById('ImageThumnail').files = emptyDataTransfer.files;
+                document.getElementById('Images').files = emptyDataTransfer.files;
+            });
+            let currentPage = 1;
+            loadCategories();
+            loadProducts(currentPage);
+
+            // Load danh mục sản phẩm
+            function loadCategories() {
+                $.ajax({
+                    url: '/Allinone/ListCatogeryProduct',
+                    type: 'GET',
+                    success: function (response) {
+                        if (response.status) {
+                            let html = '<option value="">Chọn danh mục</option>';
+                            response.data.forEach(function (item) {
+                                html += `<option value="${item.id_Categoryproduct}">${item.title}</option>`;
+                            });
+                            $('#Id_Categoryproduct, #categoryFilter').html(html);
+                        }
+                    }
+                });
+            }
+
+            // Load danh sách sản phẩm
+            function loadProducts(page = currentPage, search = '', category = '') {
+                const pageSize = 20; // Số sản phẩm trên mỗi trang
+                currentPage = page;
+                
+                $.ajax({
+                    url: '/Allinone/ListProduct',
+                    type: 'GET',
+                    data: {
+                        page: page,
+                        search: search,
+                        category: category
+                    },
+                    success: function (response) {
+                        if (response.status) {
+                            let filteredData = response.data;
+                            
+                            // Lọc theo từ khóa tìm kiếm
+                            if (search) {
+                                filteredData = filteredData.filter(item => 
+                                    item.title.toLowerCase().includes(search.toLowerCase())
+                                );
+                            }
+                            
+                            // Lọc theo danh mục
+                            if (category) {
+                                filteredData = filteredData.filter(item => 
+                                    item.id_Categoryproduct.toString() === category
+                                );
+                            }
+
+                            // Phân trang dữ liệu
+                            const startIndex = (page - 1) * pageSize;
+                            const paginatedData = filteredData.slice(startIndex, startIndex + pageSize);
+                            
+                            renderProducts(paginatedData);
+                            
+                            // Tính tổng số trang
+                            const totalPages = Math.ceil(filteredData.length / pageSize);
+                            renderPagination(totalPages, page);
+                        }
+                    }
+                });
+            }
+
+            // Render sản phẩm
+            function renderProducts(products) {
+                console.log(products);  
+                let html = '';
+                products.forEach(function (item) {
+                    html += `
+                        <tr>
+                            <td>${item.product_Id}</td>
+                            <td><img src="/Resources/${item.url}" width="50" /></td>
+                            <td>${item.title}</td>
+                            <td>${getCategoryName(item.id_Categoryproduct)}</td>
+                            <td>${new Date(item.createat).toLocaleDateString()}</td>
+                            <td>${item.alias_url}</td>
+                            <td>
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="status_${item.id_product}" ${item.status ? 'checked' : ''} onchange="updateStatus('${item.id_product}')">
+                                    <label class="custom-control-label" for="status_${item.id_product}" style="color: ${item.status ? '#28a745' : '#dc3545'}">
+                                        ${item.status ? 'Hiện' : 'Ẩn'}
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <button class="btn btn-info btn-sm edit-product" data-id="${item.id_product}">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm delete-product" data-id="${item.id_product}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                $('#productList').html(html);
+
+                // Thêm sự kiện onchange cho các checkbox status
+                $('.custom-control-input').on('change', function() {
+                    const productId = this.id.split('_')[1];
+                    updateStatus(productId);
+                });
+            }
+
+
+            // Xử lý sự kiện click nút edit
+            $(document).on('click', '.edit-product', function() {
+                const productId = $(this).data('id');
+                $('#Id_product').val(productId);
+                // Reset form
+                $('#productForm')[0].reset();
+                $('#imagePreviewThumbContainer').empty();
+                $('#imagePreviewContainer').empty();
+                $('#selectedImagesContainer').empty();
+                
+                // Gọi API để lấy thông tin sản phẩm
+                $.ajax({
+                    url: '/Allinone/GetProductById',
+                    type: 'POST',
+                    data: { id: productId },
+                    success: function(response) {
+                        if (response.status) {
+                            const product = response.data;
+                            
+                            // Điền dữ liệu vào form
+                            $('#Id_product').val(product.id_product);
+                            $('#Product_Id').val(product.product_Id);
+                            $('#Title').val(product.title);
+                            $('#Alias_url').val(product.alias_url);
+                            $('#Description').summernote('code', product.description);
+                            $('#Id_Categoryproduct').val(product.id_Categoryproduct);
+                            
+                            // Hiển thị ảnh đại diện
+                            if (product.url) {
+                                const imgContainer = document.createElement('div');
+                                imgContainer.className = 'position-relative';
+                                
+                                const img = document.createElement('img');
+                                img.src = `/Resources/${product.url}`;
+                                img.className = 'img-thumbnail me-2 mb-2';
+                                img.style.maxHeight = '100px';
+
+                                const deleteBtn = document.createElement('button');
+                                deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0';
+                                deleteBtn.innerHTML = '<i class="fas fa-times"></i>';
+                                deleteBtn.onclick = function() {
+                                    imgContainer.remove();
+                                    // Clear input file when image is deleted
+                                    document.getElementById('ImageThumnail').value = '';
+                                };
+                                
+                                imgContainer.appendChild(img);
+                                imgContainer.appendChild(deleteBtn);
+                                $('#imagePreviewThumbContainer').append(imgContainer);
+
+                                // Create a new File object from the image URL
+                                fetch(`/Resources/${product.url}`)
+                                    .then(res => res.blob())
+                                    .then(blob => {
+                                        const file = new File([blob], product.url, { type: blob.type });
+                                        const dataTransfer = new DataTransfer();
+                                        dataTransfer.items.add(file);
+                                        document.getElementById('ImageThumnail').files = dataTransfer.files;
+                                    });
+                            }
+                            
+                            // Hiển thị ảnh phụ
+                            if (product.imagesDelete && product.imagesDelete.length > 0) {
+                                const dataTransfer = new DataTransfer();
+                                
+                                product.imagesDelete.forEach(function(imgUrl) {
+                                    const imgContainer = document.createElement('div');
+                                    imgContainer.className = 'position-relative';
+                                    
+                                    const img = document.createElement('img');
+                                    img.src = `/Resources/${imgUrl}`;
+                                    img.className = 'img-thumbnail me-2 mb-2';
+                                    img.style.maxHeight = '100px';
+
+                                    const deleteBtn = document.createElement('button');
+                                    deleteBtn.className = 'btn btn-danger btn-sm position-absolute top-0 end-0';
+                                    deleteBtn.innerHTML = '<i class="fas fa-times"></i>';
+                                    deleteBtn.onclick = function() {
+                                        imgContainer.remove();
+                                        // Remove corresponding file from input when image is deleted
+                                        const filesArray = Array.from(document.getElementById('Images').files);
+                                        const updatedFiles = filesArray.filter(file => file.name !== imgUrl);
+                                        const newDataTransfer = new DataTransfer();
+                                        updatedFiles.forEach(file => newDataTransfer.items.add(file));
+                                        document.getElementById('Images').files = newDataTransfer.files;
+                                    };
+                                    
+                                    imgContainer.appendChild(img);
+                                    imgContainer.appendChild(deleteBtn);
+                                    $('#selectedImagesContainer').append(imgContainer);
+
+                                    // Create File object for each image
+                                    fetch(`/Resources/${imgUrl}`)
+                                        .then(res => res.blob())
+                                        .then(blob => {
+                                            const file = new File([blob], imgUrl, { type: blob.type });
+                                            dataTransfer.items.add(file);
+                                            document.getElementById('Images').files = dataTransfer.files;
+                                        });
+                                });
+                            }
+                            
+                            // Hiển thị modal
+                            $('#modal-add').modal('show');
+                        }
+                    }
+                });
+            });
+
+            // Render phân trang
+            function renderPagination(totalPages, currentPage) {
+                let html = '';
+                
+                // Nút Previous
+                html += `<li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a>
+                </li>`;
+
+                // Các nút số trang
+                for (let i = 1; i <= totalPages; i++) {
+                    html += `<li class="page-item ${currentPage === i ? 'active' : ''}">
+                        <a class="page-link" href="#" data-page="${i}">${i}</a>
+                    </li>`;
+                }
+
+                // Nút Next
+                html += `<li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" data-page="${currentPage + 1}">Next</a>
+                </li>`;
+
+                $('#pagination').html(html);
+
+                // Xử lý sự kiện click phân trang
+                $('.page-link').click(function(e) {
+                    e.preventDefault();
+                    const page = $(this).data('page');
+                    if (page >= 1 && page <= totalPages) {
+                        loadProducts(page, $('#searchInput').val(), $('#categoryFilter').val());
+                    }
+                });
+            }
+
+            // Xử lý tìm kiếm
+            $('#searchButton').click(function() {
+                loadProducts(1, $('#searchInput').val(), $('#categoryFilter').val());
+            });
+
+            // Xử lý tìm kiếm khi nhấn Enter
+            $('#searchInput').keypress(function(e) {
+                if(e.which == 13) {
+                    loadProducts(1, $(this).val(), $('#categoryFilter').val());
+                }
+            });
+
+            // Xử lý lọc theo danh mục
+            $('#categoryFilter').change(function() {
+                loadProducts(1, $('#searchInput').val(), $(this).val());
+            });
+
+            // Xử lý thêm/sửa sản phẩm
+            $('#saveProduct').click(function() {
+                let formData = new FormData($('#productForm')[0]);
+                $.ajax({
+                    url: '/Allinone/AddProduct',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.status) {
+                                loadProducts(currentPage, $('#searchInput').val(), $('#categoryFilter').val());
+                            $('#modal-add').modal('hide');
+                                       // Kiểm tra tồn tại của các container trước khi empty
+                            // Đảm bảo các container tồn tại trong DOM trước khi thao tác
+
+                            swal.fire("Thành công", response.message, "success");
+                            let imagePreviewContainer = document.getElementById('imagePreviewContainer');
+                            let imagePreviewThumbContainer = document.getElementById('imagePreviewThumbContainer');
+                            let selectedImagesContainer = document.getElementById('selectedImagesContainer');
+
+                            if(imagePreviewContainer) {
+                                imagePreviewContainer.innerHTML = '';
+                            } else {
+                                console.error('Không tìm thấy #imagePreviewContainer - kiểm tra lại ID trong HTML');
+                            }
+
+                            if(imagePreviewThumbContainer) {
+                                imagePreviewThumbContainer.innerHTML = '';  
+                            } else {
+                                console.error('Không tìm thấy #imagePreviewThumbContainer - kiểm tra lại ID trong HTML');
+                            }
+
+                            if(selectedImagesContainer) {
+                                selectedImagesContainer.innerHTML = '';
+                            } else {
+                                console.error('Không tìm thấy #selectedImagesContainer - kiểm tra lại ID trong HTML');
+                            }
+                            $('#productForm')[0].reset();
+                            $('.summernote').summernote('reset');
+                            
+                            // Reload danh sách sản phẩm sau khi thêm/sửa thành công
+                        
+                            
+                        } else {
+                            swal.fire("Thất bại", response.message, "error");
+                        }
+                    }
+                });
+            });
+
+            // Xử lý xóa sản phẩm
+            $(document).on('click', '.delete-product', function() {
+                Swal.fire({
+                    title: 'Bạn có chắc chắn muốn xóa?',
+                    text: "Bạn sẽ không thể khôi phục lại dữ liệu này!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6', 
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Đồng ý',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let id = $(this).data('id');
+                        $.ajax({
+                            url: '/Allinone/DeleteProduct',
+                            type: 'POST',
+                            data: { id: id },
+                            success: function(response) {
+                                if (response.status) {
+                                    loadProducts(currentPage, $('#searchInput').val(), $('#categoryFilter').val());
+                                    Swal.fire(
+                                        'Đã xóa!',
+                                        response.message,
+                                        'success'
+                                    );
+                                } else {
+                                    Swal.fire(
+                                        'Lỗi!',
+                                        response.message,
+                                        'error'
+                                    );
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+        function getCategoryName(categoryId) {
+                const category = $('#categoryFilter option[value="' + categoryId + '"]').text();
+                return category || '';
+        }
+
+        function updateStatus(productId) {
+            $.ajax({
+                url: '/Allinone/UpdatestatusPro',
+                type: 'POST',
+                data: { id: productId },
+                success: function(response) {
+                    if (response.status) {
+                        loadProducts(currentPage, $('#searchInput').val(), $('#categoryFilter').val());
+                    }
+                }
+            });
+        }
+
+
+        });
+    </script>
+}
