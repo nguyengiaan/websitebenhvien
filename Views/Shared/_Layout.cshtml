@@ -9,8 +9,38 @@
     <link rel="stylesheet" href="~/css/trangchu.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/websitebenhvien.styles.css" asp-append-version="true" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'vi',
+                includedLanguages: 'en,vi', 
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+        
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+      <style>
+        .goog-te-gadget-simple {
+            border: none !important;
+            background-color: transparent !important;
+            padding: 0 !important;
+        }
+        .goog-te-gadget-simple span {
+            color: white !important;
+            font-size: 14px !important;
+            font-family: 'Montserrat', sans-serif !important;
+            font-weight: bold !important;
+        }
+        .goog-te-gadget-simple img {
+            display: none !important;
+        }
+    </style>
 
 
+ 
 </head>
 <body>
     <header class="sticky-header">
@@ -34,13 +64,13 @@
                         
                         <!-- Navigation Links -->
                         <div class="d-none d-md-flex flex-wrap justify-content-center justify-content-md-end gap-3">
-                            <a href="#" class="text-decoration-none text-dark" style=" font-family: ''Montserrat', sans-serif';font-weight: bold;">
+                            <a href="#" class="text-decoration-none text-dark" style="font-family: 'Montserrat', sans-serif; font-weight: bold;">
                                    <img src="~/image/icon-user.png" alt="Emergency" class="me-2" style="height: 25px;"> Dành cho khách hàng
                             </a>
-                            <a href="#" class="text-decoration-none text-dark" style=" font-family: ''Montserrat', sans-serif';font-weight: bold;">
+                            <a href="#" class="text-decoration-none text-dark" style="font-family: 'Montserrat', sans-serif; font-weight: bold;">
                                   <img src="~/image/icon-hoidap.png" alt="Emergency" class="me-2" style="height: 25px;"> Hỏi đáp
                             </a>
-                            <a href="#" class="text-decoration-none text-dark" style=" font-family: ''Montserrat', sans-serif';font-weight: bold;">
+                            <a href="#" class="text-decoration-none text-dark" style="font-family: 'Montserrat', sans-serif; font-weight: bold;">
                                 <img src="~/image/icon-cacu.png" alt="Emergency" class="me-2" style="height: 25px;">Đặt lịch khám
                             </a>
                         </div>
@@ -56,33 +86,44 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav w-100 justify-content-between">
+                    <ul class="navbar-nav w-100 justify-content-between flex-nowrap">
                         <li class="nav-item px-2">
-                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-home me-2"></i>TRANG CHỦ</a>
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: 'Montserrat', sans-serif; font-weight: bold; white-space: nowrap;"><i class="fas fa-home me-2"></i>TRANG CHỦ</a>
                         </li>
                         <li class="nav-item px-2">
-                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-info-circle me-2"></i>GIỚI THIỆU</a>
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: 'Montserrat', sans-serif; font-weight: bold; white-space: nowrap;"><i class="fas fa-info-circle me-2"></i>GIỚI THIỆU</a>
                         </li>
                         <li class="nav-item px-2">
-                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-user-md me-2"></i>CHUYÊN GIA-BÁC SĨ</a>
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: 'Montserrat', sans-serif; font-weight: bold; white-space: nowrap;"><i class="fas fa-user-md me-2"></i>CHUYÊN GIA-BÁC SĨ</a>
                         </li>
                         <li class="nav-item px-2">
-                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-procedures me-2"></i>DỊCH VỤ ĐẶC BIỆT</a>
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: 'Montserrat', sans-serif; font-weight: bold; white-space: nowrap;"><i class="fas fa-procedures me-2"></i>DỊCH VỤ ĐẶC BIỆT</a>
                         </li>
                         <li class="nav-item px-2">
-                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-hospital me-2"></i>TIỆN NGHI</a>
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: 'Montserrat', sans-serif; font-weight: bold; white-space: nowrap;"><i class="fas fa-hospital me-2"></i>TIỆN NGHI</a>
                         </li>
                         <li class="nav-item px-2">
-                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-trophy me-2"></i>THÀNH TỰU</a>
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: 'Montserrat', sans-serif; font-weight: bold; white-space: nowrap;"><i class="fas fa-trophy me-2"></i>THÀNH TỰU</a>
                         </li>
                         <li class="nav-item px-2">
-                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-newspaper me-2"></i>TIN TỨC</a>
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: 'Montserrat', sans-serif; font-weight: bold; white-space: nowrap;"><i class="fas fa-newspaper me-2"></i>TIN TỨC</a>
                         </li>
                         <li class="nav-item px-2">
-                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-phone-alt me-2"></i>LIÊN HỆ</a>
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: 'Montserrat', sans-serif; font-weight: bold; white-space: nowrap;"><i class="fas fa-phone-alt me-2"></i>LIÊN HỆ</a>
                         </li>
                         <li class="nav-item px-2">
-                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: ''Montserrat', sans-serif';font-weight: bold;"><i class="fas fa-search me-2"></i>TÌM KIẾM</a>
+                            <a class="nav-link text-white" href="#" style="font-size: 14px; font-family: 'Montserrat', sans-serif; font-weight: bold; white-space: nowrap;"><i class="fas fa-search me-2"></i>TÌM KIẾM</a>
+                        </li>
+                        <li class="nav-item px-2">
+                            <div class="d-flex align-items-center">
+                       
+                                <div class="d-flex align-items-center">
+                                    <div id="google_translate_element" ></div>
+                                    
+  
+                            </div>
+
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -96,13 +137,13 @@
     </div>
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img src="~/image/hinh2.png" class="d-block w-100 img-fluid" alt="Slide 1" style="width: 100%; height: auto; min-height: 200px; max-height: 70vh; object-fit: cover;">
+            <img src="~/image/hinh2.png" class="d-block w-100 img-fluid" alt="Slide 1" style="width: 100%; height: auto; min-height: 300px; max-height: 80vh; object-fit: cover;">
         </div>
         <div class="carousel-item">
-            <img src="~/image/hinh3.png" class="d-block w-100 img-fluid" alt="Slide 2" style="width: 100%; height: auto; min-height: 200px; max-height: 70vh; object-fit: cover;">
+            <img src="~/image/hinh3.png" class="d-block w-100 img-fluid" alt="Slide 2" style="width: 100%; height: auto; min-height: 300px; max-height: 80vh; object-fit: cover;">
         </div>
         <div class="carousel-item">
-            <img src="~/image/hinh4.png" class="d-block w-100 img-fluid" alt="Slide 3" style="width: 100%; height: auto; min-height: 200px; max-height: 70vh; object-fit: cover;">
+            <img src="~/image/hinh4.png" class="d-block w-100 img-fluid" alt="Slide 3" style="width: 100%; height: auto; min-height: 300px; max-height: 80vh; object-fit: cover;">
         </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -627,6 +668,7 @@
         <div class="text-center text-muted mt-4">
             <small>&copy; 2024 Bệnh viện Đa khoa Mỹ Phước. All rights reserved.</small>
         </div>
+        <div id="google_translate_element"></div>
     </div>
 </footer>
 
@@ -635,12 +677,14 @@
         <i class="fas fa-arrow-up"></i>
     </button>
 
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     
     <!-- Script xử lý nút cuộn lên đầu trang -->
     <script>
+
         $(document).ready(function() {
             $(window).scroll(function() {
                 if ($(this).scrollTop() > 200) {
@@ -655,6 +699,9 @@
                 return false;
             });
         });
+ 
+
+
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
