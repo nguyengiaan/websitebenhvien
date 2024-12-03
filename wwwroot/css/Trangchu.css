@@ -296,3 +296,46 @@ span i{
   opacity: 1;
   transition: opacity 1.5s ease-in-out;
 }
+@media (max-width: 768px) {
+  .carousel-item .col-md-3 {
+      flex: 0 0 100%; /* Mỗi sản phẩm chiếm 100% chiều rộng */
+      max-width: 100%;
+  }
+}
+.sticky-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: white;
+  transition: all 0.3s ease-in-out;
+}
+
+.sticky-nav {
+  position: fixed;
+  top: 104px; /* Adjust this value based on your header height */
+  width: 100%;
+  z-index: 999;
+  transition: all 0.3s ease-in-out;
+  padding-bottom: 11px;
+}
+
+body {
+  padding-top: 160px; /* Adjust this value based on combined height of header and nav */
+}
+@media (max-width: 768px) {
+  .carousel-inner .carousel-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+
+  .carousel-inner .equipment-item {
+      width: 100%; /* Chiếm toàn bộ chiều rộng */
+  }
+
+  .equipment-item img {
+      height: auto; /* Đảm bảo ảnh không bị kéo dài */
+      max-height: 300px; /* Giới hạn chiều cao ảnh nếu cần */
+  }
+}

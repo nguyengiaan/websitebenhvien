@@ -576,5 +576,23 @@ namespace websitebenhvien.Service.Reponser
                 return false;
             }
         }
+
+        public async Task<CountdashboardVM> Countdashboard()
+        {
+            try
+            {
+                var data = new CountdashboardVM();
+                data.CountUser = await _context.Users.CountAsync() ;
+                data.CountProduct = await _context.Products.CountAsync() ;
+                data.CountCategoryProduct = await _context.Categoryproducts.CountAsync()  ;
+                data.CountNews = await _context.News.CountAsync()  ;
+                data.CountCategoryNews = await _context.Categorynews.CountAsync()  ;
+                return data;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

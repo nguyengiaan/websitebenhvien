@@ -31,8 +31,8 @@ namespace websitebenhvien.Service.Interface
 
         public Task<bool> UpdatestatusPro(string id);
 
-
-
+    
+        public Task<CountdashboardVM> Countdashboard();
 
 
     }

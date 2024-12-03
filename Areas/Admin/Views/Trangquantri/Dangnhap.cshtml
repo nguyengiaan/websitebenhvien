@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="~/css/login.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <div class="medical-symbols">
@@ -36,16 +36,81 @@
                 <i class="fas fa-lock"></i>
                 <input type="password" id="password" placeholder="Mật khẩu" required>
             </div>
+            <div id="captchaCode" class="mb-3 text-center"></div>
+            <div class="input-group">
+                <i class="fas fa-shield-alt"></i>
+                <input type="text" id="captchaInput" placeholder="Nhập mã captcha" required>
+            </div>
             <button type="submit" class="login-button">Đăng nhập</button>
         </form>
     </div>
 
     <script>
+        function generateCaptcha() {
+            const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            let captcha = '';
+            for (let i = 0; i < 6; i++) {
+                captcha += chars[Math.floor(Math.random() * chars.length)];
+            }
+            return captcha;
+        }
+
+        function displayCaptcha() {
+            const captcha = generateCaptcha();
+            const canvas = document.createElement('canvas');
+            canvas.width = 150;
+            canvas.height = 50;
+            const ctx = canvas.getContext('2d');
+
+            // Background
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Add noise
+            for (let i = 0; i < 50; i++) {
+                ctx.strokeStyle = `rgba(${Math.random() * 255},${Math.random() * 255},${Math.random() * 255},0.5)`;
+                ctx.beginPath();
+                ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+                ctx.stroke();
+            }
+
+            // Draw captcha text
+            ctx.font = 'bold 30px Arial';
+            ctx.fillStyle = '#333';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(captcha, canvas.width/2, canvas.height/2);
+
+            // Display canvas
+            const captchaDiv = document.getElementById('captchaCode');
+            captchaDiv.innerHTML = '';
+            captchaDiv.appendChild(canvas);
+            
+            return captcha;
+        }
+
         $(document).ready(function() {
+            let currentCaptcha = displayCaptcha();
+
             $('#loginForm').submit(function(e) {
                 e.preventDefault();
                 
-                // Show loading spinner
+                const username = $('#username').val();
+                const password = $('#password').val();
+                const captchaInput = $('#captchaInput').val();
+
+                if (captchaInput !== currentCaptcha) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Mã captcha không chính xác'
+                    });
+                    currentCaptcha = displayCaptcha();
+                    $('#captchaInput').val('');
+                    return;
+                }
+
                 Swal.fire({
                     title: 'Đang xử lý...',
                     html: 'Vui lòng chờ trong giây lát',
@@ -55,21 +120,15 @@
                     }
                 });
 
-                // Get form data
-                const username = $('#username').val();
-                const password = $('#password').val();
-
-                // Make login request
                 $.ajax({
                     url: '/User/Login',
                     type: 'POST',
                     data: {
                         Username: username,
-                        Password: password
+                        Password: password,
                     },
                     success: function(response) {
                         if (response.status) {
-                            // Show success message with loading
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Đăng nhập thành công!',
@@ -77,11 +136,11 @@
                                 timer: 1500,
                                 showConfirmButton: false
                             }).then(() => {
-                                // Redirect to dashboard
                                 window.location.href = '/trang-quan-tri';
                             });
                         } else {
-                            // Show error message
+                            currentCaptcha = displayCaptcha();
+                            $('#captchaInput').val('');
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Đăng nhập thất bại!',
@@ -90,7 +149,8 @@
                         }
                     },
                     error: function(xhr, status, error) {
-                        // Show error message
+                        currentCaptcha = displayCaptcha();
+                        $('#captchaInput').val('');
                         Swal.fire({
                             icon: 'error',
                             title: 'Lỗi!',

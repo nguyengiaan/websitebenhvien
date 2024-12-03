@@ -266,5 +266,11 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+        [HttpGet]
+        public async Task<IActionResult> Countdashboard()
+        {
+            var data = await _allinone.Countdashboard();
+            return Json(new { status = true, data=data   });
+        }
     }
 }
