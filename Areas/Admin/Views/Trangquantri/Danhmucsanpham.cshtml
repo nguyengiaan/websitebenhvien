@@ -11,10 +11,7 @@
             <div class="row mb-3">
                 <div class="col-md-4">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm..." onkeypress="if(event.keyCode==13) searchCategories()">
-                        <button class="btn btn-outline-secondary" onclick="searchCategories()">
-                            <i class="fas fa-search"></i>
-                        </button>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm..." oninput="searchCategories()">
                     </div>
                 </div>
             </div>

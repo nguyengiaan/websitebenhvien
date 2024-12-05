@@ -339,3 +339,9 @@ body {
       max-height: 300px; /* Giới hạn chiều cao ảnh nếu cần */
   }
 }
+.goog-te-banner-frame {
+  display: none !important;
+}
+body {
+  top: 0px !important;
+}

@@ -40,16 +40,21 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("admin", policy => policy.RequireRole("admin"));
     options.AddPolicy("user", policy => policy.RequireRole("user"));
 });
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Listen(System.Net.IPAddress.Any, 5026); // Lắng nghe trên cổng 5000
+});
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/trang-quan-tri/dang-nhap";
-    options.AccessDeniedPath = "/trang-quan-tri/dang-nhap";
+    options.LoginPath = "/dang-nhap";
+    options.AccessDeniedPath = "/dang-nhap";
 });
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(options =>
         {
-            options.LoginPath = "/trang-quan-tri/dang-nhapp";
-            options.LogoutPath = "/trang-quan-tri/dang-nhap";
+            options.LoginPath = "/dang-nhap";
+            options.LogoutPath = "/dang-nhap";
             options.Cookie.HttpOnly = true;
             options.Cookie.Expiration = TimeSpan.FromDays(1);
             options.SlidingExpiration = true;

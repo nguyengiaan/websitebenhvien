@@ -567,7 +567,9 @@
             $('#searchButton').click(function() {
                 loadProducts(1, $('#searchInput').val(), $('#categoryFilter').val());
             });
-
+            $('#searchInput').on('input', function() {
+                loadProducts(1, $(this).val(), $('#categoryFilter').val());
+            });
             // Xử lý tìm kiếm khi nhấn Enter
             $('#searchInput').keypress(function(e) {
                 if(e.which == 13) {

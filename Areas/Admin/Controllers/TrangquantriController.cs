@@ -85,7 +85,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
-        [Route("/trang-quan-tri/dang-nhap")]
+        [Route("/dang-nhap")]
         public IActionResult Dangnhap()
         {
             return View();
