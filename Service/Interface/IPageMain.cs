@@ -68,7 +68,6 @@ namespace websitebenhvien.Service.Interface
         public Task<bool> Updatemenu(MenuVM menu);
         // update status
         public Task<Boolean> UpdateStatusMenu(string id);
-
     }
 
 }

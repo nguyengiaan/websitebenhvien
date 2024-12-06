@@ -5,6 +5,7 @@
     GetSlide();
     GetSchema();
     ListProduct();
+    ListNews();
     $(window).scroll(function() {
         if ($(this).scrollTop() > 200) {
             $('#backToTop').fadeIn();
@@ -331,7 +332,7 @@ function ListProduct() {
         type: "GET",
         success: function (res) {
             if (res.status) {
-                console.log(res.data);
+     
                 // Gọi hàm hiển thị carousel với dữ liệu trả về
                 displayProductCarousel(res.data);
             } else {
@@ -396,8 +397,9 @@ function displayProductCarousel(productData) {
                 const equipmentItem = document.createElement('div');
                 equipmentItem.className = 'equipment-item';
                 equipmentItem.style.cursor = 'pointer';
+                equipmentItem.style.position = 'relative';
                 equipmentItem.onclick = () => {
-                    window.location.href =product.alias_url ;
+                    window.location.href = product.alias_url;
                 };
 
                 const img = document.createElement('img');
@@ -409,15 +411,42 @@ function displayProductCarousel(productData) {
                 overlay.className = 'overlay';
 
                 const title = document.createElement('h4');
+                title.className = 'product-title';
+                title.style.cssText = `
+                    font-size: 18px;
+                    font-weight: 600;
+                    color: #fff;
+                    text-align: center;
+                    margin: 10px 0;
+                    padding: 0 15px;
+                    text-transform: uppercase;
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+                    letter-spacing: 0.5px;
+                    line-height: 1.4;
+                    ${window.innerWidth < 768 ? `
+                        position: absolute;
+                        bottom: 0;
+                        left: 0;
+                        right: 0;
+                        background: rgba(0,0,0,0.7);
+                        padding: 10px;
+                        margin: 0;
+                    ` : ''}
+                `;
                 title.textContent = product.title;
 
                 const description = document.createElement('p');
-                description.innerHTML = product.description || 'Mô tả sản phẩm đang được cập nhật...';
 
-                overlay.appendChild(title);
-                overlay.appendChild(description);
-                equipmentItem.appendChild(img);
-                equipmentItem.appendChild(overlay);
+                if (window.innerWidth < 768) {
+                    equipmentItem.appendChild(img);
+                    equipmentItem.appendChild(title);
+                } else {
+                    overlay.appendChild(title);
+                    overlay.appendChild(description);
+                    equipmentItem.appendChild(img);
+                    equipmentItem.appendChild(overlay);
+                }
+                
                 col.appendChild(equipmentItem);
                 row.appendChild(col);
             }
@@ -441,5 +470,138 @@ function displayProductCarousel(productData) {
     window.addEventListener('resize', () => {
         // Gọi lại hàm để cập nhật layout
         displayProductCarousel(productData);
+    });
+}
+
+function ListNews() {
+    $.ajax({
+        url: "/Allinone/ListNews", 
+        type: "GET",
+        success: function (res) {
+            if (res && res.data) {
+                displayNewsCarousel(res.data);
+            }
+        },
+        error: function(err) {
+            console.error("Error fetching news:", err);
+        }
+    });
+}
+
+function displayNewsCarousel(newsData) {
+    if (!newsData || !Array.isArray(newsData)) {
+        console.error("Invalid news data");
+        return;
+    }
+
+    const carousel = document.querySelector('#newsCarousel');
+    if (!carousel) {
+        console.error("Carousel element not found");
+        return;
+    }
+
+    // Clear existing content
+    carousel.innerHTML = `
+        <div class="carousel-inner" id="newsContainer"></div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#newsCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#newsCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    `;
+
+    const newsContainer = document.querySelector('#newsContainer');
+    if (!newsContainer) {
+        console.error("News container not found");
+        return;
+    }
+
+    let newsPerSlide = 4;
+    if (window.innerWidth < 768) {
+        newsPerSlide = 1;
+    } else if (window.innerWidth < 992) {
+        newsPerSlide = 2;
+    }
+
+    let newsChunks = [];
+    for (let i = 0; i < newsData.length; i += newsPerSlide) {
+        newsChunks.push(newsData.slice(i, i + newsPerSlide));
+    }
+
+    newsChunks.forEach((chunk, index) => {
+        const slide = document.createElement('div');
+        slide.className = index === 0 ? 'carousel-item active' : 'carousel-item';
+
+        const row = document.createElement('div');
+        row.className = 'row g-2 justify-content-center';
+
+        chunk.forEach(news => {
+            if (!news) return;
+
+            const col = document.createElement('div');
+            col.className = `col-${12/newsPerSlide}`;
+
+            const newsItem = document.createElement('div');
+            newsItem.className = 'news-item position-relative overflow-hidden';
+
+            const img = document.createElement('img');
+            img.src = news.url ? `/Resources/${news.url}` : '/image/default-news.jpg';
+            img.className = 'img-fluid w-100';
+            img.alt = news.title || 'News image';
+            img.onerror = function() {
+                this.src = '/image/default-news.jpg';
+            };
+
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay position-absolute w-100 h-100 d-flex flex-column justify-content-end p-3';
+
+            const title = document.createElement('h5');
+            title.className = 'text-white mb-2';
+            title.style.cssText = `
+                ${window.innerWidth < 768 ? `
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    background: rgba(0,0,0,0.7);
+                    padding: 10px;
+                    margin: 0;
+                ` : ''}
+            `;
+            title.textContent = news.title || 'Untitled';
+
+            if (window.innerWidth < 768) {
+                newsItem.appendChild(img);
+                newsItem.appendChild(title);
+            } else {
+                overlay.appendChild(title);
+                newsItem.appendChild(img);
+                newsItem.appendChild(overlay);
+            }
+            
+            col.appendChild(newsItem);
+            row.appendChild(col);
+        });
+
+        if (row.children.length > 0) {
+            slide.appendChild(row);
+            newsContainer.appendChild(slide);
+        }
+    });
+
+    if (newsContainer.children.length > 0) {
+        new bootstrap.Carousel(carousel, {
+            interval: 3000,
+            wrap: true
+        });
+    }
+
+    // Xử lý sự kiện resize window
+    window.addEventListener('resize', () => {
+        // Gọi lại hàm để cập nhật layout
+        displayNewsCarousel(newsData);
     });
 }

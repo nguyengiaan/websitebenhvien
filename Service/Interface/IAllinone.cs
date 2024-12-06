@@ -33,6 +33,7 @@ namespace websitebenhvien.Service.Interface
 
     
         public Task<CountdashboardVM> Countdashboard();
+               public Task<Boolean> UpdateStatusNews(string id);
 
 
     }

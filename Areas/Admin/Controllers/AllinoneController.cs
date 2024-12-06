@@ -272,5 +272,18 @@ namespace websitebenhvien.Areas.Admin.Controllers
             var data = await _allinone.Countdashboard();
             return Json(new { status = true, data=data   });
         }
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatusNews(string id)
+        {
+            try
+            {
+                var data = await _allinone.UpdateStatusNews(id);
+                return Json(new { status = true, message = "Cập nhật trạng thái tin tức thành công" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
     }
 }

@@ -34,7 +34,8 @@
                             <th style="width: 15%">Danh mục</th>
                             <th style="width: 15%">Ngày đăng</th>
                             <th style="width: 20%">Đường dẫn</th>
-                            <th style="width: 20%" class="text-center">Thao tác</th>
+                            <th style="width: 10%">Bài viết nổi bật</th>
+                            <th style="width: 25%" class="text-center">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody id="newsTableBody">
@@ -218,13 +219,28 @@
                         <td>${getCategoryName(item.id_Categorynews)}</td>
                         <td>${item.createat.split('T')[0]   }</td>
                         <td>${item.alias_url}</td>
+                        <td>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" 
+                                    id="status_${item.id_News}" 
+                                    ${item.status ? 'checked' : ''}
+                                    onchange="updateNewsStatus('${item.id_News}')">
+                                <label class="form-check-label" for="status_${item.id_News}">
+                                    ${item.status ? 'Hiện' : 'Ẩn'}
+                                </label>
+                            </div>
+                        </td>
                         <td class="text-center">
-                            <button class="btn btn-sm btn-outline-primary me-2" onclick="editNews('${item.id_News}')">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger" onclick="deleteNews('${item.id_News}')">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                            <div class="d-flex justify-content-center">
+                                <button class="btn btn-sm btn-primary me-2" onclick="editNews('${item.id_News}')" 
+                                        data-bs-toggle="tooltip" title="Sửa">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteNews('${item.id_News}')"
+                                        data-bs-toggle="tooltip" title="Xóa">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 `);
@@ -436,5 +452,19 @@
                 }
             });
         }
+        // update status news
+        function updateNewsStatus(id) {
+            $.ajax({
+                url: '/Allinone/UpdateStatusNews',
+                type: 'POST',
+                data: { id: id },
+                success: function(response) {
+                    if (response.status) {
+                        loadNews(currentPage);
+                    }
+                }
+            });
+        }
+            
     </script>
 }

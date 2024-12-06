@@ -217,7 +217,8 @@ namespace websitebenhvien.Service.Reponser
                     Url = x.Url,
                     Alias_url = x.Alias_url,
                     Id_Categorynews = x.Id_Categorynews,
-                    Createat = x.Createat
+                    Createat = x.Createat,
+                    Status = x.Status,
                 }).OrderByDescending(x => x.Createat).ToListAsync();
                 return data;
             }
@@ -227,6 +228,7 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
+        
         public async Task<bool> DeleteNews(string id)
         {
             try
@@ -594,5 +596,22 @@ namespace websitebenhvien.Service.Reponser
                 return null;
             }
         }
+        // update status news
+        public async Task<bool> UpdateStatusNews(string id)
+        {
+            try
+            {
+                var data = await _context.News.FindAsync(id);
+                data.Status = !data.Status;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+   
     }
 }

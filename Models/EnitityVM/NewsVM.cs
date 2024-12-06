@@ -16,6 +16,8 @@ namespace websitebenhvien.Models.EnitityVM
 
         public string ?Id_Categorynews { get; set; }
 
+        public bool ?Status { get; set; }
+
         public DateTime ?Createat { get; set; }
 
         public IFormFile ? formFile { get; set; }

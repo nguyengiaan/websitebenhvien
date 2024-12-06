@@ -11,6 +11,10 @@
         public string Alias_url { get; set; }
 
         public string Id_Categorynews { get; set; }
+
+        public bool Status { get; set; }
+
+
         public DateTime Createat { get; set; }
         public Categorynews Categorynews { get; set; }
 
