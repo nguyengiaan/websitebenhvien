@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using websitebenhvien.Models.Enitity;
@@ -531,6 +532,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
+
         [HttpGet]
         public async Task<IActionResult> ListMenu()
         {
