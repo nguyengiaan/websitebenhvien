@@ -213,12 +213,12 @@ namespace websitebenhvien.Service.Reponser
                 {
                     Id_News = x.Id_News,
                     Title = x.Title,
-                    Description = x.Description,
                     Url = x.Url,
                     Alias_url = x.Alias_url,
                     Id_Categorynews = x.Id_Categorynews,
                     Createat = x.Createat,
                     Status = x.Status,
+
                 }).OrderByDescending(x => x.Createat).ToListAsync();
                 return data;
             }
@@ -612,6 +612,122 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
-   
+        public async Task<List<NewsVM>> ListService()
+        {
+            try
+            {
+                var data = await _context.News
+                    .Join(_context.Categorynews,
+                        n => n.Id_Categorynews,
+                        c => c.Id_Categorynews,
+                        (n, c) => new { n, c })
+                    .Where(x => x.c.Title == "Dịch vụ")
+                    .Select(x => new NewsVM
+                    {
+                        Id_News = x.n.Id_News,
+                        Title = x.n.Title,
+                        Url = x.n.Url,
+                        Alias_url = x.n.Alias_url,
+                        Createat = x.n.Createat,
+                        Status = x.n.Status,
+                    })
+                    .ToListAsync();
+                return data;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<NewsVM>> ListNews()
+        {
+            try
+            {
+                var data = await _context.News
+                    .Join(_context.Categorynews,
+                        n => n.Id_Categorynews,
+                        c => c.Id_Categorynews,
+                        (n, c) => new { n, c })
+                    .Where(x => x.c.Title == "Tin tức và sự kiện")
+                    .Select(x => new NewsVM
+                    {
+                        Id_News = x.n.Id_News,
+                        Title = x.n.Title,
+                        Url = x.n.Url,
+                        Alias_url = x.n.Alias_url,
+                        Createat = x.n.Createat,
+                        Status = x.n.Status,
+                    })
+                    .ToListAsync();
+                return data;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<LogocustomerVM>> ListShareCustomer()
+        {
+            try
+            {   
+                var data = await _context.Logocustomer.Select(x => new LogocustomerVM()
+                {
+                    CustomerName = x.Logo,
+                }).ToListAsync();
+                return data;
+
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<(List<NewsVM> ds, int totalpages)> ListCategorypost(int page, int pagesize,string Catogery)
+        {
+            try
+            {
+                var totalItems = await _context.News
+     .Join(_context.Categorynews,
+           n => n.Id_Categorynews,
+           c => c.Id_Categorynews,
+           (n, c) => new { n, c })
+     .Where(x => x.c.Alias_url == Catogery) // Sửa tên biến "Catogery" thành "Category"
+     .CountAsync();
+
+                var totalPages = (int)Math.Ceiling(totalItems / (double)pagesize);
+
+                var data = await _context.News
+                    .Join(_context.Categorynews,
+                          n => n.Id_Categorynews,
+                          c => c.Id_Categorynews,
+                          (n, c) => new { n, c })
+                    .Where(x => x.c.Alias_url == Catogery)
+                    .OrderByDescending(x => x.n.Createat)
+                    .Skip((page - 1) * pagesize)
+                    .Take(pagesize)
+                    .Select(x => new NewsVM
+                    {
+                        Id_News = x.n.Id_News,
+                        Title = x.n.Title,
+                        Url = x.n.Url,
+                        Alias_url = x.n.Alias_url,
+                        Createat = x.n.Createat,
+                        Status = x.n.Status,
+                    })
+                    .ToListAsync();
+
+                return (data, totalPages);
+
+            }
+            catch (Exception ex)
+            {
+                return (null,0);
+            }
+        }
+        // danh mục catogery post
+
     }
 }

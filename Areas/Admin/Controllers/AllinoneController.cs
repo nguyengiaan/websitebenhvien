@@ -39,7 +39,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         }
         // danh sách danh mục
         [HttpGet]
-        public async Task<IActionResult> ListCatogery()
+        public async Task<IActionResult> ListCatogeryNews()
         {
             try
             {
@@ -284,6 +284,38 @@ namespace websitebenhvien.Areas.Admin.Controllers
             {
                 return Json(new { status = false, message = ex.Message });
             }
+        }
+        [HttpGet]
+        public async Task<IActionResult> ListService()
+        {
+            try
+            {
+                var data = await _allinone.ListService();
+                return Json(new { status = true, data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> NewsList()
+        {
+            try
+            {
+                var data = await _allinone.ListNews();
+                return Json(new { status = true, data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> ListShareCustomer()
+        {
+            var data = await _allinone.ListShareCustomer();
+            return Json(new { status = true, data });
         }
     }
 }

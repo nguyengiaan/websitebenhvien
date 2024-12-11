@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - websitebenhvien</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/trangchu2.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/websitebenhvien.styles.css" asp-append-version="true" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement(
+                { pageLanguage: 'vi', includedLanguages: 'vi,en,zh-CN'},
+                'google_translate_element'
+            );
+        }
+    </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
+</head>
+<body>
+    
+     <header>
+        <div class="row d-flex bg-white h-70" style="height: 105px;"  >
+            <div class="col-md-6 col-12 d-flex justify-content-center align-items-center">
+                <img src="/Images/Logo-rm.png" alt="Emergency" class="me-2" style="height: 83px; width: auto;">
+            </div>
+            <div class="col-md-6 col-12 d-none d-md-flex flex-column    " id="header-contact">    
+
+            </div>
+
+            
+        </div>
+        
+        <nav class="navbar navbar-expand-lg" style="background-color: #0063EC; width: 100%; padding-top: 8px;">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto" id="menu">
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+
+
+<main role="main" class="pb-3">
+    @RenderBody()
+</main>
+</div>
+<footer class="bg-white py-5 border-top fade-in w-100" >
+   
+</footer>
+
+
+    <div id="google_translate_element" class="ms-2" style="display: none;"></div>
+    <!-- Nút cuộn lên đầu trang -->
+    <button id="backToTop" class="btn btn-primary rounded-circle position-fixed bottom-0 end-0 m-4" style="display: none;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site2.js" asp-append-version="true"></script>
+    
+    <!-- Script xử lý nút cuộn lên đầu trang -->
+    <script>
+        // Xử lý hiệu ứng fade-in khi cuộn
+        function checkFade() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                if (elementTop < windowHeight * 0.9) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        // Gọi hàm khi trang tải và khi cuộn
+        window.addEventListener('load', checkFade);
+        window.addEventListener('scroll', checkFade);
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+

@@ -18,95 +18,248 @@
         }
     </script>
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
-
-
- 
 </head>
 <body>
-     <header class="sticky-header">
-        <div class="container py-5">
-            <div class="row align-items-center">
-                <!-- Logo -->
-                <div class="col-12 col-md-4 text-center text-md-start mb-3 mb-md-0">
-                    <img src="~/image/Logo-rm.png" alt="Logo" class="img-fluid" style="max-height: 80px;">
-                </div>
-                
-                <!-- Emergency Contact -->
-                <div class="col-12 col-md-8">
-                    <div class="d-flex flex-column align-items-center align-items-md-end" id="header-contact" >
-                        <!-- Emergency Number -->
-                        <!--đây là header-->
-
-                    </div>
-                </div>
+    
+     <header>
+        <div class="row d-flex bg-white h-70" style="height: 105px;"  >
+            <div class="col-md-6 col-12 d-flex justify-content-center align-items-center">
+                <img src="/Images/Logo-rm.png" alt="Emergency" class="me-2" style="height: 83px; width: auto;">
             </div>
+            <div class="col-md-6 col-12 d-none d-md-flex flex-column    " id="header-contact">    
+
+            </div>
+
+            
         </div>
-      
-    </header>
-      <nav class="navbar navbar-expand-lg sticky-nav" style="background-color: #14a1ff; width: 100%; padding-top: 8px; z-index: 1499;">
-            <div class="container">
+        
+        <nav class="navbar navbar-expand-lg" style="background-color: #0063EC; width: 100%; padding-top: 8px;">
+            <div class="container-fluid">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav w-100 justify-content-between flex-nowrap" id="menu">
-                      
+                    <ul class="navbar-nav mx-auto" id="menu">
                     </ul>
                 </div>
             </div>
- </nav>
+        </nav>
+    </header>
 
-<div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+<div id="carouselContainer" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000" >
     <!--đây là slide-->
+
 </div>
 
-    <div class="container" >
-        <div class="row mt-4 " >
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title text-center text-primary mb-4">LỊCH KHÁM BỆNH</h5>
-                        <div id="timework" style="overflow: hidden; max-height: 300px;"></div>
-                    <button id="btnReadMore" style="display: none;" class="btn btn-primary">Xem thêm</button>
+
+<section class="video-section py-5 fade-in" style="background-color: #e6f2ff;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <div class="position-relative" style="padding-bottom: 56.25%;">
+                        <iframe 
+                            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);"
+                            src="https://www.youtube.com/embed/WY1MaGhH7Hc"
+                            title="Giới thiệu Bệnh viện Đa khoa Mỹ Phước"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6 d-none d-md-block">
-                <div class="row">
-                     <h5 class="card-title text-center text-primary mb-4">BỆNH VIỆN ĐA KHOA MỸ PHƯỚC</h5>
-                        <h6 class="card-title text-center text-primary mb-4">Uy tín - Chất lượng - Tận tâm</h6>
-                    <div class="col-6 mb-4">
-                        <div class="card text-center p-3">
-                            <i class="fas fa-user-md fa-3x text-primary mb-2"></i>
-                            <h6>KHÁM CHỮA BỆNH</h6>
+                <div class="col-lg-6">
+                    <div class="ps-lg-4">
+                        <h2 class="fw-bold mb-4 text-primary">Bệnh viện Đa khoa Mỹ Phước</h2>
+                        <p class="lead mb-4">Chăm sóc sức khỏe tận tâm - Phục vụ người bệnh chu đáo</p>
+                        <div class="mb-4">
+                            <p class="text-muted">
+                                Với đội ngũ y bác sĩ giàu kinh nghiệm cùng trang thiết bị hiện đại, 
+                                Bệnh viện Đa khoa Mỹ Phước cam kết mang đến dịch vụ y tế chất lượng cao, 
+                                đáp ứng nhu cầu khám chữa bệnh của người dân trong khu vực.
+                            </p>
                         </div>
-                    </div>
-                    <div class="col-6 mb-4">
-                        <div class="card text-center p-3">
-                            <i class="fas fa-stethoscope fa-3x text-primary mb-2"></i>
-                            <h6>CHUYÊN KHOA</h6>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="card text-center p-3">
-                            <i class="fas fa-tint fa-3x text-primary mb-2"></i>
-                            <h6>XÉT NGHIỆM</h6>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="card text-center p-3">
-                            <i class="fas fa-clipboard-list fa-3x text-primary mb-2"></i>
-                            <h6>KẾT QUẢ</h6>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-primary me-2"></i>
+                                    <span>Trang thiết bị hiện đại</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-primary me-2"></i>
+                                    <span>Đội ngũ chuyên môn cao</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-primary me-2"></i>
+                                    <span>Phục vụ 24/7</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-primary me-2"></i>
+                                    <span>Chi phí hợp lý</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </section>
+        <section class="equipment-section py-5">
+        <div class="container">
+            <div class="row mb-5 text-center">
+                <div class="col-lg-8 mx-auto d-flex justify-content-start flex-column ">
+                    <h2 class="fw-bold text-primary mb-3">Trang Thiết Bị Hiện Đại</h2>
+                    <p class="text-muted">Bệnh viện được trang bị các thiết bị y tế tiên tiến, hiện đại nhằm phục vụ tốt nhất cho công tác khám chữa bệnh</p>
+                </div>
+            </div>
 
-     <section class="features-section py-5">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="equipment-card fade-in">
+                        <div class="equipment-image">
+                            <img src="https://dakhoasaigontamky.com/Uploads/images/Blogs/279571292_5119285161451158_5972709584363135645_n-vlrejvol.jpg" alt="CT Scanner" class="img-fluid">
+                            <div class="equipment-overlay">
+                                <h4>Máy CT Scanner</h4>
+                                <p>Chẩn đoán hình ảnh chính xác, độ phân giải cao</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="equipment-card fade-in">
+                        <div class="equipment-image">
+                            <img src="https://tamanhhospital.vn/wp-content/uploads/2021/04/ky-thuat-chup-mri.jpg" alt="MRI" class="img-fluid">
+                            <div class="equipment-overlay">
+                                <h4>Máy MRI</h4>
+                                <p>Chụp cộng hưởng từ công nghệ mới nhất</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="equipment-card fade-in">
+                        <div class="equipment-image">
+                            <img src="https://media.loveitopcdn.com/7941/thumb/hs40jpg1.jpg" alt="Siêu âm 4D" class="img-fluid">
+                            <div class="equipment-overlay">
+                                <h4>Máy Siêu Âm 4D</h4>
+                                <p>Hình ảnh siêu âm sắc nét, chi tiết</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="equipment-card fade-in">
+                        <div class="equipment-image">
+                            <img src="https://bizweb.dktcdn.net/100/369/516/products/may-xet-nghiem-sinh-hoa-tu-dong-au-680-beckman-coulter.jpg?v=1636768204413" alt="Máy xét nghiệm" class="img-fluid">
+                            <div class="equipment-overlay">
+                                <h4>Máy Xét Nghiệm Tự Động</h4>
+                                <p>Kết quả chính xác, nhanh chóng</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="equipment-card fade-in">
+                        <div class="equipment-image">
+                            <img src="https://bcp.cdnchinhphu.vn/Uploaded/buithuhuong/2020_04_15/may%20tho.jpg" alt="Máy thở" class="img-fluid">
+                            <div class="equipment-overlay">
+                                <h4>Máy Thở Cao Cấp</h4>
+                                <p>Hỗ trợ hô hấp hiệu quả</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="equipment-card fade-in">
+                        <div class="equipment-image">
+                            <img src="https://drtuynh.vn/uploads/2021/03/20190403-101913-276689-cac-ky-thuat-tien-t-max-1800x1800.jpg" alt="Máy mổ nội soi" class="img-fluid">
+                            <div class="equipment-overlay">
+                                <h4>Hệ Thống Mổ Nội Soi</h4>
+                                <p>Phẫu thuật tối thiểu xâm lấn</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+     
+    </section>
+    <div class="container">
+        <div class="row mt-5 fade-in">
+            <!-- Lịch khám bệnh -->
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 shadow hover-shadow">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-4">
+                            <i class="fas fa-calendar-alt fa-2x text-primary me-3"></i>
+                            <h5 class="card-title fw-bold mb-0">Lịch Khám Bệnh</h5>
+                        </div>
+                        <div id="timework" class="px-2 border-start border-primary border-3"></div>
+                        <button id="btnReadMore" class="btn btn-primary w-100 mt-4" style="display: none;">
+                            <i class="fas fa-chevron-down me-2"></i>Xem thêm
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Thông tin bệnh viện -->
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <div class="text-center mb-4">
+                            <h4 class="fw-bold text-primary" style="font-size: 1.5rem;">BỆNH VIỆN ĐA KHOA MỸ PHƯỚC</h4>
+                            <p class="text-muted fst-italic">Uy tín - Chất lượng - Tận tâm</p>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="d-flex flex-column align-items-center p-3 rounded-3 hover-shadow" style="background: rgba(20, 161, 255, 0.05);">
+                                    <i class="fas fa-user-md fa-2x text-primary mb-2"></i>
+                                    <h6 class="fw-bold mb-0 text-center">Khám Chữa Bệnh</h6>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex flex-column align-items-center p-3 rounded-3 hover-shadow" style="background: rgba(20, 161, 255, 0.05);">
+                                    <i class="fas fa-stethoscope fa-2x text-primary mb-2"></i>
+                                    <h6 class="fw-bold mb-0 text-center">Chuyên Khoa</h6>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex flex-column align-items-center p-3 rounded-3 hover-shadow" style="background: rgba(20, 161, 255, 0.05);">
+                                    <i class="fas fa-flask fa-2x text-primary mb-2"></i>
+                                    <h6 class="fw-bold mb-0 text-center">Xét Nghiệm</h6>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex flex-column align-items-center p-3 rounded-3 hover-shadow" style="background: rgba(20, 161, 255, 0.05);">
+                                    <i class="fas fa-clipboard-list fa-2x text-primary mb-2"></i>
+                                    <h6 class="fw-bold mb-0 text-center">Kết Quả</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+    </div>
+    </div>
+
+     <section class="features-section py-5 fade-in" style="background-color: #e6f2ff;">
             <div class="container">
                 <div class="text-center mb-4">
-                    <h2 class="text-primary fw-bold">Sản phẩm nổi bật</h2>
+                    <h2 class="text-primary fw-bold">SẢN PHẨM NỔI BẬT</h2>
                     <div class="divider" style="background-color: #0984e3;"></div>
                 </div>
                 <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -115,346 +268,59 @@
      
             </div>
         </section>
-      
-    <section class="features-section py-5">
+     <section class="features-section py-5 fade-in"> 
             <div class="container">
-                    <div class="text-center mb-5">
-                    <h2 class="text-primary fw-bold">Dịch vụ</h2>
-            <div class="divider" style="background-color: #0984e3;"></div>
-        </div>
+                <div class="text-center mb-4">
+                    <h2 class="text-primary fw-bold">DịCH VỤ NỔI BẬT</h2>
+                    <div class="divider" style="background-color: #0984e3;"></div>
                 </div>
-                <div class="row justify-content-center">
-                    <div class="col-md mb-4">
-                        <div class="equipment-item">
-          <img src="~/image/hinh7.png" alt="Equipment 5" style=" height: 200px; object-fit: cover;">
-          <div class="overlay">
-            <h4>Máy xét nghiệm tự động</h4>
-            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
-          </div>
-        </div>
-                    </div>
-                    <div class="col-md mb-4">
-                         <div class="equipment-item">
-          <img src="~/image/hinh8.jpg" alt="Equipment 5" style="height: 200px; object-fit: cover;">
-          <div class="overlay">
-            <h4>Máy xét nghiệm tự động</h4>
-            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
-          </div>
-        </div>
-                    </div>
-                    <div class="col-md mb-4">
-                         <div class="equipment-item">
-          <img src="~/image/hinh9.jpg" alt="Equipment 5" style="height: 200px; object-fit: cover;">
-          <div class="overlay">
-            <h4>Máy xét nghiệm tự động</h4>
-            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
-          </div>
-        </div>
-                    </div>
-                    <div class="col-md mb-4">
-                      <div class="equipment-item">
-          <img src="~/image/hinh.jpg" alt="Equipment 5" style=" height: 200px; object-fit: cover;">
-          <div class="overlay">
-            <h4>Máy xét nghiệm tự động</h4>
-            <p>Hệ thống xét nghiệm tự động hiện đại cho kết quả nhanh chóng và chính xác cao.</p>
-          </div>
-        </div>
-                    </div>
+                <div id="serviceCarousel" class="carousel slide" data-bs-ride="carousel">
+                  
                 </div>
+     
             </div>
-        </section>
+    </section>
 
-<section class="news-section py-5" style="background-color: #f8f9fa;">
+<section class="features-section py-5 fade-in" style="background-color: #e6f2ff;">
     <div class="container">
-        <div class="text-center mb-5">
-               <div class="text-center mb-4"><h2 class="text-primary fw-bold">Tin tức & Sự kiện</h2>
-            <div class="divider" style="background-color: #0984e3;"></div>
-        </div>
-        <div class="row g-4">
-            <!-- Tin tức nổi bật -->
-            <div class="col-lg-6">
-                <div class="card h-100 border-0 shadow-sm" style="transition: transform 0.3s ease; transform-style: preserve-3d;">
-                    <div class="row g-0">
-                        <div class="col-md-6">
-                            <div class="position-relative">
-                                <img src="~/image/hinh6.jpg" alt="Tin tức nổi bật" class="img-fluid rounded-start h-100" style="object-fit: cover;">
-                                <div class="position-absolute top-0 start-0 m-3">
-                                    <span class="badge bg-danger">HOT</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card-body d-flex flex-column h-100">
-                                <div class="mb-3">
-                                    <span class="badge bg-primary me-2">Tin mới</span>
-                                    <small class="text-muted"><i class="far fa-clock me-1"></i>20/11/2023</small>
-                                </div>
-                                <h3 class="card-title h4 fw-bold mb-3">Thông tin quan trọng cần biết khi đi khám bệnh</h3>
-                                <p class="card-text text-muted flex-grow-1">Để việc thăm khám được thuận lợi và hiệu quả, quý khách vui lòng tham khảo những thông tin thiết yếu về quy trình khám chữa bệnh tại bệnh viện...</p>
-                                <div class="d-flex justify-content-between align-items-center mt-3">
-                                    <a href="#" class="btn btn-primary">Xem chi tiết <i class="fas fa-arrow-right ms-2"></i></a>
-                                    <div class="d-flex align-items-center">
-                                        <i class="far fa-eye me-1"></i>
-                                        <small class="text-muted">2.5k lượt xem</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="text-center mb-4">
+                    <h2 class="text-primary fw-bold">TIN TỨC VÀ SỰ KIỆN</h2>
+                    <div class="divider" style="background-color: #0984e3;"></div>
                 </div>
-            </div>
-
-            <!-- Danh sách tin tức -->
-            <div class="col-lg-6">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body p-0">
-                        <!-- Tin tức 1 -->
-                        <div class="d-flex p-3 border-bottom hover-bg-light transition">
-                            <img src="~/image/hinh6.jpg" alt="Tin tức" class="rounded" style="width: 100px; height: 70px; object-fit: cover;">
-                            <div class="ms-3">
-                                <h6 class="mb-1">Bệnh viện triển khai dịch vụ tư vấn sức khỏe từ xa</h6>
-                                <div class="d-flex align-items-center text-muted">
-                                    <i class="far fa-calendar-alt me-2"></i>
-                                    <small>20/11/2023</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tin tức 2 -->
-                        <div class="d-flex p-3 border-bottom hover-bg-light transition">
-                            <img src="~/image/hinh6.jpg" alt="Tin tức" class="rounded" style="width: 100px; height: 70px; object-fit: cover;">
-                            <div class="ms-3">
-                                <h6 class="mb-1">Chương trình khám sức khỏe định kỳ cho người cao tuổi</h6>
-                                <div class="d-flex align-items-center text-muted">
-                                    <i class="far fa-calendar-alt me-2"></i>
-                                    <small>18/11/2023</small>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tin tức 3 -->
-                        <div class="d-flex p-3 hover-bg-light transition">
-                            <img src="~/image/hinh6.jpg" alt="Tin tức" class="rounded" style="width: 100px; height: 70px; object-fit: cover;">
-                            <div class="ms-3">
-                                <h6 class="mb-1">Hướng dẫn đăng ký khám bệnh trực tuyến</h6>
-                                <div class="d-flex align-items-center text-muted">
-                                    <i class="far fa-calendar-alt me-2"></i>
-                                    <small>15/11/2023</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div id="newsCarousel" class="carousel slide" data-bs-ride="carousel">
+                  
                 </div>
+     
             </div>
-        </div>
-    </div>
 </section>
 
-<section class="partners-section py-5 bg-light">
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2 class="text-primary fw-bold">Đối tác của chúng tôi</h2>
+
+<section class="partners-section py-5 bg-light w-100 d-flex justify-content-center align-items-center fade-in">
+        <div class="container-fluid">
+            <div class="text-center mb-5">
+            <h2 class="text-primary fw-bold">ĐỐI TÁC KHÁCH HÀNG</h2>
             <div class="divider mx-auto"></div>
         </div>
+        <div id="shareCustomerCarousel" class="carousel slide" data-bs-ride="carousel">
 
-        <div id="partnersCarousel" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="row g-4">
-                        <div class="col-md-3">
-                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
-                                <img src="~/image/dt1.png" alt="Bệnh viện Bạch Mai" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
-                                <h5 class="fw-bold">Bệnh viện Bạch Mai</h5>
-                                <p class="text-muted small">Đối tác chiến lược hàng đầu</p>
-                            </div>
-                        </div>
 
-                        <div class="col-md-3">
-                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
-                                <img src="~/image/dt1.png" alt="Bệnh viện Việt Đức" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
-                                <h5 class="fw-bold">Bệnh viện Việt Đức</h5>
-                                <p class="text-muted small">Hợp tác chuyên môn</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
-                                <img src="~/image/dt1.png" alt="Bệnh viện Chợ Rẫy" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
-                                <h5 class="fw-bold">Bệnh viện Chợ Rẫy</h5>
-                                <p class="text-muted small">Đối tác nghiên cứu</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
-                                <img src="~/image/dt1.png" alt="Bệnh viện 108" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
-                                <h5 class="fw-bold">Bệnh viện 108</h5>
-                                <p class="text-muted small">Đối tác đào tạo</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-item">
-                    <div class="row g-4">
-                        <div class="col-md-3">
-                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
-                                <img src="~/image/dt1.png" alt="Bệnh viện 103" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
-                                <h5 class="fw-bold">Bệnh viện 103</h5>
-                                <p class="text-muted small">Đối tác chiến lược</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
-                                <img src="~/image/dt1.png" alt="Bệnh viện E" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
-                                <h5 class="fw-bold">Bệnh viện E</h5>
-                                <p class="text-muted small">Đối tác y tế</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
-                                <img src="~/image/dt1.png" alt="Bệnh viện K" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
-                                <h5 class="fw-bold">Bệnh viện K</h5>
-                                <p class="text-muted small">Đối tác chuyên khoa</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="partner-card text-center p-4 bg-white rounded shadow-sm">
-                                <img src="~/image/dt1.png" alt="Bệnh viện Nhi" class="img-fluid mb-3" style="height: 80px; object-fit: contain;">
-                                <h5 class="fw-bold">Bệnh viện Nhi</h5>
-                                <p class="text-muted small">Đối tác nhi khoa</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <button class="carousel-control-prev" type="button" data-bs-target="#partnersCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#partnersCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
         </div>
+
     </div>
+     
+
 </section>
 
 <main role="main" class="pb-3">
     @RenderBody()
 </main>
-
-<footer class="bg-white py-5 border-top">
-    <div class="container">
-        <div class="row">
-            <!-- Logo và thông tin liên hệ -->
-            <div class="col-lg-4 mb-4">
-                <img src="~/image/Logo-rm.png" alt="Logo bệnh viện" class="mb-3" style="height: 60px;">
-                <ul class="list-unstyled text-muted">
-                    <li class="mb-2">
-                        <i class="fas fa-map-marker-alt me-2 text-primary"></i>
-                        Số 1 Đường 30/4, Phú Mỹ, Thủ Dầu Một, Bình Dương
-                    </li>
-                    <li class="mb-2">
-                        <i class="fas fa-phone me-2 text-primary"></i>
-                        (0274) 3567 899
-                    </li>
-                    <li>
-                        <i class="fas fa-envelope me-2 text-primary"></i>
-                        info@myphuochospital.com
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Về chúng tôi -->
-            <div class="col-lg-2 mb-4">
-                <h5 class="fw-bold text-uppercase mb-3">Thông tin chung</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none hover-primary">
-                            <i class="fas fa-angle-right me-2"></i>Giới thiệu
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none hover-primary">
-                            <i class="fas fa-angle-right me-2"></i>Tầm nhìn & Sứ mệnh
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none hover-primary">
-                            <i class="fas fa-angle-right me-2"></i>Đội ngũ bác sĩ
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none hover-primary">
-                            <i class="fas fa-angle-right me-2"></i>Tuyển dụng
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="col-lg-2 mb-4">
-                <h5 class="fw-bold text-uppercase mb-3">Dịch vụ</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none hover-primary">
-                            <i class="fas fa-angle-right me-2"></i>Khám bệnh
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none hover-primary">
-                            <i class="fas fa-angle-right me-2"></i>Xét nghiệm
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none hover-primary">
-                            <i class="fas fa-angle-right me-2"></i>Chẩn đoán hình ảnh
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none hover-primary">
-                            <i class="fas fa-angle-right me-2"></i>Nội trú
-                        </a>
-                    </li>
-                    <li class="mb-2">
-                        <a href="#" class="text-muted text-decoration-none hover-primary">
-                            <i class="fas fa-angle-right me-2"></i>Khám doanh nghiệp
-                        </a>
-                    </li>
-                    <li class="mt-3">
-                        <a href="#" class="btn btn-outline-primary btn-sm">
-                            <i class="fas fa-calendar-alt me-2"></i>Lịch khám bệnh
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Đăng ký nhận tin -->
-            <div class="col-lg-4 mb-4">
-                <h5 class="fw-bold text-uppercase mb-3">Đăng ký nhận tin</h5>
-                <p class="text-muted">Nhận thông tin mới nhất về sức khỏe và các chương trình ưu đãi.</p>
-                <div class="input-group mb-3">
-                    <input type="email" class="form-control" placeholder="Nhập email của bạn">
-                    <button class="btn btn-primary" type="button">Đăng ký</button>
-                </div>
-                <div class="social-links mt-3">
-                    <a href="#" class="text-primary me-3"><i class="fab fa-facebook-f fa-lg"></i></a>
-                    <a href="#" class="text-info me-3"><i class="fab fa-twitter fa-lg"></i></a>
-                    <a href="#" class="text-danger"><i class="fab fa-youtube fa-lg"></i></a>
-                </div>
-            </div>
-        </div>
-        <!-- Bản quyền -->
-        <div class="text-center text-muted mt-4">
-            <small>&copy; 2024 Bệnh viện Đa khoa Mỹ Phước. All rights reserved.</small>
-        </div>
-    </div>
+</div>
+<footer class="bg-white py-5 border-top fade-in w-100" >
+   
 </footer>
-           <div id="google_translate_element" class="ms-2" style="display: none;"></div>
+
+
+    <div id="google_translate_element" class="ms-2" style="display: none;"></div>
     <!-- Nút cuộn lên đầu trang -->
     <button id="backToTop" class="btn btn-primary rounded-circle position-fixed bottom-0 end-0 m-4" style="display: none;">
         <i class="fas fa-arrow-up"></i>
@@ -466,7 +332,25 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     
     <!-- Script xử lý nút cuộn lên đầu trang -->
+    <script>
+        // Xử lý hiệu ứng fade-in khi cuộn
+        function checkFade() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                if (elementTop < windowHeight * 0.9) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        // Gọi hàm khi trang tải và khi cuộn
+        window.addEventListener('load', checkFade);
+        window.addEventListener('scroll', checkFade);
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+

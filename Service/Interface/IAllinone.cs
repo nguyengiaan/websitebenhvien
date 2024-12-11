@@ -33,8 +33,18 @@ namespace websitebenhvien.Service.Interface
 
     
         public Task<CountdashboardVM> Countdashboard();
-               public Task<Boolean> UpdateStatusNews(string id);
+        public Task<Boolean> UpdateStatusNews(string id);
 
+        // dịch vụ nổi bật
+        public Task<List<NewsVM>> ListService();
+        // tin tức nổi bật
+        public Task<List<NewsVM>> ListNews();
+
+        // list logo khách hàng
+        public Task<List<LogocustomerVM>> ListShareCustomer();
+
+        // danh mục bài viết
+        public Task<(List<NewsVM> ds, int totalpages)> ListCategorypost(int page, int pagesize,string Catogery);
 
     }
 }

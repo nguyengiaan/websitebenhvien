@@ -33,6 +33,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<IPageMain,PageMainReponser>();
 builder.Services.AddScoped<IAllinone, AllinoneReponser>();  
 builder.Services.AddScoped<IUser, UserReponser>();
+builder.Services.AddScoped<IPost, PostReponser>();
 builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));
 builder.Services.AddAuthorization(options =>
 {
@@ -96,6 +97,14 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapControllerRoute(
+    name: "bai-viet",
+    defaults: new { controller = "Home", action = "PostCategory" },
+    pattern: "bai-viet/{catogery}");
+app.MapControllerRoute(
+    name: "bai-viet-detail",
+    defaults: new { controller = "Home", action = "PostDetail" },
+    pattern: "bai-viet/{catogery}/{alias_url}");
 
 app.Run();
 

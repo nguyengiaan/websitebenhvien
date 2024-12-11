@@ -11,7 +11,7 @@
             <div class="row mb-3">
                 <div class="col-md-4">
                     <div class="input-group">
-                        <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm...">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm..." onchange="searchNews()">
                         <button class="btn btn-outline-secondary" onclick="searchNews()">
                             <i class="fas fa-search"></i>
                         </button>
@@ -149,7 +149,7 @@
 
         function loadCategories() {
             $.ajax({
-                url: '/Allinone/ListCatogery',
+                url: '/Allinone/ListCatogeryNews',
                 type: 'GET',
                 success: function(response) {
                     if (response.status) {
@@ -170,36 +170,30 @@
                 url: '/Allinone/Listnews',
                 type: 'GET',
                 success: function(response) {
-                    if (response.status) {
-                        currentPage = page;
-                        const allData = response.data;
-                        
-                        // Lọc theo danh mục và tìm kiếm
-                        const categoryId = $('#categoryFilter').val();
-                        const searchTerm = $('#searchInput').val().toLowerCase();
-                        
-                        let filteredData = allData;
-                        if (categoryId) {
-                            filteredData = filteredData.filter(item => item.id_Categorynews === categoryId);
-                        }
-                        if (searchTerm) {
-                            filteredData = filteredData.filter(item => 
-                                item.title.toLowerCase().includes(searchTerm) ||
-                                item.description?.toLowerCase().includes(searchTerm) ||
-                                item.alias_url.toLowerCase().includes(searchTerm)
-                            );
-                        }
+                    if (!response.status) return;
 
-                        // Phân trang
-                        const totalItems = filteredData.length;
-                        const totalPages = Math.ceil(totalItems / pageSize);
-                        const startIndex = (page - 1) * pageSize;
-                        const endIndex = Math.min(startIndex + pageSize, totalItems);
-                        const paginatedData = filteredData.slice(startIndex, endIndex);
+                    currentPage = page;
+                    const categoryId = $('#categoryFilter').val();
+                    const searchTerm = $('#searchInput').val().toLowerCase();
 
-                        renderNews(paginatedData);
-                        renderPagination(totalPages, page);
-                    }
+                    // Lọc dữ liệu một lần duy nhất
+                    const filteredData = response.data.filter(item => {
+                        const matchesCategory = !categoryId || item.id_Categorynews === categoryId;
+                        const matchesSearch = !searchTerm || 
+                            item.title.toLowerCase().includes(searchTerm) ||
+                            item.description?.toLowerCase().includes(searchTerm) ||
+                            item.alias_url.toLowerCase().includes(searchTerm);
+                        return matchesCategory && matchesSearch;
+                    });
+
+                    // Tính toán phân trang
+                    const startIndex = (page - 1) * pageSize;
+                    const paginatedData = filteredData.slice(startIndex, startIndex + pageSize);
+                    const totalPages = Math.ceil(filteredData.length / pageSize);
+
+                    // Render dữ liệu
+                    renderNews(paginatedData);
+                    renderPagination(totalPages, page);
                 }
             });
         }
@@ -215,7 +209,7 @@
                     <tr>
                         <td class="ps-4">${startIndex + index + 1}</td>
                         <td>${item.title}</td>
-                        <td><img src="/Resources/${item.url}" alt="News Image" style="max-width: 100px;"></td>
+                        <td><img src="/Resources/${item.url}" alt="News Image" width="50"></td>
                         <td>${getCategoryName(item.id_Categorynews)}</td>
                         <td>${item.createat.split('T')[0]   }</td>
                         <td>${item.alias_url}</td>
@@ -282,7 +276,7 @@
                 .replace(/(\s+)/g, '-')
                 .replace(/-+/g, '-')
                 .replace(/^-+|-+$/g, '');
-            $('#alias_url').val('/' + categoryAlias + '/' + alias);
+            $('#alias_url').val('bai-viet/' + categoryAlias + '/' + alias);
         }
 
         function openNewsModal() {

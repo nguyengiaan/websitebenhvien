@@ -96,7 +96,7 @@
 
         function loadCategories(page = 1) {
             $.ajax({
-                url: '/Allinone/ListCatogery',
+                url: '/Allinone/ListCatogeryNews',
                 type: 'GET',
                 success: function(response) {
                     if (response.status) {
@@ -269,7 +269,7 @@
                 searchCategories();
             }
         });
-function generateAlias(str) {
+        function generateAlias(str) {
             // Chuyển về chữ thường
             str = str.toLowerCase();
 
@@ -283,8 +283,8 @@ function generateAlias(str) {
 
             // Xóa dấu gạch ngang ở đầu và cuối
             str = str.replace(/^-+|-+$/g, '');
-            $('#categoryForm').find('#alias_url').val('/' + str);
-            return '/' + str;
+            $('#categoryForm').find('#alias_url').val('/bai-viet/' + str);
+            return 'bai-viet/' + str;
         }
     </script>
 }

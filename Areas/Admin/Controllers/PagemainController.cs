@@ -506,7 +506,6 @@ namespace websitebenhvien.Areas.Admin.Controllers
         }
         // menu con
         [HttpPost]
-
         public async Task<IActionResult> AddSubMenu(SubMenuVM submenu)
         {
             try

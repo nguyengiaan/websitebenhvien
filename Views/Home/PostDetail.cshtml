@@ -1,0 +1,164 @@
+@{
+    ViewData["Title"] = "Chi tiết bài viết";
+    Layout = "~/Views/Shared/Layout_2.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Sidebar danh mục -->
+        <div class="col-lg-3">
+            <div class="categories-sidebar bg-white p-4 rounded-3 shadow-sm mb-4">
+                <h4 class="fw-bold border-bottom pb-3 mb-3">Danh mục bài viết</h4>
+                <ul class="list-unstyled categories-list">
+                    <li class="mb-3">
+                        <a href="#" class="text-decoration-none text-dark d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-angle-right me-2 text-primary"></i>Tin tức</span>
+                            <span class="badge bg-light text-dark">12</span>
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="#" class="text-decoration-none text-dark d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-angle-right me-2 text-primary"></i>Hoạt động</span>
+                            <span class="badge bg-light text-dark">8</span>
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="#" class="text-decoration-none text-dark d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-angle-right me-2 text-primary"></i>Sự kiện</span>
+                            <span class="badge bg-light text-dark">15</span>
+                        </a>
+                    </li>
+                    <li class="mb-3">
+                        <a href="#" class="text-decoration-none text-dark d-flex justify-content-between align-items-center">
+                            <span><i class="fas fa-angle-right me-2 text-primary"></i>Y tế - Sức khỏe</span>
+                            <span class="badge bg-light text-dark">20</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Bài viết nổi bật -->
+            <div class="featured-posts bg-white p-4 rounded-3 shadow-sm">
+                <h4 class="fw-bold border-bottom pb-3 mb-3">Bài viết nổi bật</h4>
+                <div class="featured-post-item mb-3 pb-3 border-bottom">
+                    <a href="#" class="text-decoration-none">
+                        <img src="/path/to/thumbnail.jpg" class="img-fluid rounded mb-2" alt="Post thumbnail">
+                        <h6 class="text-dark mb-1">Tiêu đề bài viết nổi bật 1</h6>
+                        <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>01/01/2024</small>
+                    </a>
+                </div>
+                <div class="featured-post-item mb-3">
+                    <a href="#" class="text-decoration-none">
+                        <img src="/path/to/thumbnail.jpg" class="img-fluid rounded mb-2" alt="Post thumbnail">
+                        <h6 class="text-dark mb-1">Tiêu đề bài viết nổi bật 2</h6>
+                        <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>01/01/2024</small>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nội dung bài viết -->
+        <div class="col-lg-9">
+            <article class="post-content bg-white p-4 rounded-3 shadow-sm">
+                <h1 class="post-title fw-bold mb-4">Tiêu đề bài viết</h1>
+                
+                <div class="post-meta text-muted mb-4">
+                    <span class="me-3"><i class="far fa-calendar-alt me-2"></i>Ngày đăng: 01/01/2024</span>
+                    <span class="me-3"><i class="far fa-user me-2"></i>Tác giả: Admin</span>
+                    <span><i class="far fa-folder me-2"></i>Danh mục: Tin tức</span>
+                </div>
+
+                <div class="post-featured-image mb-4">
+                    <img src="/path/to/image.jpg" class="img-fluid rounded" alt="Ảnh bài viết">
+                </div>
+
+                <div class="post-body">
+                  
+                </div>
+
+                <div class="post-tags mt-4 pt-4 border-top">
+                    <span class="fw-bold me-2">Tags:</span>
+                    <a href="#" class="badge bg-light text-dark text-decoration-none me-2">tag1</a>
+                    <a href="#" class="badge bg-light text-dark text-decoration-none me-2">tag2</a>
+                    <a href="#" class="badge bg-light text-dark text-decoration-none">tag3</a>
+                </div>
+            </article>
+
+            <div class="share-buttons mt-4 text-center">
+                <h5 class="mb-3">Chia sẻ bài viết</h5>
+                <a href="#" class="btn btn-primary me-2"><i class="fab fa-facebook-f me-2"></i>Facebook</a>
+                <a href="#" class="btn btn-info me-2"><i class="fab fa-twitter me-2"></i>Twitter</a>
+                <a href="#" class="btn btn-danger"><i class="fab fa-pinterest me-2"></i>Pinterest</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .post-content {
+        line-height: 1.8;
+    }
+    
+    .post-title {
+        color: #2c3e50;
+        font-size: 2.2rem;
+    }
+
+    .post-meta {
+        font-size: 0.9rem;
+    }
+
+    .post-body {
+        font-size: 1.1rem;
+        color: #34495e;
+    }
+
+    .badge {
+        padding: 8px 15px;
+        font-weight: 500;
+    }
+
+    .share-buttons .btn {
+        padding: 8px 20px;
+        border-radius: 25px;
+    }
+
+    .categories-list li a {
+        padding: 8px 0;
+        transition: all 0.3s ease;
+    }
+
+    .categories-list li a:hover {
+        color: #007bff !important;
+        transform: translateX(5px);
+    }
+
+    .featured-post-item img {
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .featured-post-item:hover h6 {
+        color: #007bff !important;
+    }
+</style>
+@section Scripts{
+    <script>
+        $(document).ready(function(){
+            GetNewsById();
+        });
+        function GetNewsById(){
+            var currentUrl = window.location.pathname;
+            var segments = currentUrl.split('/');
+            var alias_url = segments[segments.length - 1];
+            $.ajax({
+                url: "/Post/PostDetail",
+                type: "POST",
+                data: { alias_url: alias_url },
+                success: function(response){
+                    console.log(response);
+                }
+            });
+        }
+    </script>
+}
