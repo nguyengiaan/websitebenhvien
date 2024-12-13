@@ -212,9 +212,13 @@ function Menu() {
                                            background: #0063EC;
                                            padding: 10px 0;
                                            min-width: 220px;
-                                           border: none;
+                                    
                                            left: 0;">`;
-
+                             
+                            // Sort submenu items by order_MenuChild from high to low
+                            menu.menu.sort((a, b) => a.order_menu-b.order_menu );
+                            
+                            console.log(menu.menu); 
                             menu.menu.forEach(submenu => {
                                 if (submenu.status) {
                                     html += `
@@ -305,8 +309,8 @@ function Menu() {
                     .dropdown-item:hover {
                         background: rgba(255, 255, 255, 0.3) !important;
                         transform: translateX(5px);
-                        border-left: 4px solid #ffffff !important;
-                        color: #ffffff !important;
+                        border-left: 4px solid #ff0000 !important;
+                        color: #ff0000 !important;
                         font-weight: 600;
                     }
                     @keyframes fadeIn {

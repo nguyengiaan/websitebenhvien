@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using websitebenhvien.Data;
+using websitebenhvien.Helper;
 using websitebenhvien.Models.Enitity;
 using websitebenhvien.Models.EnitityVM;
 using websitebenhvien.Service.Interface;
@@ -16,14 +17,19 @@ namespace websitebenhvien.Service.Reponser
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public UserReponser(MyDbcontext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, IHttpContextAccessor httpContextAccessor)
+        private readonly Hubnot _hubnot;
+
+        public UserReponser(Hubnot hubnot,MyDbcontext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _httpContextAccessor = httpContextAccessor;
+            _hubnot = hubnot;
         }
+
+     
 
         public async Task<bool> DeleteUser(string id)
         {
@@ -196,7 +202,7 @@ namespace websitebenhvien.Service.Reponser
             }
         }
         
-        
+     
     
     }
 }

@@ -276,6 +276,34 @@ namespace websitebenhvien.Migrations
                     b.ToTable("Categoryproduct", (string)null);
                 });
 
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Chat", b =>
+                {
+                    b.Property<string>("Id_chat")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Id_Receiver")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Id_Sender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id_chat");
+
+                    b.ToTable("Chat", (string)null);
+                });
+
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Footer", b =>
                 {
                     b.Property<string>("Id_footer")
@@ -485,6 +513,34 @@ namespace websitebenhvien.Migrations
                     b.ToTable("News", (string)null);
                 });
 
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Notification", b =>
+                {
+                    b.Property<string>("Id_Notification")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("Createat")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id_Notification");
+
+                    b.ToTable("Notification", (string)null);
+                });
+
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Product", b =>
                 {
                     b.Property<string>("Id_product")
@@ -545,6 +601,47 @@ namespace websitebenhvien.Migrations
                     b.HasIndex("Id_product");
 
                     b.ToTable("Proimages", (string)null);
+                });
+
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Recruitment", b =>
+                {
+                    b.Property<string>("Id_Recruitment")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CV_Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Note")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Sex")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id_Recruitment");
+
+                    b.ToTable("Recruitment", (string)null);
                 });
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Sharecustomer", b =>

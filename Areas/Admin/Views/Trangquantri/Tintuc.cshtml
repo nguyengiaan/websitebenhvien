@@ -55,48 +55,48 @@
 
 <!-- Modal -->
 <div class="modal fade" id="newsModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content border-0">
             <div class="modal-header border-bottom-0">
-                <h5 class="modal-title fw-bold" id="modalTitle">Thêm tin tức</h5>
+                <h4 class="modal-title fw-bold" id="modalTitle">Thêm tin tức</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="newsForm">
                     <input type="hidden" id="id_News" name="id_News">
-                    <div class="row mb-3">
+                    <div class="row mb-4">
                         <div class="col-md-6">
-                            <label class="form-label">Tiêu đề</label>
-                            <input type="text" class="form-control" id="title" name="title" required onchange="generateNewsAlias(this.value)">
+                            <label class="form-label fs-5">Tiêu đề</label>
+                            <input type="text" class="form-control form-control-lg" id="title" name="title" required onchange="generateNewsAlias(this.value)">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Danh mục</label>
-                            <select class="form-select" id="id_Categorynews" name="id_Categorynews" onchange="generateNewsAlias($('#title').val())">
+                            <label class="form-label fs-5">Danh mục</label>
+                            <select class="form-select form-select-lg" id="id_Categorynews" name="id_Categorynews" onchange="generateNewsAlias($('#title').val())">
                             </select>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Đường dẫn</label>
-                        <input type="text" class="form-control" id="alias_url" name="alias_url">
+                    <div class="mb-4">
+                        <label class="form-label fs-5">Đường dẫn</label>
+                        <input type="text" class="form-control form-control-lg" id="alias_url" name="alias_url">
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Hình ảnh đại diện</label>
-                        <div class="input-group">
+                    <div class="mb-4">
+                        <label class="form-label fs-5">Hình ảnh đại diện</label>
+                        <div class="input-group input-group-lg">
                             <input type="file" class="form-control" id="formFile" name="formFile">
-                            <button class="btn btn-outline-secondary" type="button" onclick="openElfinder()">
+                            <button class="btn btn-outline-secondary btn-lg" type="button" onclick="openElfinder()">
                                 <i class="fas fa-folder-open"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Mô tả</label>
+                    <div class="mb-4">
+                        <label class="form-label fs-5">Mô tả</label>
                         <textarea id="description" name="description" class="summernote" value="#"></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer border-top-0">
-                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary rounded-pill px-4" onclick="saveNews()">Lưu</button>
+                <button type="button" class="btn btn-light btn-lg rounded-pill px-5" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary btn-lg rounded-pill px-5" onclick="saveNews()">Lưu</button>
             </div>
         </div>
     </div>
@@ -276,7 +276,7 @@
                 .replace(/(\s+)/g, '-')
                 .replace(/-+/g, '-')
                 .replace(/^-+|-+$/g, '');
-            $('#alias_url').val('bai-viet/' + categoryAlias + '/' + alias);
+            $('#alias_url').val( "/chi-tiet-tin/" + alias);
         }
 
         function openNewsModal() {

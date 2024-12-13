@@ -7,86 +7,132 @@
     <div class="row">
         <!-- Sidebar danh mục -->
         <div class="col-lg-3">
-            <div class="categories-sidebar bg-white p-4 rounded-3 shadow-sm mb-4">
-                <h4 class="fw-bold border-bottom pb-3 mb-3">Danh mục bài viết</h4>
-                <ul class="list-unstyled categories-list">
-                    <li class="mb-3">
-                        <a href="#" class="text-decoration-none text-dark d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-angle-right me-2 text-primary"></i>Tin tức</span>
-                            <span class="badge bg-light text-dark">12</span>
-                        </a>
-                    </li>
-                    <li class="mb-3">
-                        <a href="#" class="text-decoration-none text-dark d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-angle-right me-2 text-primary"></i>Hoạt động</span>
-                            <span class="badge bg-light text-dark">8</span>
-                        </a>
-                    </li>
-                    <li class="mb-3">
-                        <a href="#" class="text-decoration-none text-dark d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-angle-right me-2 text-primary"></i>Sự kiện</span>
-                            <span class="badge bg-light text-dark">15</span>
-                        </a>
-                    </li>
-                    <li class="mb-3">
-                        <a href="#" class="text-decoration-none text-dark d-flex justify-content-between align-items-center">
-                            <span><i class="fas fa-angle-right me-2 text-primary"></i>Y tế - Sức khỏe</span>
-                            <span class="badge bg-light text-dark">20</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+           
 
             <!-- Bài viết nổi bật -->
-            <div class="featured-posts bg-white p-4 rounded-3 shadow-sm">
-                <h4 class="fw-bold border-bottom pb-3 mb-3">Bài viết nổi bật</h4>
-                <div class="featured-post-item mb-3 pb-3 border-bottom">
-                    <a href="#" class="text-decoration-none">
-                        <img src="/path/to/thumbnail.jpg" class="img-fluid rounded mb-2" alt="Post thumbnail">
-                        <h6 class="text-dark mb-1">Tiêu đề bài viết nổi bật 1</h6>
-                        <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>01/01/2024</small>
-                    </a>
+            <div class="featured-posts bg-white p-4 rounded-3 shadow-sm d-none d-lg-block">
+                <h4 class="fw-bold border-bottom pb-3 mb-3 text-center text-danger">Bài viết nổi bật</h4>
+                <div id="post-category-news" class="overflow-auto" style="max-height: 900px; ">
+                    <!-- Nội dung bài viết sẽ được thêm vào đây qua JavaScript -->
                 </div>
-                <div class="featured-post-item mb-3">
-                    <a href="#" class="text-decoration-none">
-                        <img src="/path/to/thumbnail.jpg" class="img-fluid rounded mb-2" alt="Post thumbnail">
-                        <h6 class="text-dark mb-1">Tiêu đề bài viết nổi bật 2</h6>
-                        <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>01/01/2024</small>
-                    </a>
-                </div>
+              
+                
             </div>
         </div>
 
         <!-- Nội dung bài viết -->
         <div class="col-lg-9">
             <article class="post-content bg-white p-4 rounded-3 shadow-sm">
-                <h1 class="post-title fw-bold mb-4">Tiêu đề bài viết</h1>
+                <h1 class="post-title fw-bold mb-4" id="post-title">Tiêu đề bài viết</h1>
                 
-                <div class="post-meta text-muted mb-4">
-                    <span class="me-3"><i class="far fa-calendar-alt me-2"></i>Ngày đăng: 01/01/2024</span>
-                    <span class="me-3"><i class="far fa-user me-2"></i>Tác giả: Admin</span>
-                    <span><i class="far fa-folder me-2"></i>Danh mục: Tin tức</span>
+                <div class="post-meta mb-4 d-flex align-items-center">
+                    <span class="me-4 d-flex align-items-center">
+                        <i class="far fa-calendar-alt me-2 text-danger"></i>
+                        <span class="fw-bold text-danger" id="post-date">Ngày đăng: 01/01/2024</span>
+                    </span>
+                    <span class="d-flex align-items-center">
+                        <i class="far fa-user me-2 text-info"></i>
+                        <span class="fw-bold text-info" id="post-author">Tác giả: Admin</span>
+                    </span>
                 </div>
 
-                <div class="post-featured-image mb-4">
-                    <img src="/path/to/image.jpg" class="img-fluid rounded" alt="Ảnh bài viết">
+              
+                <div class="post-body" id="post-body">
+                 
                 </div>
+                <div class="recruitment-form mt-5 bg-white p-5 rounded-4 shadow-lg border" id="recruitment-form">
+                    <div class="text-center mb-5">
+                        <h3 class="text-primary fw-bold mb-2">Đăng ký ứng tuyển</h3>
+                        <p class="text-muted">Hãy điền đầy đủ thông tin bên dưới để ứng tuyển</p>
+                    </div>
 
-                <div class="post-body">
-                  
-                </div>
+                    <form id="recruitmentForm" class="needs-validation" novalidate>
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control border-0 bg-light" id="Name" name="Name" placeholder="Họ và tên" required>
+                                    <label for="Name" class="text-muted">
+                                        <i class="far fa-user me-2"></i>Họ và tên
+                                    </label>
+                                </div>
+                            </div>
 
-                <div class="post-tags mt-4 pt-4 border-top">
-                    <span class="fw-bold me-2">Tags:</span>
-                    <a href="#" class="badge bg-light text-dark text-decoration-none me-2">tag1</a>
-                    <a href="#" class="badge bg-light text-dark text-decoration-none me-2">tag2</a>
-                    <a href="#" class="badge bg-light text-dark text-decoration-none">tag3</a>
+                            <div class="col-md-6">
+                                <div class="gender-select bg-light p-3 rounded-3 h-100">
+                                    <label class="form-label fw-medium mb-3 text-muted">
+                                        <i class="fas fa-venus-mars me-2"></i>Giới tính
+                                    </label>
+                                    <div class="d-flex gap-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="sex" id="sex" value="Nam" required>
+                                            <label class="form-check-label" for="male">Nam</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="sex" id="sex" value="Nữ" required>
+                                            <label class="form-check-label" for="female">Nữ</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="tel" class="form-control border-0 bg-light" id="Phone" name="Phone" placeholder="Số điện thoại" required>
+                                    <label for="phone" class="text-muted">
+                                        <i class="fas fa-phone-alt me-2"></i>Số điện thoại
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control border-0 bg-light" id="Position" name="Position" placeholder="Vị trí ứng tuyển" required>
+                                    <label for="position" class="text-muted">
+                                        <i class="fas fa-briefcase me-2"></i>Vị trí ứng tuyển
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control border-0 bg-light" id="Address" name="Address" placeholder="Địa chỉ" required>
+                                    <label for="address" class="text-muted">
+                                        <i class="fas fa-map-marker-alt me-2"></i>Địa chỉ
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="upload-cv p-4 border border-dashed rounded-3 bg-light text-center">
+                                    <i class="fas fa-cloud-upload-alt fa-2x text-primary mb-3"></i>
+                                    <h6 class="fw-bold mb-2">Tải lên CV của bạn</h6>
+                                    <input type="file" class="form-control border-0" id="CV_Url" name="CV_Url" accept=".pdf,.doc,.docx">
+                                    <small class="text-muted mt-2 d-block">Chấp nhận file PDF, DOC, DOCX (Tối đa 5MB)</small>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control border-0 bg-light" id="Note" name="Note" style="height: 120px" placeholder="Thư giới thiệu"></textarea>
+                                    <label for="coverLetter" class="text-muted">
+                                        <i class="fas fa-envelope me-2"></i>Thư giới thiệu
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 text-center mt-4">
+                                <button type="button" onclick="SubmitRecruitment()" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm hover-lift">
+                                    <i class="fas fa-paper-plane me-2"></i>Gửi đơn ứng tuyển
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </article>
 
             <div class="share-buttons mt-4 text-center">
                 <h5 class="mb-3">Chia sẻ bài viết</h5>
-                <a href="#" class="btn btn-primary me-2"><i class="fab fa-facebook-f me-2"></i>Facebook</a>
+                <a onclick="shareToFacebook()" class="btn btn-primary me-2" style="cursor:pointer"><i class="fab fa-facebook-f me-2"></i>Facebook</a>
                 <a href="#" class="btn btn-info me-2"><i class="fab fa-twitter me-2"></i>Twitter</a>
                 <a href="#" class="btn btn-danger"><i class="fab fa-pinterest me-2"></i>Pinterest</a>
             </div>
@@ -145,18 +191,159 @@
 @section Scripts{
     <script>
         $(document).ready(function(){
+            $('#recruitment-form').hide();
             GetNewsById();
+            GetNewsByCategory();
+
         });
+
+        function shareToFacebook() {
+            var currentUrl = window.location.href;
+            var facebookShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(currentUrl);
+            window.open(facebookShareUrl, '_blank', 'width=600,height=400');
+        }
         function GetNewsById(){
             var currentUrl = window.location.pathname;
             var segments = currentUrl.split('/');
-            var alias_url = segments[segments.length - 1];
+            var alias_url = "/chi-tiet-tin/" + segments[segments.length - 1];
+            console.log(alias_url);
             $.ajax({
                 url: "/Post/PostDetail",
                 type: "POST",
                 data: { alias_url: alias_url },
                 success: function(response){
-                    console.log(response);
+             
+                    $('#post-title').text( response.data.title);
+                    $('#post-date').text("Ngày đăng: " + response.data.createat.split('T')[0]);
+                    $('#post-author').text('Tác giả: Admin');
+                    $('#post-body').html(response.data.description).css({
+                        'font-size': '14px',
+                        'padding': '10px', 
+                        'word-wrap': 'break-word',
+                        'max-width': '100%'
+                    }).find('img, table').css({
+                        'max-width': '100%',
+                        'height': 'auto',
+                        'object-fit': 'contain'
+                    });
+                    $('#post-body table').css({
+                        'display': 'block',
+                        'overflow-x': 'auto',
+                        'width': '100%'
+                    }).find('td').css({
+                        'min-width': '120px',
+                        'white-space': 'nowrap'
+                    });
+                }
+            });
+        }
+        function GetNewsByCategory(){
+            var currentUrl = window.location.pathname;
+            var segments = currentUrl.split('/');
+            var alias_url = "/chi-tiet-tin/" + segments[segments.length - 1];
+            $.ajax({
+                url: "/Post/GetNewsByCategory", 
+                type: "POST",
+                data: { alias_url: alias_url },
+                success: function(response){
+                   if(response.status){
+                        var html = '';
+                        console.log(response.data); 
+                        $.each(response.data,function(index,item){
+                            var postDate = new Date(item.createat).toLocaleDateString();
+                            var today = new Date().toLocaleDateString();
+                            var isNew = postDate === today;
+                            
+                            html += `
+                                <div class="featured-post-item mb-4 bg-white rounded-3 shadow-hover" 
+                                     style="transition: all 0.3s ease;">
+                                    <a href="${item.alias_url}" class="text-decoration-none">
+                                        <div class="position-relative">
+                                            <img src="/Resources/${item.url}" 
+                                                 class="img-fluid w-100 rounded-top" 
+                                                 alt="${item.title}"
+                                                 style="height: 200px; object-fit: cover;">
+                                            ${isNew ? '<span class="badge bg-danger position-absolute top-0 end-0 m-2">Mới</span>' : ''}
+                                        </div>
+                                        <div class="p-3" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef);">
+                                            <h6 class="text-dark mb-2 fw-bold" 
+                                                style="display: -webkit-box;
+                                                       -webkit-line-clamp: 2;
+                                                       -webkit-box-orient: vertical;
+                                                       overflow: hidden;
+                                                       line-height: 1.5;
+                                                       height: 3em;
+                                                       color: #2c3e50;">
+                                                ${item.title}
+                                            </h6>
+                                            <div class="d-flex align-items-center">
+                                                <i class="far fa-calendar-alt text-danger me-2"></i>
+                                                <span class="text-muted small" style="color: #6c757d !important;">${item.createat.split('T')[0]}</span>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            `;
+                        });
+                        if(response.data[0].id_Categorynews ==='4016460a-bf7a-4b41-9ff2-4e1cb4cbdf28'){
+                            $('#recruitment-form').show();
+                        }else{
+                            $('#recruitment-form').hide();
+                        }
+                        $('#post-category-news').html(html);
+
+                        // Add hover effects via CSS
+                        $("<style>")
+                            .text(`
+                                .shadow-hover {
+                                    border: 1px solid #e0e0e0;
+                                    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+                                }
+                                .shadow-hover:hover {
+                                    transform: translateY(-5px);
+                                    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+                                    border-color: #007bff;
+                                }
+                                .featured-post-item:hover h6 {
+                                    color: #007bff !important;
+                                    text-shadow: 0 0 1px rgba(0,123,255,0.1);
+                                }
+                                .featured-post-item img {
+                                    transition: all 0.4s ease;
+                                }
+                                .featured-post-item:hover img {
+                                    transform: scale(1.05);
+                                    filter: brightness(1.05);
+                                }
+                                .badge {
+                                    background: linear-gradient(45deg, #dc3545, #ff4d5a) !important;
+                                    box-shadow: 0 2px 4px rgba(220,53,69,0.3);
+                                }
+                                .featured-post-item {
+                                    border-radius: 10px;
+                                    overflow: hidden;
+                                }
+                            `)
+                            .appendTo("head");
+                   }
+                }
+            });
+        }
+        function SubmitRecruitment(){
+            var form=$('#recruitmentForm')[0];
+            var data=new FormData(form);
+            $.ajax({
+                url: "/api/ungtuyencv",
+                type: "POST",
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function(response){
+                    if(response.status){
+                        Swal.fire("Thành công", response.message, "success");
+                    }else{
+                        swal.fire("Thất bại", response.message, "error");
+                    }
                 }
             });
         }

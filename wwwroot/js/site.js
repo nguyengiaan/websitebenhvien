@@ -215,12 +215,16 @@ function Menu() {
                                     style="animation: fadeIn 0.3s ease;
                                            border-radius: 3%;
                                            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-                                           background: #0063EC;
+                                           background: #0095d9;
                                            padding: 10px 0;
                                            min-width: 220px;
-                                           border: none;
-                                           left: 0;">`;
 
+                                           left: 0;">`;
+                             
+                            // Sort submenu items by order_MenuChild from high to low
+                            menu.menu.sort((a, b) => a.order_menu-b.order_menu );
+                            
+                            console.log(menu.menu); 
                             menu.menu.forEach(submenu => {
                                 if (submenu.status) {
                                     html += `
@@ -311,8 +315,8 @@ function Menu() {
                     .dropdown-item:hover {
                         background: rgba(255, 255, 255, 0.3) !important;
                         transform: translateX(5px);
-                        border-left: 4px solid #ffffff !important;
-                        color: #ffffff !important;
+                        border-left: 4px solid #ff0000 !important;
+                        color: #ff0000 !important;
                         font-weight: 600;
                     }
                     @keyframes fadeIn {
@@ -334,6 +338,8 @@ function Menu() {
                     .dropdown-menu {
                         margin-top: 0;
                         left: 0 !important;
+
+                        background-color: #0095d9!important;
                     }
                 `;
                 document.head.appendChild(style);
@@ -1230,3 +1236,57 @@ function GetFooter() {
         }
     });
 }
+document.addEventListener('DOMContentLoaded', function() {
+    const chatButton = document.getElementById('chatButton');
+    const chatWindow = document.getElementById('chatWindow');
+    const closeChatBtn = document.getElementById('closeChatBtn');
+    const messageInput = document.getElementById('messageInput');
+    const sendMessageBtn = document.getElementById('sendMessageBtn');
+    const chatMessages = document.getElementById('chatMessages');
+
+    // Toggle chat window
+    chatButton.addEventListener('click', function() {
+        chatWindow.style.display = chatWindow.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // Close chat window
+    closeChatBtn.addEventListener('click', function() {
+        chatWindow.style.display = 'none';
+    });
+   
+
+
+    // Send message
+    function sendMessage() {
+        const message = messageInput.value.trim();
+        if (message) {
+            $.ajax({
+                url: "/api/gui-cho-admin",
+                type: "POST",
+                data: { message: message },
+                success: function(response) {
+                    if(response.status)
+                    {
+                        messageInput.value = '';
+                        chatMessages.innerHTML += `<div class="mb-2 text-end">
+                            <div class="d-inline-block bg-primary text-white rounded p-2">
+                                ${message}
+                            </div>
+                        </div>`;
+                    }
+                    else
+                    {
+                        alert(response.message);
+                    }
+                }
+            });
+        }
+    }
+
+    sendMessageBtn.addEventListener('click', sendMessage);
+    messageInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+});

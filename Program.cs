@@ -11,6 +11,7 @@ using websitebenhvien.Service.Reponser;
 using websitebenhvien.Config;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using websitebenhvien.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,18 +27,21 @@ builder.Services.AddDbContext<MyDbcontext>(options =>
                 maxRetryDelay: TimeSpan.FromSeconds(30), // Thời gian chờ tối đa giữa các lần thử lại
                 errorNumbersToAdd: null); // Có thể chỉ định mã lỗi cụ thể để thử lại
         }));
+
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<MyDbcontext>()
     .AddDefaultTokenProviders();
 builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
+
 builder.Services.AddScoped<IPageMain,PageMainReponser>();
 builder.Services.AddScoped<IAllinone, AllinoneReponser>();  
 builder.Services.AddScoped<IUser, UserReponser>();
 builder.Services.AddScoped<IPost, PostReponser>();
+builder.Services.AddScoped<Hubnot>();
 builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));
 builder.Services.AddAuthorization(options =>
 {
-
     options.AddPolicy("admin", policy => policy.RequireRole("admin"));
     options.AddPolicy("user", policy => policy.RequireRole("user"));
 });
@@ -83,11 +87,13 @@ app.UseStaticFiles(
         RequestPath = "/Resources"
     }
 );
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapHub<Hubnot>("/friendHub");
 // Route cho Areas
 app.MapControllerRoute(
     name: "areas",
@@ -104,7 +110,8 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "bai-viet-detail",
     defaults: new { controller = "Home", action = "PostDetail" },
-    pattern: "bai-viet/{catogery}/{alias_url}");
+    pattern: "chi-tiet-tin/{alias_url}");
+
 
 app.Run();
 

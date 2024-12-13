@@ -13,5 +13,8 @@ namespace websitebenhvien.Service.Interface
 
         public Task<Status> Login(LoginVM login);
 
+        // chat
+
+
     }
 }

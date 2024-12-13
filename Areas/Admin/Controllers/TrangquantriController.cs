@@ -85,6 +85,19 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
+        [Authorize]
+        [Route("/trang-quan-tri/quan-ly-tuyen-dung")]
+        public IActionResult Tuyendung()
+        {
+            return View();
+        }
+        [Authorize]
+        [Route("/trang-quan-tri/quan-ly-tin-nhan")]
+        public IActionResult TinNhan()
+        {
+            return View();
+        }
+
         [Route("/dang-nhap")]
         public IActionResult Dangnhap()
         {

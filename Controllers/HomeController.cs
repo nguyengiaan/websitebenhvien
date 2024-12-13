@@ -26,11 +26,12 @@ public class HomeController : Controller
     {
         return View();
     }
-    [HttpGet("/bai-viet/{catogery}/{alias_url}")]
+    [HttpGet("/chi-tiet-tin/{alias_url}")]
     public IActionResult PostDetail()
     {
         return View();
     }
+    
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

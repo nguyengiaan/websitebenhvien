@@ -37,8 +37,12 @@ namespace websitebenhvien.Data
 
         public DbSet<Proimages> Proimages { get; set; }
 
+        public DbSet<Recruitment> Recruitments { get; set; }
 
+        public DbSet<Notification> Notifications { get; set; }
 
+        public DbSet<Chat> Chats { get; set; }
+        
        
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -91,6 +95,15 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<Proimages>().ToTable("Proimages");
             modelBuilder.Entity<Proimages>().HasKey(x => x.Id_proimages);
             modelBuilder.Entity<Proimages>().HasOne(x => x.Product).WithMany(x => x.Proimages).HasForeignKey(x => x.Id_product);
+            //Tuyển dụng
+            modelBuilder.Entity<Recruitment>().ToTable("Recruitment");
+            modelBuilder.Entity<Recruitment>().HasKey(x => x.Id_Recruitment);
+            //Thông báo
+            modelBuilder.Entity<Notification>().ToTable("Notification");
+            modelBuilder.Entity<Notification>().HasKey(x => x.Id_Notification);
+            // chat
+            modelBuilder.Entity<Chat>().ToTable("Chat");
+            modelBuilder.Entity<Chat>().HasKey(x => x.Id_chat);
 
 
         }
