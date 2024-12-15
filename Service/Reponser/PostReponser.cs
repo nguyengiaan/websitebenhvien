@@ -98,7 +98,8 @@ namespace websitebenhvien.Service.Reponser
             catch(Exception ex){
                 return false;
             }
-        }         public Tuple<int, string> SaveMedia(IFormFile imageFile)
+        }
+        public Tuple<int, string> SaveMedia(IFormFile imageFile)
         {
                  try
             {
@@ -223,12 +224,14 @@ namespace websitebenhvien.Service.Reponser
                 return false;
             }
         }
+        // chat interface
 
         public async Task<bool> Chatcustomer(string message)
         {
             try
             {
                 var sessionId = _httpContextAccessor.HttpContext.Request.Cookies["SessionId"];
+                var name = sessionId == "admin" ? sessionId.Substring(0,3) : sessionId.Substring(0,3);
 
                 if (sessionId == null)
                 {
@@ -239,7 +242,7 @@ namespace websitebenhvien.Service.Reponser
                     _httpContextAccessor.HttpContext.Response.Cookies.Append("SessionId", sessionId, new CookieOptions
                     {
                         Expires = DateTime.UtcNow.AddDays(1),  // Cookie tồn tại 1 ngày
-                        HttpOnly = true,
+                        HttpOnly = false,
                         Secure = false // Chấp nhận cả HTTP và HTTPS
                     });
                 }
@@ -265,6 +268,8 @@ namespace websitebenhvien.Service.Reponser
                await _context.Notifications.AddAsync(Notification);
                await _context.SaveChangesAsync();
                await _hubnot.SendNotification();
+          
+               await _hubnot.SendChat(sessionId,name);
                return true;
             }
             catch(Exception ex)
@@ -272,5 +277,102 @@ namespace websitebenhvien.Service.Reponser
                 return false;
             }
         }
+        // lấy danh sách chat khách hàng 
+        
+        public async Task<List<Chat>> GetChat()
+        {
+            try
+            {
+                var chat = await _context.Chats.Where(x=>x.Id_Sender!="admin")
+                    .GroupBy(x => x.Id_Sender == "admin" ? x.Id_Receiver : x.Id_Sender)
+                    .Select(g => g.OrderByDescending(x => x.Time).First())
+                    .ToListAsync();
+                    
+                return chat.OrderByDescending(x=>x.Time).ToList();
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
+        // chat hiển thị danh sách tin nhắn
+        public async Task<List<Chat>> GetChatById(string id)
+        {
+            try
+            {
+                var chat = await _context.Chats.Where(x=>x.Id_Sender==id  || x.Id_Receiver==id).ToListAsync();
+                return chat.OrderBy(x=>x.Time).ToList();
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
+        // admin rep tin nhắn khách hàng 
+        public async Task<bool> RepChat(string id, string message)
+        {
+            try
+            {
+                var data=new Chat()
+                {
+                    Id_chat=Guid.NewGuid().ToString(),
+                    Message=message,
+                    Id_Sender="admin",
+                    Id_Receiver=id,
+                    Time=DateTime.Now,
+                    Status=false,
+                };
+                await _context.Chats.AddAsync(data);
+                await _context.SaveChangesAsync();
+                await _hubnot.SendNotification();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> ViewChat(string id)
+        {
+            try
+            {
+                var data = await _context.Chats.Where(x => x.Id_Sender == id).ToListAsync();
+                if (data != null && data.Any())
+                {
+                    foreach (var item in data)
+                    {
+                        item.Status = true;
+                        _context.Chats.Update(item);
+                    }
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> DelChat(string id)
+        {
+            try
+            {
+                var data=await _context.Chats.Where(x=>x.Id_Sender==id).ToListAsync();
+                _context.Chats.RemoveRange(data);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+        }
+
+        // rep tin nhắn khách hàng 
+
+
     }
 }

@@ -170,5 +170,85 @@ namespace websitebenhvien.Controllers
                 return Json(new { status = false,message = ex.Message });
             }
        }
+        // lấy danh sách chat khách hàng 
+        [Authorize]
+        [HttpGet("/api/lay-danh-sach-chat")]
+        public async Task<IActionResult> GetChat()
+        {
+            try
+            {
+                var data = await _post.GetChat();
+                return Json(new { status = true,data = data });
+            }catch(Exception ex)
+            {
+                return Json(new { status = false,message = ex.Message });
+            }
+        }
+        // hiển thị chi tiet tin nhan 
+        [HttpPost("/api/lay-tin-nhan")]
+        public async Task<IActionResult> GetChatById(string id)
+        {
+           try
+
+           {
+            var data = await _post.GetChatById(id);
+            return Json(new { status = true,data = data });
+
+           }
+           catch(Exception ex)
+           {
+            return Json(new { status = false,message = ex.Message });
+           }
+        }
+        // admin rep tin nhắn khách hàng 
+        [Authorize]
+        [HttpPost("/api/rep-tin-nhan")]
+        public async Task<IActionResult> RepChat(string id,string message)
+        {
+           try
+           {
+            var data = await _post.RepChat(id,message);
+            if(data)
+            {
+                return Json(new { status = true,message = "Trả lời thành công" });
+            }
+            return Json(new { status = false,message = "Trả lời thất bại" });
+           }catch(Exception ex)
+           {
+            return Json(new { status = false,message = ex.Message });
+           }
+        }
+        // xem tin nhắn khách hàng 
+        [Authorize]
+        [HttpPost("/api/xem-tin-nhan")]
+        public async Task<IActionResult> ViewChat(string id)
+        {
+            try
+            {
+                var data = await _post.ViewChat(id);
+                return Json(new { status = true,message = "Xem tin nhắn thành công" });
+            }catch(Exception ex)
+            {
+                return Json(new { status = false,message = ex.Message });
+            }
+        }
+        // xóa tin nhắn khách hàng 
+        [Authorize]
+        [HttpPost("/api/xoa-tin-nhan")]
+        public async Task<IActionResult> DelChat(string id)
+        {
+           try
+           {
+            var data = await _post.DelChat(id);
+            if(data)
+            {
+                return Json(new { status = true,message = "Xóa tin nhắn thành công" });
+            }
+            return Json(new { status = false,message = "Xóa tin nhắn thất bại" });
+           }catch(Exception ex)
+           {
+            return Json(new { status = false,message = ex.Message });
+           }
+        }
     }
 }

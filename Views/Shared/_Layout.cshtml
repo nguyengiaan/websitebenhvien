@@ -460,9 +460,9 @@
             <!-- Chat Button -->
             <button id="chatButton" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center position-relative" style="width: 50px; height: 50px; background: linear-gradient(45deg, #0063EC, #00a5ff); border: none; transition: all 0.3s ease;">
                 <i class="fas fa-comments fa-lg" style="color: white; filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger animate__animated animate__heartBeat animate__infinite" style="font-size: 0.6rem;">
-                    1
-                    <span class="visually-hidden">unread messages</span>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger animate__animated animate__heartBeat animate__infinite" style="font-size: 0.6rem;" id="count-notification">
+                    <i class="fas fa-bell text-white" id="count-notification"></i>
+                    
                 </span>
                 <div class="ripple position-absolute w-100 h-100 rounded-circle" style="animation: ripple 1.5s linear infinite; border: 2px solid #fff; opacity: 0;"></div>
             </button>
@@ -508,11 +508,11 @@
 
     <div id="google_translate_element" class="ms-2" style="display: none;"></div>
 
-
+    <script src="~/lib/aspnet-signalr/signalr.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    
+ 
     <!-- Script xử lý nút cuộn lên đầu trang -->
     <script>
         // Xử lý hiệu ứng fade-in khi cuộn

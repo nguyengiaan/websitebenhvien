@@ -1,4 +1,21 @@
-﻿$(document).ready(function() {
+﻿const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/friendHub")
+    .build();
+
+connection.start()
+    .then(function () {
+        console.log("SignalR connected.");
+    })
+    .catch(function (err) {
+        console.error(err.toString());
+    });
+
+connection.on("ReceiveNotification", function () {
+    ViewChat();
+});
+
+
+$(document).ready(function() {
     // Ẩn select language nếu tồn tại
     Header();   
     Menu();
@@ -1236,14 +1253,92 @@ function GetFooter() {
         }
     });
 }
+function getSessionId() 
+{
+    // Decode cookie string to handle special characters
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookies = decodedCookie.split(';');
+    for (let cookie of cookies) {
+        // Trim whitespace and split on first =
+        let [name, ...value] = cookie.trim().split('=');
+        // Join value parts back together in case value contained =
+        value = value.join('=');
+        
+        if (name === 'SessionId') {
+            return value;
+        }
+
+    }
+    console.log(cookies);
+    return null;
+}
+// xem tin nhắn khách hàng 
+function ViewChat() {
+    const sessionId = getSessionId();
+    if (!sessionId) {
+        console.log("SessionId cookie not found");
+        return;
+    }
+    console.log(sessionId);
+    $.ajax({
+        url: "/api/lay-tin-nhan",
+        type: "POST",
+        data: { id: sessionId },
+        success: function(response) {
+            if(response.status)
+            {
+                renderChat(response.data);
+            }
+        }
+    });
+}
+// render chat
+function renderChat(data)
+{
+    console.log(data);
+    const chatMessages = document.getElementById('chatMessages');
+    chatMessages.innerHTML = ''; // Clear existing messages
+
+    // Add welcome message if no messages
+    if (!data || data.length === 0) {
+        chatMessages.innerHTML = `
+            <div class="mb-2 animate__animated animate__fadeInLeft">
+                <div class="d-inline-block bg-light rounded p-2" style="position: relative; max-width: 80%;">
+                    <p class="m-0">Xin chào! Chúng tôi có thể giúp gì cho bạn? 👋</p>
+                </div>
+            </div>`;
+        return;
+    }
+
+    // Render each message
+    data.forEach(message => {
+        const isAdmin = message.id_Sender === 'admin';
+        const messageHtml = `
+            <div class="mb-2 animate__animated ${isAdmin ? 'animate__fadeInLeft' : 'animate__fadeInRight'}" 
+                 style="display: flex; justify-content: ${isAdmin ? 'flex-start' : 'flex-end'}">
+                <div class="d-inline-block ${isAdmin ? 'bg-light' : 'bg-primary text-white'} rounded p-2" 
+                     style="position: relative; max-width: 80%; word-break: break-word;">
+                    <p class="m-0">${message.message}</p>
+            
+                </div>
+            </div>`;
+        chatMessages.innerHTML += messageHtml;
+        
+    });
+
+    // Scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
 document.addEventListener('DOMContentLoaded', function() {
+
+  
     const chatButton = document.getElementById('chatButton');
     const chatWindow = document.getElementById('chatWindow');
     const closeChatBtn = document.getElementById('closeChatBtn');
     const messageInput = document.getElementById('messageInput');
     const sendMessageBtn = document.getElementById('sendMessageBtn');
     const chatMessages = document.getElementById('chatMessages');
-
+    ViewChat();
     // Toggle chat window
     chatButton.addEventListener('click', function() {
         chatWindow.style.display = chatWindow.style.display === 'none' ? 'block' : 'none';
@@ -1273,6 +1368,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 ${message}
                             </div>
                         </div>`;
+                        ViewChat();
                     }
                     else
                     {
@@ -1289,4 +1385,6 @@ document.addEventListener('DOMContentLoaded', function() {
             sendMessage();
         }
     });
+    // Get SessionId from cookie
+  
 });

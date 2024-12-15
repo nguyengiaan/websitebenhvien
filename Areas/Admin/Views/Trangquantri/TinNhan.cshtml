@@ -2,71 +2,393 @@
     ViewData["Title"] = "Quản lý tin nhắn";
 }
 
-<h2>Quản lý tin nhắn</h2>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
 
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Người gửi</th>
-                        <th scope="col">Nội dung</th>
-                        <th scope="col">Thời gian</th>
-                        <th scope="col">Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Example row -->
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Nguyễn Văn A</td>
-                        <td>Tin nhắn ví dụ</td>
-                        <td>2023-10-01 12:34</td>
-                        <td>
-                            <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#messageModal">Nhắn tin</button>
-                            <button type="button" class="btn btn-danger btn-sm">Xóa</button>
-                        </td>
-                    </tr>
-                    <!-- Repeat rows as needed -->
-                </tbody>
-            </table>
+<!-- Content Row -->
+<div class="row">
+    <!-- Users List -->
+    <div class="col-xl-4">
+        <div class="card shadow mb-4 border-left-primary">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-users mr-2"></i>
+                    Danh sách người dùng
+                </h6>
+                <div class="dropdown no-arrow">
+                    <a class="dropdown-toggle" href="#" role="button" id="usersDropdown" data-toggle="dropdown">
+                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in">
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-user-plus fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Thêm người dùng
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Cài đặt
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="users-list">
+                    <!-- User items will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="col-xl-8">
+        <div class="card shadow mb-4 border-left-success">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center bg-gradient-primary text-white">
+                <div class="d-flex align-items-center">
+                    <img id="selected-user-avatar" src="/img/default-avatar.png" class="rounded-circle mr-2" style="width: 40px; height: 40px; display: none;">
+                    <h6 class="m-0 font-weight-bold" id="selected-user-name">Chọn người dùng để bắt đầu trò chuyện</h6>
+                </div>
+                <div class="online-status d-none">
+                    <span class="dot"></span>
+                    <span class="status-text">Trực tuyến</span>
+                </div>
+            </div>
+            <div class="card-body chat-container" style="height: 500px; overflow-y: auto; background: #f8f9fc;">
+                <div id="chat-messages" class="messages-area px-3">
+                    <!-- Messages will be dynamically added here -->
+                </div>
+            </div>
+            <div class="card-footer bg-white">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                    </div>
+                    <input type="text" id="message-input" class="form-control border-0 py-3" placeholder="Nhập tin nhắn của bạn...">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary px-4" type="button" id="send-message">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Message Modal -->
-<div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="messageModalLabel">Gửi tin nhắn</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Người nhận:</label>
-                        <input type="text" class="form-control" id="recipient-name">
-                    </div>
-                    <div class="form-group">
-                        <label for="message-text" class="col-form-label">Tin nhắn:</label>
-                        <textarea class="form-control" id="message-text"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary">Gửi</button>
-            </div>
-        </div>
-    </div>
-</div>
+<style>
+    .users-list {
+        max-height: 600px;
+        overflow-y: auto;
+    }
 
-<!-- Bootstrap CSS and JS -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script></div>
+    .user-item {
+        padding: 15px;
+        transition: all 0.2s ease;
+        border-bottom: 1px solid #e3e6f0;
+        cursor: pointer;
+    }
+
+    .user-item:hover {
+        background-color: #f8f9fc;
+        transform: translateX(5px);
+    }
+
+    .user-item-content {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .user-avatar-wrapper {
+        position: relative;
+        margin-right: 15px;
+    }
+
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid #4e73df;
+        transition: all 0.2s ease;
+    }
+
+    .user-status {
+        position: absolute;
+        bottom: 2px;
+        right: 2px;
+        width: 12px;
+        height: 12px;
+        border: 2px solid #fff;
+        border-radius: 50%;
+    }
+
+    .user-status.online {
+        background-color: #1cc88a;
+        box-shadow: 0 0 0 2px rgba(28, 200, 138, 0.3);
+    }
+
+    .user-info {
+        flex: 1;
+    }
+
+    .user-name {
+        font-weight: 600;
+        color: #5a5c69;
+        margin-bottom: 2px;
+    }
+
+    .user-last-message {
+        font-size: 0.85rem;
+        color: #858796;
+    }
+
+    .notification-badge {
+        background: #e74a3b;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        box-shadow: 0 2px 4px rgba(231, 74, 59, 0.3);
+    }
+
+    .message {
+        max-width: 75%;
+        padding: 12px 16px;
+        border-radius: 20px;
+        margin: 8px 0;
+        position: relative;
+    }
+
+    .message.received {
+        background-color: #e3e6f0;
+        color: #5a5c69;
+        border-bottom-left-radius: 5px;
+    }
+
+    .message.sent {
+        background-color: #4e73df;
+        color: white;
+        border-bottom-right-radius: 5px;
+        margin-left: auto;
+    }
+
+    .chat-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .chat-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .chat-container::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+    }
+
+    .chat-container::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+    .btn-outline-danger {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+    }
+
+    .dot {
+        height: 8px;
+        width: 8px;
+        background-color: #1cc88a;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 5px;
+        animation: pulse 2s infinite;
+    }
+
+</style>
+
+@section Scripts {
+    <script>
+        connection.on("ReceiveChat", function (id,name) {
+            console.log(id,name);
+            getChat();
+            getChatById(id,name);
+        });
+
+        $(document).ready(function() {
+            // Simulate some users
+         
+
+            // Render users list
+          
+            // Initialize
+            getChatById(getChatById,);
+
+    
+      
+            //hiển thị tin nhắn
+            
+            // xử lý sự kiện nhấn enter
+            $('#message-input').keypress(function(e) {
+                if (e.which == 13) {
+                    $('#send-message').click();
+                }
+            });
+            $('#send-message').click(function() {
+                const messageText = $('#message-input').val().trim();
+                const id = $('#send-message').data('id');
+                console.log(messageText);
+                $.ajax({
+                    url: "/api/rep-tin-nhan",
+                    type: "POST",
+                    data: { id: id, message: messageText },
+                    success: function(response) {
+                       if(response.status)
+                       {
+                          $('#chat-messages').append(`<div class="message sent">${messageText}</div>`);
+                        $('#message-input').val('');
+                       }
+                    }
+                });
+            });
+        });
+        // hiển thị Danh sách người dùng 
+            function getChat()
+            {
+                $.ajax({
+                    url: "/api/lay-danh-sach-chat",
+                    type: "GET",
+                    success: function(response) {
+           
+                        renderUsers(response.data);
+                    }
+                });
+            }
+            // hiển thị tin nhắn 
+            function renderUsers(users) {
+                const usersList = $('.users-list');
+                usersList.empty();
+                
+                if (!users || users.length === 0) {
+                    usersList.append('<div class="text-center">Không có tin nhắn nào</div>');
+                    return;
+                }
+
+                users.forEach(user => {
+                    var name = user.id_Sender == "admin" ? (user.id_Receiver ? user.id_Receiver.substring(0,3) : '') : (user.id_Sender ? user.id_Sender.substring(0,3) : '');
+                    const userHtml = `
+                        <div class="user-item" data-user-id="${user.id_Sender}" onclick="getChatById('${user.id_Sender==="admin" ? user.id_Receiver : user.id_Sender}','${name}')">
+                            <div class="user-item-content">
+                                <div class="user-avatar-wrapper">
+                                    <img src="https://pbs.twimg.com/media/GH6wEXHW8AEnwAf.jpg"  class="user-avatar" alt="User Avatar">
+                                    <span class="user-status ${user.status ? 'online' : ''}"></span>
+                                </div>
+                                <div class="user-info">
+                                    <div class="user-name tw-text-lg">Khách hàng ${user.id_Sender == "admin" ? (user.id_Receiver ? user.id_Receiver.substring(0,3) : '') : (user.id_Sender ? user.id_Sender.substring(0,3) : '')}</div>
+                                    <div class="user-time text-muted">
+                                        <small class="text-danger">${new Date(user.time).toLocaleString()}</small>
+                                    </div>
+                                    <div class="user-last-message text-muted">
+                                        <small>${user.message}</small>
+                                    </div>
+                                </div>
+                                <div class="user-actions d-flex align-items-center">
+                                    ${!user.status ? `
+                                        <span class="notification-badge position-relative me-2">
+                                            <i class="fas fa-bell notification-icon text-warning animate__animated animate__swing"></i>
+                                            <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                                                <span class="visually-hidden">New alerts</span>
+                                            </span>
+                                        </span>
+                                    ` : ''}
+                                    <button class="btn btn-outline-danger btn-sm delete-user" 
+                                            data-user-id="${user.id_Sender}"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            title="Xóa cuộc trò chuyện"
+                                            onclick="delChat('${user.id_Sender==="admin" ? user.id_Receiver : user.id_Sender}')">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    usersList.append(userHtml);
+                });
+            }
+            // hiển thị chi tiet tin nhan 
+            function getChatById(id,name)
+            {
+                $.ajax({
+                    url: "/api/lay-tin-nhan",
+                    type: "POST",
+                    data: { id: id },
+                    success: function(response) {
+                        viewChat(id);
+                        $('#send-message').data('id',id);
+                        renderChat(response.data,name);
+                    }
+                });
+            }
+            // hiển thị chi tiet tin nhan 
+            function renderChat(chat,name)
+            {
+                console.log(chat);
+
+                $('#selected-user-name').text(`Khách hàng ${name ? name : 'hãy chọn người dùng để bắt đầu trò chuyện'}`);
+                $('#chat-messages').empty();
+                var messageHtml = '';
+                chat.forEach(message => {
+                    if(message.id_Sender == "admin")
+                    {   
+                        messageHtml += `
+                            <div class="message sent">${message.message}</div>
+                        `;
+                    }else{
+                        messageHtml += `
+                            <div class="message received">${message.message}</div>
+                        `;
+                    }
+                   
+                });
+                 $('#chat-messages').html(messageHtml);
+            }
+            // rep tin nhắn khách hàng 
+            function viewChat(id)
+            {
+                $.ajax({
+                    url: "/api/xem-tin-nhan",
+                    type: "POST",
+                    data: { id: id },
+                    success: function(response) {
+                        if(response.status)
+                        {
+                            console.log("ok");
+                            getChat();
+
+                        }
+                    }
+                });
+            }
+            // xóa tin nhắn khách hàng 
+            function delChat(id)
+            {
+                $.ajax({
+                    url: "/api/xoa-tin-nhan",
+                    type: "POST",
+                    data: { id: id },
+                    success: function(response) {
+                        if(response.status)
+                        {
+                            getChat();
+                        }
+                    }
+                });
+            }
+    </script>
+}

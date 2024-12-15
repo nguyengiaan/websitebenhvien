@@ -24,6 +24,11 @@ namespace websitebenhvien.Helper
         {
             await _hubContext.Clients.All.SendAsync("ReceiveNotification");
         }
+        public async Task SendChat(string id,string name)
+        {
+            await _hubContext.Clients.All.SendAsync("ReceiveChat",id,name);
+        }
+
 
     }
 }

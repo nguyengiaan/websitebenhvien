@@ -26,6 +26,19 @@ namespace websitebenhvien.Service.Interface
         // chat khách hàng 
         
         public Task<Boolean> Chatcustomer(string message);
+
+        // hiển thị danh sách chat khách hàng 
+        public Task<List<Chat>> GetChat();  
+
+        // hiển thị chi tiet tin nhan   
+        public Task<List<Chat>> GetChatById(string id);
+
+        // rep tin nhắn khách hàng 
+        public Task<Boolean> RepChat(string id,string message);
+        // xem tin nhắn khách hàng 
+        public Task<Boolean> ViewChat(string id);
+        // XOÁ KHÁCH HÀNG 
+        public Task<Boolean> DelChat(string id);
     }
 }
 
