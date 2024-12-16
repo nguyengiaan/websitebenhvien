@@ -15,9 +15,9 @@ namespace websitebenhvien.Service.Interface
 
         public Task<List<NewsVM>>Listnews();
 
-        public Task<bool> DeleteNews(string id);
+        public Task<bool> DeleteNews(int id);
 
-        public Task<NewsVM> GetNewsById(string id);
+        public Task<NewsVM> GetNewsById(int id);
         // danh mục sản phẩm 
         public Task<bool> AddCatogeryProduct(CategoryproductVM category);
         public Task<List<CategoryproductVM>> ListCatogeryProduct();
@@ -32,7 +32,7 @@ namespace websitebenhvien.Service.Interface
         public Task<bool> UpdatestatusPro(string id);
 
         public Task<CountdashboardVM> Countdashboard();
-        public Task<Boolean> UpdateStatusNews(string id);
+        public Task<Boolean> UpdateStatusNews(int id);
 
         // dịch vụ nổi bật
         public Task<List<NewsVM>> ListService();

@@ -103,7 +103,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteNews(string id)
+        public async Task<IActionResult> DeleteNews(int  id)
         {
             try
             {
@@ -116,7 +116,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> GetNewsById(string id)
+        public async Task<IActionResult> GetNewsById(int id)
         {
             try
             {
@@ -273,7 +273,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             return Json(new { status = true, data=data   });
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateStatusNews(string id)
+        public async Task<IActionResult> UpdateStatusNews(int id)
         {
             try
             {

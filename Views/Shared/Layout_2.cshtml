@@ -23,8 +23,10 @@
     
      <header>
         <div class="row d-flex bg-white h-70" style="height: 105px;"  >
-            <div class="col-md-6 col-12 d-flex justify-content-center align-items-center">
-                <img src="/Images/Logo-rm.png" alt="Emergency" class="me-2" style="height: 83px; width: auto;">
+                 <div class="col-md-6 col-12 d-flex justify-content-center align-items-center">
+                <a href="/" >
+                    <img src="/Images/Logo-rm.png" alt="Emergency" class="me-2" style="height: 83px; width: auto;">
+                </a>
             </div>
             <div class="col-md-6 col-12 d-none d-md-flex flex-column    " id="header-contact">    
 
@@ -33,12 +35,12 @@
             
         </div>
         
-        <nav class="navbar navbar-expand-lg" style="background-color: #0063EC; width: 100%; padding-top: 8px;">
+        <nav class="navbar navbar-expand-lg" style="background-color: #0095d9; width: 100%; padding-top: 8px;">
             <div class="container-fluid">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="collapse navbar-collapse" id="navbarNav" >
                     <ul class="navbar-nav mx-auto" id="menu">
                     </ul>
                 </div>
@@ -57,15 +59,63 @@
    
 </footer>
 
- 
+    <div class="position-fixed bottom-0 end-0 m-4 d-flex flex-column gap-3" style="z-index: 1000;">
+        <!-- Chat box -->
+        <div class="chat-box-wrapper">
+            <!-- Chat Button -->
+            <button id="chatButton" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center position-relative" style="width: 50px; height: 50px; background: linear-gradient(45deg, #0063EC, #00a5ff); border: none; transition: all 0.3s ease;">
+                <i class="fas fa-comments fa-lg" style="color: white; filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger animate__animated animate__heartBeat animate__infinite" style="font-size: 0.6rem;" id="count-notification">
+                    <i class="fas fa-bell text-white" id="count-notification"></i>
+                    
+                </span>
+                <div class="ripple position-absolute w-100 h-100 rounded-circle" style="animation: ripple 1.5s linear infinite; border: 2px solid #fff; opacity: 0;"></div>
+            </button>
+
+            <!-- Chat Window -->
+            <div id="chatWindow" class="card position-absolute bottom-100 mb-2" style="width: 300px; display: none; right: 0; transform-origin: bottom right; animation: zoomIn 0.3s ease-out;">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" style="border-radius: 10px 10px 0 0;">
+                    <h6 class="m-0">
+                        <i class="fas fa-circle text-success me-2" style="font-size: 10px;"></i>
+                        Chat với chúng tôi
+                    </h6>
+                    <button type="button" class="btn-close btn-close-white" id="closeChatBtn" style="transition: transform 0.2s;" onmouseover="this.style.transform='rotate(90deg)';" onmouseout="this.style.transform='rotate(0deg)';"></button>
+                </div>
+                <div class="card-body" style="height: 300px; overflow-y: auto; scroll-behavior: smooth;" id="chatMessages">
+                    <!-- Welcome message -->
+                    <div class="mb-2 animate__animated animate__fadeInLeft">
+                        <div class="d-inline-block bg-light rounded p-2" style="position: relative;">
+                            <p class="m-0">Xin chào! Chúng tôi có thể giúp gì cho bạn? 👋</p>
+                            <div class="typing-indicator">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer" style="border-radius: 0 0 10px 10px;">
+                    <div class="input-group">
+                        <input type="text" id="messageInput" class="form-control" placeholder="Nhập tin nhắn..." style="border-radius: 20px 0 0 20px;">
+                        <button class="btn btn-primary" id="sendMessageBtn" style="border-radius: 0 20px 20px 0; transition: all 0.3s;">
+                            <i class="fas fa-paper-plane" style="transition: transform 0.3s;"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back to top button -->
+        <button id="backToTop" class="btn btn-primary rounded-circle shadow" style="width: 50px; height: 50px; display: none;">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+    </div>
 
 
     <div id="google_translate_element" class="ms-2" style="display: none;"></div>
     <!-- Nút cuộn lên đầu trang -->
-    <button id="backToTop" class="btn btn-primary rounded-circle position-fixed bottom-0 end-0 m-4" style="display: none;">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
+    
+    <script src="~/lib/aspnet-signalr/signalr.js"></script>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

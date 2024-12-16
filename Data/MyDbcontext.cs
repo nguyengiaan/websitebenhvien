@@ -83,6 +83,8 @@ namespace websitebenhvien.Data
             //News
             modelBuilder.Entity<News>().ToTable("News");
             modelBuilder.Entity<News>().HasKey(x => x.Id_News);
+            modelBuilder.Entity<News>().Property(x=>x.Id_News).ValueGeneratedOnAdd();
+            modelBuilder.Entity<News>().HasIndex(x => x.Alias_url).IsUnique();
             modelBuilder.Entity<News>().HasOne(x => x.Categorynews).WithMany(x => x.News).HasForeignKey(x => x.Id_Categorynews);
             // danh mục sản phẩm
             modelBuilder.Entity<Categoryproduct>().ToTable("Categoryproduct");

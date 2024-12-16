@@ -478,12 +478,15 @@ namespace websitebenhvien.Migrations
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.News", b =>
                 {
-                    b.Property<string>("Id_News")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id_News")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_News"));
 
                     b.Property<string>("Alias_url")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("Createat")
                         .HasColumnType("datetime2");
@@ -507,6 +510,9 @@ namespace websitebenhvien.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id_News");
+
+                    b.HasIndex("Alias_url")
+                        .IsUnique();
 
                     b.HasIndex("Id_Categorynews");
 

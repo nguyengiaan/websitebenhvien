@@ -231,7 +231,7 @@ namespace websitebenhvien.Service.Reponser
             try
             {
                 var sessionId = _httpContextAccessor.HttpContext.Request.Cookies["SessionId"];
-                var name = sessionId == "admin" ? sessionId.Substring(0,3) : sessionId.Substring(0,3);
+               
 
                 if (sessionId == null)
                 {
@@ -245,6 +245,7 @@ namespace websitebenhvien.Service.Reponser
                         HttpOnly = false,
                         Secure = false // Chấp nhận cả HTTP và HTTPS
                     });
+                    
                 }
                 var Chat = new Chat()
                 {
@@ -268,8 +269,9 @@ namespace websitebenhvien.Service.Reponser
                await _context.Notifications.AddAsync(Notification);
                await _context.SaveChangesAsync();
                await _hubnot.SendNotification();
-          
-               await _hubnot.SendChat(sessionId,name);
+               var name = sessionId.Substring(0, 3);
+                
+               await _hubnot.SendChat(sessionId,name );
                return true;
             }
             catch(Exception ex)
@@ -371,8 +373,8 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
-        // rep tin nhắn khách hàng 
-
+        // rep tin nhắn khách hàng
+        
 
     }
 }

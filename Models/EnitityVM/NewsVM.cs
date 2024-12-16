@@ -4,7 +4,7 @@ namespace websitebenhvien.Models.EnitityVM
 {
     public class NewsVM
     {
-        public string ?Id_News { get; set; }
+        public int ?Id_News { get; set; }
         [Required(ErrorMessage = "Vui lòng nhập tiêu đề")]
         public string Title { get; set; }
 

@@ -1,3 +1,7 @@
+@{
+    ViewData["Title"] = "Quản lý tin tức";
+    
+}
 <div class="container-fluid">
     <div class="card">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -321,21 +325,47 @@
                 data: formData,
                 processData: false,
                 contentType: false,
+                beforeSend: function() {    
+                    Swal.fire({
+                        title: 'Chờ một xíu....',
+                        html: `
+                            <div class="text-center">
+                                <img src="https://i.pinimg.com/originals/fe/a5/33/fea5336ece9573d235870d51b8d28e7a.gif" width="100" height="100" alt="Loading..." />
+                                <div class="progress mt-3" style="height: 20px;">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+                                         role="progressbar" 
+                                         style="width: 0%"
+                                         aria-valuenow="0" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
+                        `,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        background: '#ffffff',
+                        didOpen: () => {
+                            let progress = 0;
+                            const bar = document.querySelector('.progress-bar');
+                            const interval = setInterval(() => {
+                                progress += 2;
+                                bar.style.width = progress + '%';
+                                bar.setAttribute('aria-valuenow', progress);
+                                if (progress >= 100) {
+                                    clearInterval(interval);
+                                }
+                            }, 50);
+                        }
+                    });
+                },
                 success: function(response) {
                     if (response.status) {
-                        Swal.fire({
-                            title: 'Thành công!',
-                            text: response.message,
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                $('#newsModal').modal('hide');
-                                loadNews(currentPage);
-                                $('#description').summernote('code', '');
-                                $('#newsForm')[0].reset();
-                            }
-                        });
+                        Swal.close();
+                        $('#newsModal').modal('hide');
+                        loadNews(currentPage);
+                        $('#description').summernote('code', '');
+                        $('#newsForm')[0].reset();
                     } else {
                         Swal.fire({
                             title: 'Lỗi!',
@@ -357,6 +387,7 @@
         }
 
         function deleteNews(id) {
+
             Swal.fire({
                 title: 'Xác nhận xóa?',
                 text: "Bạn có chắc chắn muốn xóa tin tức này không?",
@@ -372,6 +403,7 @@
                         url: '/Allinone/DeleteNews',
                         type: 'POST',
                         data: { id: id },
+                       
                         success: function(response) {
                             if (response.status) {
                                 Swal.fire({
@@ -409,12 +441,54 @@
             $('#modalTitle').text('Sửa tin tức');
             $('#newsForm')[0].reset();
             
+            // Show loading spinner
+        
+       
             $.ajax({
                 url: '/Allinone/GetNewsById',
                 type: 'POST',
                 data: { id: id },
+                beforeSend: function() {
+                    Swal.fire({
+                        title: 'Chờ một xíu....',
+                        html: `
+                            <div class="text-center">
+                                <img src="https://i.pinimg.com/originals/fe/a5/33/fea5336ece9573d235870d51b8d28e7a.gif" width="100" height="100" alt="Loading..." />
+                                <div class="progress mt-3" style="height: 20px;">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+                                         role="progressbar" 
+                                         style="width: 0%"
+                                         aria-valuenow="0" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
+                        `,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        background: '#ffffff',
+                        didOpen: () => {
+                            let progress = 0;
+                            const bar = document.querySelector('.progress-bar');
+                            const interval = setInterval(() => {
+                                progress += 2;
+                                bar.style.width = progress + '%';
+                                bar.setAttribute('aria-valuenow', progress);
+                                if (progress >= 100) {
+                                    clearInterval(interval);
+                                }
+                            }, 50);
+                        }
+                    });
+                },
                 success: function(response) {
+                    // Hide loading spinner
+                 
+           
+                    
                     if (response.status) {
+                           Swal.close();
                         const news = response.data;
                         
                         $('#id_News').val(news.id_News);
@@ -422,9 +496,6 @@
                         $('#id_Categorynews').val(news.id_Categorynews);
                         $('#alias_url').val(news.alias_url);
                         $('#description').summernote('code', news.description);
-                        
-                
-                      
                         
                         $('#newsModal').modal('show');
                     } else {
@@ -437,6 +508,10 @@
                     }
                 },
                 error: function(xhr, status, error) {
+                    // Hide loading spinner
+                    Swal.close();
+                    loadingOverlay.remove();
+                    
                     Swal.fire({
                         title: 'Lỗi!',
                         text: 'Có lỗi xảy ra khi kết nối với server',

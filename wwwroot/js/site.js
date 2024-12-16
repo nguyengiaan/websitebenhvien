@@ -1,4 +1,4 @@
-﻿const connection = new signalR.HubConnectionBuilder()
+﻿﻿const connection = new signalR.HubConnectionBuilder()
     .withUrl("/friendHub")
     .build();
 

@@ -1,3 +1,18 @@
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("/friendHub")
+    .build();
+
+connection.start()
+    .then(function () {
+        console.log("SignalR connected.");
+    })
+    .catch(function (err) {
+        console.error(err.toString());
+    });
+
+connection.on("ReceiveNotification", function () {
+    ViewChat();
+});
 $(document).ready(function() {
     // Ẩn select language nếu tồn tại
     Header();
@@ -19,9 +34,9 @@ $(document).ready(function() {
     });
 });
 function changeLanguage(languageCode) {
-    console.log(languageCode);  
+
 var select = document.querySelector('.goog-te-combo');
-console.log(select);
+
 
 if (select) {
     select.value = languageCode;
@@ -209,10 +224,10 @@ function Menu() {
                                     style="animation: fadeIn 0.3s ease;
                                            border-radius: 3%;
                                            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-                                           background: #0063EC;
+                                           background: #0095d9;
                                            padding: 10px 0;
                                            min-width: 220px;
-                                    
+
                                            left: 0;">`;
                              
                             // Sort submenu items by order_MenuChild from high to low
@@ -332,6 +347,8 @@ function Menu() {
                     .dropdown-menu {
                         margin-top: 0;
                         left: 0 !important;
+
+                        background-color: #0095d9!important;
                     }
                 `;
                 document.head.appendChild(style);
@@ -464,3 +481,142 @@ function GetFooter() {
         }
     });
 }
+
+// xem tin nhắn khách hàng 
+function ViewChat() {
+    const sessionId = getSessionId();
+    if (!sessionId) {
+        console.log("SessionId cookie not found");
+        return;
+    }
+
+    $.ajax({
+        url: "/api/lay-tin-nhan",
+        type: "POST",
+        data: { id: sessionId },
+        success: function(response) {
+            if(response.status)
+            {
+                renderChat(response.data);
+            }
+        }
+    });
+}
+// render chat
+function renderChat(data)
+{
+    console.log(data);
+    const chatMessages = document.getElementById('chatMessages');
+    if (!chatMessages) {
+        console.log("Chat messages element not found");
+        return;
+    }
+    
+    chatMessages.innerHTML = ''; // Clear existing messages
+
+    // Add welcome message if no messages
+    if (!data || data.length === 0) {
+        chatMessages.innerHTML = `
+            <div class="mb-2 animate__animated animate__fadeInLeft">
+                <div class="d-inline-block bg-light rounded p-2" style="position: relative; max-width: 80%;">
+                    <p class="m-0">Xin chào! Chúng tôi có thể giúp gì cho bạn? 👋</p>
+                </div>
+            </div>`;
+        return;
+    }
+
+    // Render each message
+    data.forEach(message => {
+        const isAdmin = message.id_Sender === 'admin';
+        const messageHtml = `
+            <div class="mb-2 animate__animated ${isAdmin ? 'animate__fadeInLeft' : 'animate__fadeInRight'}" 
+                 style="display: flex; justify-content: ${isAdmin ? 'flex-start' : 'flex-end'}">
+                <div class="d-inline-block ${isAdmin ? 'bg-light' : 'bg-primary text-white'} rounded p-2" 
+                     style="position: relative; max-width: 80%; word-break: break-word;">
+                    <p class="m-0">${message.message}</p>
+            
+                </div>
+            </div>`;
+        chatMessages.innerHTML += messageHtml;
+        
+    });
+
+    // Scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function getSessionId() {
+    // Decode cookie string to handle special characters
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookies = decodedCookie.split(';');
+    
+    // Trim whitespace from each cookie before processing
+    for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith('SessionId=')) {
+            return cookie.substring('SessionId='.length);
+        }
+    }
+    return null;
+}
+
+// Wait for DOM to be fully loaded before initializing chat
+document.addEventListener('DOMContentLoaded', function() {
+    const chatButton = document.getElementById('chatButton');
+    const chatWindow = document.getElementById('chatWindow');
+    const closeChatBtn = document.getElementById('closeChatBtn');
+    const messageInput = document.getElementById('messageInput');
+    const sendMessageBtn = document.getElementById('sendMessageBtn');
+    const chatMessages = document.getElementById('chatMessages');
+
+    // Check if all required elements exist
+    if (!chatButton || !chatWindow || !closeChatBtn || !messageInput || !sendMessageBtn || !chatMessages) {
+        console.log("Some chat elements are missing");
+        return;
+    }
+
+    // Initialize chat
+    ViewChat();
+
+    // Toggle chat window
+    chatButton.addEventListener('click', function() {
+        chatWindow.style.display = chatWindow.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // Close chat window
+    closeChatBtn.addEventListener('click', function() {
+        chatWindow.style.display = 'none';
+    });
+
+    // Send message
+    function sendMessage() {
+        const message = messageInput.value.trim();
+        if (message) {
+            $.ajax({
+                url: "/api/gui-cho-admin",
+                type: "POST",
+                data: { message: message },
+                success: function(response) {
+                    if(response.status) {
+                        messageInput.value = '';
+                        chatMessages.innerHTML += `<div class="mb-2 text-end">
+                            <div class="d-inline-block bg-primary text-white rounded p-2">
+                                ${message}
+                            </div>
+                        </div>`;
+                        ViewChat();
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            });
+        }
+    }
+
+    sendMessageBtn.addEventListener('click', sendMessage);
+    messageInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+});

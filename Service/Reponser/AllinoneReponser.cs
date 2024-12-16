@@ -132,12 +132,13 @@ namespace websitebenhvien.Service.Reponser
                             data.Url = result.Item2;
                         }
                     }
-                    data.Id_News = Guid.NewGuid().ToString();
+                   
                     data.Title = news.Title;
                     data.Alias_url = news.Alias_url;
                     data.Description = news.Description;
                     data.Id_Categorynews = news.Id_Categorynews;
                     data.Createat = DateTime.Now;
+                    data.Status = true;
 
                     _context.News.Add(data);
                     await _context.SaveChangesAsync();
@@ -209,27 +210,32 @@ namespace websitebenhvien.Service.Reponser
         {
             try
             {
-                var data = await _context.News.Select(x => new NewsVM()
-                {
-                    Id_News = x.Id_News,
-                    Title = x.Title,
-                    Url = x.Url,
-                    Alias_url = x.Alias_url,
-                    Id_Categorynews = x.Id_Categorynews,
-                    Createat = x.Createat,
-                    Status = x.Status,
+                // Sử dụng AsNoTracking() để không track entities và tăng hiệu suất
+                var data = await _context.News
+                    .AsNoTracking()
+                    .Select(x => new NewsVM
+                    {
+                        Id_News = x.Id_News,
+                        Title = x.Title,
+                        Url = x.Url,
+                        Alias_url = x.Alias_url,
+                        Id_Categorynews = x.Id_Categorynews,
+                        Createat = x.Createat,
+                        Status = x.Status
+                    })
+                    .OrderByDescending(x => x.Createat)
+                    .ToListAsync();
 
-                }).OrderByDescending(x => x.Createat).ToListAsync();
                 return data;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
         }
 
         
-        public async Task<bool> DeleteNews(string id)
+        public async Task<bool> DeleteNews(int id)
         {
             try
             {
@@ -244,28 +250,35 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
-        public async Task<NewsVM> GetNewsById(string id)
-        {
-            try
+      public async Task<NewsVM> GetNewsById(int id)
+{
+    try
+    {
+        // Truy vấn dữ liệu với AsNoTracking để cải thiện hiệu năng
+        var data = await _context.News
+            .AsNoTracking()
+            .Where(x => x.Id_News == id)
+            .Select(x => new NewsVM
             {
-                var data = await _context.News.Select(x => new NewsVM()
-                {
-                    Id_News = x.Id_News,
-                    Title = x.Title,
-                    Description = x.Description,
-                    Url = x.Url,
-                    Alias_url = x.Alias_url,
-                    Id_Categorynews = x.Id_Categorynews,
-                    Createat = x.Createat
-                }).FirstOrDefaultAsync(x => x.Id_News == id);
-                return data;
+                Id_News = x.Id_News,
+                Title = x.Title,
+                Description = x.Description,
+                Url = x.Url,
+                Alias_url = x.Alias_url,
+                Id_Categorynews = x.Id_Categorynews,
+                Createat = x.Createat
+            })
+            .FirstOrDefaultAsync();
 
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
+        return data;
+    }
+    catch (Exception ex)
+    {
+        // Log lỗi (có thể sử dụng thư viện logging như Serilog hoặc NLog)
+        Console.WriteLine($"Error in GetNewsById: {ex.Message}");
+        return null;
+    }
+}
 
         public async Task<bool> AddCatogeryProduct(CategoryproductVM category)
         {
@@ -597,20 +610,26 @@ namespace websitebenhvien.Service.Reponser
             }
         }
         // update status news
-        public async Task<bool> UpdateStatusNews(string id)
-        {
-            try
-            {
-                var data = await _context.News.FindAsync(id);
-                data.Status = !data.Status;
-                await _context.SaveChangesAsync();
-                return true;
+      public async Task<bool> UpdateStatusNews(int id)
+{
+    try
+    {
+        // Thực hiện cập nhật trực tiếp và kiểm tra số bản ghi bị ảnh hưởng
+        int affectedRows = await _context.News
+            .Where(x => x.Id_News == id)
+            .ExecuteUpdateAsync(s => s
+                .SetProperty(b => b.Status, b => !b.Status));
+
+                // Nếu không có bản ghi nào bị cập nhật, trả về false
+                return affectedRows > 0;
             }
-            catch (Exception ex)
-            {
+            catch (Exception)
+    {
+                // Log lỗi nếu cần
                 return false;
             }
         }
+
 
         public async Task<List<NewsVM>> ListService()
         {
