@@ -38,6 +38,7 @@ builder.Services.AddScoped<IPageMain,PageMainReponser>();
 builder.Services.AddScoped<IAllinone, AllinoneReponser>();  
 builder.Services.AddScoped<IUser, UserReponser>();
 builder.Services.AddScoped<IPost, PostReponser>();
+builder.Services.AddScoped<ISpecialty, SpecialtyReponser>();
 builder.Services.AddScoped<Hubnot>();
 builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));
 builder.Services.AddAuthorization(options =>

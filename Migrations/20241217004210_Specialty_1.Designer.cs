@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using websitebenhvien.Data;
 
@@ -11,9 +12,11 @@ using websitebenhvien.Data;
 namespace websitebenhvien.Migrations
 {
     [DbContext(typeof(MyDbcontext))]
-    partial class MyDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20241217004210_Specialty_1")]
+    partial class Specialty_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -302,100 +305,6 @@ namespace websitebenhvien.Migrations
                     b.HasKey("Id_chat");
 
                     b.ToTable("Chat", (string)null);
-                });
-
-            modelBuilder.Entity("websitebenhvien.Models.Enitity.Doctor", b =>
-                {
-                    b.Property<int>("Id_doctor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_doctor"));
-
-                    b.Property<string>("Award")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Experiencework")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Id_specialty")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Introduction")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Organization")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Research")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Specialize")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Thumnail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Training")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id_doctor");
-
-                    b.HasIndex("Id_specialty");
-
-                    b.ToTable("Doctor", (string)null);
-                });
-
-            modelBuilder.Entity("websitebenhvien.Models.Enitity.Feeldoctor", b =>
-                {
-                    b.Property<int>("Id_Feeldoctor")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_Feeldoctor"));
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Evaluate")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_Doctor")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id_Feeldoctor");
-
-                    b.HasIndex("Id_Doctor");
-
-                    b.ToTable("Feeldoctor", (string)null);
                 });
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Footer", b =>
@@ -887,10 +796,6 @@ namespace websitebenhvien.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Alias_url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Introduction")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -904,10 +809,6 @@ namespace websitebenhvien.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Service")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Thumnail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -1009,28 +910,6 @@ namespace websitebenhvien.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("websitebenhvien.Models.Enitity.Doctor", b =>
-                {
-                    b.HasOne("websitebenhvien.Models.Enitity.Specialty", "Specialty")
-                        .WithMany("Doctor")
-                        .HasForeignKey("Id_specialty")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Specialty");
-                });
-
-            modelBuilder.Entity("websitebenhvien.Models.Enitity.Feeldoctor", b =>
-                {
-                    b.HasOne("websitebenhvien.Models.Enitity.Doctor", "Doctor")
-                        .WithMany("Feeldoctor")
-                        .HasForeignKey("Id_Doctor")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-                });
-
             modelBuilder.Entity("websitebenhvien.Models.Enitity.ListvideoSpectialty", b =>
                 {
                     b.HasOne("websitebenhvien.Models.Enitity.Specialty", "Specialty")
@@ -1118,11 +997,6 @@ namespace websitebenhvien.Migrations
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("websitebenhvien.Models.Enitity.Doctor", b =>
-                {
-                    b.Navigation("Feeldoctor");
-                });
-
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Header", b =>
                 {
                     b.Navigation("titleheader");
@@ -1140,8 +1014,6 @@ namespace websitebenhvien.Migrations
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Specialty", b =>
                 {
-                    b.Navigation("Doctor");
-
                     b.Navigation("ListvideoSpectialty");
 
                     b.Navigation("Postrelate");

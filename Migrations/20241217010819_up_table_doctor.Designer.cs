@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using websitebenhvien.Data;
 
@@ -11,9 +12,11 @@ using websitebenhvien.Data;
 namespace websitebenhvien.Migrations
 {
     [DbContext(typeof(MyDbcontext))]
-    partial class MyDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20241217010819_up_table_doctor")]
+    partial class up_table_doctor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -887,10 +890,6 @@ namespace websitebenhvien.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Alias_url")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Introduction")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -904,10 +903,6 @@ namespace websitebenhvien.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Service")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Thumnail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

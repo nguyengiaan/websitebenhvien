@@ -9,7 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Trang quản trị</title>
+    <title>@ViewData["Title"] </title>
+
 
     <!-- Custom fonts for this template-->
     <link href="~/Admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -166,6 +167,20 @@
                     <span>Quản lý tuyển dụng</span>
                 </a>
             </li>
+                      <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSpecialty"
+                    aria-expanded="true" aria-controls="collapseSpecialty">
+                    <i class="fas fa-fw fa-stethoscope"></i>
+                    <span>Quản lý chuyên khoa</span>
+                </a>
+                <div id="collapseSpecialty" class="collapse" aria-labelledby="headingSpecialty" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Chuyên khoa:</h6>
+                        <a class="collapse-item" href="/trang-quan-tri/quan-ly-chuyen-khoa">Danh sách chuyên khoa</a>
+                        <a class="collapse-item" href="/trang-quan-tri/quan-ly-chuyen-khoa">Thêm chuyên khoa mới</a>
+                    </div>
+                </div>
+            </li>
             <!-- Nav Item - Message Management -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMessages"
@@ -181,6 +196,8 @@
                     </div>
                 </div>
             </li>
+            <!-- Nav Item - Specialty Management -->
+  
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">

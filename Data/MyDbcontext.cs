@@ -42,8 +42,18 @@ namespace websitebenhvien.Data
         public DbSet<Notification> Notifications { get; set; }
 
         public DbSet<Chat> Chats { get; set; }
-        
-       
+
+        public DbSet<Specialty> Specialties { get; set; }
+
+        public DbSet<Postrelate> Postrelates { get; set; }
+
+        public DbSet<ListvideoSpectialty> ListvideoSpectialtys {get;set; }
+
+        public DbSet<Doctor> Doctors { get; set; }
+
+        public DbSet<Feeldoctor> Feeldoctors { get; set; }
+
+
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -106,6 +116,34 @@ namespace websitebenhvien.Data
             // chat
             modelBuilder.Entity<Chat>().ToTable("Chat");
             modelBuilder.Entity<Chat>().HasKey(x => x.Id_chat);
+            // chuyên gia 
+            modelBuilder.Entity<Specialty>().ToTable("Specialty");
+            modelBuilder.Entity<Specialty>().HasKey(x => x.Id_Specialty);
+            modelBuilder.Entity<Specialty>().Property(x=>x.Id_Specialty).ValueGeneratedOnAdd();
+            // bài viết liên quan
+            modelBuilder.Entity<Postrelate>().ToTable("Postrelate");
+            modelBuilder.Entity<Postrelate>().HasKey(x => x.Id_Postrelate);
+      
+            modelBuilder.Entity<Postrelate>().HasOne(x => x.Specialty).WithMany(x => x.Postrelate).HasForeignKey(x => x.Id_Specialty);
+            // video chuyên gia
+            modelBuilder.Entity<ListvideoSpectialty>().ToTable("ListvideoSpectialty");
+            modelBuilder.Entity<ListvideoSpectialty>().HasKey(x => x.Id_ListvideoSpectialty);
+            modelBuilder.Entity<ListvideoSpectialty>().HasOne(x => x.Specialty).WithMany(x => x.ListvideoSpectialty).HasForeignKey(x => x.Id_Specialty);
+            // bác sĩ
+            modelBuilder.Entity<Doctor>().ToTable("Doctor");
+            modelBuilder.Entity<Doctor>().HasKey(x => x.Id_doctor);
+            modelBuilder.Entity<Doctor>().Property(x => x.Id_doctor).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Doctor>().HasOne(x => x.Specialty).WithMany(x => x.Doctor).HasForeignKey(x => x.Id_specialty);
+            // chuyên khoa
+            modelBuilder.Entity<Feeldoctor>().ToTable("Feeldoctor");
+            modelBuilder.Entity<Feeldoctor>().HasKey(x => x.Id_Feeldoctor);
+            modelBuilder.Entity<Feeldoctor>().Property(x => x.Id_Feeldoctor).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Feeldoctor>().HasOne(x => x.Doctor).WithMany(x => x.Feeldoctor).HasForeignKey(x => x.Id_Doctor);
+
+
+
+
+
 
 
         }
