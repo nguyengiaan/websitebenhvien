@@ -177,6 +177,26 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
-
+        public async Task<SpecialtyVM> GetSpecialtyById(int id)
+        {
+            try{
+                var data = await _context.Specialties.Where(x=>x.Id_Specialty == id).Select(x=>new SpecialtyVM{
+                    Id_Specialty = x.Id_Specialty,
+                    Title = x.Title,
+                    Thumnail = x.Thumnail,
+                    Alias_url = x.Alias_url,
+                    Introduction = x.Introduction,
+                    Machine = x.Machine,
+                    Method = x.Method,
+                    Service = x.Service,
+                    Achievement = x.Achievement,
+                  
+                }).FirstOrDefaultAsync();
+                return data;
+            }catch(Exception e)
+            {
+                return null;
+            }
+        }
     }
 }

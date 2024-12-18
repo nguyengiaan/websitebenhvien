@@ -11,5 +11,7 @@ namespace websitebenhvien.Service.Interface
         public Task<Boolean> DeleteSpecialty(int id);
 
         public Task<Boolean> UpdateSpecialty(SpecialtyVM specialty);
+
+        public Task<SpecialtyVM> GetSpecialtyById(int id);
     }
 }

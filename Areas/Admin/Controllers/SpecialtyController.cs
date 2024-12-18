@@ -2,6 +2,7 @@
 using websitebenhvien.Models.Enitity;
 using websitebenhvien.Models.EnitityVM;
 using websitebenhvien.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
 
 namespace websitebenhvien.Areas.Admin.Controllers
 {
@@ -9,12 +10,15 @@ namespace websitebenhvien.Areas.Admin.Controllers
     {
         private readonly ISpecialty _specialty;
 
+       
         public SpecialtyController(ISpecialty specialty)
         {
             _specialty = specialty;
 
         }
+       [Authorize]
         [HttpPost]
+       
         public async Task<IActionResult> AddSpecialty(SpecialtyVM specialty)
         {
             try
@@ -36,6 +40,34 @@ namespace websitebenhvien.Areas.Admin.Controllers
             {
                 return Json(new { status = false, message = ex.Message });
             }
+        }
+        [Authorize]
+        [HttpPost("/api/lay-danh-sach-chuyen-khoa")]
+        public async Task<IActionResult> GetSpecialty(int page, int pageSize)
+        {
+            try
+            {
+                var data = await _specialty.GetSpecialty(page, pageSize);
+                return Json(new { success = true, data = data.ds, totalPages = data.TotalPages ,page=page});
+
+
+            }
+            catch(Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [Authorize]
+        [HttpPost("/api/lay-chuyen-khoa-theo-id")]
+        public async Task<IActionResult> GetSpecialtyById(int id)
+        {
+            try{
+                var data = await _specialty.GetSpecialtyById(id);
+                return Json(new { success = true, data = data });
+            }catch(Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }   
         }
     }
 }
