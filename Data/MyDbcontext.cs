@@ -53,6 +53,12 @@ namespace websitebenhvien.Data
 
         public DbSet<Feeldoctor> Feeldoctors { get; set; }
 
+        public DbSet<Workschedule> Workschedules { get; set; }
+
+        public DbSet<Worksdoctor> Worksdoctors { get; set; }
+
+        public DbSet<Makeanappointment> Makeanappointments { get; set; }
+
 
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -139,6 +145,19 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<Feeldoctor>().HasKey(x => x.Id_Feeldoctor);
             modelBuilder.Entity<Feeldoctor>().Property(x => x.Id_Feeldoctor).ValueGeneratedOnAdd();
             modelBuilder.Entity<Feeldoctor>().HasOne(x => x.Doctor).WithMany(x => x.Feeldoctor).HasForeignKey(x => x.Id_Doctor);
+            // lịch làm việc
+            modelBuilder.Entity<Workschedule>().ToTable("Workschedule");
+            modelBuilder.Entity<Workschedule>().HasKey(x => x.Id_workschedule);
+            modelBuilder.Entity<Workschedule>().HasOne(x => x.Worksdoctor).WithMany(x => x.Workschedules).HasForeignKey(x => x.Id_worksdoctor);
+            // công việc bác sĩ
+            modelBuilder.Entity<Worksdoctor>().ToTable("Worksdoctor");
+            modelBuilder.Entity<Worksdoctor>().HasKey(x => x.Id_worksdoctor);
+            modelBuilder.Entity<Worksdoctor>().HasOne(x => x.Doctor).WithMany(x => x.Worksdoctor).HasForeignKey(x => x.Id_doctor);
+            // đặt lịch hẹn
+            modelBuilder.Entity<Makeanappointment>().ToTable("Makeanappointment");
+            modelBuilder.Entity<Makeanappointment>().HasKey(x => x.Id_Make);
+            modelBuilder.Entity<Makeanappointment>().HasOne(x => x.Specialty).WithMany(x => x.Makeanappointment).HasForeignKey(x => x.Id_Specialty);
+
 
 
 

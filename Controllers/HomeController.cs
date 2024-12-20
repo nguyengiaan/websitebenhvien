@@ -31,12 +31,24 @@ public class HomeController : Controller
     {
         return View();
     }
-    [HttpGet("/chuyen-khoa")]
+     [HttpGet("/chuyen-khoa")]
     public IActionResult Specialty()
     {
         return View();
     }
+    [HttpGet("/danh-muc-khoa/{chuyenkhoa}")]
+    public IActionResult SpecialtyDetail()
+    {
+        return View();
+    }
+    [HttpGet("/bac-si/{tenbacsi}")]
+    public IActionResult DoctorDetail()
+    {
+        return View();
+    }
+
     
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

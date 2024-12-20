@@ -13,5 +13,20 @@ namespace websitebenhvien.Service.Interface
         public Task<Boolean> UpdateSpecialty(SpecialtyVM specialty);
 
         public Task<SpecialtyVM> GetSpecialtyById(int id);
+        // doctor
+        public Task<Boolean> AddDoctor(DoctorVM doctor);
+
+        public Task<Boolean> DeleteDoctor(int id);
+
+        public Task<List<DoctorVM>> GetDoctorBySpecialty(int id);
+
+        public Task<(List<DoctorVM> ds, int TotalPages)> GetDoctorByAlias(int page, int pageSize);
+
+        public Task<List<SpecialtyVM>> GetAllSpecialty();
+
+        
+
+        
+
     }
 }

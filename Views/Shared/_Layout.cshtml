@@ -72,46 +72,41 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <select class="form-select border-0 bg-light" id="department" required>
-                                <option value="">Chọn chuyên khoa</option>
-                                <option value="nhi">Khoa Nhi</option>
-                                <option value="ngoai">Khoa Ngoại</option>
-                                <option value="sanphukhoa">Sản phụ khoa</option>
-                                <option value="noisoi">Nội soi</option>
+                             <select class="form-select border-0 bg-light" id="Id_specialty" required>
+                                
                             </select>
-                            <label for="department">Chuyên khoa</label>
+                             <label for="Id_specialty">Chuyên khoa</label>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <select class="form-select border-0 bg-light" id="doctor" required>
-                                <option value="">Chọn bác sĩ</option>
+                                <select class="form-select border-0 bg-light" id="Id_doctor" required>
+                                
                             </select>
-                            <label for="doctor">Bác sĩ</label>
+                                <label for="Id_doctor">Bác sĩ</label>
+                        </div>
+
+                        <div class="form-floating mb-3" id="calendar">
+                          
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="datetime-local" class="form-control border-0 bg-light" id="appointmentTime" required>
-                            <label for="appointmentTime">Thời gian khám</label>
+                                <input type="text" class="form-control border-0 bg-light" id="patientName" placeholder=" " required>
+                                <label for="patientName">Họ và tên</label>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control border-0 bg-light" id="name" placeholder=" " required>
-                            <label for="name">Họ và tên</label>
-                        </div>
-
-                        <div class="form-floating mb-3">
-                            <input type="tel" class="form-control border-0 bg-light" id="phone" placeholder=" " required>
-                            <label for="phone">Số điện thoại</label>
+                                <input type="tel" class="form-control border-0 bg-light" id="patientPhone" placeholder=" " required>
+                                <label for="patientPhone">Số điện thoại</label>
                         </div>
 
                  
 
                         <div class="form-floating mb-4">
-                            <textarea class="form-control border-0 bg-light" id="content" style="height: 100px" placeholder=" "></textarea>
-                            <label for="content">Nội dung tư vấn</label>
+                                <textarea class="form-control border-0 bg-light" id="patientNote" style="height: 100px" placeholder=" "></textarea>
+                                <label for="patientNote">Nội dung tư vấn</label>
                         </div>
 
-                        <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm">
+                        <button type="button" class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm" id="btnRegister">
                             <i class="fas fa-paper-plane me-2"></i>Gửi yêu cầu
                         </button>
                     </form>
@@ -506,6 +501,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
  
     <!-- Script xử lý nút cuộn lên đầu trang -->
     <script>

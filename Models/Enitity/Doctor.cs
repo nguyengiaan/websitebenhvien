@@ -1,10 +1,16 @@
-﻿namespace websitebenhvien.Models.Enitity
+﻿using Microsoft.Identity.Client;
+
+namespace websitebenhvien.Models.Enitity
 {
     public class Doctor
     {
         public Doctor() 
         {
             Feeldoctor = new List<Feeldoctor>();
+            Worksdoctor= new List<Worksdoctor>();
+
+
+
         }
         public int Id_doctor { get; set; }
 
@@ -31,17 +37,11 @@
 
         public int Id_specialty { get; set; }
 
+
+        public string Alias_url { get; set; }
+
         public List<Feeldoctor> Feeldoctor { get; set; }
-
-
-
-
-
-
-
-
-
-
+        public List<Worksdoctor> Worksdoctor { get; set; }
 
 
 

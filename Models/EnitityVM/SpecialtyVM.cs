@@ -27,8 +27,8 @@ namespace websitebenhvien.Models.EnitityVM
         [Required(ErrorMessage = "Đường dẫn không được để trống")]
 
         public string Alias_url { get; set; }
-        [Required(ErrorMessage = "Hình ảnh là bắt buộc")]
 
-        public IFormFile formFile { get; set; }
+
+        public IFormFile ?formFile { get; set; }
     }
 }

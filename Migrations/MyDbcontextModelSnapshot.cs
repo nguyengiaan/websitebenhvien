@@ -312,6 +312,10 @@ namespace websitebenhvien.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_doctor"));
 
+                    b.Property<string>("Alias_url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Award")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -542,6 +546,42 @@ namespace websitebenhvien.Migrations
                     b.HasKey("Id_logocustomer");
 
                     b.ToTable("Logocustomer", (string)null);
+                });
+
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Makeanappointment", b =>
+                {
+                    b.Property<int>("Id_Make")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_Make"));
+
+                    b.Property<DateTime>("Examinationtime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Id_Specialty")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name_doctor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id_Make");
+
+                    b.HasIndex("Id_Specialty");
+
+                    b.ToTable("Makeanappointment", (string)null);
                 });
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Menu", b =>
@@ -958,6 +998,66 @@ namespace websitebenhvien.Migrations
                     b.ToTable("Titleheader", (string)null);
                 });
 
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Workschedule", b =>
+                {
+                    b.Property<int>("Id_workschedule")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_workschedule"));
+
+                    b.Property<string>("Afternoon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Evening")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Id_worksdoctor")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Morning")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("date")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id_workschedule");
+
+                    b.HasIndex("Id_worksdoctor");
+
+                    b.ToTable("Workschedule", (string)null);
+                });
+
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Worksdoctor", b =>
+                {
+                    b.Property<int>("Id_worksdoctor")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_worksdoctor"));
+
+                    b.Property<DateTime>("CreateAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Id_doctor")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id_worksdoctor");
+
+                    b.HasIndex("Id_doctor");
+
+                    b.ToTable("Worksdoctor", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1042,6 +1142,17 @@ namespace websitebenhvien.Migrations
                     b.Navigation("Specialty");
                 });
 
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Makeanappointment", b =>
+                {
+                    b.HasOne("websitebenhvien.Models.Enitity.Specialty", "Specialty")
+                        .WithMany("Makeanappointment")
+                        .HasForeignKey("Id_Specialty")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Specialty");
+                });
+
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Menuchild", b =>
                 {
                     b.HasOne("websitebenhvien.Models.Enitity.Menu", "Menu")
@@ -1108,6 +1219,28 @@ namespace websitebenhvien.Migrations
                     b.Navigation("Header");
                 });
 
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Workschedule", b =>
+                {
+                    b.HasOne("websitebenhvien.Models.Enitity.Worksdoctor", "Worksdoctor")
+                        .WithMany("Workschedules")
+                        .HasForeignKey("Id_worksdoctor")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Worksdoctor");
+                });
+
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Worksdoctor", b =>
+                {
+                    b.HasOne("websitebenhvien.Models.Enitity.Doctor", "Doctor")
+                        .WithMany("Worksdoctor")
+                        .HasForeignKey("Id_doctor")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+                });
+
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Categorynews", b =>
                 {
                     b.Navigation("News");
@@ -1121,6 +1254,8 @@ namespace websitebenhvien.Migrations
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Doctor", b =>
                 {
                     b.Navigation("Feeldoctor");
+
+                    b.Navigation("Worksdoctor");
                 });
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Header", b =>
@@ -1144,7 +1279,14 @@ namespace websitebenhvien.Migrations
 
                     b.Navigation("ListvideoSpectialty");
 
+                    b.Navigation("Makeanappointment");
+
                     b.Navigation("Postrelate");
+                });
+
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Worksdoctor", b =>
+                {
+                    b.Navigation("Workschedules");
                 });
 #pragma warning restore 612, 618
         }

@@ -109,6 +109,19 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
+        [Authorize]
+        [Route("/trang-quan-tri/quan-ly-bac-si")]
+        public IActionResult Bacsi()
+        {
+            return View();
+        }
+        [Authorize]
+        [Route("/trang-quan-tri/dang-ky-kham-benh")]
+        public IActionResult Dangkykhambenh()
+        {
+            return View();
+        }
 
     }
 }
+

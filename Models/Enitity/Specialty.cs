@@ -11,6 +11,7 @@ namespace websitebenhvien.Models.Enitity
             Postrelate = new List<Postrelate>();
             ListvideoSpectialty = new List<ListvideoSpectialty>();
             Doctor = new List<Doctor>();
+            Makeanappointment = new List<Makeanappointment>();
         }
         
         public int Id_Specialty { get; set; }
@@ -35,6 +36,10 @@ namespace websitebenhvien.Models.Enitity
         public List<ListvideoSpectialty> ListvideoSpectialty { get; set; }
 
         public List<Doctor> Doctor { get; set; }
+
+        public List<Makeanappointment> Makeanappointment { get; set; }
+
+
 
     }
 }

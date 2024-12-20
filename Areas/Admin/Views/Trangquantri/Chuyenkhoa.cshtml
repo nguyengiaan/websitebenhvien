@@ -14,15 +14,7 @@
                         <i class="fas fa-plus me-2"></i>Thêm chuyên khoa
                     </button>
                 </div>
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <input type="text" class="form-control border-end-0" id="searchInput"
-                               placeholder="Tìm kiếm danh mục...">
-                        <button class="btn btn-outline-secondary border-start-0" onclick="searchCategories()">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </div>
+              
             </div>
         </div>
 
@@ -176,11 +168,11 @@
 @section Scripts {
     <script>
         let currentPage = 1;
-        const pageSize = 10;
+        const pageSize = 20;
 
         $(document).ready(function() {
         // Khi modal tắt, reset form
-    $('#categoryModal').on('hidden.bs.modal', function () {
+     $('#categoryModal').on('hidden.bs.modal', function () {
         $('#categoryForm')[0].reset(); // Reset các trường input trong form
         $('#id_Specialty').val(''); // Reset id field
         $('#title').val('');
@@ -194,13 +186,8 @@
         $('#previewImage').attr('src', '').addClass('d-none'); // Reset preview image
 
     });
-
             loadCategories(1,20);
-            
-            
-
         });
-
         function loadCategories(page,pageSize) {
             $.ajax({
                 url: '/api/lay-danh-sach-chuyen-khoa',
@@ -210,9 +197,9 @@
                     if (response.success) {
                         var html=''
                         console.log(response);
-                        response.data.forEach(item => {
+                        response.data.forEach((item,index) => {
                             html += `<tr class="align-middle">
-                                        <td class="ps-4">${item.id_Specialty}</td>
+                                        <td class="ps-4">${index+1}</td>
                                         <td><img src="/Resources/${item.thumnail}" alt="Ảnh đại diện" style="width: 100px; height: 100px;"></td>
                                         <td>${item.title}</td>
                                         <td>${item.alias_url}</td>
@@ -249,10 +236,6 @@
                 }
             });
         }
-
-   
-       
-
         function renderPagination(totalPages, currentPage) {
             let html = '';
             
@@ -316,7 +299,6 @@
             
             $('#pagination').html(html);
         }
-
         function showAddModal() {
             $('#modalTitle').text('Thêm chuyên khoa');
             $('#categoryForm')[0].reset();
@@ -332,6 +314,7 @@
                 success: function(response) {
                     if(response.success)
                     {
+                        console.log(response.data);
                         $('#id_Specialty').val(response.data.id_Specialty);
                         $('#title').val(response.data.title);
                         $('#alias_url').val(response.data.alias_url);
@@ -340,14 +323,12 @@
                         $('#method').summernote('code', response.data.method);
                         $('#service').summernote('code', response.data.service);
                         $('#achievement').summernote('code', response.data.achievement);
-                        // Hiển thị ảnh preview từ đường dẫn
-       
-       
-
+                                  
                         $('#categoryModal').modal('show');
                         $('#modalTitle').text('Sửa chuyên khoa');
-                 
                         $('#categoryModal').modal('show');
+     
+
 
                     }
 
@@ -355,7 +336,6 @@
                 }
             });
         }
-
         function saveCategory() {
             const formData = new FormData($('#categoryForm')[0]);
             const isNew = !$('#id_Specialty').val();
@@ -405,26 +385,24 @@
                         $('#categoryModal').modal('hide');
                         Swal.fire({
                             title: 'Thành công!',
-                            text: isNew ? 'Thêm danh mục thành công' : 'Cập nhật danh mục thành công',
+                            text: isNew ? 'Thêm chuyen khoa thành công' : 'Cập nhật chuyen khoa thành công',
                             icon: 'success'
                         });
-                        $('#categoryForm')[0].reset();
-                        formData.reset();
-                        $('.summernote').summernote('reset');
+               
+                        loadCategories(currentPage,pageSize);
 
                       
 
                     } else {
                         Swal.fire({
                             title: 'Lỗi!',
-                            text: response.message,
+                            text: "Vui lòng thêm hình ảnh",
                             icon: 'error'
                         });
                     }
                 }
             });
         }
-
         function deleteCategory(id) {
             Swal.fire({
                 title: 'Xác nhận xóa?',
@@ -438,17 +416,17 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: '/Allinone/DeleteCatogery',
+                        url: '/api/xoa-chuyen-khoa',
                         type: 'POST',
                         data: { id: id },
                         success: function(response) {
-                            if (response.status) {
+                            if (response.message) {
                                 Swal.fire({
                                     title: 'Thành công!',
                                     text: 'Xóa danh mục thành công',
                                     icon: 'success'
                                 });
-                                loadCategories(currentPage);
+                                loadCategories(currentPage,pageSize);
                             } else {
                                 Swal.fire({
                                     title: 'Lỗi!',
@@ -461,12 +439,6 @@
                 }
             });
         }
-
-        function searchCategories() {
-            currentPage = 1;
-            loadCategories();
-        }
-
         $('#searchInput').on('keypress', function(e) {
             if (e.which === 13) {
                 searchCategories();

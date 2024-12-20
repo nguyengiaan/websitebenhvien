@@ -39,6 +39,14 @@ namespace websitebenhvien.Service.Interface
         public Task<Boolean> ViewChat(string id);
         // XOÁ KHÁCH HÀNG 
         public Task<Boolean> DelChat(string id);
+
+        // lấy chi tiết chuyên khoa 
+        public Task<(Specialty,List<DoctorVM>)> GetSpecialtyById(string alias_url);
+
+        // lấy chi tiết bác sĩ
+        public Task<DoctorVM> GetDoctorById(string alias_url);
+
+
     }
 }
 

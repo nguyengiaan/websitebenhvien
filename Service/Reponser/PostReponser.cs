@@ -373,8 +373,59 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
+        public async Task<(Specialty,List<DoctorVM>)> GetSpecialtyById(string alias_url)
+        {
+            try
+            {
+                var data=await _context.Specialties.AsNoTracking().Where(x=>x.Alias_url==alias_url).FirstOrDefaultAsync();
+                var doctor=await _context.Doctors.AsNoTracking().Where(x=>x.Id_specialty==data.Id_Specialty)
+                .Select(x=> new DoctorVM{
+                    Id_doctor=x.Id_doctor,
+                    Name=x.Name,
+                    Introduction=x.Introduction,
+                    Alias_url=x.Alias_url,
+                    Thumnail=x.Thumnail,
+                    nameCategory=data.Title,
+                }).ToListAsync();
+                return (data,doctor);
+            }
+            catch(Exception ex)
+            {
+                return (null,null);
+            }
+        }
+
+        public async Task<DoctorVM> GetDoctorById(string alias_url)
+        {
+            try
+            {
+                var data=await _context.Doctors.AsNoTracking().Where(x=>x.Alias_url==alias_url).Select(x=>new DoctorVM{
+                    Id_doctor=x.Id_doctor,
+                    Name=x.Name,
+                    Introduction=x.Introduction,
+                    Alias_url=x.Alias_url,
+                    Thumnail=x.Thumnail,
+                    nameCategory=x.Specialty.Title,
+                    Experiencework =x.Experiencework,
+                    Organization=x.Organization,
+                    Award=x.Award,
+                    Research=x.Research,
+                    Training=x.Training,
+                   
+                   
+                    
+
+                }).FirstOrDefaultAsync();
+                return data;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
+
         // rep tin nhắn khách hàng
-        
+
 
     }
 }

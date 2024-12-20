@@ -1,4 +1,4 @@
-﻿﻿const connection = new signalR.HubConnectionBuilder()
+﻿﻿﻿﻿const connection = new signalR.HubConnectionBuilder()
     .withUrl("/friendHub")
     .build();
 
@@ -25,7 +25,7 @@ $(document).ready(function() {
     ListService();
     ListNews();
     ListShareCustomer();
-
+    loadSpecialties();
     GetFooter();
 
     $(window).scroll(function() {
@@ -35,6 +35,11 @@ $(document).ready(function() {
             $('#backToTop').fadeOut();
         }
     });
+    $('#btnRegister').click(function(){
+        registerAppointment();
+    });
+
+
 
     $('#backToTop').click(function() {
         $('html, body').animate({scrollTop: 0}, 'slow');
@@ -42,7 +47,6 @@ $(document).ready(function() {
     });
 });
 function changeLanguage(languageCode) {
-    console.log(languageCode);  
 var select = document.querySelector('.goog-te-combo');
 console.log(select);
 
@@ -1388,3 +1392,280 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get SessionId from cookie
   
 });
+function loadDoctor(id) {
+    $.ajax({
+        url: '/api/bac-si',
+        type: 'POST',
+        data: { id: id },
+        success: function (response) {
+            console.log(response.data);
+            let options = ''; // Khai báo biến options
+            response.data.forEach(function (doctor) {
+                options += `<option value="${doctor.id_doctor}">${doctor.name}</option>`;
+            });
+            $('#Id_doctor').html(options); // Gắn HTML vào phần tử select
+
+            // Add change event listener for doctor selection
+            $('#Id_doctor').on('change', function() {
+                const selectedDoctorId = $(this).val();
+                if (selectedDoctorId) {
+                    loadDoctorSchedule(selectedDoctorId);
+                }
+            });
+        },
+        error: function () {
+            Swal.fire({
+                title: 'Lỗi!',
+                text: 'Không thể tải dữ liệu bác sĩ',
+                icon: 'error'
+            });
+        }
+    });
+}
+
+function loadDoctorSchedule(doctorId) {
+    const calendarContainer = document.getElementById('calendar');
+    const today = new Date();
+    
+    $.ajax({
+        url: '/api/lich-lam-viec',
+        type: 'POST',
+        data: {
+            id_doctor: doctorId
+        },
+        success: function(response) {
+            if (response.status && response.data) {
+                const workSchedules = response.data.workschedules;
+                console.log(workSchedules);
+                
+                // Create calendar UI
+                let calendarHtml = `
+                    <div class="calendar-wrapper p-3 bg-white rounded shadow-sm">
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-primary">
+                                <i class="fas fa-calendar-alt me-2"></i>Chọn ngày khám
+                            </label>
+                            <select class="form-select form-select-lg border-0 bg-light" id="datePicker">
+                                <option value="">-- Vui lòng chọn ngày --</option>
+                `;
+
+                // Add next 30 days as options
+                for(let i = 0; i < 30; i++) {
+                    const date = new Date();
+                    date.setDate(today.getDate() + i);
+                    const dateString = date.toISOString().split('T')[0];
+                    
+                    const schedule = workSchedules.find(s => s.date.split('T')[0] === dateString);
+                    if(schedule && (schedule.morning === "true" || schedule.afternoon === "true")) {
+                        const formattedDate = new Intl.DateTimeFormat('vi-VN', {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        }).format(date);
+                        calendarHtml += `<option value="${dateString}">${formattedDate}</option>`;
+                    }
+                }
+                calendarHtml += `
+                            </select>
+                        </div>
+
+                        <div class="time-slots mb-3" style="display:none" id="timePickerWrapper">
+                            <label class="form-label fw-bold text-primary">
+                                <i class="fas fa-clock me-2"></i>Chọn giờ khám
+                            </label>
+                            <div class="row g-2" id="timePicker">
+                            </div>
+                        </div>
+                `;
+
+                calendarContainer.innerHTML = calendarHtml;
+
+                // Handle date selection
+                $('#datePicker').on('change', function() {
+                    const selectedDate = $(this).val();
+                    const schedule = workSchedules.find(s => s.date.split('T')[0] === selectedDate);
+                    const timePickerWrapper = $('#timePickerWrapper');
+                    const timePicker = $('#timePicker');
+                    
+                    if(schedule) {
+                        let timeSlots = '';
+                        
+                        if(schedule.morning === "true") {
+                            timeSlots += `
+                                <div class="col-12 mb-2">
+                                    <div class="time-period">
+                                        <small class="text-muted"><i class="fas fa-sun me-1"></i>Buổi sáng (7h-12h)</small>
+                                    </div>
+                                </div>
+                            `;
+                            for(let hour = 7; hour < 12; hour++) {
+                                timeSlots += `
+                                    <div class="col-6 col-md-3">
+                                        <input type="radio" class="btn-check" name="timeSlot" id="time${hour}00" value="${hour}:00">
+                                        <label class="btn btn-outline-primary w-100" for="time${hour}00">${hour}:00</label>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <input type="radio" class="btn-check" name="timeSlot" id="time${hour}30" value="${hour}:30">
+                                        <label class="btn btn-outline-primary w-100" for="time${hour}30">${hour}:30</label>
+                                    </div>
+                                `;
+                            }
+                        }
+                        
+                        if(schedule.afternoon === "true") {
+                            timeSlots += `
+                                <div class="col-12 mb-2 mt-3">
+                                    <div class="time-period">
+                                        <small class="text-muted"><i class="fas fa-moon me-1"></i>Buổi chiều (13h-16h)</small>
+                                    </div>
+                                </div>
+                            `;
+                            for(let hour = 13; hour <= 15; hour++) {
+                                timeSlots += `
+                                    <div class="col-6 col-md-3">
+                                        <input type="radio" class="btn-check" name="timeSlot" id="time${hour}00" value="${hour}:00">
+                                        <label class="btn btn-outline-primary w-100" for="time${hour}00">${hour}:00</label>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <input type="radio" class="btn-check" name="timeSlot" id="time${hour}30" value="${hour}:30">
+                                        <label class="btn btn-outline-primary w-100" for="time${hour}30">${hour}:30</label>
+                                    </div>
+                                `;
+                            }
+                        }
+                        
+                        timePicker.html(timeSlots);
+                        timePickerWrapper.slideDown();
+
+                        // Handle time selection
+                        $('input[name="timeSlot"]').on('change', function() {
+                            const selectedTime = $(this).val();
+                            const appointmentDateTime = `${selectedDate}T${selectedTime}`;
+                            
+                            if(!$('#appointmentTime').length) {
+                                calendarContainer.insertAdjacentHTML('beforeend', `
+                                    <input type="hidden" id="appointmentTime" value="${appointmentDateTime}">
+                                `);
+                            } else {
+                                $('#appointmentTime').val(appointmentDateTime);
+                            }
+                        });
+                    } else {
+                        timePickerWrapper.slideUp();
+                    }
+                });
+            }
+        },
+        error: function() {
+            Swal.fire({
+                title: 'Lỗi',
+                text: 'Không thể tải lịch khám của bác sĩ',
+                icon: 'error'
+            });
+            calendarContainer.innerHTML = '';
+        }
+    });
+}
+
+function loadSpecialties() {
+    $.ajax({
+        url: '/api/chuyen-khoa-catogery',
+        type: 'GET',
+        success: function (response) {
+            let options = '<option value="">Select a specialty</option>'; // Thêm tùy chọn mặc định
+            response.data.forEach(function (specialty) {
+                options += `<option value="${specialty.id_Specialty}">${specialty.title}</option>`;
+            });
+            $('#Id_specialty').html(options);
+
+            // Gắn sự kiện onchange cho phần tử select
+            $('#Id_specialty').on('change', function () {
+                const selectedSpecialtyId = $(this).val();
+                if (selectedSpecialtyId) {
+                    loadDoctor(selectedSpecialtyId);
+                }
+            });
+        },
+        error: function (err) {
+            console.error('Error loading specialties:', err);
+        }
+    });
+}
+
+function registerAppointment() {
+    const appointmentTimeStr = $('#appointmentTime').val();
+    console.log(appointmentTimeStr);
+
+    if (!appointmentTimeStr) {
+        Swal.fire({
+            title: 'Lỗi',
+            text: 'Vui lòng chọn ngày và giờ khám',
+            icon: 'error'
+        });
+        return;
+    }
+
+    let date;
+    let datePart, hours, minutes;
+    try {
+        // Chuẩn hóa chuỗi thời gian
+        const normalizedString = appointmentTimeStr.replace(/T(\d{1}):/, "T0$1:");
+        [datePart, timePart] = normalizedString.split('T'); // Tách ngày và giờ
+        [hours, minutes] = timePart.split(':'); // Tách giờ và phút
+        const [year, month, day] = datePart.split('-'); // Tách năm, tháng, ngày
+
+        // Tạo đối tượng Date mà không đổi múi giờ
+        date = new Date(year, month - 1, day, hours, minutes);
+
+        if (isNaN(date)) {
+            throw new Error("Invalid date");
+        }
+    } catch (err) {
+        Swal.fire({
+            title: 'Lỗi',
+            text: 'Định dạng ngày giờ không hợp lệ',
+            icon: 'error'
+        });
+        return;
+    }
+
+    const appointmentData = {
+        Name_doctor: $('#Id_doctor option:selected').text(),
+        Examinationtime: `${datePart}T${hours}:${minutes}:00`, // Giữ nguyên định dạng gốc
+        name: $('#patientName').val(),
+        phone: $('#patientPhone').val(),
+        note: $('#patientNote').val(),
+        Id_Specialty: $('#Id_specialty').val()
+    };
+
+    $.ajax({
+        url: '/api/dang-ky-kb',
+        type: 'POST',
+        data: appointmentData,
+        success: function (response) {
+            if (response.status) {
+                Swal.fire({
+                    title: 'Thành công',
+                    text: response.message,
+                    icon: 'success'
+                }).then(() => {
+                    window.location.reload();
+                });
+            } else {
+                Swal.fire({
+                    title: 'Lỗi',
+                    text: response.message,
+                    icon: 'error'
+                });
+            }
+        },
+        error: function () {
+            Swal.fire({
+                title: 'Lỗi',
+                text: 'Không thể đăng ký khám bệnh. Vui lòng thử lại sau.',
+                icon: 'error'
+            });
+        }
+    });
+}

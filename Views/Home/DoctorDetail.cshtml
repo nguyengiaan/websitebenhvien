@@ -1,0 +1,274 @@
+@{
+    ViewData["Title"] = "Chi tiết bác sĩ";
+    Layout = "~/Views/Shared/Layout_2.cshtml";
+}
+
+
+
+<div class="doctor-profile">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="doctor-card shadow-sm">
+                    <div class="doctor-image">
+                        <img id="doctorImage" src="" class="w-100" alt="Doctor's photo" style="height: 360px; object-fit: cover;">
+                    </div>
+                    <div class="card-body p-4">
+                        <h2 id="doctorName" class="h3 fw-bold mb-2 text-primary"></h2>
+                        <p id="doctorSpecialty" class="text-muted mb-4 fs-5"></p>
+                        <button class="btn btn-booking w-100">
+                            <i class="fas fa-calendar-check me-2"></i>Đặt lịch khám
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="info-card mb-4">
+                    <div class="card-body p-4">
+                        <h4 class="section-title fw-bold mb-3 d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#introCollapse" role="button" aria-expanded="true">
+                            <span><i class="fas fa-user-md me-2"></i>Giới thiệu</span>
+                            <i class="fas fa-chevron-down collapse-icon"></i>
+                        </h4>
+                        <div class="collapse show" id="introCollapse">
+                            <div id="doctorIntroduction" class="content-section"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card mb-4">
+                    <div class="card-body p-4">
+                        <h4 class="section-title fw-bold mb-3 d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#expertiseCollapse" role="button">
+                            <span><i class="fas fa-stethoscope me-2"></i>Chuyên môn</span>
+                            <i class="fas fa-chevron-down collapse-icon"></i>
+                        </h4>
+                        <div class="collapse" id="expertiseCollapse">
+                            <div id="doctorExpertise" class="content-section"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card mb-4">
+                    <div class="card-body p-4">
+                        <h4 class="section-title fw-bold mb-3 d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#experienceCollapse" role="button">
+                            <span><i class="fas fa-history me-2"></i>Kinh nghiệm</span>
+                            <i class="fas fa-chevron-down collapse-icon"></i>
+                        </h4>
+                        <div class="collapse" id="experienceCollapse">
+                            <div id="doctorExperience" class="content-section"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card mb-4">
+                    <div class="card-body p-4">
+                        <h4 class="section-title fw-bold mb-3 d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#organizationCollapse" role="button">
+                            <span><i class="fas fa-hospital me-2"></i>Tổ chức</span>
+                            <i class="fas fa-chevron-down collapse-icon"></i>
+                        </h4>
+                        <div class="collapse" id="organizationCollapse">
+                            <div id="doctorOrganization" class="content-section"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card mb-4">
+                    <div class="card-body p-4">
+                        <h4 class="section-title fw-bold mb-3 d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#awardCollapse" role="button">
+                            <span><i class="fas fa-award me-2"></i>Giải thưởng</span>
+                            <i class="fas fa-chevron-down collapse-icon"></i>
+                        </h4>
+                        <div class="collapse" id="awardCollapse">
+                            <div id="doctorAward" class="content-section"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card mb-4">
+                    <div class="card-body p-4">
+                        <h4 class="section-title fw-bold mb-3 d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#achievementsCollapse" role="button">
+                            <span><i class="fas fa-trophy me-2"></i>Thành tựu</span>
+                            <i class="fas fa-chevron-down collapse-icon"></i>
+                        </h4>
+                        <div class="collapse" id="achievementsCollapse">
+                            <div id="doctorAchievements" class="content-section"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card mb-4">
+                    <div class="card-body p-4">
+                        <h4 class="section-title fw-bold mb-3 d-flex align-items-center justify-content-between" data-bs-toggle="collapse" href="#researchCollapse" role="button">
+                            <span><i class="fas fa-microscope me-2"></i>Nghiên cứu</span>
+                            <i class="fas fa-chevron-down collapse-icon"></i>
+                        </h4>
+                        <div class="collapse" id="researchCollapse">
+                            <div id="doctorResearch" class="content-section"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Styles{
+    <style>
+    .doctor-profile {
+        padding: 60px 0;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    }
+
+    .custom-textarea {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 16px;
+        width: 100%;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 1rem;
+    }
+
+    .custom-textarea:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+    }
+
+    .btn-booking {
+        padding: 14px 32px;
+        border-radius: 30px;
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        border: none;
+        box-shadow: 0 8px 20px rgba(37,99,235,0.25);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        font-weight: 600;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-booking:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(37,99,235,0.35);
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    .doctor-card {
+        border-radius: 20px;
+        overflow: hidden;
+        background: white;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .doctor-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    }
+
+    .doctor-image {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .doctor-image img {
+        transition: all 0.5s ease;
+    }
+
+    .doctor-image:hover img {
+        transform: scale(1.05);
+    }
+
+    .info-card {
+        border-radius: 16px;
+        background: white;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        overflow: hidden;
+    }
+
+    .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+    }
+
+    .section-title {
+        position: relative;
+        padding-left: 16px;
+        cursor: pointer;
+    }
+
+    .section-title::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 24px;
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        border-radius: 2px;
+    }
+
+    .collapse-icon {
+        transition: transform 0.3s ease;
+    }
+
+    [aria-expanded="true"] .collapse-icon {
+        transform: rotate(180deg);
+    }
+
+    .content-section {
+        padding: 20px;
+        line-height: 1.8;
+        color: #334155;
+    }
+</style>
+    
+}
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            loadDoctorData();
+            
+            // Add smooth animation for collapse
+            $('.collapse').on('show.bs.collapse', function() {
+                $(this).closest('.info-card').find('.collapse-icon').css('transform', 'rotate(180deg)');
+            }).on('hide.bs.collapse', function() {
+                $(this).closest('.info-card').find('.collapse-icon').css('transform', 'rotate(0deg)');
+            });
+        });
+
+        function loadDoctorData() {
+            let currentPath = window.location.pathname;
+            let alias_url = '/bac-si/' + currentPath.split('/').pop();
+
+            $.ajax({
+                url: "/api/lay-chi-tiet-bac-si",
+                type: "POST",
+                data: { alias_url: alias_url },
+                success: function(response) {
+                    if(response.status) {
+                        const doctor = response.data;
+                     
+                        
+                        $('#doctorImage').attr('src', '/Resources/' + doctor.thumnail)
+                            .on('load', function() {
+                                $(this).fadeIn(500);
+                            });
+                        $('#doctorName').text(doctor.name);
+                        $('#doctorSpecialty').text('Chuyên khoa ' + doctor.nameCategory);
+                        $('#doctorIntroduction').html(doctor.introduction);
+                        $('#doctorExpertise').html(doctor.training);
+                        $('#doctorExperience').html(doctor.experiencework);
+                        $('#doctorAchievements').html(doctor.research);
+                        $('#doctorOrganization').html(doctor.organization);
+                        $('#doctorAward').html(doctor.award);
+                        $('#doctorResearch').html(doctor.research);
+                    }
+                },
+                error: function(error) {
+                    console.error('Error loading doctor data:', error);
+                }
+            });
+        }
+    </script>
+}

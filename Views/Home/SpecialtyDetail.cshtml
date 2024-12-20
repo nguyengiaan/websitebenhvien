@@ -1,0 +1,338 @@
+
+@{
+    ViewData["Title"] = "Chuyên khoa";
+    Layout = "~/Views/Shared/Layout_2.cshtml";
+}
+
+<div class="specialty-container py-5">
+    <div class="container">
+        <ul class="nav nav-tabs mb-5 justify-content-center" id="specialtyTabs" role="tablist">
+            <li class="nav-item mx-2" role="presentation">
+                <button class="nav-link active px-4 py-3" id="overview-tab" data-bs-toggle="tab" data-bs-target="#overview" type="button" role="tab">
+                    <i class="fas fa-info-circle me-2"></i>Tổng quan
+                </button>
+            </li>
+            <li class="nav-item mx-2" role="presentation">
+                <button class="nav-link px-4 py-3" id="medical-team-tab" data-bs-toggle="tab" data-bs-target="#medical-team" type="button" role="tab">
+                    <i class="fas fa-user-md me-2"></i>Đội ngũ y tế
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="specialtyTabContent">
+            <!-- Tab Tổng quan -->
+            <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                <div class="specialty-content">
+                    <div class="accordion" id="specialtyAccordion">
+                        <!-- Tổng quan -->
+                        <div class="accordion-item shadow-sm mb-4 border-0 rounded-4 overflow-hidden">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button fw-bold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#overviewContent">
+                                    <i class="fas fa-info-circle me-2 text-primary"></i>Tổng quan
+                                </button>
+                            </h2>
+                            <div id="overviewContent" class="accordion-collapse collapse show" data-bs-parent="#specialtyAccordion">
+                                <div class="accordion-body bg-white">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-8">
+                                            <div class="specialty-description lh-lg" id="specialtyIntroduction">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <img src="" id="specialtyImage" class="img-fluid rounded-4 shadow-sm hover-zoom" alt="Tổng quan chuyên khoa">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dịch vụ y tế -->
+                        <div class="accordion-item shadow-sm mb-4 border-0 rounded-4 overflow-hidden">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#medicalServicesContent">
+                                    <i class="fas fa-heartbeat me-2 text-danger"></i>Dịch vụ y tế
+                                </button>
+                            </h2>
+                            <div id="medicalServicesContent" class="accordion-collapse collapse" data-bs-parent="#specialtyAccordion">
+                                <div class="accordion-body bg-white">
+                                    <div id="specialtyServices" class="lh-lg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Thành tựu y khoa -->
+                        <div class="accordion-item shadow-sm mb-4 border-0 rounded-4 overflow-hidden">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#medicalAchievementsContent">
+                                    <i class="fas fa-trophy me-2 text-warning"></i>Thành tựu y khoa
+                                </button>
+                            </h2>
+                            <div id="medicalAchievementsContent" class="accordion-collapse collapse" data-bs-parent="#specialtyAccordion">
+                                <div class="accordion-body bg-white">
+                                    <div id="specialtyAchievements" class="lh-lg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cơ sở y tế -->
+                        <div class="accordion-item shadow-sm mb-4 border-0 rounded-4 overflow-hidden">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#medicalFacilitiesContent">
+                                    <i class="fas fa-hospital me-2 text-info"></i>Cơ sở y tế
+                                </button>
+                            </h2>
+                            <div id="medicalFacilitiesContent" class="accordion-collapse collapse" data-bs-parent="#specialtyAccordion">
+                                <div class="accordion-body bg-white">
+                                    <div id="specialtyMachines" class="lh-lg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Phương pháp-->
+                        <div class="accordion-item shadow-sm mb-4 border-0 rounded-4 overflow-hidden">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#treatmentMethodsContent">
+                                    <i class="fas fa-procedures me-2 text-success"></i>Phương pháp điều trị
+                                </button>
+                            </h2>
+                            <div id="treatmentMethodsContent" class="accordion-collapse collapse" data-bs-parent="#specialtyAccordion">
+                                <div class="accordion-body bg-white">
+                                    <div id="specialtyTreatments" class="lh-lg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Đội ngũ y tế -->
+            <div class="tab-pane fade" id="medical-team" role="tabpanel">
+                <div class="row g-4" id="medicalTeamList">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles{
+<style>
+.specialty-container {
+    background: linear-gradient(120deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.specialty-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: url('/images/pattern.png') repeat;
+    opacity: 0.03;
+    pointer-events: none;
+}
+
+.nav-tabs {
+    border: none;
+    background: rgba(255,255,255,0.98);
+    border-radius: 30px;
+    padding: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    position: relative;
+    z-index: 1;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    border-radius: 20px;
+    padding: 12px 25px;
+    font-weight: 600;
+    color: #566a7f;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    color: #2563eb;
+    transform: translateY(-1px);
+}
+
+.nav-tabs .nav-link.active {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: white;
+    box-shadow: 0 4px 15px rgba(37,99,235,0.35);
+}
+
+.accordion-item {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 1rem;
+    border: none;
+    border-radius: 12px !important;
+    background: rgba(255,255,255,0.98);
+}
+
+.accordion-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.accordion-button {
+    background: white;
+    border: none;
+    border-radius: 12px !important;
+    padding: 1.2rem;
+    font-size: 1.05rem;
+    transition: all 0.3s ease;
+}
+
+.accordion-button:not(.collapsed) {
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: white;
+    box-shadow: 0 4px 15px rgba(37,99,235,0.2);
+}
+
+.custom-input {
+    border-radius: 10px;
+    border: 1.5px solid #e2e8f0;
+    padding: 12px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.custom-input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.custom-textarea {
+    border-radius: 10px;
+    border: 1.5px solid #e2e8f0;
+    padding: 12px;
+    resize: none;
+    transition: all 0.3s ease;
+}
+
+.custom-textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.btn-booking {
+    padding: 12px 30px;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    border: none;
+    box-shadow: 0 4px 15px rgba(37,99,235,0.3);
+    transition: all 0.3s ease;
+    font-weight: 600;
+    color: white;
+}
+
+.btn-booking:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37,99,235,0.4);
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+}
+
+.contact-card {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.1) !important;
+}
+
+.placeholder-content {
+    animation: pulse 2s infinite;
+    background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+    background-size: 200% 100%;
+    border-radius: 8px;
+    padding: 20px;
+}
+</style>
+}
+
+@section Scripts{
+    <script>
+        $(document).ready(function(){
+            loadData();
+        });
+        
+        function loadData(){
+            // Get the current URL path
+            let currentPath = window.location.pathname;
+            // Extract the alias_url from the path
+            let alias_url = currentPath;
+
+            $.ajax({
+                url: "/api/lay-chi-tiet-chuyen-khoa", 
+                type: "POST",
+                data: { alias_url: alias_url },
+                success: function(response){
+                    if(response.status) {
+                        console.log(response);
+                        const data = response.data;
+                        const doctors = response.doctor;
+                        
+                        // Update introduction
+                        $('#specialtyIntroduction').html(data.introduction);
+                        
+                        // Update image
+                        $('#specialtyImage').attr('src', '/Resources/' + data.thumnail);
+                        
+                        // Update services
+                        $('#specialtyServices').html(data.service);
+                        
+                        // Update achievements
+                        $('#specialtyAchievements').html(data.achievement);
+                        
+                        // Update machines/facilities
+                        $('#specialtyMachines').html(data.machine);
+                        
+                        $('#specialtyTreatments').html(data.method);
+                        // Update doctor list
+                        let doctorHtml = '';
+                        doctors.forEach(doctor => {
+                            doctorHtml += `
+                                <div class="col-md-6 col-lg-4 mb-4">
+                                    <div class="card h-100 border-0" style="transform-style: preserve-3d; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+                                        <div class="card-image-wrapper" style="perspective: 1000px;">
+                                            <img src="/Resources/${doctor.thumnail}" 
+                                                 class="card-img-top"
+                                                 alt="${doctor.name}"
+                                                 style="height: 200px; object-fit: cover; border-radius: 8px 8px 0 0; transform: translateZ(20px);">
+                                        </div>
+                                        <div class="card-body" style="transform: translateZ(30px);">
+                                            <h5 class="card-title fw-bold mb-2" style="color: #2563eb;">
+                                                <i class="fas fa-user-md me-2"></i>${doctor.name}
+                                            </h5>
+                                            <p class="text-muted mb-2" style="font-size: 0.9rem;">
+                                                <i class="fas fa-graduation-cap me-2"></i>
+                                                Chuyên khoa ${doctor.nameCategory}
+                                            </p>
+                                            <p class="card-text text-muted mb-3" style="height: 3em; overflow: hidden; font-size: 0.85rem;">
+                                                ${doctor.introduction}
+                                            </p>
+                                            <a href="${doctor.alias_url}" class="btn w-100" style="background: linear-gradient(145deg, #2563eb, #1d4ed8); color: white; border: none; padding: 10px; border-radius: 6px; transform: translateZ(10px); transition: all 0.3s ease;">
+                                                Xem chi tiết
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        $('#doctorList').html(doctorHtml);
+                        $('#medicalTeamList').html(doctorHtml);
+                    }
+                }
+            });
+        }
+    </script>
+}

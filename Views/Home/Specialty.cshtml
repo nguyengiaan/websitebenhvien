@@ -2,50 +2,170 @@
     ViewData["Title"] = "Chuyên khoa";
     Layout = "~/Views/Shared/Layout_2.cshtml";
 }
-<div class="specialty-tabs">
-    <ul class="nav nav-tabs" id="specialtyTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="intro-tab" data-bs-toggle="tab" data-bs-target="#intro" type="button" role="tab" aria-controls="intro" aria-selected="true">
-                Giới thiệu
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="experts-tab" data-bs-toggle="tab" data-bs-target="#experts" type="button" role="tab" aria-controls="experts" aria-selected="false">
-                Chuyên gia
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="services-tab" data-bs-toggle="tab" data-bs-target="#services" type="button" role="tab" aria-controls="services" aria-selected="false">
-                Dịch vụ
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="achievements-tab" data-bs-toggle="tab" data-bs-target="#achievements" type="button" role="tab" aria-controls="achievements" aria-selected="false">
-                Thành tựu
-            </button>
-        </li>
-    </ul>
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <div class="specialty-header position-relative">
+                <!-- 3D Background Shape -->
+                <div class="position-absolute top-50 start-50 translate-middle"
+                     style="width: 300px; height: 300px;
+                            background: linear-gradient(45deg, rgba(13, 110, 253, 0.05), rgba(13, 110, 253, 0.1));
+                            border-radius: 50%;
+                            transform: rotate3d(1, 1, 0, 45deg);
+                            animation: float 6s infinite ease-in-out;
+                            z-index: -1;">
+                </div>
 
-    <div class="tab-content" id="specialtyTabsContent">
-        <div class="tab-pane fade show active" id="intro" role="tabpanel" aria-labelledby="intro-tab">
-            <div class="content-wrapper">
-                <!-- Nội dung giới thiệu -->
-            </div>
-        </div>
-        <div class="tab-pane fade" id="experts" role="tabpanel" aria-labelledby="experts-tab">
-            <div class="content-wrapper">
-                <!-- Nội dung chuyên gia -->
-            </div>
-        </div>
-        <div class="tab-pane fade" id="services" role="tabpanel" aria-labelledby="services-tab">
-            <div class="content-wrapper">
-                <!-- Nội dung dịch vụ -->
-            </div>
-        </div>
-        <div class="tab-pane fade" id="achievements" role="tabpanel" aria-labelledby="achievements-tab">
-            <div class="content-wrapper">
-                <!-- Nội dung thành tựu -->
+                <!-- Title with 3D effect -->
+                <h2 class="display-4 fw-bold mb-4"
+                    style="transform: translateZ(30px);
+                           color: #0d6efd;
+                           text-shadow: 2px 2px 0px rgba(13, 110, 253, 0.2);">
+                    <i class="fas fa-stethoscope me-2"></i>
+                    Chuyên Khoa
+                </h2>
+
+                <!-- Subtitle -->
+                <p class="lead text-muted mb-4 mx-auto" style="max-width: 600px;">
+                    Khám phá các chuyên khoa tại bệnh viện của chúng tôi với đội ngũ y bác sĩ giàu kinh nghiệm
+                </p>
+
+                <!-- Decorative Divider -->
+                <div class="d-flex align-items-center justify-content-center gap-3">
+                    <div style="width: 80px; height: 2px; background: linear-gradient(90deg, transparent, #0d6efd)"></div>
+                    <i class="fas fa-heart text-danger" style="animation: pulse 2s infinite"></i>
+                    <div style="width: 80px; height: 2px; background: linear-gradient(90deg, #0d6efd, transparent)"></div>
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="row g-4" id="specialtyList">
+        <!-- Danh sách chuyên khoa sẽ được render ở đây -->
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            loadSpecialties();
+            AOS.init();
+        });
+
+        function loadSpecialties() {
+            $.ajax({
+                url: '/api/chuyen-khoa-catogery',
+                type: 'GET',
+                success: function(response) {
+                    if(response.data) {
+                        console.log(response.data);
+                        renderSpecialties(response.data);
+                    }
+                }
+            });
+        }
+
+        function renderSpecialties(specialties) {
+            let html = '';
+            specialties.forEach(function(specialty, index) {
+                html += `
+                    <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="${index * 100}">
+                        <div class="card specialty-card h-100 border-0 rounded-4">
+                            <div class="card-body p-4 d-flex flex-column">
+                                <div class="specialty-icon mb-4">
+                                    <div class="icon-circle position-relative overflow-hidden" style="width: 150px; height: 150px; margin: 0 auto; transform-style: preserve-3d; perspective: 1000px; transition: transform 0.5s;">
+                                        <div class="icon-3d-container position-relative w-100 h-100" style="transform-style: preserve-3d; animation: float 6s ease-in-out infinite;">
+                                            <div class="icon-front position-absolute w-100 h-100" style="transform: translateZ(30px); border-radius: 50%; background: linear-gradient(145deg, #2196f3, #1976d2); box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
+                                                <img src="/Resources/${specialty.thumnail}" alt="${specialty.title}" class="position-absolute top-50 start-50 translate-middle rounded-circle" style="width: 80%; height: 80%; object-fit: cover; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));">
+                                            </div>
+                                            <div class="icon-glow position-absolute w-100 h-100" style="border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%); transform: translateZ(10px);">
+                                            </div>
+                                            <div class="icon-shadow position-absolute w-100 h-100" style="border-radius: 50%; background: rgba(0,0,0,0.1); transform: translateZ(-30px) scale(0.9); filter: blur(20px);">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h4 class="card-title mb-3 fw-bold text-primary text-center">${specialty.title}</h4>
+                                <p class="card-text mb-4 flex-grow-1">
+                                    ${specialty.description || 'Chuyên khoa điều trị các bệnh lý liên quan với đội ngũ bác sĩ giàu kinh nghiệm.'}
+                                </p>
+                                <div class="mt-auto">
+                                    <a href="${specialty.alias_url}" class="btn btn-primary btn-lg rounded-pill px-4 w-100">
+                                        <i class="fas fa-info-circle me-2"></i>Xem chi tiết
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            $('#specialtyList').html(html);
+        }
+    </script>
+}
+
+<style>
+    .divider-custom {
+        margin: 1.25rem 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .divider-custom-line {
+        width: 100%;
+        max-width: 7rem;
+        height: 0.25rem;
+        background-color: #0d6efd;
+        border-radius: 1rem;
+        margin: 0 1rem;
+    }
+
+    .divider-custom-icon {
+        font-size: 2rem;
+    }
+
+    .specialty-card {
+        transition: all 0.4s ease;
+        background: linear-gradient(145deg, #ffffff, #f5f7ff);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    .specialty-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+    }
+
+    .specialty-icon {
+        text-align: center;
+    }
+
+    .icon-circle {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto;
+        background: linear-gradient(45deg, #0d6efd, #0099ff);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .icon-circle i {
+        font-size: 2rem;
+        color: white;
+    }
+
+    .btn-primary {
+        border: none;
+        background: linear-gradient(45deg, #0d6efd, #0099ff);
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(13, 110, 253, 0.4);
+    }
+</style>
+

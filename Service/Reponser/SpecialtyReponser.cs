@@ -91,12 +91,26 @@ namespace websitebenhvien.Service.Reponser
             target.Alias_url = source.Alias_url;
         }
 
-
-        public Task<bool> DeleteSpecialty(int id)
+        public async Task<bool> DeleteSpecialty(int id)
         {
-            throw new NotImplementedException();
-        }
+          try
+          {
+            var data = await _context.Specialties.FindAsync(id);
+            if(data != null)
+            {
+                _context.Specialties.Remove(data);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
 
+          }
+          catch(Exception e)
+          {
+            return false;
+          }
+        }
+        
         public async Task<(List<SpecialtyVM> ds, int TotalPages)> GetSpecialty(int page, int pageSize)
         {
             try
@@ -196,6 +210,142 @@ namespace websitebenhvien.Service.Reponser
             }catch(Exception e)
             {
                 return null;
+            }
+        }
+
+        public async Task<bool> AddDoctor(DoctorVM doctor)
+        {
+            try
+            {
+                var data = await _context.Doctors.FindAsync(doctor.Id_doctor);
+                if(data != null)
+                {
+                    UpdateDoctorData(data,doctor);
+                    if(doctor.ImageFile != null)
+                    {
+                        var result = SaveMedia(doctor.ImageFile);
+                        if(result.Item1 == 1)
+                        {
+                            DeleteMedia(data.Thumnail);
+                            data.Thumnail = result.Item2;
+                        }
+                    }
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    var newDoctor = new Doctor();
+                    UpdateDoctorData(newDoctor,doctor);
+                    if(doctor.ImageFile != null)
+                    {
+                        var result = SaveMedia(doctor.ImageFile);
+                        if(result.Item1 == 1)
+                        {
+                            newDoctor.Thumnail = result.Item2;
+                        }
+                    }
+                    await _context.Doctors.AddAsync(newDoctor);
+                    await _context.SaveChangesAsync();
+                    return true;
+                 
+                }
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+        }
+        private void UpdateDoctorData(Doctor target, DoctorVM source)
+        {
+            target.Name = source.Name;
+            target.Introduction = source.Introduction;
+            target.Organization = source.Organization;
+            target.Award = source.Award;
+            target.Research = source.Research;
+            target.Training = source.Training;
+            target.Experiencework = source.Experiencework;
+            target.Alias_url = source.Alias_url;
+            target.Id_specialty = source.Id_specialty;
+        }
+
+        
+
+        public async Task<bool> DeleteDoctor(int id)
+        {
+            try
+            {
+                var data = await _context.Doctors.FindAsync(id);
+                if(data != null)
+                {
+                    _context.Doctors.Remove(data);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }catch(Exception e)
+            {
+                return false;
+            }
+        }
+
+        public async Task<List<DoctorVM>> GetDoctorBySpecialty(int id)
+        {
+            try{
+                var data = await _context.Doctors.Where(x=>x.Id_doctor == id).Select(x=>new DoctorVM{
+                    Id_doctor = x.Id_doctor,
+                    Name = x.Name,
+                    Thumnail = x.Thumnail,
+                    Alias_url = x.Alias_url,
+                    Introduction = x.Introduction,
+                    Organization = x.Organization,
+                    Award = x.Award,
+                    Research = x.Research,
+                    Training = x.Training,
+                    Experiencework = x.Experiencework,
+                    Id_specialty = x.Id_specialty,
+                
+                  
+                }).ToListAsync();
+                return data;
+            }catch(Exception e)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<SpecialtyVM>> GetAllSpecialty()
+        {
+            try{
+                var data = await _context.Specialties.Select(x=>new SpecialtyVM{
+                    Id_Specialty = x.Id_Specialty,
+                    Title = x.Title,
+                    Alias_url = x.Alias_url,
+                    Thumnail = x.Thumnail,
+                }).ToListAsync();
+                return data;
+            }catch(Exception e)
+            {
+                return null;
+            }
+        }
+
+        public async Task<(List<DoctorVM> ds, int TotalPages)> GetDoctorByAlias(int page, int pageSize)
+        {
+            try{
+                var totalItems = await _context.Doctors.CountAsync(); 
+                var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+                var query = await _context.Doctors.Include(x=>x.Specialty).AsNoTracking().Select(x=>new DoctorVM{
+                    Id_doctor = x.Id_doctor,
+                    Name = x.Name,
+                    Thumnail = x.Thumnail,
+                    Alias_url = x.Alias_url,
+                    nameCategory = x.Specialty.Title,
+                }).OrderByDescending(x=>x.Id_doctor).Skip((page-1)*pageSize).Take(pageSize).ToListAsync();
+                return (query,totalPages);
+            }catch(Exception e)
+            {
+                return (null,0);
             }
         }
     }

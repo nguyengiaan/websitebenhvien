@@ -1,0 +1,182 @@
+@{
+    ViewData["Title"] = "Quản lý đăng ký khám bệnh";
+
+}
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Quản lý đăng ký khám bệnh</h4>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <select class="form-select" id="specialtyFilter">
+                        <option value="">Tất cả chuyên khoa</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm...">
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="appointmentTable">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên bệnh nhân</th>
+                            <th>Số điện thoại</th>
+                            <th>Bác sĩ</th>
+                            <th>Chuyên khoa</th>
+                            <th>Thời gian khám</th>
+                            <th>Ghi chú</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div id="pagination" class="float-start"></div>
+                </div>
+                <div class="col-md-6">
+                    <div class="float-end">
+                        <select class="form-select" id="pageSize">
+                            <option value="10">10 dòng</option>
+                            <option value="20">20 dòng</option>
+                            <option value="50">50 dòng</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            loadSpecialties();
+            loadAppointments();
+
+            $('#searchInput').on('keyup', function() {
+                loadAppointments();
+            });
+
+            $('#specialtyFilter').on('change', function() {
+                loadAppointments();
+            });
+
+            $('#pageSize').on('change', function() {
+                loadAppointments();
+            });
+        });
+
+        function loadSpecialties() {
+            $.ajax({
+                url: '/api/chuyen-khoa-catogery',
+                type: 'GET',
+                success: function(response) {
+                    let options = '<option value="">Tất cả chuyên khoa</option>';
+                    response.data.forEach(function(specialty) {
+                        options += `<option value="${specialty.id_Specialty}">${specialty.title}</option>`;
+                    });
+                    $('#specialtyFilter').html(options);
+                }
+            });
+        }
+
+        function loadAppointments(page = 1) {
+            const searchTerm = $('#searchInput').val();
+            const specialtyId = $('#specialtyFilter').val();
+            const pageSize = $('#pageSize').val();
+
+            $.ajax({
+                url: '/api/appointments',
+                type: 'GET',
+                data: {
+                    page: page,
+                    pageSize: pageSize,
+                    search: searchTerm,
+                    specialtyId: specialtyId
+                },
+                success: function(response) {
+                    renderAppointments(response.data);
+                    renderPagination(response.totalPages, page);
+                }
+            });
+        }
+
+        function renderAppointments(appointments) {
+            let html = '';
+            appointments.forEach((item, index) => {
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td>${item.phone}</td>
+                        <td>${item.name_doctor}</td>
+                        <td>${item.specialty_name}</td>
+                        <td>${formatDateTime(item.examinationtime)}</td>
+                        <td>${item.note || ''}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="deleteAppointment(${item.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            $('#appointmentTable tbody').html(html);
+        }
+
+        function renderPagination(totalPages, currentPage) {
+            let html = '';
+            for (let i = 1; i <= totalPages; i++) {
+                html += `
+                    <button class="btn btn-${currentPage === i ? 'primary' : 'outline-primary'} btn-sm me-1" 
+                            onclick="loadAppointments(${i})">
+                        ${i}
+                    </button>
+                `;
+            }
+            $('#pagination').html(html);
+        }
+
+        function deleteAppointment(id) {
+            Swal.fire({
+                title: 'Xác nhận xóa?',
+                text: "Bạn có chắc chắn muốn xóa lịch khám này?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/api/appointments/${id}`,
+                        type: 'DELETE',
+                        success: function(response) {
+                            if (response.status) {
+                                Swal.fire('Thành công', 'Đã xóa lịch khám', 'success');
+                                loadAppointments();
+                            } else {
+                                Swal.fire('Lỗi', response.message, 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        function formatDateTime(dateTimeStr) {
+            const date = new Date(dateTimeStr);
+            return date.toLocaleString('vi-VN');
+        }
+    </script>
+}
+

@@ -250,5 +250,33 @@ namespace websitebenhvien.Controllers
             return Json(new { status = false,message = ex.Message });
            }
         }
+        // lấy chi tiết chuyên khoa 
+        [HttpPost("/api/lay-chi-tiet-chuyen-khoa")]
+        public async Task<IActionResult> GetSpecialtyById(string alias_url)
+        {
+            try
+            {
+                var data = await _post.GetSpecialtyById(alias_url);
+                return Json(new { status = true,data = data.Item1,Doctor = data.Item2 });
+            }catch(Exception ex)
+            {
+                return Json(new { status = false,message = ex.Message });
+            }
+        }
+        // lấy danh sách bác sĩ theo chuyên khoa
+        [HttpPost("/api/lay-chi-tiet-bac-si")]
+        public async Task<IActionResult> GetDoctorById(string alias_url)
+        {
+            try
+            {
+                var data = await _post.GetDoctorById(alias_url);
+                return Json(new { status = true,data = data });
+            }catch(Exception ex)
+            {
+                return Json(new { status = false,message = ex.Message });
+            }
+        }
+        //đăng ký kham benh
+     
     }
 }
