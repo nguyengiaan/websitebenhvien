@@ -16,7 +16,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             _specialty = specialty;
 
         }
-       [Authorize]
+        [Authorize]
         [HttpPost]
        
         public async Task<IActionResult> AddSpecialty(SpecialtyVM specialty)
@@ -83,7 +83,6 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-
         [HttpGet("/api/chuyen-khoa-catogery")]
         public async Task<IActionResult> GetAllSpecialty()
         {
@@ -102,6 +101,12 @@ namespace websitebenhvien.Areas.Admin.Controllers
         public async Task<IActionResult> AddDoctor(DoctorVM doctor)
         {
             try{    
+                if (!ModelState.IsValid)
+                {
+                    // Trả về thông báo lỗi từ ModelState
+                    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                    return Json(new { status = false, message = string.Join(", ", errors), errors });
+                }
                 var result = await _specialty.AddDoctor(doctor);
                 if(result)
                 {
@@ -118,10 +123,10 @@ namespace websitebenhvien.Areas.Admin.Controllers
         }
         [Authorize]
         [HttpPost("/api/lay-danh-sach-bac-si")]
-        public async Task<IActionResult> GetDoctorByAlias(int page, int pageSize)
+        public async Task<IActionResult> GetDoctorByAlias(int page, int pageSize,string search,int specialtyId)
         {
             try{
-                var data = await _specialty.GetDoctorByAlias(page, pageSize);
+                var data = await _specialty.GetDoctorByAlias(page, pageSize,search,specialtyId);
                 return Json(new { success = true, data = data.ds, totalPages = data.TotalPages, page = page });
             }
             catch(Exception ex)

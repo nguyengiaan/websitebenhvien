@@ -14,6 +14,8 @@
         public string ?note { get; set; }
         public int Id_Specialty { get; set; }
 
+        public bool ? Status { get; set; }
+
         public Specialty Specialty { get; set; }
     }
 }

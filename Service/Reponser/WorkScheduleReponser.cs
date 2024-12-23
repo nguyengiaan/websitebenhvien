@@ -163,6 +163,7 @@ namespace websitebenhvien.Service.Reponser
                 data.name =workschedule.name;
                 data.phone=workschedule.phone;
                 data.note=workschedule.note;
+                data.Status=false;
                 await _context.Makeanappointments.AddAsync(data);
             
                 notfi.Id_Notification=Guid.NewGuid().ToString();
@@ -198,5 +199,81 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
+        public async Task<(List<MakeanappointmentVM> ds, int total)> GetAppointment(int page, int pageSize, string search, int specialtyId)
+        {
+          try
+          {
+            var query = _context.Makeanappointments.AsQueryable();
+            
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(x => x.name.Contains(search) || x.Name_doctor.Contains(search));
+            }
+
+            if (specialtyId > 0)
+            {
+                query = query.Where(x => x.Id_Specialty == specialtyId);
+            }
+
+            var totalItems = await query.CountAsync();
+            var totalpages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+                var result = await query.Select(x => new MakeanappointmentVM {
+                    Id_makeanappointment = x.Id_Make,
+                    Id_Specialty = x.Id_Specialty,
+                    Name_doctor = x.Name_doctor,
+                    Examinationtime = x.Examinationtime,
+                    name = x.name,
+                    phone = x.phone,
+                    note = x.note,
+                    Title_Specialty=x.Specialty.Title,
+                    Status=x.Status,
+
+
+                })
+            .OrderByDescending(x => x.Id_makeanappointment)
+            .Skip((page-1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+            return (result, totalpages);
+          }
+          catch(Exception ex)
+          {
+            return (null, 0);
+          }
+        }
+
+        public async Task<bool> DeleteAppointment(int id)
+        {
+            try{
+                var data=await _context.Makeanappointments.FindAsync(id);
+                if(data!=null){
+                    _context.Makeanappointments.Remove(data);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch(Exception ex){
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateAppointment(int id)
+        {
+            try{
+                var data=await _context.Makeanappointments.FindAsync(id);
+                if(data!=null){
+                    data.Status=!data.Status;
+                    await _context.SaveChangesAsync();
+                    return true;
+                }   
+                return false;
+            }
+            catch(Exception ex){
+                return false;
+            }
+        }
     }
 }

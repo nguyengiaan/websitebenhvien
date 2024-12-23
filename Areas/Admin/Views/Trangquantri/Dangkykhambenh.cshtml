@@ -31,6 +31,7 @@
                             <th>Chuyên khoa</th>
                             <th>Thời gian khám</th>
                             <th>Ghi chú</th>
+                            <th>Trạng thái</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
@@ -43,15 +44,7 @@
                 <div class="col-md-6">
                     <div id="pagination" class="float-start"></div>
                 </div>
-                <div class="col-md-6">
-                    <div class="float-end">
-                        <select class="form-select" id="pageSize">
-                            <option value="10">10 dòng</option>
-                            <option value="20">20 dòng</option>
-                            <option value="50">50 dòng</option>
-                        </select>
-                    </div>
-                </div>
+             
             </div>
         </div>
     </div>
@@ -59,6 +52,9 @@
 
 @section Scripts {
     <script>
+        let currentPage = 1;
+        const pageSize = 20;
+
         $(document).ready(function() {
             loadSpecialties();
             loadAppointments();
@@ -90,23 +86,25 @@
             });
         }
 
-        function loadAppointments(page = 1) {
+        function loadAppointments() {
             const searchTerm = $('#searchInput').val();
             const specialtyId = $('#specialtyFilter').val();
-            const pageSize = $('#pageSize').val();
 
             $.ajax({
-                url: '/api/appointments',
-                type: 'GET',
+                url: '/api/lay-danh-sach-dang-ky-kb',
+                type: 'POST',
                 data: {
-                    page: page,
+                    page: currentPage,
                     pageSize: pageSize,
                     search: searchTerm,
                     specialtyId: specialtyId
                 },
                 success: function(response) {
-                    renderAppointments(response.data);
-                    renderPagination(response.totalPages, page);
+                    if(response.status){
+                        console.log(response);
+                        renderAppointments(response.data);
+                        renderPagination(response.total, currentPage);
+                    }
                 }
             });
         }
@@ -120,11 +118,20 @@
                         <td>${item.name}</td>
                         <td>${item.phone}</td>
                         <td>${item.name_doctor}</td>
-                        <td>${item.specialty_name}</td>
+                        <td>${item.title_Specialty}</td>
                         <td>${formatDateTime(item.examinationtime)}</td>
                         <td>${item.note || ''}</td>
                         <td>
-                            <button class="btn btn-danger btn-sm" onclick="deleteAppointment(${item.id})">
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">${item.status ? 'Đã xác nhận' : 'Chưa xác nhận'}</span>
+                                <button class="btn btn-${item.status ? 'success' : 'warning'} btn-sm" 
+                                        onclick="toggleStatus(${item.id_makeanappointment})">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="deleteAppointment(${item.id_makeanappointment})">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>
@@ -133,18 +140,70 @@
             });
             $('#appointmentTable tbody').html(html);
         }
-
         function renderPagination(totalPages, currentPage) {
             let html = '';
-            for (let i = 1; i <= totalPages; i++) {
+            
+            // Previous button
+            html += `
+                <button class="btn btn-outline-primary btn-sm me-1" 
+                        onclick="changePage(${currentPage - 1})"
+                        ${currentPage === 1 ? 'disabled' : ''}>
+                    &laquo;
+                </button>
+            `;
+
+            // Calculate range of pages to show
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            
+            // Adjust start if end is maxed out
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+
+            // First page + ellipsis
+            if (startPage > 1) {
+                html += `
+                    <button class="btn btn-outline-primary btn-sm me-1" onclick="changePage(1)">1</button>
+                    ${startPage > 2 ? '<span class="me-1">...</span>' : ''}
+                `;
+            }
+
+            // Page numbers
+            for (let i = startPage; i <= endPage; i++) {
                 html += `
                     <button class="btn btn-${currentPage === i ? 'primary' : 'outline-primary'} btn-sm me-1" 
-                            onclick="loadAppointments(${i})">
+                            onclick="changePage(${i})">
                         ${i}
                     </button>
                 `;
             }
+
+            // Last page + ellipsis
+            if (endPage < totalPages) {
+                html += `
+                    ${endPage < totalPages - 1 ? '<span class="me-1">...</span>' : ''}
+                    <button class="btn btn-outline-primary btn-sm me-1" onclick="changePage(${totalPages})">${totalPages}</button>
+                `;
+            }
+
+            // Next button
+            html += `
+                <button class="btn btn-outline-primary btn-sm me-1"
+                        onclick="changePage(${currentPage + 1})"
+                        ${currentPage === totalPages ? 'disabled' : ''}>
+                    &raquo;
+                </button>
+            `;
+
             $('#pagination').html(html);
+        }
+
+        function changePage(page) {
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                loadAppointments();
+            }
         }
 
         function deleteAppointment(id) {
@@ -158,8 +217,11 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/api/appointments/${id}`,
-                        type: 'DELETE',
+                        url: `/api/xoa-lich-khambenh`,
+                        type: 'POST',
+                        data: {
+                            id: id
+                        },
                         success: function(response) {
                             if (response.status) {
                                 Swal.fire('Thành công', 'Đã xóa lịch khám', 'success');
@@ -176,6 +238,22 @@
         function formatDateTime(dateTimeStr) {
             const date = new Date(dateTimeStr);
             return date.toLocaleString('vi-VN');
+        }
+
+        function toggleStatus(id) {
+            $.ajax({
+                url: `/api/cap-nhat-lich-kham-benh`,
+                type: 'POST',
+                data: { id: id },
+                success: function(response) {
+                    if(response.status){
+                        Swal.fire('Thành công', 'Đã cập nhật trạng thái', 'success');
+                        loadAppointments();
+                    }else{
+                        Swal.fire('Lỗi', response.message, 'error');
+                    }
+                }
+            });
         }
     </script>
 }

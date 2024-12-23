@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using websitebenhvien.Data;
+using websitebenhvien.Helper;
 using websitebenhvien.Migrations;
 using websitebenhvien.Models.Enitity;
 using websitebenhvien.Models.EnitityVM;
@@ -15,13 +16,15 @@ namespace websitebenhvien.Service.Reponser
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly Uploadfile _upload;
 
-        public SpecialtyReponser(MyDbcontext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment hostingEnvironment)
+        public SpecialtyReponser(Uploadfile upload,MyDbcontext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
             _hostingEnvironment = hostingEnvironment;
+            _upload=upload;
              
         }
         public async Task<bool> AddSpecialty(SpecialtyVM specialty)
@@ -41,10 +44,10 @@ namespace websitebenhvien.Service.Reponser
                     // Xử lý hình ảnh nếu có
                     if (specialty.formFile != null)
                     {
-                        var result = SaveMedia(specialty.formFile);
+                        var result =_upload.SaveMedia(specialty.formFile);
                         if (result.Item1 == 1)
                         {
-                            DeleteMedia(data.Thumnail);
+                            _upload.DeleteMedia(data.Thumnail);
                             data.Thumnail = result.Item2;
                         }
                     }
@@ -60,10 +63,14 @@ namespace websitebenhvien.Service.Reponser
                     // Xử lý hình ảnh nếu có
                     if (specialty.formFile != null)
                     {
-                        var result = SaveMedia(specialty.formFile);
+                        var result = _upload.SaveMedia(specialty.formFile);
                         if (result.Item1 == 1)
                         {
                             newSpecialty.Thumnail = result.Item2;
+                        }
+                        else
+                        {
+                            newSpecialty.Thumnail = "avt.jpg";
                         }
                     }
 
@@ -98,6 +105,10 @@ namespace websitebenhvien.Service.Reponser
             var data = await _context.Specialties.FindAsync(id);
             if(data != null)
             {
+                if(data.Thumnail != null && data.Thumnail!= "avt.jpg")
+                {
+                    _upload.DeleteMedia(data.Thumnail);
+                }
                 _context.Specialties.Remove(data);
                 await _context.SaveChangesAsync();
                 return true;
@@ -136,61 +147,8 @@ namespace websitebenhvien.Service.Reponser
         {
             throw new NotImplementedException();
         }
-        public Tuple<int, string> SaveMedia(IFormFile imageFile)
-        {
-            try
-            {
-                var contentPath = this._hostingEnvironment.ContentRootPath;
-                // path = "c://projects/productminiapi/uploads" ,not exactly something like that
-                var path = Path.Combine(contentPath, "Uploads");
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                // Check the allowed extenstions
-                var ext = Path.GetExtension(imageFile.FileName);
-                var allowedExtensions = new string[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv" };
-                if (!allowedExtensions.Contains(ext))
-                {
-                    string msg = string.Format("Only {0} extensions are allowed", string.Join(",", allowedExtensions));
-                    return new Tuple<int, string>(0, msg);
-                }
-                string uniqueString = Guid.NewGuid().ToString();
-                var fileName = Path.GetFileName(imageFile.FileName);
-                // we are trying to create a unique filename here
-                var newFileName = Guid.NewGuid().ToString().Substring(0, 4) + "__" + fileName;
-                var fileWithPath = Path.Combine(path, newFileName);
-                var stream = new FileStream(fileWithPath, FileMode.Create);
-                imageFile.CopyTo(stream);
-                stream.Close();
-                return new Tuple<int, string>(1, newFileName);
-            }
-            catch (Exception ex)
-            {
-                return new Tuple<int, string>(0, "Error has occured");
-            }
-        }
-        public bool DeleteMedia(string fileName)
-        {
-            try
-            {
-                var contentPath = this._hostingEnvironment.ContentRootPath;
-                var path = Path.Combine(contentPath, "Uploads");
-                var filePath = Path.Combine(path, fileName);
-
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
+       
+       
         public async Task<SpecialtyVM> GetSpecialtyById(int id)
         {
             try{
@@ -223,10 +181,10 @@ namespace websitebenhvien.Service.Reponser
                     UpdateDoctorData(data,doctor);
                     if(doctor.ImageFile != null)
                     {
-                        var result = SaveMedia(doctor.ImageFile);
+                        var result = _upload.SaveMedia(doctor.ImageFile);
                         if(result.Item1 == 1)
                         {
-                            DeleteMedia(data.Thumnail);
+                            _upload.DeleteMedia(data.Thumnail);
                             data.Thumnail = result.Item2;
                         }
                     }
@@ -239,11 +197,15 @@ namespace websitebenhvien.Service.Reponser
                     UpdateDoctorData(newDoctor,doctor);
                     if(doctor.ImageFile != null)
                     {
-                        var result = SaveMedia(doctor.ImageFile);
+                        var result = _upload.SaveMedia(doctor.ImageFile);
                         if(result.Item1 == 1)
                         {
                             newDoctor.Thumnail = result.Item2;
                         }
+                    }
+                    else
+                    {
+                        newDoctor.Thumnail = "avt.jpg";
                     }
                     await _context.Doctors.AddAsync(newDoctor);
                     await _context.SaveChangesAsync();
@@ -269,8 +231,6 @@ namespace websitebenhvien.Service.Reponser
             target.Id_specialty = source.Id_specialty;
         }
 
-        
-
         public async Task<bool> DeleteDoctor(int id)
         {
             try
@@ -278,6 +238,10 @@ namespace websitebenhvien.Service.Reponser
                 var data = await _context.Doctors.FindAsync(id);
                 if(data != null)
                 {
+                    if(data.Thumnail != null && data.Thumnail != "avt.jpg")
+                    {
+                        _upload.DeleteMedia(data.Thumnail);
+                    }
                     _context.Doctors.Remove(data);
                     await _context.SaveChangesAsync();
                     return true;
@@ -330,19 +294,28 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
-        public async Task<(List<DoctorVM> ds, int TotalPages)> GetDoctorByAlias(int page, int pageSize)
+        public async Task<(List<DoctorVM> ds, int TotalPages)> GetDoctorByAlias(int page, int pageSize,string search,int specialtyId)
         {
             try{
-                var totalItems = await _context.Doctors.CountAsync(); 
+                var query = _context.Doctors.AsQueryable();
+                if(!string.IsNullOrEmpty(search))
+                {
+                    query = query.Where(x=>x.Name.Contains(search));
+                }
+                if(specialtyId != 0)
+                {
+                    query = query.Where(x=>x.Id_specialty == specialtyId);
+                }
+                var totalItems = await query.CountAsync(); 
                 var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
-                var query = await _context.Doctors.Include(x=>x.Specialty).AsNoTracking().Select(x=>new DoctorVM{
+                var data = await query.Include(x=>x.Specialty).AsNoTracking().Select(x=>new DoctorVM{
                     Id_doctor = x.Id_doctor,
                     Name = x.Name,
                     Thumnail = x.Thumnail,
                     Alias_url = x.Alias_url,
                     nameCategory = x.Specialty.Title,
                 }).OrderByDescending(x=>x.Id_doctor).Skip((page-1)*pageSize).Take(pageSize).ToListAsync();
-                return (query,totalPages);
+                return (data,totalPages);
             }catch(Exception e)
             {
                 return (null,0);

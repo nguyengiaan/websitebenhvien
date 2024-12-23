@@ -4,6 +4,7 @@ namespace websitebenhvien.Models.EnitityVM
 {
     public class MakeanappointmentVM
     {
+        public int? Id_makeanappointment { get; set; }
         [Required(ErrorMessage = "Vui lòng nhập tên bác sĩ")]
         public string Name_doctor { get; set; }
         [Required(ErrorMessage = "Vui lòng chọn thời gian khám bệnh")]
@@ -19,8 +20,13 @@ namespace websitebenhvien.Models.EnitityVM
         public string? note { get; set; }
         [Required(ErrorMessage = "Vui lòng chọn chuyên khoa")]
         public int Id_Specialty { get; set; }
-
+  
         public string? Title_Specialty { get; set; }
+
+        public bool ? Status { get; set; }
+
+   
+
 
     }
 }

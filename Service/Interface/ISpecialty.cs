@@ -20,7 +20,7 @@ namespace websitebenhvien.Service.Interface
 
         public Task<List<DoctorVM>> GetDoctorBySpecialty(int id);
 
-        public Task<(List<DoctorVM> ds, int TotalPages)> GetDoctorByAlias(int page, int pageSize);
+        public Task<(List<DoctorVM> ds, int TotalPages)> GetDoctorByAlias(int page, int pageSize,string search,int specialtyId);
 
         public Task<List<SpecialtyVM>> GetAllSpecialty();
 

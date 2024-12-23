@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using websitebenhvien.Data;
+using websitebenhvien.Helper;
 using websitebenhvien.Models.Enitity;
 using websitebenhvien.Models.EnitityVM;
 using websitebenhvien.Service.Interface;
@@ -13,13 +14,15 @@ namespace websitebenhvien.Service.Reponser
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly Uploadfile _uploadfile;
 
-        public AllinoneReponser(MyDbcontext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment hostingEnvironment)
+        public AllinoneReponser(Uploadfile uploadfile,MyDbcontext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
             _hostingEnvironment = hostingEnvironment;
+            _uploadfile= uploadfile;
 
         }
         public async Task<bool> AddCatogery(CategorynewsVM category)
@@ -102,15 +105,16 @@ namespace websitebenhvien.Service.Reponser
                     {
 
 
-                        var result = SaveMedia(news.formFile);
+                        var result = _uploadfile.SaveMedia(news.formFile);
                         if (result.Item1 == 1)
                         {
-                            news.Url = result.Item2;
+                            
 
                             if (data.Result.Url != null)
                             {
-                                DeleteMedia(data.Result.Url);
+                                _uploadfile.DeleteMedia(data.Result.Url);
                             }
+                            data.Result.Url = result.Item2;
                         }
                     }
 
@@ -126,11 +130,12 @@ namespace websitebenhvien.Service.Reponser
                     var data = new News();
                     if (news.formFile != null)
                     {
-                        var result = SaveMedia(news.formFile);
+                        var result = _uploadfile.SaveMedia(news.formFile);
                         if (result.Item1 == 1)
                         {
                             data.Url = result.Item2;
                         }
+                        
                     }
                    
                     data.Title = news.Title;
@@ -151,61 +156,7 @@ namespace websitebenhvien.Service.Reponser
                 return false;
             }
         }
-        public Tuple<int, string> SaveMedia(IFormFile imageFile)
-        {
-            try
-            {
-                var contentPath = this._hostingEnvironment.ContentRootPath;
-                // path = "c://projects/productminiapi/uploads" ,not exactly something like that
-                var path = Path.Combine(contentPath, "Uploads");
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                // Check the allowed extenstions
-                var ext = Path.GetExtension(imageFile.FileName);
-                var allowedExtensions = new string[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv" };
-                if (!allowedExtensions.Contains(ext))
-                {
-                    string msg = string.Format("Only {0} extensions are allowed", string.Join(",", allowedExtensions));
-                    return new Tuple<int, string>(0, msg);
-                }
-                string uniqueString = Guid.NewGuid().ToString();
-                var fileName = Path.GetFileName(imageFile.FileName);
-                // we are trying to create a unique filename here
-                var newFileName = Guid.NewGuid().ToString().Substring(0, 4) + "__" + fileName;
-                var fileWithPath = Path.Combine(path, newFileName);
-                var stream = new FileStream(fileWithPath, FileMode.Create);
-                imageFile.CopyTo(stream);
-                stream.Close();
-                return new Tuple<int, string>(1, newFileName);
-            }
-            catch (Exception ex)
-            {
-                return new Tuple<int, string>(0, "Error has occured");
-            }
-        }
-        public bool DeleteMedia(string fileName)
-        {
-            try
-            {
-                var contentPath = this._hostingEnvironment.ContentRootPath;
-                var path = Path.Combine(contentPath, "Uploads");
-                var filePath = Path.Combine(path, fileName);
-
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
+     
         public async Task<List<NewsVM>> Listnews()
         {
             try
@@ -250,8 +201,8 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
-      public async Task<NewsVM> GetNewsById(int id)
-{
+         public async Task<NewsVM> GetNewsById(int id)
+     {
     try
     {
         // Truy vấn dữ liệu với AsNoTracking để cải thiện hiệu năng
@@ -290,12 +241,12 @@ namespace websitebenhvien.Service.Reponser
                     var data = await _context.Categoryproducts.FindAsync(category.Id_Categoryproduct);
                     if (category.formFile != null)
                     {
-                        var result = SaveMedia(category.formFile);
+                        var result = _uploadfile.SaveMedia(category.formFile);
                         if (result.Item1 == 1)
                         {
                             if (data.url != null)
                             {
-                                DeleteMedia(data.url);
+                                _uploadfile.DeleteMedia(data.url);
                             }
                             data.url = result.Item2;
                            
@@ -322,7 +273,7 @@ namespace websitebenhvien.Service.Reponser
                     };
                     if (category.formFile != null)
                     {
-                        var result = SaveMedia(category.formFile);
+                        var result = _uploadfile.SaveMedia(category.formFile);
                         if (result.Item1 == 1)
                         {
                             data.url = result.Item2;
@@ -408,12 +359,12 @@ namespace websitebenhvien.Service.Reponser
                     var data =await _context.Products.FindAsync(product.Id_product);
                     if (product.ImageThumnail != null)
                     {
-                        var result = SaveMedia(product.ImageThumnail);
+                        var result = _uploadfile.SaveMedia(product.ImageThumnail);
                         if (result.Item1 == 1)
                         {
                             if (data.url != null)
                             {
-                                DeleteMedia(data.url);
+                                _uploadfile.DeleteMedia(data.url);
                             }
                             data.url = result.Item2;
                         }
@@ -427,13 +378,13 @@ namespace websitebenhvien.Service.Reponser
                             
                         foreach (var img in existingImages)
                         {
-                            DeleteMedia(img.url);
+                            _uploadfile.DeleteMedia(img.url);
                         }
                         _context.Proimages.RemoveRange(existingImages);
 
                         // Thêm ảnh mới
                         var newImages = product.Images
-                            .Select(img => SaveMedia(img))
+                            .Select(img => _uploadfile.SaveMedia(img))
                             .Where(result => result.Item1 == 1)
                             .Select(result => new Proimages
                             {
@@ -470,7 +421,7 @@ namespace websitebenhvien.Service.Reponser
                     };
                     if (product.ImageThumnail != null)
                     {
-                        var result = SaveMedia(product.ImageThumnail);
+                        var result = _uploadfile.SaveMedia(product.ImageThumnail);
                         if (result.Item1 == 1)
                         {
                             data.url = result.Item2;
@@ -480,7 +431,7 @@ namespace websitebenhvien.Service.Reponser
                     {
                         foreach (var item in product.Images)
                         {
-                            var result = SaveMedia(item);
+                            var result = _uploadfile.SaveMedia(item);
                             if (result.Item1 == 1)
                             {
                                 var data1 = new Proimages()
@@ -611,9 +562,9 @@ namespace websitebenhvien.Service.Reponser
         }
         // update status news
       public async Task<bool> UpdateStatusNews(int id)
-{
-    try
-    {
+        {
+         try
+    {   
         // Thực hiện cập nhật trực tiếp và kiểm tra số bản ghi bị ảnh hưởng
         int affectedRows = await _context.News
             .Where(x => x.Id_News == id)

@@ -196,35 +196,18 @@
             $('#btnSaveMenuContent').click(function() {
                 saveMenu();
             });
-
             $('#btnCancelEdit').click(function() {
                 cancelEdit();
             });
-              $('#btnSaveMenu').click(function() {
+            $('#btnSaveMenu').click(function() {
                 themmenucon();
             });
-		$('#btnSaveMenuContentUP').click(function() {
+	        $('#btnSaveMenuContentUP').click(function() {
 						UpdateMenu();
 		});
         });
 
-        function loadMenuList(page, pageSize) {
-            // TODO: Implement API call to load menu list
-            // Example structure:
-            /*
-            $.ajax({
-                url: '/Pagemain/ListMenu',
-                type: 'POST',
-                data: { page: page, pagesize: pageSize },
-                success: function(response) {
-                    if (response.success) {
-                        renderMenuList(response.data);
-                        renderPagination(response.totalPages, page);
-                    }
-                }
-            });
-            */
-        }
+   
 
         function saveMenu() {
             var form = $('#menuContentForm')[0];   
@@ -265,6 +248,7 @@
                        $('#menuContentForm').find('.summernote').summernote('code', '');
                         dsmenusl();
                         danhsachmenu(); 
+                       
                     } else {
                         Swal.fire({
                             title: 'Lỗi!',
@@ -285,7 +269,7 @@
             });
         }
 
-        function editMenuSub(id,) {
+        function editMenuSub(id) {
             // TODO: Implement edit menu functionality
             
             $('#btnCancelEdit').show();
@@ -351,7 +335,7 @@
         function updateMenuStatus(id) {
             // TODO: Implement API call to update menu status
         }
-function generateAlias(str) {
+        function generateAlias(str) {
             // Chuyển về chữ thường
             str = str.toLowerCase();
             
@@ -369,7 +353,7 @@ function generateAlias(str) {
              $('#menuContentForm').find('#Link_menu').val('/' + str);
             return '/' + str;
         }
-function dsmenusl() {
+        function dsmenusl() {
             $.ajax({
                 url: '/Pagemain/Menu', // URL endpoint
                 type: 'GET',
@@ -394,7 +378,7 @@ function dsmenusl() {
         }
 
         // save menu con 
-function themmenucon() {
+        function themmenucon() {
             var form = $('#menuForm')[0];
             var formData = new FormData(form);
             $.ajax({
@@ -414,6 +398,7 @@ function themmenucon() {
                         form.reset();
                         dsmenusl();
                         danhsachmenu();
+                        cancelEdit();
                     } else {
                         Swal.fire({
                             title: 'Lỗi!',
@@ -434,30 +419,33 @@ function themmenucon() {
             });
         }
   
-function danhsachmenu() {
+        function danhsachmenu() {
             $.ajax({
-                url: '/Pagemain/ListMenu', // URL API lấy danh sách menu
+                url: '/Pagemain/ListMenu',
                 type: 'GET',
                 success: function (response) {
                     if (response.success) {
-                        console.log(response.data); 
-                        let data = response.data; // Dữ liệu từ server
+                        console.log(response.data);
+                        let data = response.data;
                         
-                        // Sắp xếp menu cha theo order_menu
                         data.sort((a, b) => a.order_menu - b.order_menu);
                         
                         let html = "";
 
-                        // Lặp qua từng menu cha
                         data.forEach((menu, index) => {
-
-           
-                 
+                            const hasSubmenu = menu.menu && menu.menu.length > 0;
+                            const submenuId = `submenu-${menu.id_menu}`;
 
                             html += `
                                 <tr class="table-secondary">
                                     <td>${index + 1}</td>
-                                    <td><strong>${menu.title_menu || ''}</strong></td>
+                                    <td>
+                                        ${hasSubmenu ? 
+                                            `<i class="fas fa-plus-circle mr-2" style="cursor: pointer;" 
+                                               onclick="toggleSubmenu('${submenuId}')"></i>` : 
+                                            `<i class="fas fa-minus-circle mr-2" style="visibility: hidden;"></i>`}
+                                        <strong>${menu.title_menu || ''}</strong>
+                                    </td>
                                     <td>${menu.link_menu || '/'}</td>
                                     <td>${menu.order_menu || 0}</td>
                                     <td>
@@ -476,16 +464,14 @@ function danhsachmenu() {
                                     </td>
                                 </tr>`;
 
-                            // Sắp xếp và thêm các menu con (dòng nhạt)
-                            if (menu.menu && menu.menu.length > 0) {
-                                // Sắp xếp menu con theo order_menu
+                            if (hasSubmenu) {
                                 menu.menu.sort((a, b) => a.order_menu - b.order_menu);
                                 
                                 menu.menu.forEach((submenu, subIndex) => {
                                     html += `
-                                        <tr class="table-light">
+                                        <tr class="table-light submenu-row" id="${submenuId}" style="display: none;">
                                             <td>${index + 1}.${subIndex + 1}</td>
-                                            <td>${submenu.title_MenuChild}</td>
+                                            <td class="pl-4">${submenu.title_MenuChild}</td>
                                             <td>${submenu.link_MenuChild || "#"}</td>
                                             <td>${submenu.order_menu}</td>
                                             <td>
@@ -507,7 +493,6 @@ function danhsachmenu() {
                             }
                         });
 
-                        // Gắn HTML vào bảng
                         $("#menuTableBody").html(html);
                     }
                 },
@@ -516,9 +501,26 @@ function danhsachmenu() {
                 }
             });
         }
+
+        function toggleSubmenu(submenuId) {
+            const submenuRows = document.querySelectorAll(`#${submenuId}`);
+            const icon = event.target;
+            
+            submenuRows.forEach(row => {
+                if(row.style.display === 'none') {
+                    row.style.display = '';
+                    icon.classList.remove('fa-plus-circle');
+                    icon.classList.add('fa-minus-circle');
+                } else {
+                    row.style.display = 'none';
+                    icon.classList.remove('fa-minus-circle');
+                    icon.classList.add('fa-plus-circle');
+                }
+            });
+        }
         // xoá menu con
         
-function DeleteMenuSub(id) {
+        function DeleteMenuSub(id) {
             Swal.fire({
                 title: 'Xác nhận xóa?',
                 text: "Bạn có chắc chắn muốn xóa menu này?",
@@ -566,17 +568,19 @@ function DeleteMenuSub(id) {
             });
         }
         // edit menu sub
-function editMenuSub(Id_MenuChild, Title_MenuChild, Link_MenuChild, Order_menu, Id_menu)
+        function editMenuSub(Id_MenuChild, Title_MenuChild, Link_MenuChild, Order_menu, Id_menu)
         {
-            console.log(Id_menu);    
+       
+       
 				$('#Id_MenuChild').val(Id_MenuChild);
 				$('#Title_MenuChild').val(Title_MenuChild);
 				$('#Link_MenuChild').val(Link_MenuChild);
-				$('#Id_menu').val(Id_menu)
-				$('#Order_menu').val(Order_menu);
+				$('#menuForm').find('#Id_menu').val(Id_menu)
+			    $('#menuForm').find('#Order_menu').val(Order_menu);
 				$('#btnCancelEdit').show();
+                
         }
-function editMenuParent(id_menu) {
+        function editMenuParent(id_menu) {
     // Gọi API để lấy thông tin menu
     $.ajax({
         url: '/Pagemain/GetMenuvm',
@@ -613,7 +617,7 @@ function editMenuParent(id_menu) {
         }
     });
 }
-function UpdateMenu() {
+        function UpdateMenu() {
               var form = $('#menuContentFormupdate')[0];
 			var formData = new FormData(form);
 			$.ajax({
@@ -650,9 +654,8 @@ function UpdateMenu() {
 				}
 			});
 		}
-  
-// sửa trạng thái menu 
-function UpdateStatusMenu(id_menu)
+        // sửa trạng thái menu 
+        function UpdateStatusMenu(id_menu)
      {
         $.ajax({
             url: '/Pagemain/UpdateStatusMenu',

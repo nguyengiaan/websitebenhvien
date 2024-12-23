@@ -20,14 +20,16 @@ namespace websitebenhvien.Service.Reponser
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly Hubnot _hubnot;
+        private readonly Uploadfile _uploadfile;
 
-        public PostReponser(Hubnot hubnot,MyDbcontext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment hostingEnvironment)
+        public PostReponser(Uploadfile uploadfile,Hubnot hubnot,MyDbcontext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
             _hostingEnvironment = hostingEnvironment;
             _hubnot = hubnot;
+            _uploadfile=uploadfile;
 
         }
         public async Task<News> GetNewsById(string alias_url)
@@ -77,7 +79,7 @@ namespace websitebenhvien.Service.Reponser
                 data.Note=recruitment.Note;
                 data.Position=recruitment.Position;
                 data.Sex=recruitment.Sex;
-                var md=SaveMedia(recruitment.CV_Url);
+                var md=_uploadfile.SaveMedia(recruitment.CV_Url);
                 if(md.Item1==1)
                 {
                     data.CV_Url=md.Item2;
@@ -99,60 +101,8 @@ namespace websitebenhvien.Service.Reponser
                 return false;
             }
         }
-        public Tuple<int, string> SaveMedia(IFormFile imageFile)
-        {
-                 try
-            {
-                var contentPath = this._hostingEnvironment.ContentRootPath;
-                // path = "c://projects/productminiapi/uploads" ,not exactly something like that
-                var path = Path.Combine(contentPath, "Uploads");
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                // Check the allowed extenstions
-                var ext = Path.GetExtension(imageFile.FileName);
-                var allowedExtensions = new string[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv", ".doc", ".docx", ".pdf", ".txt", ".rtf" };
-                if (!allowedExtensions.Contains(ext))
-                {
-                    string msg = string.Format("Only {0} extensions are allowed", string.Join(",", allowedExtensions));
-                    return new Tuple<int, string>(0, msg);
-                }
-                string uniqueString = Guid.NewGuid().ToString();
-                var fileName = Path.GetFileName(imageFile.FileName);
-                // we are trying to create a unique filename here
-                var newFileName = Guid.NewGuid().ToString().Substring(0, 4) + "__" + fileName;
-                var fileWithPath = Path.Combine(path, newFileName);
-                var stream = new FileStream(fileWithPath, FileMode.Create);
-                imageFile.CopyTo(stream);
-                stream.Close();
-                return new Tuple<int, string>(1, newFileName);
-            }
-            catch (Exception ex)
-            {
-                return new Tuple<int, string>(0, "Error has occured");
-            }
-        }
-        public bool DeleteMedia(string fileName)
-        {
-            try
-            {
-                var contentPath = this._hostingEnvironment.ContentRootPath;
-                var path = Path.Combine(contentPath, "Uploads");
-                var filePath = Path.Combine(path, fileName);
-
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
+       
+  
 
         public async Task<List<Notification>> GetNotification()
         {
@@ -215,8 +165,17 @@ namespace websitebenhvien.Service.Reponser
             try
             {
                 var data=await _context.Recruitments.Where(x=>x.Id_Recruitment==id).FirstOrDefaultAsync();
-                _context.Recruitments.Remove(data);
-                await _context.SaveChangesAsync();
+                if (data != null)
+                {
+                    if (data.CV_Url != null)
+                    {
+                        _uploadfile.DeleteMedia(data.CV_Url);
+                    }
+
+                    _context.Recruitments.Remove(data);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
                 return true;
             }
             catch(Exception ex)

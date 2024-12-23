@@ -447,30 +447,29 @@
         <!-- Chat box -->
         <div class="chat-box-wrapper">
             <!-- Chat Button -->
-            <button id="chatButton" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center position-relative" style="width: 50px; height: 50px; background: linear-gradient(45deg, #0063EC, #00a5ff); border: none; transition: all 0.3s ease;">
+            <button id="chatButton" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center position-relative animate__animated animate__pulse animate__infinite" style="width: 50px; height: 50px; background: linear-gradient(45deg, #0063EC, #00a5ff); border: none; transition: all 0.3s ease;">
                 <i class="fas fa-comments fa-lg" style="color: white; filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));"></i>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger animate__animated animate__heartBeat animate__infinite" style="font-size: 0.6rem;" id="count-notification">
                     <i class="fas fa-bell text-white" id="count-notification"></i>
-                    
                 </span>
                 <div class="ripple position-absolute w-100 h-100 rounded-circle" style="animation: ripple 1.5s linear infinite; border: 2px solid #fff; opacity: 0;"></div>
             </button>
 
             <!-- Chat Window -->
-            <div id="chatWindow" class="card position-absolute bottom-100 mb-2" style="width: 300px; display: none; right: 0; transform-origin: bottom right; animation: zoomIn 0.3s ease-out;">
+            <div id="chatWindow" class="card position-absolute bottom-100 mb-2 animate__animated animate__fadeIn" style="width: 300px; display: none; right: 0; transform-origin: bottom right;">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" style="border-radius: 10px 10px 0 0;">
                     <h6 class="m-0">
-                        <i class="fas fa-circle text-success me-2" style="font-size: 10px;"></i>
+                        <i class="fas fa-circle text-success me-2 animate__animated animate__flash animate__infinite" style="font-size: 10px;"></i>
                         Chat với chúng tôi
                     </h6>
-                    <button type="button" class="btn-close btn-close-white" id="closeChatBtn" style="transition: transform 0.2s;" onmouseover="this.style.transform='rotate(90deg)';" onmouseout="this.style.transform='rotate(0deg)';"></button>
+                    <button type="button" class="btn-close btn-close-white animate__animated animate__rotateIn" id="closeChatBtn" style="transition: transform 0.3s;" onmouseover="this.style.transform='rotate(90deg)';" onmouseout="this.style.transform='rotate(0deg)';"></button>
                 </div>
                 <div class="card-body" style="height: 300px; overflow-y: auto; scroll-behavior: smooth;" id="chatMessages">
                     <!-- Welcome message -->
                     <div class="mb-2 animate__animated animate__fadeInLeft">
                         <div class="d-inline-block bg-light rounded p-2" style="position: relative;">
                             <p class="m-0">Xin chào! Chúng tôi có thể giúp gì cho bạn? 👋</p>
-                            <div class="typing-indicator">
+                            <div class="typing-indicator animate__animated animate__fadeIn">
                                 <span></span>
                                 <span></span>
                                 <span></span>
@@ -478,10 +477,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer" style="border-radius: 0 0 10px 10px;">
+                <div class="card-footer animate__animated animate__fadeInUp" style="border-radius: 0 0 10px 10px;">
                     <div class="input-group">
                         <input type="text" id="messageInput" class="form-control" placeholder="Nhập tin nhắn..." style="border-radius: 20px 0 0 20px;">
-                        <button class="btn btn-primary" id="sendMessageBtn" style="border-radius: 0 20px 20px 0; transition: all 0.3s;">
+                        <button class="btn btn-primary animate__animated animate__pulse animate__infinite" id="sendMessageBtn" style="border-radius: 0 20px 20px 0; transition: all 0.3s;">
                             <i class="fas fa-paper-plane" style="transition: transform 0.3s;"></i>
                         </button>
                     </div>
@@ -489,9 +488,18 @@
             </div>
         </div>
 
+        <!-- Social Media Buttons -->
+        <a href="https://zalo.me/your-zalo-id" target="_blank" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center mb-2 animate__animated animate__bounceIn" style="width: 50px; height: 50px; background: #0068ff; border: none;">
+            <img src="/Images/zalo_sharelogo.png" alt="Zalo" style="width: 30px; height: 30px;" class="animate__animated animate__tada animate__delay-1s">
+        </a>
+
+        <a href="https://www.facebook.com/your-facebook-page" target="_blank" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center mb-2 animate__animated animate__bounceIn animate__delay-1s" style="width: 50px; height: 50px; background: #1877f2; border: none;">
+            <i class="fab fa-facebook-f fa-lg animate__animated animate__tada animate__delay-2s" style="color: white;"></i>
+        </a>
+
         <!-- Back to top button -->
-        <button id="backToTop" class="btn btn-primary rounded-circle shadow" style="width: 50px; height: 50px; display: none;">
-            <i class="fas fa-arrow-up"></i>
+        <button id="backToTop" class="btn btn-primary rounded-circle shadow animate__animated animate__bounceIn animate__delay-2s" style="width: 50px; height: 50px; display: none;">
+            <i class="fas fa-arrow-up animate__animated animate__bounce animate__infinite"></i>
         </button>
     </div>
 

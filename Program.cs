@@ -41,6 +41,7 @@ builder.Services.AddScoped<IPost, PostReponser>();
 builder.Services.AddScoped<ISpecialty, SpecialtyReponser>();
 builder.Services.AddScoped<IWorkSchedule, WorkScheduleReponser>();
 builder.Services.AddScoped<Hubnot>();
+builder.Services.AddScoped<Uploadfile>();
 builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));
 builder.Services.AddAuthorization(options =>
 {

@@ -107,5 +107,52 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false,message = ex.Message });
             }
         }
+        [Authorize]
+        [HttpPost("/api/lay-danh-sach-dang-ky-kb")]
+        public async Task<IActionResult> GetAppointment(int page, int pageSize, string search, int specialtyId)
+        {
+            try{
+                var data = await _workSchedule.GetAppointment(page, pageSize, search, specialtyId);
+                return Json(new { status = true, data = data.ds, total = data.total, page = page, pageSize = pageSize });
+            }
+            catch(Exception ex){
+                return Json(new { status = false, message = ex.Message });
+            }
+        }   
+        [Authorize]
+        [HttpPost("/api/xoa-lich-khambenh")]
+        public async Task<IActionResult> DeleteAppointment(int id)
+        {
+            try
+            {
+                var data = await _workSchedule.DeleteAppointment(id);
+                if(data)
+                {
+                    return Json(new { status = true, message = "Đã xóa lịch khám bệnh" });
+                }
+                return Json(new { status = false, message = "Không thể xóa lịch khám bệnh" });
+            }
+            catch(Exception ex){
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [Authorize]
+        [HttpPost("/api/cap-nhat-lich-kham-benh")]
+        public async Task<IActionResult> UpdateAppointment(int id)
+        {
+            try
+            {
+                var data = await _workSchedule.UpdateAppointment(id);
+                if(data)
+                {
+                    return Json(new { status = true, message = "Đã cập nhật trạng thái" });
+                }
+                return Json(new { status = false, message = "Không thể cập nhật trạng thái" });
+            }
+            catch(Exception ex){
+                return Json(new { status = false, message = ex.Message });
+            }
+     
+        }
     }
 }

@@ -14,7 +14,12 @@ namespace websitebenhvien.Service.Interface
         public Task<List<DoctorVM>> GetDoctor(int id);
         public Task<Boolean> RegisterWorkschedule(MakeanappointmentVM workschedule);
 
-        public Task<List<MakeanappointmentVM>> GetAppointment(int page, int pageSize, string search, int specialtyId);
+        public Task<(List<MakeanappointmentVM> ds, int total)> GetAppointment(int page, int pageSize, string search, int specialtyId);
+
+        // xóa lịch khám bệnh
+        public Task<Boolean> DeleteAppointment(int id);
+        // cập nhật lịch khám bệnh 
+        public Task<Boolean> UpdateAppointment(int id);
 
     }
 }

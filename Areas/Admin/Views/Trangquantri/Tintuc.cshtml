@@ -59,48 +59,83 @@
 
 <!-- Modal -->
 <div class="modal fade" id="newsModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content border-0">
-            <div class="modal-header border-bottom-0">
-                <h4 class="modal-title fw-bold" id="modalTitle">Thêm tin tức</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white py-3">
+                <h4 class="modal-title fw-bold" id="modalTitle">
+                    <i class="fas fa-newspaper me-2"></i>
+                    Thêm tin tức
+                </h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form id="newsForm">
-                    <input type="hidden" id="id_News" name="id_News">
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label class="form-label fs-5">Tiêu đề</label>
-                            <input type="text" class="form-control form-control-lg" id="title" name="title" required onchange="generateNewsAlias(this.value)">
+            <div class="modal-body bg-light">
+                <div class="container-fluid py-3">
+                    <form id="newsForm" class="bg-white rounded-3 shadow-sm p-4">
+                        <input type="hidden" id="id_News" name="id_News">
+                        
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label class="form-label fw-bold text-primary fs-5 mb-3">
+                                        <i class="fas fa-heading me-2"></i>Tiêu đề
+                                    </label>
+                                    <input type="text" class="form-control form-control-lg shadow-sm" 
+                                           id="title" name="title" required 
+                                           onchange="generateNewsAlias(this.value)"
+                                           placeholder="Nhập tiêu đề bài viết...">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label fw-bold text-primary fs-5 mb-3">
+                                        <i class="fas fa-folder me-2"></i>Danh mục
+                                    </label>
+                                    <select class="form-select form-select-lg shadow-sm" 
+                                            id="id_Categorynews" name="id_Categorynews"
+                                            onchange="generateNewsAlias($('#title').val())">
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label fs-5">Danh mục</label>
-                            <select class="form-select form-select-lg" id="id_Categorynews" name="id_Categorynews" onchange="generateNewsAlias($('#title').val())">
-                            </select>
+
+                        <div class="form-group mb-4">
+                            <label class="form-label fw-bold text-primary fs-5 mb-3">
+                                <i class="fas fa-link me-2"></i>Đường dẫn
+                            </label>
+                            <input type="text" class="form-control form-control-lg shadow-sm" 
+                                   id="alias_url" name="alias_url"
+                                   placeholder="Đường dẫn sẽ được tự động tạo...">
                         </div>
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label fs-5">Đường dẫn</label>
-                        <input type="text" class="form-control form-control-lg" id="alias_url" name="alias_url">
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label fs-5">Hình ảnh đại diện</label>
-                        <div class="input-group input-group-lg">
-                            <input type="file" class="form-control" id="formFile" name="formFile">
-                            <button class="btn btn-outline-secondary btn-lg" type="button" onclick="openElfinder()">
-                                <i class="fas fa-folder-open"></i>
-                            </button>
+
+                        <div class="form-group mb-4">
+                            <label class="form-label fw-bold text-primary fs-5 mb-3">
+                                <i class="fas fa-image me-2"></i>Hình ảnh đại diện
+                            </label>
+                            <div class="input-group input-group-lg shadow-sm">
+                                <input type="file" class="form-control" id="formFile" name="formFile">
+                                <button class="btn btn-outline-primary btn-lg px-4" type="button" onclick="openElfinder()">
+                                    <i class="fas fa-folder-open me-2"></i>Chọn ảnh
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label fs-5">Mô tả</label>
-                        <textarea id="description" name="description" class="summernote" value="#"></textarea>
-                    </div>
-                </form>
+
+                        <div class="form-group">
+                            <label class="form-label fw-bold text-primary fs-5 mb-3">
+                                <i class="fas fa-edit me-2"></i>Mô tả
+                            </label>
+                            <textarea id="description" name="description" class="summernote"></textarea>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="modal-footer border-top-0">
-                <button type="button" class="btn btn-light btn-lg rounded-pill px-5" data-bs-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary btn-lg rounded-pill px-5" onclick="saveNews()">Lưu</button>
+            <div class="modal-footer border-top shadow-sm">
+                <button type="button" class="btn btn-light btn-lg rounded-pill px-5" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Đóng
+                </button>
+                <button type="button" class="btn btn-primary btn-lg rounded-pill px-5" onclick="saveNews()">
+                    <i class="fas fa-save me-2"></i>Lưu
+                </button>
             </div>
         </div>
     </div>
@@ -146,6 +181,18 @@
                             
                             // Set files
                             document.getElementById('formFile').files = dataTransfer.files;
+
+                            // Đóng dialog sau khi chọn file
+                            fm.hide();
+                            
+                            // Hiển thị tên file đã chọn
+                            $('#formFile').next('.custom-file-label').html(files.name);
+
+
+
+
+
+
                         });
                 }
             }).dialogelfinder('instance');
@@ -249,13 +296,57 @@
             const pagination = $('#pagination');
             pagination.empty();
 
-            for (let i = 1; i <= totalPages; i++) {
+            // Add Previous button
+            pagination.append(`
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="loadNews(${currentPage - 1})" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            `);
+
+            // Logic for showing limited page numbers with ellipsis
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+
+            if (startPage > 1) {
+                pagination.append(`
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="loadNews(1)">1</a>
+                    </li>
+                `);
+                if (startPage > 2) {
+                    pagination.append('<li class="page-item disabled"><span class="page-link">...</span></li>');
+                }
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
                 pagination.append(`
                     <li class="page-item ${i === currentPage ? 'active' : ''}">
                         <a class="page-link" href="#" onclick="loadNews(${i})">${i}</a>
                     </li>
                 `);
             }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    pagination.append('<li class="page-item disabled"><span class="page-link">...</span></li>');
+                }
+                pagination.append(`
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="loadNews(${totalPages})">${totalPages}</a>
+                    </li>
+                `);
+            }
+
+            // Add Next button
+            pagination.append(`
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="loadNews(${currentPage + 1})" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            `);
         }
 
         function getCategoryName(categoryId) {
@@ -303,7 +394,7 @@
             // Get form data
             const form = $('#newsForm')[0];
             const formData = new FormData(form);
-
+            var id=$('#id_News').val();
             // Validate required fields
             if (!formData.get('title') || !formData.get('id_Categorynews')) {
                 Swal.fire({
@@ -366,6 +457,13 @@
                         loadNews(currentPage);
                         $('#description').summernote('code', '');
                         $('#newsForm')[0].reset();
+                        Swal.fire({
+    title: id ? 'Cập nhật' : 'Thêm',
+    text: id ? 'Cập nhật thành công' : 'Thêm thành công',
+    icon: 'success',
+    confirmButtonText: 'OK'
+});
+
                     } else {
                         Swal.fire({
                             title: 'Lỗi!',

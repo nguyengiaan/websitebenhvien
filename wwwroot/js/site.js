@@ -1,4 +1,4 @@
-﻿﻿﻿﻿const connection = new signalR.HubConnectionBuilder()
+﻿﻿const connection = new signalR.HubConnectionBuilder()
     .withUrl("/friendHub")
     .build();
 
@@ -1151,7 +1151,7 @@ function GetFooter() {
                         <div class="row mx-0">
                             <!-- Logo và thông tin liên hệ -->
                             <div class="col-lg-4 mb-4">
-                                <img src="/Resources/${response.data.logo}" alt="Logo bệnh viện" class="mb-3" style="height: 60px;">
+                                <img src="/Images/Logo-rm.png" alt="Logo bệnh viện" class="mb-3" style="height: 60px;">
                                 <ul class="list-unstyled text-muted">
                                     <li class="mb-2">
                                         <i class="fas fa-map-marker-alt me-2 text-primary"></i>
@@ -1399,17 +1399,18 @@ function loadDoctor(id) {
         data: { id: id },
         success: function (response) {
             console.log(response.data);
-            let options = ''; // Khai báo biến options
+            let options = '<option value="">-- Chọn bác sĩ --</option>'; 
             response.data.forEach(function (doctor) {
                 options += `<option value="${doctor.id_doctor}">${doctor.name}</option>`;
             });
-            $('#Id_doctor').html(options); // Gắn HTML vào phần tử select
+            $('#Id_doctor').html(options);
 
-            // Add change event listener for doctor selection
-            $('#Id_doctor').on('change', function() {
+            $('#Id_doctor').off('change').on('change', function() {
                 const selectedDoctorId = $(this).val();
                 if (selectedDoctorId) {
                     loadDoctorSchedule(selectedDoctorId);
+                } else {
+                    $('#calendar').html('');
                 }
             });
         },
@@ -1424,9 +1425,21 @@ function loadDoctor(id) {
 }
 
 function loadDoctorSchedule(doctorId) {
+    if (!doctorId) {
+        console.error('Doctor ID is required');
+        return;
+    }
+
     const calendarContainer = document.getElementById('calendar');
+    if (!calendarContainer) {
+        console.error('Calendar container not found');
+        return;
+    }
+
     const today = new Date();
     
+    calendarContainer.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Đang tải lịch làm việc...</div>';
+
     $.ajax({
         url: '/api/lich-lam-viec',
         type: 'POST',
@@ -1436,9 +1449,11 @@ function loadDoctorSchedule(doctorId) {
         success: function(response) {
             if (response.status && response.data) {
                 const workSchedules = response.data.workschedules;
-                console.log(workSchedules);
-                
-                // Create calendar UI
+                if (!workSchedules || workSchedules.length === 0) {
+                    calendarContainer.innerHTML = '<div class="alert alert-info">Bác sĩ chưa có lịch làm việc</div>';
+                    return;
+                }
+
                 let calendarHtml = `
                     <div class="calendar-wrapper p-3 bg-white rounded shadow-sm">
                         <div class="mb-4">
@@ -1449,86 +1464,128 @@ function loadDoctorSchedule(doctorId) {
                                 <option value="">-- Vui lòng chọn ngày --</option>
                 `;
 
-                // Add next 30 days as options
+                let hasAvailableDates = false;
                 for(let i = 0; i < 30; i++) {
                     const date = new Date();
                     date.setDate(today.getDate() + i);
+                    
+                    // Format date to match server format (YYYY-MM-DD)
                     const dateString = date.toISOString().split('T')[0];
                     
-                    const schedule = workSchedules.find(s => s.date.split('T')[0] === dateString);
-                    if(schedule && (schedule.morning === "true" || schedule.afternoon === "true")) {
+                    const schedule = workSchedules.find(s => {
+                        const scheduleDate = new Date(s.date);
+                        return scheduleDate.toISOString().split('T')[0] === dateString;
+                    });
+
+                    if(schedule) {
+                        hasAvailableDates = true;
                         const formattedDate = new Intl.DateTimeFormat('vi-VN', {
                             weekday: 'long',
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric'
                         }).format(date);
-                        calendarHtml += `<option value="${dateString}">${formattedDate}</option>`;
+
+                        calendarHtml += `<option value="${dateString}" 
+                            data-morning="${schedule.morning}" 
+                            data-afternoon="${schedule.afternoon}"
+                            data-evening="${schedule.evening}"
+                            data-id-schedule="${schedule.id_workschedule}">${formattedDate}</option>`;
                     }
                 }
+
+                if (!hasAvailableDates) {
+                    calendarContainer.innerHTML = '<div class="alert alert-info">Không có lịch khám trong 30 ngày tới</div>';
+                    return;
+                }
+
                 calendarHtml += `
                             </select>
                         </div>
-
                         <div class="time-slots mb-3" style="display:none" id="timePickerWrapper">
                             <label class="form-label fw-bold text-primary">
                                 <i class="fas fa-clock me-2"></i>Chọn giờ khám
                             </label>
-                            <div class="row g-2" id="timePicker">
-                            </div>
+                            <div class="row g-2" id="timePicker"></div>
                         </div>
                 `;
 
                 calendarContainer.innerHTML = calendarHtml;
 
-                // Handle date selection
-                $('#datePicker').on('change', function() {
+                $('#datePicker').off('change').on('change', function() {
+                    const selectedOption = $(this).find(':selected');
                     const selectedDate = $(this).val();
-                    const schedule = workSchedules.find(s => s.date.split('T')[0] === selectedDate);
+                    const morning = selectedOption.data('morning');
+                    const afternoon = selectedOption.data('afternoon');
+                    const evening = selectedOption.data('evening');
+                    const scheduleId = selectedOption.data('id-schedule');
+                    
                     const timePickerWrapper = $('#timePickerWrapper');
                     const timePicker = $('#timePicker');
                     
-                    if(schedule) {
+                    if(selectedDate) {
                         let timeSlots = '';
                         
-                        if(schedule.morning === "true") {
+                        if(morning) {
                             timeSlots += `
                                 <div class="col-12 mb-2">
                                     <div class="time-period">
-                                        <small class="text-muted"><i class="fas fa-sun me-1"></i>Buổi sáng (7h-12h)</small>
+                                        <small class="text-muted"><i class="fas fa-sun me-1"></i>Buổi sáng (7h-11h)</small>
                                     </div>
                                 </div>
                             `;
-                            for(let hour = 7; hour < 12; hour++) {
+                            for(let hour = 7; hour <= 11; hour++) {
                                 timeSlots += `
                                     <div class="col-6 col-md-3">
-                                        <input type="radio" class="btn-check" name="timeSlot" id="time${hour}00" value="${hour}:00">
+                                        <input type="radio" class="btn-check" name="timeSlot" id="time${hour}00" value="${String(hour).padStart(2, '0')}:00">
                                         <label class="btn btn-outline-primary w-100" for="time${hour}00">${hour}:00</label>
                                     </div>
                                     <div class="col-6 col-md-3">
-                                        <input type="radio" class="btn-check" name="timeSlot" id="time${hour}30" value="${hour}:30">
+                                        <input type="radio" class="btn-check" name="timeSlot" id="time${hour}30" value="${String(hour).padStart(2, '0')}:30">
                                         <label class="btn btn-outline-primary w-100" for="time${hour}30">${hour}:30</label>
                                     </div>
                                 `;
                             }
                         }
                         
-                        if(schedule.afternoon === "true") {
+                        if(afternoon) {
                             timeSlots += `
                                 <div class="col-12 mb-2 mt-3">
                                     <div class="time-period">
-                                        <small class="text-muted"><i class="fas fa-moon me-1"></i>Buổi chiều (13h-16h)</small>
+                                        <small class="text-muted"><i class="fas fa-sun me-1"></i>Buổi chiều (13h-17h)</small>
                                     </div>
                                 </div>
                             `;
-                            for(let hour = 13; hour <= 15; hour++) {
+                            for(let hour = 13; hour <= 17; hour++) {
                                 timeSlots += `
                                     <div class="col-6 col-md-3">
-                                        <input type="radio" class="btn-check" name="timeSlot" id="time${hour}00" value="${hour}:00">
+                                        <input type="radio" class="btn-check" name="timeSlot" id="time${hour}00" value="${String(hour).padStart(2, '0')}:00">
                                         <label class="btn btn-outline-primary w-100" for="time${hour}00">${hour}:00</label>
                                     </div>
                                     <div class="col-6 col-md-3">
-                                        <input type="radio" class="btn-check" name="timeSlot" id="time${hour}30" value="${hour}:30">
+                                        <input type="radio" class="btn-check" name="timeSlot" id="time${hour}30" value="${String(hour).padStart(2, '0')}:30">
+                                        <label class="btn btn-outline-primary w-100" for="time${hour}30">${hour}:30</label>
+                                    </div>
+                                `;
+                            }
+                        }
+
+                        if(evening) {
+                            timeSlots += `
+                                <div class="col-12 mb-2 mt-3">
+                                    <div class="time-period">
+                                        <small class="text-muted"><i class="fas fa-moon me-1"></i>Buổi tối (18h-20h)</small>
+                                    </div>
+                                </div>
+                            `;
+                            for(let hour = 18; hour <= 20; hour++) {
+                                timeSlots += `
+                                    <div class="col-6 col-md-3">
+                                        <input type="radio" class="btn-check" name="timeSlot" id="time${hour}00" value="${String(hour).padStart(2, '0')}:00">
+                                        <label class="btn btn-outline-primary w-100" for="time${hour}00">${hour}:00</label>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <input type="radio" class="btn-check" name="timeSlot" id="time${hour}30" value="${String(hour).padStart(2, '0')}:30">
                                         <label class="btn btn-outline-primary w-100" for="time${hour}30">${hour}:30</label>
                                     </div>
                                 `;
@@ -1538,32 +1595,36 @@ function loadDoctorSchedule(doctorId) {
                         timePicker.html(timeSlots);
                         timePickerWrapper.slideDown();
 
-                        // Handle time selection
-                        $('input[name="timeSlot"]').on('change', function() {
+                        $('input[name="timeSlot"]').off('change').on('change', function() {
                             const selectedTime = $(this).val();
                             const appointmentDateTime = `${selectedDate}T${selectedTime}`;
                             
                             if(!$('#appointmentTime').length) {
                                 calendarContainer.insertAdjacentHTML('beforeend', `
                                     <input type="hidden" id="appointmentTime" value="${appointmentDateTime}">
+                                    <input type="hidden" id="scheduleId" value="${scheduleId}">
                                 `);
                             } else {
                                 $('#appointmentTime').val(appointmentDateTime);
+                                $('#scheduleId').val(scheduleId);
                             }
                         });
                     } else {
                         timePickerWrapper.slideUp();
                     }
                 });
+            } else {
+                calendarContainer.innerHTML = '<div class="alert alert-warning">Hôm nay bác sĩ không có lịch làm việc</div>';
             }
         },
-        error: function() {
+        error: function(xhr, status, error) {
+            console.error('Error loading doctor schedule:', error);
+            calendarContainer.innerHTML = '<div class="alert alert-danger">Đã xảy ra lỗi khi tải lịch làm việc</div>';
             Swal.fire({
                 title: 'Lỗi',
-                text: 'Không thể tải lịch khám của bác sĩ',
+                text: 'Không thể tải lịch khám của bác sĩ', 
                 icon: 'error'
             });
-            calendarContainer.innerHTML = '';
         }
     });
 }
@@ -1573,22 +1634,29 @@ function loadSpecialties() {
         url: '/api/chuyen-khoa-catogery',
         type: 'GET',
         success: function (response) {
-            let options = '<option value="">Select a specialty</option>'; // Thêm tùy chọn mặc định
+            let options = '<option value="">-- Chọn chuyên khoa --</option>';
             response.data.forEach(function (specialty) {
                 options += `<option value="${specialty.id_Specialty}">${specialty.title}</option>`;
             });
             $('#Id_specialty').html(options);
 
-            // Gắn sự kiện onchange cho phần tử select
-            $('#Id_specialty').on('change', function () {
+            $('#Id_specialty').off('change').on('change', function () {
                 const selectedSpecialtyId = $(this).val();
                 if (selectedSpecialtyId) {
                     loadDoctor(selectedSpecialtyId);
+                } else {
+                    $('#Id_doctor').html('<option value="">-- Chọn bác sĩ --</option>');
+                    $('#calendar').html('');
                 }
             });
         },
         error: function (err) {
             console.error('Error loading specialties:', err);
+            Swal.fire({
+                title: 'Lỗi',
+                text: 'Không thể tải danh sách chuyên khoa',
+                icon: 'error'
+            });
         }
     });
 }
