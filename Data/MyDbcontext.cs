@@ -59,6 +59,9 @@ namespace websitebenhvien.Data
 
         public DbSet<Makeanappointment> Makeanappointments { get; set; }
 
+        public DbSet<SampleMessage> SampleMessages { get; set; }
+
+        public DbSet<ButtonSample> ButtonSamples { get; set; }
 
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -157,6 +160,14 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<Makeanappointment>().ToTable("Makeanappointment");
             modelBuilder.Entity<Makeanappointment>().HasKey(x => x.Id_Make);
             modelBuilder.Entity<Makeanappointment>().HasOne(x => x.Specialty).WithMany(x => x.Makeanappointment).HasForeignKey(x => x.Id_Specialty);
+            // tin nhắn mẫu
+            modelBuilder.Entity<SampleMessage>().ToTable("SampleMessage");
+            modelBuilder.Entity<SampleMessage>().HasKey(x=>x.Id_SampleMessager);
+        
+            // nút mẫu
+            modelBuilder.Entity<ButtonSample>().ToTable("ButtonSample");
+            modelBuilder.Entity<ButtonSample>().HasKey(x => x.Id_ButtonSample);
+            modelBuilder.Entity<ButtonSample>().HasOne(x => x.SampleMessage).WithMany(x => x.ButtonSamples).HasForeignKey(x => x.Id_SampleMessage);
 
 
 

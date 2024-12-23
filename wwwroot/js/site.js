@@ -19,7 +19,7 @@ $(document).ready(function() {
     // Ẩn select language nếu tồn tại
     Header();   
     Menu();
-    GetSlide();
+ 
     GetSchema();
     ListProduct();
     ListService();

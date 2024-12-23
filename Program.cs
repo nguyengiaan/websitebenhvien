@@ -40,6 +40,7 @@ builder.Services.AddScoped<IUser, UserReponser>();
 builder.Services.AddScoped<IPost, PostReponser>();
 builder.Services.AddScoped<ISpecialty, SpecialtyReponser>();
 builder.Services.AddScoped<IWorkSchedule, WorkScheduleReponser>();
+builder.Services.AddScoped<ISamplemessager, SampleReponser>();
 builder.Services.AddScoped<Hubnot>();
 builder.Services.AddScoped<Uploadfile>();
 builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));

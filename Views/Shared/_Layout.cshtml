@@ -47,11 +47,247 @@
             </div>
         </nav>
     </header>
+<div class="container-fluid p-0" style="padding-top: 180px!important;">
+    <!-- Carousel/Slider Section -->
+    
+    <div class="container py-4">
+        <div class="row g-3">
+            <!-- Services Section -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <!-- Main Carousel Section -->
+                    <div id="mainCarousel" class="carousel slide carousel-fade shadow-lg" data-bs-ride="carousel" style="height: 100%; border-radius: 20px; overflow: hidden;">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+                            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="1"></button>
+                            <button type="button" data-bs-target="#mainCarousel" data-bs-slide-to="2"></button>
+                        </div>
+                        <div class="carousel-inner" style="height: 100%;">
+                            <div class="carousel-item active" style="height: 100%;">
+                                <img src="/Images/demo.jpg" class="d-block w-100 h-100" alt="Hospital Slider 1" style="object-fit: cover;">
+                            </div>
+                            <div class="carousel-item" style="height: 100%;">
+                                <img src="/Images/demo2.jpg" class="d-block w-100 h-100" alt="Hospital Slider 2" style="object-fit: cover;">
+                            </div>
+                            <div class="carousel-item" style="height: 100%;">
+                                <img src="/Images/demo3.jpg" class="d-block w-100 h-100" alt="Hospital Slider 3" style="object-fit: cover;">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
 
-<div id="carouselContainer" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000" >
-    <!--đây là slide-->
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-lg rounded-4 h-100" style="background: linear-gradient(135deg, #0095d9, #00c6ff);">
+                        <div class="card-body p-4">
+                            <h6 class="text-white mb-4 d-flex align-items-center">
+                                <i class="fas fa-newspaper me-2"></i>Tin tức mới nhất
+                            </h6>
+                            <div class="news-list">
+                                <div class="news-item mb-3 p-3 rounded-3 bg-white shadow-sm hover-translate" style="transition: all 0.3s ease;">
+                                    <h6 class="mb-2" style="color: #0095d9;">Khai trương Trung tâm Tim mạch hiện đại</h6>
+                                    <p class="mb-2 text-muted small">Trung tâm được trang bị các thiết bị hiện đại bậc nhất</p>
+                                    <small style="color: #00c6ff;"><i class="far fa-calendar-alt me-1"></i>23/11/2023</small>
+                                </div>
+                                <div class="news-item mb-3 p-3 rounded-3 bg-white shadow-sm hover-translate" style="transition: all 0.3s ease;">
+                                    <h6 class="mb-2" style="color: #0095d9;">Chương trình khám sức khỏe miễn phí</h6>
+                                    <p class="mb-2 text-muted small">Khám sức khỏe miễn phí cho người cao tuổi</p>
+                                    <small style="color: #00c6ff;"><i class="far fa-calendar-alt me-1"></i>20/11/2023</small>
+                                </div>
+                                <div class="news-item p-3 rounded-3 bg-white shadow-sm hover-translate" style="transition: all 0.3s ease;">
+                                    <h6 class="mb-2" style="color: #0095d9;">Hội thảo về phòng chống dịch bệnh</h6>
+                                    <p class="mb-2 text-muted small">Chia sẻ kiến thức về phòng chống dịch bệnh mùa đông</p>
+                                    <small style="color: #00c6ff;"><i class="far fa-calendar-alt me-1"></i>18/11/2023</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Video Section -->
+            <div class="row mt-4">
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-lg rounded-4 bg-gradient-primary h-100">
+                        <div class="card-body p-4">
+                            <h5 class="text-white mb-4">
+                                <i class="fas fa-video me-2"></i>Video nổi bật
+                            </h5>
+                            <div class="video-list">
+                                <div class="ratio ratio-16x9 mb-3">
+                                    <iframe src="https://www.youtube.com/embed/example1" title="Video 1" allowfullscreen class="rounded-4 shadow"></iframe>
+                                </div>
+                                <div class="video-item mb-2 p-3 bg-white rounded-3 d-flex align-items-center hover-translate">
+                                    <i class="fas fa-play-circle text-primary me-3"></i>
+                                    <span class="fw-medium">Giới thiệu về bệnh viện</span>
+                                </div>
+                                <div class="video-item p-3 bg-white rounded-3 d-flex align-items-center hover-translate">
+                                    <i class="fas fa-play-circle text-primary me-3"></i>
+                                    <span class="fw-medium">Hướng dẫn đăng ký khám online</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-lg rounded-4 bg-gradient-success h-100">
+                        <div class="card-body p-4">
+                            <h5 class="text-white mb-4">
+                                <i class="fas fa-newspaper me-2"></i>Dịch vụ nổi bật
+                            </h5>
+                            <div class="news-list">
+                                <div class="news-item mb-3 p-3 bg-white rounded-3 d-flex align-items-center hover-translate">
+                                    <i class="fas fa-file-alt text-success me-3"></i>
+                                    <div>
+                                        <h6 class="fw-medium mb-1">Bệnh viện tổ chức khám từ thiện cho người cao tuổi</h6>
+                                        <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>25/11/2023</small>
+                                    </div>
+                                </div>
+                                <div class="news-item mb-3 p-3 bg-white rounded-3 d-flex align-items-center hover-translate">
+                                    <i class="fas fa-file-alt text-success me-3"></i>
+                                    <div>
+                                        <h6 class="fw-medium mb-1">Trang bị hệ thống máy chụp MRI hiện đại</h6>
+                                        <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>22/11/2023</small>
+                                    </div>
+                                </div>
+                                <div class="news-item p-3 bg-white rounded-3 d-flex align-items-center hover-translate">
+                                    <i class="fas fa-file-alt text-success me-3"></i>
+                                    <div>
+                                        <h6 class="fw-medium mb-1">Hội thảo chuyên đề về bệnh đái tháo đường</h6>
+                                        <small class="text-muted"><i class="far fa-calendar-alt me-1"></i>20/11/2023</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-5 mt-4">
+                <h4 class="text-primary mb-4 d-flex align-items-center">
+                    <i class="fas fa-hand-holding-medical me-2"></i>
+                    <span>Chuyên khoa nổi bật</span>
+                </h4>
+                <ul class="list-unstyled row g-4">
+                    <li class="col-md-3 col-sm-6">
+                        <div class="card h-100 border-0 shadow-lg rounded-4 bg-gradient-danger hover-translate">
+                            <div class="card-body text-center p-4">
+                                <div class="service-icon-wrapper mb-4 bg-white">
+                                    <i class="fas fa-heartbeat fa-3x text-danger"></i>
+                                </div>
+                                <h5 class="card-title mb-3 text-white">Khám Tim mạch</h5>
+                                <p class="card-text text-white-50">Chẩn đoán và điều trị chuyên sâu các bệnh về tim mạch</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="col-md-3 col-sm-6">
+                        <div class="card h-100 border-0 shadow-lg rounded-4 bg-gradient-purple hover-translate">
+                            <div class="card-body text-center p-4">
+                                <div class="service-icon-wrapper mb-4 bg-white">
+                                    <i class="fas fa-brain fa-3x text-purple"></i>
+                                </div>
+                                <h5 class="card-title mb-3 text-white">Thần kinh</h5>
+                                <p class="card-text text-white-50">Điều trị chuyên sâu các bệnh về hệ thần kinh</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="col-md-3 col-sm-6">
+                        <div class="card h-100 border-0 shadow-lg rounded-4 bg-gradient-info hover-translate">
+                            <div class="card-body text-center p-4">
+                                <div class="service-icon-wrapper mb-4 bg-white">
+                                    <i class="fas fa-bone fa-3x text-info"></i>
+                                </div>
+                                <h5 class="card-title mb-3 text-white">Cơ xương khớp</h5>
+                                <p class="card-text text-white-50">Chuyên khoa điều trị về xương khớp và cột sống</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="col-md-3 col-sm-6">
+                        <div class="card h-100 border-0 shadow-lg rounded-4 bg-gradient-success hover-translate">
+                            <div class="card-body text-center p-4">
+                                <div class="service-icon-wrapper mb-4 bg-white">
+                                    <i class="fas fa-stethoscope fa-3x text-success"></i>
+                                </div>
+                                <h5 class="card-title mb-3 text-white">Nội khoa</h5>
+                                <p class="card-text text-white-50">Khám và điều trị toàn diện bệnh nội khoa</p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    .bg-gradient-light {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    }
+    
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #0095d9 0%, #007bff 100%);
+    }
+    
+    .bg-gradient-success {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    }
+    
+    .bg-gradient-danger {
+        background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+    }
+    
+    .bg-gradient-purple {
+        background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);
+    }
+    
+    .bg-gradient-info {
+        background: linear-gradient(135deg, #17a2b8 0%, #0095d9 100%);
+    }
+
+    .hover-translate {
+        transition: all 0.3s ease;
+    }
+
+    .hover-translate:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 1rem 3rem rgba(0,0,0,0.175)!important;
+    }
+
+    .service-icon-wrapper {
+        height: 90px;
+        width: 90px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+    }
+
+    .carousel-caption {
+        border-radius: 15px;
+        padding: 2rem;
+        max-width: 80%;
+        margin: auto;
+        bottom: 2rem;
+    }
+
+    .news-item, .video-item {
+        transition: all 0.3s ease;
+    }
+
+    .text-white-50 {
+        color: rgba(255,255,255,0.8)!important;
+    }
+</style>
+
 <section class="services-section py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
     <div class="container">
         <div class="row g-4">
