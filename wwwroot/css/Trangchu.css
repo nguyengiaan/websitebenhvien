@@ -517,3 +517,27 @@ header {
   from { transform: rotate(240deg) translateX(150px) rotate(-240deg); }
   to { transform: rotate(600deg) translateX(150px) rotate(-600deg); }
 }
+.carousel-item img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover; /* Đảm bảo hình ảnh phủ đầy mà vẫn giữ tỷ lệ */
+}
+
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 15px;
+  padding: 15px;
+  text-align: center;
+}
+.card .btn {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card .btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+.video-card .card-body {
+  padding: 1rem;
+}
+
