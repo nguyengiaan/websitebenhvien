@@ -121,6 +121,15 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
+        [Authorize]
+        [Route("/trang-quan-tri/quan-ly-tin-mau")]
+        public IActionResult Tinmau()
+        {
+            return View();
+        }
+
+
+
 
     }
 }

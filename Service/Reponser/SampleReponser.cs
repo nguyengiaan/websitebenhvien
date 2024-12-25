@@ -1,4 +1,5 @@
-﻿using websitebenhvien.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using websitebenhvien.Data;
 using websitebenhvien.Migrations;
 using websitebenhvien.Models.Enitity;
 using websitebenhvien.Models.EnitityVM;
@@ -59,6 +60,92 @@ namespace websitebenhvien.Service.Reponser
                
               }
             catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public async Task<(List<SampleVM> ds, int TotalPages)> Getlistsp(int page, int pagesize)
+        {
+            try
+            {
+                var totalItems= await _context.SampleMessages.CountAsync();
+                var totalPages= (int)Math.Ceiling(totalItems / (double)pagesize);
+                var data = await _context.SampleMessages.Include(x => x.ButtonSamples).OrderByDescending(x => x.Id_SampleMessager).Select(x => new SampleVM
+                {
+                    Id_SampleMessager = x.Id_SampleMessager,
+                    Question = x.Question,
+                    Reply = x.Reply,
+                    Status = x.Status,
+             
+                }).Skip((page - 1) * pagesize).Take(pagesize).ToListAsync();
+                return (data, totalPages);
+            }
+            catch(Exception ex)
+            {
+                return (null, 0);
+            }
+        }
+
+        public async Task<SampleVM> GetSamplemessager(int id)
+        {
+            try
+            {
+                var data = await _context.SampleMessages.Include(x => x.ButtonSamples).Where(x => x.Id_SampleMessager == id).Select(x => new SampleVM
+                {
+                    Id_SampleMessager = x.Id_SampleMessager,
+                    Question = x.Question,
+                    Reply = x.Reply,
+                    Status = x.Status,
+                    ButtonSamples = x.ButtonSamples.Select(x => new ButtonsampleVM
+                    {
+                        Id_ButtonSample = x.Id_ButtonSample,
+                        Title = x.Title,
+                        Link = x.Link
+                    }).ToList()
+                }).FirstOrDefaultAsync();
+                return data;
+            }catch(Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<bool> DeleteSamplemessager(int id)
+        {
+            try
+            {
+                var data = await _context.SampleMessages.FindAsync(id);
+                _context.SampleMessages.Remove(data);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateStatus(int id)
+        {
+            try
+            {
+                var data = await _context.SampleMessages.FindAsync(id);
+                if (data.Status == "Active")
+                {
+                    data.Status = "InActive";
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    data.Status = "Active";
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch(Exception ex)
             {
                 return false;
             }

@@ -1,0 +1,458 @@
+﻿
+@{
+    ViewData["Title"] = "Tin mẫu";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <button class="btn btn-primary rounded-pill px-4" id="themtnm" >
+                        <i class="fas fa-plus me-2"></i>Thêm tin nhắn mẫu
+                    </button>
+                </div>
+          
+            </div>
+        </div>
+
+        <div class="card-body px-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4" style="width: 5%">STT</th>
+                            <th style="width: 30%">Tin nhắn mẫu</th>
+                            <th style="width: 30%">Câu trả lời</th>
+                            <th style="width: 25%">Trạng thái</th>
+                            <th style="width: 25%" class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categoryTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-footer bg-white py-3">
+            <nav>
+                <ul class="pagination justify-content-center mb-0" id="pagination">
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-4 shadow-sm">
+            <div class="modal-header bg-gradient-primary text-white py-3 rounded-top-4">
+                <h5 class="modal-title fw-bold" id="categoryModalLabel">
+                    <i class="fas fa-comment-dots me-2"></i> Tin nhắn mẫu
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-5">
+                <form id="categoryForm" class="needs-validation" novalidate>
+                    <input type="hidden" id="Id_SampleMessager" name="Id_SampleMessager">
+
+                    <div class="mb-4">
+                        <label for="Question" class="form-label text-secondary fw-semibold">
+                            <i class="fas fa-question-circle me-2 text-primary"></i> Câu hỏi
+                        </label>
+                        <textarea class="form-control border border-light shadow-sm rounded-3" rows="3" id="Question" name="Question" placeholder="Nhập câu hỏi..." required></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="Reply" class="form-label text-secondary fw-semibold">
+                            <i class="fas fa-comment me-2 text-primary"></i> Trả lời
+                        </label>
+                        <textarea class="form-control border border-light shadow-sm rounded-3" rows="3" id="Reply" name="Reply" placeholder="Nhập câu trả lời..." required></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="buttonList" class="form-label text-secondary fw-semibold">
+                            <i class="fas fa-link me-2 text-primary"></i> Danh sách liên kết
+                        </label>
+                        <div id="buttonList" class="d-flex flex-wrap gap-2">
+                            <!-- Button list will be dynamically generated here -->
+                        </div>
+                        <button type="button" class="btn btn-outline-primary btn-sm mt-3" onclick="addButton()" id="btnadd">
+                            <i class="fas fa-plus me-2"></i>Thêm liên kết
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer bg-light py-3 rounded-bottom-4">
+                <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Đóng
+                </button>
+                <button type="button" class="btn btn-primary rounded-pill px-4" onclick="Themtinnhan()">
+                    <i class="fas fa-save me-2"></i>Lưu
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Lịch làm việc -->
+
+
+@{
+    var summenote = new websitebenhvien.Models.EnitityVM.Summenote(".summernote");
+}
+<partial name="_Summernote" model="summenote" />
+@section Styles {
+    <style>
+        .bg-gradient-primary {
+        background: linear-gradient(90deg, #4e73df, #224abe);
+    }
+
+    .btn-close-white {
+        filter: invert(1);
+    }
+
+    .form-control::placeholder {
+        color: #adb5bd;
+        opacity: 0.7;
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 8px rgba(78, 115, 223, 0.5);
+        border-color: #4e73df;
+    }
+
+    .shadow-sm {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .rounded-4 {
+        border-radius: 1rem !important;
+    }
+
+    .rounded-top-4 {
+        border-top-left-radius: 1rem !important;
+        border-top-right-radius: 1rem !important;
+    }
+
+    .rounded-bottom-4 {
+        border-bottom-left-radius: 1rem !important;
+        border-bottom-right-radius: 1rem !important;
+    }
+    </style>
+}
+@section Scripts {
+    <script>
+            var page = 1;
+            var pageSize = 20;
+            let buttonCounter = 0;
+            $(document).ready(function () {
+               $("#themtnm").click(function () {
+                    $("#categoryModal").modal("show");
+                });
+                $("#categoryModal").on("hidden.bs.modal", function () {
+                    $("#categoryForm")[0].reset();
+                    $("#Id_SampleMessager").val("");
+                    $("#buttonList").html("");
+                    buttonCounter = 0;
+                $("#btnadd").prop('disabled', false);
+                });
+                Laydstn(page,pageSize)
+          
+            });
+                
+                function addButton() {
+                    buttonCounter++;
+                    const buttonHtml = `
+                                        <div class="input-group mb-2" id="button-${buttonCounter}">
+                                             <input type="text" class="form-control" placeholder="Tiêu đề" name="buttons[${buttonCounter}].Title">
+                                            <input type="text" class="form-control" placeholder="Đường dẫn" name="buttons[${buttonCounter}].Link">
+                                                        <button class="btn btn-outline-danger" type="button" onclick="removeButton(${buttonCounter})">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                `;
+                                                document.getElementById('buttonList').insertAdjacentHTML('beforeend', buttonHtml);
+                        }
+                function removeButton(id) {
+                    document.getElementById(`button-${id}`).remove();
+                }
+                function Themtinnhan()
+                {
+                    var form=$("#categoryForm")[0];
+                    var formData = new FormData();
+                    formData.append("Id_SampleMessager", $("#Id_SampleMessager").val());
+                    formData.append("Question", $("#Question").val());
+                    formData.append("Reply", $("#Reply").val());
+                    var buttons = [];
+                    for (let i = 0; i <= buttonCounter; i++) {
+                        const title = $(`input[name="buttons[${i}].Title"]`).val();
+                        const link = $(`input[name="buttons[${i}].Link"]`).val();
+                        const id_ButtonSample = $(`input[name="buttons[${i}].Id_ButtonSample"]`).val();
+                        if (title && link) {
+                            const button = {
+                                Id_ButtonSample: id_ButtonSample,
+                                Title: title,
+                                Link: link
+                            };
+                            buttons.push(button);
+                        }
+                    }
+
+                    formData.append("SamplesButton",JSON.stringify(buttons));
+                    $.ajax({
+                        url: "/api/Them-tin-nhan-mau",
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (response) {
+                            if (response.status) {
+                                $("#categoryModal").modal("hide");
+                                Swal.fire({
+                                    icon: "success",
+                                    title: response.message,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                                Laydstn(page,pageSize)
+                                form.reset();
+
+                            } else {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: response.message,
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
+                        }
+                    });
+                }
+                function Laydstn(page,pageSize)
+                {
+                    $.ajax({
+                        url: "/api/lay-tin-nhan-mau",
+                        type: "POST",
+                        data: {
+                            page: page,
+                            pageSize: pageSize
+                        },
+                        success: function (response) {
+                            if (response.status) {
+                                var data = response.data;
+                                var html = "";
+
+                                data.forEach(function (item,index) {
+                                    html += `
+                                        <tr>
+                                            <td class="ps-4">${index}</td>
+                                            <td>${item.question}</td>
+                                            <td>${item.reply}</td>
+                                
+                                            <td>
+                                                <div class="form-check form-switch">
+                                                            <input class="form-check-input" type="checkbox" id="statusSwitch${item.Id_SampleMessager}" ${item.status=='Active' ? 'checked' : ''} onchange="toggleStatus(${item.id_SampleMessager})">
+                                                            <label class="form-check-label" for="statusSwitch${item.Id_SampleMessager}">${item.status=='Active' ? 'Active' : 'Inactive'}</label>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <button class="btn btn-outline-primary btn-sm" onclick="Sua(${item.id_SampleMessager})">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-outline-danger btn-sm" onclick="Xoa(${item.id_SampleMessager})">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `;
+                                   
+                                });
+                                $("#categoryTableBody").html(html);
+                                updatePagination(response.total, response.page,pageSize);
+                            }
+                        }
+                    });
+                }
+      function updatePagination(totalPages, currentPage, pageSize) {
+    if (totalPages > 0) {
+        let str = `<nav aria-label="Page navigation example">
+                        <ul class="pagination">`;
+
+        // Nút Previous
+        if (currentPage > 1) {
+            str += `<li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="Laydstn(${currentPage - 1}, ${pageSize})">Previous</a>
+                    </li>`;
+        }
+
+        const maxVisiblePages = 5; // Số trang hiển thị xung quanh trang hiện tại
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, currentPage + 2);
+
+        // Điều chỉnh dải trang nếu cần
+        if (currentPage <= 2) {
+            endPage = Math.min(totalPages, maxVisiblePages);
+        }
+        if (currentPage >= totalPages - 1) {
+            startPage = Math.max(1, totalPages - maxVisiblePages + 1);
+        }
+
+        // Trang đầu + Ellipsis
+        if (startPage > 1) {
+            str += `<li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="Laydstn(1, ${pageSize})">1</a>
+                    </li>`;
+            if (startPage > 2) {
+                str += `<li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>`;
+            }
+        }
+
+        // Các trang trong phạm vi
+        for (let i = startPage; i <= endPage; i++) {
+            if (currentPage === i) {
+                str += `<li class="page-item active">
+                            <a class="page-link" href="javascript:void(0)">${i}</a>
+                        </li>`;
+            } else {
+                str += `<li class="page-item">
+                            <a class="page-link" href="javascript:void(0)" onclick="Laydstn(${i}, ${pageSize})">${i}</a>
+                        </li>`;
+            }
+        }
+
+        // Trang cuối + Ellipsis
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                str += `<li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>`;
+            }
+            str += `<li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="Laydstn(${totalPages}, ${pageSize})">${totalPages}</a>
+                    </li>`;
+        }
+
+        // Nút Next
+        if (currentPage < totalPages) {
+            str += `<li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="Laydstn(${currentPage + 1}, ${pageSize})">Next</a>
+                    </li>`;
+        }
+
+        str += `</ul></nav>`;
+        $('#pagination').html(str);
+    }
+}
+
+
+              function Sua(id)
+              {
+              
+                    $.ajax({
+                        url: "/api/lay-tin-nhan-mau-theo-id",
+                        type: "POST",
+                        data: {
+                            id: id
+                        },
+                        success: function (response) {
+                            if (response.status) {
+                                var data = response.data;
+                                console.log(data);
+                                $("#Id_SampleMessager").val(data.id_SampleMessager);
+                                $("#Question").val(data.question);
+                                $("#Reply").val(data.reply);
+                                $("#categoryModal").modal("show");
+                                  $("#btnadd").prop('disabled', true);
+                                if(response.data.buttonSamples.length > 0) {
+                                    response.data.buttonSamples.forEach(function (item) {
+                                        const buttonHtml = `
+                                            <div class="input-group mb-2" id="button-${buttonCounter}">
+                                                <input type="hidden" name="buttons[${buttonCounter}].Id_ButtonSample" value="${item.id_ButtonSample}">
+                                                <input type="text" class="form-control" placeholder="Tiêu đề" name="buttons[${buttonCounter}].Title" value="${item.title}">
+                                                <input type="text" class="form-control" placeholder="Đường dẫn" name="buttons[${buttonCounter}].Link" value="${item.link}">
+                                        
+                                            </div>
+                                        `;
+                                        document.getElementById('buttonList').insertAdjacentHTML('beforeend', buttonHtml);
+                                        buttonCounter++;
+                                    });
+                                  
+                                }
+                                $("#categoryModal").modal("show");
+                            }
+                        }
+                    });
+              }
+            function Xoa(id)
+            {
+                Swal.fire({
+                    title: "Bạn có chắc chắn muốn xóa?",
+                    text: "Dữ liệu sẽ không thể khôi phục!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Xác nhận",
+                    cancelButtonText: "Hủy"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "/api/cap-nhat-trang-thai",
+                            type: "POST",
+                            data: {
+                                id: id
+                            },
+                            success: function (response) {
+                                if (response.status) {
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: response.message,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    Laydstn(page,pageSize)
+                                } else {
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: response.message,
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+            function toggleStatus(id)
+            {
+                console.log(id);
+                $.ajax({
+                    url: "/api/cap-nhat-trang-thai",
+                    type: "POST",
+                    data: {
+                        id: id
+                    },
+                    success: function (response) {
+                        if (response.status) 
+                        {
+                            Laydstn(page,pageSize)
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: response.message,
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
+                    }
+                });
+            }
+    </script>
+}
+
