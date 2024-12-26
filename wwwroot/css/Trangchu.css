@@ -569,3 +569,97 @@ header {
       transform: translateY(-5px);
   }
 }
+.news-card {
+  transition: all 0.3s ease;
+  }
+  .hover-effect {
+  transition: all 0.2s ease-in-out;
+  }
+  .hover-effect:hover {
+  background-color: #f8f9fa;
+  transform: translateX(-5px);
+  }
+  .news-item {
+  position: relative;
+  padding-left: 0.5rem;
+  border-left: 3px solid #0d6efd;
+  }
+  @keyframes flash {
+    0%, 100% {
+        background-color: #ff6b6b;
+        color: white;
+        box-shadow: 0 0 5px #ff6b6b, 0 0 10px #ff6b6b;
+    }
+    50% {
+        background-color: #ff4757;
+        color: white;
+        box-shadow: 0 0 20px #ff4757, 0 0 30px #ff4757;
+    }
+}
+
+.new-label {
+    background-color: #ff6b6b;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 2px 6px;
+    animation: flash 1.5s infinite ease-in-out;
+    margin-left: 10px;
+}
+/* Animation hiệu ứng chuông rung */
+@keyframes shake {
+  0%, 100% {
+      transform: rotate(0);
+  }
+  25% {
+      transform: rotate(-15deg);
+  }
+  75% {
+      transform: rotate(15deg);
+  }
+}
+
+/* Animation vòng ripple */
+@keyframes ripple {
+  0% {
+      transform: scale(0.8);
+      opacity: 1;
+  }
+  100% {
+      transform: scale(2.5);
+      opacity: 0;
+  }
+}
+
+/* Animation cho badge */
+@keyframes pulseBadge {
+  0%, 100% {
+      transform: scale(1);
+      background-color: #ff4757;
+  }
+  50% {
+      transform: scale(1.2);
+      background-color: #ff6b6b;
+  }
+}
+
+/* Bell shake */
+.bell-shake i {
+  animation: shake 1.2s ease-in-out infinite;
+}
+
+/* Ripple */
+.ripple {
+  animation: ripple 1.5s linear infinite;
+  border: 2px solid #fff;
+  opacity: 0.5;
+  position: absolute;
+}
+
+/* Badge pulse */
+#count-notification {
+  animation:shake 1.5s infinite ease-in-out ;
+
+
+}

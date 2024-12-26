@@ -83,17 +83,20 @@
         </div>
 
         <!-- News Section -->
-        <div class="col-lg-2" style="padding-right: 50px!important;"> 
+        <div class="col-lg-2" style="padding-right: 50px!important;">
             <div class="card shadow rounded-4 border-0 h-100 news-card" style="height: 371px;">
             <div class="card-header bg-primary text-white py-3 rounded-top-4 d-flex align-items-center">
                 <i class="fas fa-newspaper me-2 fa-lg"></i>
                 <h5 class="mb-0 fw-bold">Tin tức & Sự kiện</h5>
             </div>
-            <div class="card-body p-0">
+            <div class="card-body p-0" style="background-color: #ffffff!important; border-radius: 10px;">
                 <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action p-3 border-bottom hover-effect rounded-start-4">
+                <a href="#" class="list-group-item list-group-item-action p-3 border-bottom hover-effect rounded-start-4 position-relative">
                     <div class="news-item">
-                    <h6 class="mb-2 text-primary fw-bold">Chương trình khám sức khỏe miễn phí</h6>
+                    <h6 class="mb-2 text-primary fw-bold">
+                        Chương trình khám sức khỏe miễn phí 
+                    </h6>
+                    <span class="badge new-label position-absolute top-0 end-0 m-2 fw-bold">MỚI</span>
                     <div class="d-flex align-items-center text-muted mb-2">
                         <i class="far fa-clock me-2"></i>
                         <small>3 ngày trước</small>
@@ -103,9 +106,12 @@
                     </p>
                     </div>
                 </a>
-                <a href="#" class="list-group-item list-group-item-action p-3 border-bottom hover-effect rounded-start-4">
+                <a href="#" class="list-group-item list-group-item-action p-3 border-bottom hover-effect rounded-start-4 position-relative">
                     <div class="news-item">
-                    <h6 class="mb-2 text-primary fw-bold">Khai trương khoa mới</h6>
+                    <h6 class="mb-2 text-primary fw-bold">
+                        Khai trương khoa mới
+                    </h6>
+                    <span class="badge new-label position-absolute top-0 end-0 m-2 fw-bold">MỚI</span>
                     <div class="d-flex align-items-center text-muted mb-2">
                         <i class="far fa-clock me-2"></i>
                         <small>5 ngày trước</small>
@@ -115,26 +121,8 @@
                     </p>
                     </div>
                 </a>
-              
                 </div>
             </div>
-            <style>
-                .news-card {
-                transition: all 0.3s ease;
-                }
-                .hover-effect {
-                transition: all 0.2s ease-in-out;
-                }
-                .hover-effect:hover {
-                background-color: #f8f9fa;
-                transform: translateX(-5px);
-                }
-                .news-item {
-                position: relative;
-                padding-left: 0.5rem;
-                border-left: 3px solid #0d6efd;
-                }
-            </style>
             </div>
         </div>
 
@@ -157,8 +145,8 @@
                                                 allowfullscreen 
                                                 style="width: 100%; height: 100%; object-fit: cover;"></iframe>
                                     </div>
-                                    <span class="badge new-badge position-absolute top-0 end-0 m-3 px-3 py-2">
-                                        <i class="fas fa-star me-1"></i>NEW
+                                    <span class="badge new-badge position-absolute top-0 end-0 m-3 px-3 py-2 new-label fw-bold">
+                                        <i class="fas fa-star me-1"></i>MỚI
                                     </span>
 
                                 </div>
@@ -173,8 +161,8 @@
                                                 allowfullscreen 
                                                 style="width: 100%; height: 100%; object-fit: cover;"></iframe>
                                     </div>
-                                        <span class="badge new-badge position-absolute top-0 end-0 m-3 px-3 py-2">
-                                        <i class="fas fa-star me-1"></i>NEW
+                                        <span class="badge new-badge position-absolute top-0 end-0 m-3 px-3 py-2 new-label fw-bold">
+                                        <i class="fas fa-star me-1"></i>MỚI
                                     </span>
 
                                 </div>
@@ -683,19 +671,25 @@
         <!-- Chat box -->
         <div class="chat-box-wrapper">
             <!-- Chat Button -->
-            <button id="chatButton" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center position-relative animate__animated animate__pulse animate__infinite" style="width: 50px; height: 50px; background: linear-gradient(45deg, #0063EC, #00a5ff); border: none; transition: all 0.3s ease;">
-                <i class="fas fa-comments fa-lg" style="color: white; filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger animate__animated animate__heartBeat animate__infinite" style="font-size: 0.6rem;" id="count-notification">
-                    <i class="fas fa-bell text-white" id="count-notification"></i>
-                </span>
-                <div class="ripple position-absolute w-100 h-100 rounded-circle" style="animation: ripple 1.5s linear infinite; border: 2px solid #fff; opacity: 0;"></div>
-            </button>
+           <button id="chatButton" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center position-relative animate__animated animate__pulse animate__infinite" 
+        style="width: 50px; height: 50px; background: linear-gradient(45deg, #0063EC, #00a5ff); border: none; transition: all 0.3s ease;">
+    <i class="fas fa-comments fa-lg" style="color: white; filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));"></i>
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger  " 
+          style="font-size: 0.6rem;" id="count-notification">
+        <i class="fas fa-bell text-white" id="count-notification"></i>
+    </span>
+    <div class="ripple position-absolute w-100 h-100 rounded-circle" style="animation: ripple 1.5s linear infinite; border: 2px solid #fff; opacity: 0;"></div>
+    <div class="bell-shake">
+    
+    </div>
+</button>
+
 
             <!-- Chat Window -->
             <div id="chatWindow" class="card position-absolute bottom-100 mb-2 animate__animated animate__fadeIn" style="width: 300px; display: none; right: 0; transform-origin: bottom right;">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" style="border-radius: 10px 10px 0 0;">
-                    <h6 class="m-0">
-                        <i class="fas fa-circle text-success me-2 animate__animated animate__flash animate__infinite" style="font-size: 10px;"></i>
+                    <h6 class="m-0 new-label">
+                        <i class="fas fa-circle text-success me-2 " style="font-size: 10px;"></i>
                         Chat với chúng tôi
                     </h6>
                     <button type="button" class="btn-close btn-close-white animate__animated animate__rotateIn" id="closeChatBtn" style="transition: transform 0.3s;" onmouseover="this.style.transform='rotate(90deg)';" onmouseout="this.style.transform='rotate(0deg)';"></button>
