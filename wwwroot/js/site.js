@@ -1335,7 +1335,19 @@ function renderChat(data)
 // Sample messages
 
 document.addEventListener('DOMContentLoaded', function() {
-
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                console.log("Latitude:", position.coords.latitude);
+                console.log("Longitude:", position.coords.longitude);
+            },
+            (error) => {
+                console.error("Error obtaining location:", error);
+            }
+        );
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
   
     const chatButton = document.getElementById('chatButton');
     const chatWindow = document.getElementById('chatWindow');

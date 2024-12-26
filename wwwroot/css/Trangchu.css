@@ -663,3 +663,23 @@ header {
 
 
 }
+.https-indicator {
+  color: green;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+.https-indicator i {
+  margin-right: 5px;
+  color: #4caf50;
+}
+
+@keyframes fall {
+  0% {
+      transform: translateY(-100%);
+  }
+  100% {
+      transform: translateY(100vh);
+  }
+}

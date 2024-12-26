@@ -734,6 +734,10 @@
     </div>
 
     <div id="google_translate_element" class="ms-2" style="display: none;"></div>
+    <div class="https-indicator">
+    <i class="fas fa-lock"></i> Secure
+</div>
+
 
     <script src="~/lib/aspnet-signalr/signalr.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -760,7 +764,49 @@
         window.addEventListener('load', checkFade);
         window.addEventListener('scroll', checkFade);
     </script>
+    <script>
+        // Snowfall effect
+        (function() {
+            const snowflakeCount = 100;
+            const snowflakes = [];
 
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.classList.add('snowflake');
+                document.body.appendChild(snowflake);
+                snowflakes.push(snowflake);
+            }
+
+            function animateSnowflakes() {
+                snowflakes.forEach(snowflake => {
+                    const x = Math.random() * window.innerWidth;
+                    const y = Math.random() * window.innerHeight;
+                    const size = Math.random() * 5 + 2;
+                    const duration = Math.random() * 5 + 5;
+
+                    snowflake.style.left = `${x}px`;
+                    snowflake.style.top = `${y}px`;
+                    snowflake.style.width = `${size}px`;
+                    snowflake.style.height = `${size}px`;
+                    snowflake.style.animationDuration = `${duration}s`;
+                });
+            }
+
+            animateSnowflakes();
+            window.addEventListener('resize', animateSnowflakes);
+        })();
+    </script>
+    <style>
+        .snowflake {
+            position: fixed;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            pointer-events: none;
+            animation: fall linear infinite;
+        }
+
+    </style>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
