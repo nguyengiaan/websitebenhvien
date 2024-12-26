@@ -541,3 +541,31 @@ header {
   padding: 1rem;
 }
 
+.new-badge {
+  z-index: 10;
+  font-size: 0.9rem;
+  background: linear-gradient(145deg, #ff4b5c, #ff6e70); /* 3D gradient effect */
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for 3D depth */
+  transform: scale(1); /* Initial scale for animation */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.new-badge:hover {
+  transform: scale(1.1); /* Slightly increase size on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+}
+
+.new-badge i {
+  animation: star-bounce 1s infinite; /* Add bounce effect to star icon */
+}
+
+@keyframes star-bounce {
+  0%, 100% {
+      transform: translateY(0);
+  }
+  50% {
+      transform: translateY(-5px);
+  }
+}

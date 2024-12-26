@@ -1299,7 +1299,6 @@ function ViewChat() {
 // render chat
 function renderChat(data)
 {
-    console.log(data);
     const chatMessages = document.getElementById('chatMessages');
     chatMessages.innerHTML = ''; // Clear existing messages
 
@@ -1333,6 +1332,8 @@ function renderChat(data)
     // Scroll to bottom
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+// Sample messages
+
 document.addEventListener('DOMContentLoaded', function() {
 
   
