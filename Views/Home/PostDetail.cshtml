@@ -338,9 +338,22 @@
                 data: data,
                 processData: false,
                 contentType: false,
+                beforeSend:function()
+                {
+                    Swal.fire({
+                        title: "Đang xử lý",
+                        html: "Vui lòng chờ trong giây lát...",
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        willOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                },
                 success: function(response){
                     if(response.status){
                         Swal.fire("Thành công", response.message, "success");
+                        $('#recruitmentForm')[0].reset();
                     }else{
                         swal.fire("Thất bại", response.message, "error");
                     }

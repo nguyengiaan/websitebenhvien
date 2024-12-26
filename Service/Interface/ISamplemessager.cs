@@ -1,4 +1,5 @@
-﻿using websitebenhvien.Models.EnitityVM;
+﻿using System.Security.Cryptography.X509Certificates;
+using websitebenhvien.Models.EnitityVM;
 
 namespace websitebenhvien.Service.Interface
 {
@@ -13,5 +14,7 @@ namespace websitebenhvien.Service.Interface
         public Task<bool> DeleteSamplemessager(int id);
 
         public Task<bool> UpdateStatus(int id);
+
+        public Task<List<SampleVM>> GetListSamplemessager();
     }
 }

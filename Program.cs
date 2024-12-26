@@ -33,7 +33,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultTokenProviders();
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
-
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
 builder.Services.AddScoped<IPageMain,PageMainReponser>();
 builder.Services.AddScoped<IAllinone, AllinoneReponser>();  
 builder.Services.AddScoped<IUser, UserReponser>();
@@ -41,6 +41,7 @@ builder.Services.AddScoped<IPost, PostReponser>();
 builder.Services.AddScoped<ISpecialty, SpecialtyReponser>();
 builder.Services.AddScoped<IWorkSchedule, WorkScheduleReponser>();
 builder.Services.AddScoped<ISamplemessager, SampleReponser>();
+builder.Services.AddScoped<EmailSender>();
 builder.Services.AddScoped<Hubnot>();
 builder.Services.AddScoped<Uploadfile>();
 builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));

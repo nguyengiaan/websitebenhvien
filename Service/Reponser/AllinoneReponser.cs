@@ -561,7 +561,7 @@ namespace websitebenhvien.Service.Reponser
             }
         }
         // update status news
-      public async Task<bool> UpdateStatusNews(int id)
+        public async Task<bool> UpdateStatusNews(int id)
         {
          try
     {   

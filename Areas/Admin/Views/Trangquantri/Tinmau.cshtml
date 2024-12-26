@@ -250,7 +250,10 @@
                                         <tr>
                                             <td class="ps-4">${index}</td>
                                             <td>${item.question}</td>
-                                            <td>${item.reply}</td>
+                                          
+                                <td>
+                                    ${item.reply.length > 50 ? item.reply.substring(0, 50) + '...' : item.reply}
+                                </td>
                                 
                                             <td>
                                                 <div class="form-check form-switch">
@@ -402,7 +405,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "/api/cap-nhat-trang-thai",
+                            url: "/api/xoa-tin-nhan-mau",
                             type: "POST",
                             data: {
                                 id: id
