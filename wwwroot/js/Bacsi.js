@@ -29,7 +29,6 @@ $(document).ready(function() {
         var id_doctor = $('#btnDelete').data('id');
         deleteSchedule(id, id_doctor);
     });
-    
 
 });
 
@@ -61,7 +60,7 @@ function loadDoctors() {
         success: function(response) {
             if(response.success) {
                 renderDoctors(response.data);
-                renderPagination(response.totalPages, currentPage);
+                updatePagination(response.totalPages, currentPage,pageSize);
             }
         }
     });
@@ -97,17 +96,17 @@ function renderDoctors(doctors) {
                         <button type="button" class="btn btn-outline-primary btn-sm rounded-circle me-2" 
                                 onclick="editDoctor(${doctor.id_doctor})"
                                 aria-label="Chỉnh sửa bác sĩ">
-                            <i class="fas fa-edit" aria-hidden="true"></i>
+                            <i class="fas fa-edit"></i>
                         </button>
                         <button type="button" class="btn btn-outline-danger btn-sm rounded-circle me-2" 
                                 onclick="deleteDoctor(${doctor.id_doctor})"
                                 aria-label="Xóa bác sĩ">
-                            <i class="fas fa-trash" aria-hidden="true"></i>
+                            <i class="fas fa-trash"></i>
                         </button>
                         <button type="button" class="btn btn-outline-success btn-sm rounded-circle"
                                 onclick="addWorkSchedule(${doctor.id_doctor})" 
                                 aria-label="Thêm thời khoá biểu" id="btnsvadd">
-                            <i class="fas fa-calendar-plus" aria-hidden="true"></i>
+                            <i class="fas fa-calendar-plus" ></i>
                         </button>
                     </div>
                 </td>
@@ -120,63 +119,77 @@ function renderDoctors(doctors) {
     $('[data-bs-toggle="tooltip"]').tooltip();
 }
 
-function renderPagination(totalPages, currentPage) {
-    let html = '';
-    
-    // Previous button
-    html += `
-        <button class="btn btn-outline-primary btn-sm me-1" 
-                onclick="changePage(${currentPage - 1})"
-                ${currentPage === 1 ? 'disabled' : ''}>
-            &laquo;
-        </button>
-    `;
+function updatePagination(totalPages, currentPage, pageSize) {
+    if (totalPages > 0) {
+        let str = `<nav aria-label="Page navigation example">
+                        <ul class="pagination">`;
 
-    // Calculate range of pages to show
-    let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, startPage + 4);
-    
-    // Adjust start if end is maxed out
-    if (endPage - startPage < 4) {
-        startPage = Math.max(1, endPage - 4);
+        // Nút Previous
+        if (currentPage > 1) {
+            str += `<li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="Laydstn(${currentPage - 1}, ${pageSize})">Previous</a>
+                    </li>`;
+        }
+
+        const maxVisiblePages = 5; // Số trang hiển thị xung quanh trang hiện tại
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, currentPage + 2);
+
+        // Điều chỉnh dải trang nếu cần
+        if (currentPage <= 2) {
+            endPage = Math.min(totalPages, maxVisiblePages);
+        }
+        if (currentPage >= totalPages - 1) {
+            startPage = Math.max(1, totalPages - maxVisiblePages + 1);
+        }
+
+        // Trang đầu + Ellipsis
+        if (startPage > 1) {
+            str += `<li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="Laydstn(1, ${pageSize})">1</a>
+                    </li>`;
+            if (startPage > 2) {
+                str += `<li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>`;
+            }
+        }
+
+        // Các trang trong phạm vi
+        for (let i = startPage; i <= endPage; i++) {
+            if (currentPage === i) {
+                str += `<li class="page-item active">
+                            <a class="page-link" href="javascript:void(0)">${i}</a>
+                        </li>`;
+            } else {
+                str += `<li class="page-item">
+                            <a class="page-link" href="javascript:void(0)" onclick="Laydstn(${i}, ${pageSize})">${i}</a>
+                        </li>`;
+            }
+        }
+
+        // Trang cuối + Ellipsis
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                str += `<li class="page-item disabled">
+                            <span class="page-link">...</span>
+                        </li>`;
+            }
+            str += `<li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="Laydstn(${totalPages}, ${pageSize})">${totalPages}</a>
+                    </li>`;
+        }
+
+        // Nút Next
+        if (currentPage < totalPages) {
+            str += `<li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="Laydstn(${currentPage + 1}, ${pageSize})">Next</a>
+                    </li>`;
+        }
+
+        str += `</ul></nav>`;
+        $('#pagination').html(str);
     }
-
-    // First page + ellipsis
-    if (startPage > 1) {
-        html += `
-            <button class="btn btn-outline-primary btn-sm me-1" onclick="changePage(1)">1</button>
-            ${startPage > 2 ? '<span class="me-1">...</span>' : ''}
-        `;
-    }
-
-    // Page numbers
-    for (let i = startPage; i <= endPage; i++) {
-        html += `
-            <button class="btn btn-${currentPage === i ? 'primary' : 'outline-primary'} btn-sm me-1" 
-                    onclick="changePage(${i})">
-                ${i}
-            </button>
-        `;
-    }
-
-    // Last page + ellipsis
-    if (endPage < totalPages) {
-        html += `
-            ${endPage < totalPages - 1 ? '<span class="me-1">...</span>' : ''}
-            <button class="btn btn-outline-primary btn-sm me-1" onclick="changePage(${totalPages})">${totalPages}</button>
-        `;
-    }
-
-    // Next button
-    html += `
-        <button class="btn btn-outline-primary btn-sm me-1"
-                onclick="changePage(${currentPage + 1})"
-                ${currentPage === totalPages ? 'disabled' : ''}>
-            &raquo;
-        </button>
-    `;
-
-    $('#pagination').html(html);
 }
 
 function changePage(page) {
@@ -264,7 +277,7 @@ function searchDoctors() {
 }
 
 function resetForm() {
-    $('#categoryForm')[0].reset();
+    $('#Id_worksdoctor').val('');
     $('#id_doctor').val('');
     $('#name').val('');
     $('#id_specialty').val('');
@@ -423,6 +436,7 @@ function generateScheduleTable() {
 
         tableHtml += `
             <tr>
+                <input type="hidden" name="Id_workschedule_${dateValue}" id="Id_workschedule_${dateValue}">
                 <td>${formattedDate}</td>
                 <td class="text-center">
                     <input type="checkbox" class="form-check-input" name="schedule[${dateValue}][morning]" value="true">
@@ -446,6 +460,7 @@ function generateScheduleTable() {
 }
 
 function addWorkSchedule(id) {
+
     $('#scheduleModal').modal('show');
     $('#btnsave').data('id',id);
     $('#btnDelete').data('id',id);
@@ -472,6 +487,7 @@ function saveWorkSchedule() {
         const dateValue = date.toISOString().split('T')[0];
         
         const schedule = {
+            Id_workschedule: $(`input[name="Id_workschedule_${dateValue}"]`).val(),
             Date: dateValue,
             Morning: $(`input[name="schedule[${dateValue}][morning]"]`).is(':checked') ? "true" : "false",
             Afternoon: $(`input[name="schedule[${dateValue}][afternoon]"]`).is(':checked') ? "true" : "false", 
@@ -516,6 +532,7 @@ function saveWorkSchedule() {
 function getSchedule(id_doctor) {
     // Reset form
     $('#scheduleForm')[0].reset();
+    $('#Id_worksdoctor').val('');
     $('#scheduleCheckboxes').empty();
     $.ajax({
         url: '/api/lich-lam-viec',
@@ -524,6 +541,7 @@ function getSchedule(id_doctor) {
         success: function(response) {
             if (response.status && response.data) {
                 const workSchedule = response.data;
+         
             
                 // Điền thông tin cơ bản
                 $('#Id_worksdoctor').val(workSchedule.id_workdoctor);
@@ -538,7 +556,9 @@ function getSchedule(id_doctor) {
 
                 // Đánh dấu các ca làm việc
                 workSchedule.workschedules.forEach(schedule => {
+           
                     const date = schedule.date.split('T')[0];
+                    $(`input[name="Id_workschedule_${date}"]`).val(schedule.id_workschedule)
                     if(schedule.morning === "true") {
                         $(`input[name="schedule[${date}][morning]"]`).prop('checked', true);
                     }
@@ -609,7 +629,7 @@ function loadSpecialtiess() {
     });
 }
 
-  function openElfinder() {
+function openElfinder() {
     var fm = $('<div/>').dialogelfinder({
         url: '@Url.Action("Connector", "Filemanager")',
         lang: 'vi',

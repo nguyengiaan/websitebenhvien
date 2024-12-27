@@ -112,7 +112,8 @@ namespace websitebenhvien.Service.Reponser
             }
             return false;
            }
-            catch(Exception ex){
+            catch(Exception ex)
+            {
             return false;
            }
         }

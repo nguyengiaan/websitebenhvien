@@ -1514,6 +1514,7 @@ function loadDoctorSchedule(doctorId) {
     }
 
     const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of the day
     
     calendarContainer.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Đang tải lịch làm việc...</div>';
 
@@ -1525,7 +1526,12 @@ function loadDoctorSchedule(doctorId) {
         },
         success: function(response) {
             if (response.status && response.data) {
-                const workSchedules = response.data.workschedules;
+                const workSchedules = response.data.workschedules.filter(schedule => {
+                    const scheduleDate = new Date(schedule.date);
+                    scheduleDate.setHours(0, 0, 0, 0); // Set to start of the day
+                    return scheduleDate >= today;
+                });
+                console.log(workSchedules);
                 if (!workSchedules || workSchedules.length === 0) {
                     calendarContainer.innerHTML = '<div class="alert alert-info">Bác sĩ chưa có lịch làm việc</div>';
                     return;
@@ -1541,40 +1547,25 @@ function loadDoctorSchedule(doctorId) {
                                 <option value="">-- Vui lòng chọn ngày --</option>
                 `;
 
-                let hasAvailableDates = false;
-                for(let i = 0; i < 30; i++) {
-                    const date = new Date();
-                    date.setDate(today.getDate() + i);
-                    
-                    // Format date to match server format (YYYY-MM-DD)
-                    const dateString = date.toISOString().split('T')[0];
-                    
-                    const schedule = workSchedules.find(s => {
-                        const scheduleDate = new Date(s.date);
-                        return scheduleDate.toISOString().split('T')[0] === dateString;
+                workSchedules.forEach(schedule => {
+                    const scheduleDate = new Date(schedule.date);
+                    const formattedDate = scheduleDate.toLocaleDateString('vi-VN', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
                     });
 
-                    if(schedule) {
-                        hasAvailableDates = true;
-                        const formattedDate = new Intl.DateTimeFormat('vi-VN', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        }).format(date);
-
-                        calendarHtml += `<option value="${dateString}" 
-                            data-morning="${schedule.morning}" 
-                            data-afternoon="${schedule.afternoon}"
-                            data-evening="${schedule.evening}"
-                            data-id-schedule="${schedule.id_workschedule}">${formattedDate}</option>`;
-                    }
-                }
-
-                if (!hasAvailableDates) {
-                    calendarContainer.innerHTML = '<div class="alert alert-info">Không có lịch khám trong 30 ngày tới</div>';
-                    return;
-                }
+                    calendarHtml += `
+                        <option value="${schedule.date}" 
+                                data-morning="${schedule.morning}" 
+                                data-afternoon="${schedule.afternoon}" 
+                                data-evening="${schedule.evening}" 
+                                data-id-schedule="${schedule.id}">
+                            ${formattedDate}
+                        </option>
+                    `;
+                });
 
                 calendarHtml += `
                             </select>
@@ -1629,11 +1620,11 @@ function loadDoctorSchedule(doctorId) {
                             timeSlots += `
                                 <div class="col-12 mb-2 mt-3">
                                     <div class="time-period">
-                                        <small class="text-muted"><i class="fas fa-sun me-1"></i>Buổi chiều (13h-17h)</small>
+                                        <small class="text-muted"><i class="fas fa-sun me-1"></i>Buổi chiều (13h-16h)</small>
                                     </div>
                                 </div>
                             `;
-                            for(let hour = 13; hour <= 17; hour++) {
+                            for(let hour = 13; hour <= 16; hour++) {
                                 timeSlots += `
                                     <div class="col-6 col-md-3">
                                         <input type="radio" class="btn-check" name="timeSlot" id="time${hour}00" value="${String(hour).padStart(2, '0')}:00">
@@ -1777,7 +1768,7 @@ function registerAppointment() {
 
     const appointmentData = {
         Name_doctor: $('#Id_doctor option:selected').text(),
-        Examinationtime: `${datePart}T${hours}:${minutes}:00`, // Giữ nguyên định dạng gốc
+        Examinationtime: date.toISOString(), // Sử dụng toISOString để lấy giờ chính xác
         name: $('#patientName').val(),
         phone: $('#patientPhone').val(),
         note: $('#patientNote').val(),
