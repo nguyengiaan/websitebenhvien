@@ -150,5 +150,30 @@ namespace websitebenhvien.Service.Reponser
                 return false;
             }
         }
+
+        public async Task<List<SampleVM>> GetListSamplemessager()
+        {
+            try
+            {
+                var data=await _context.SampleMessages.Include(x => x.ButtonSamples).Select(x => new SampleVM
+                {
+                    Id_SampleMessager = x.Id_SampleMessager,
+                    Question = x.Question,
+                    Reply = x.Reply,
+                    Status = x.Status,
+                    ButtonSamples = x.ButtonSamples.Select(x => new ButtonsampleVM
+                    {
+                        Id_ButtonSample = x.Id_ButtonSample,
+                        Title = x.Title,
+                        Link = x.Link
+                    }).ToList()
+                }).ToListAsync();
+                return data;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

@@ -132,5 +132,25 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+        [HttpGet("/api/lay-tat-ca-tin-nhan-mau")]
+        public async Task<IActionResult> GetAllSpmess()
+        {
+            try
+            {
+                var data = await _samplemessager.GetListSamplemessager();
+                if (data != null)
+                {
+                    return Json(new { status = true, data = data });
+                }
+                else
+                {
+                    return Json(new { status = false, message = "Không có dữ liệu" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
     }
 }

@@ -9,7 +9,9 @@ connection.start()
     .catch(function (err) {
         console.error(err.toString());
     });
+const sampleQuestions = [];
 
+const sampleAnswers = {};
 connection.on("ReceiveNotification", function () {
     ViewChat();
 });
@@ -27,7 +29,7 @@ $(document).ready(function() {
     ListShareCustomer();
     loadSpecialties();
     GetFooter();
-
+    laydscauhoi();
     $(window).scroll(function() {
         if ($(this).scrollTop() > 200) {
             $('#backToTop').fadeIn();
@@ -1297,12 +1299,11 @@ function ViewChat() {
     });
 }
 // render chat
-function renderChat(data)
-{
+function renderChat(data) {
     const chatMessages = document.getElementById('chatMessages');
-    chatMessages.innerHTML = ''; // Clear existing messages
+    chatMessages.innerHTML = ''; // Xóa các tin nhắn hiện tại
 
-    // Add welcome message if no messages
+    // Thêm tin nhắn chào mừng nếu không có tin nhắn nào
     if (!data || data.length === 0) {
         chatMessages.innerHTML = `
             <div class="mb-2 animate__animated animate__fadeInLeft">
@@ -1310,10 +1311,11 @@ function renderChat(data)
                     <p class="m-0">Xin chào! Chúng tôi có thể giúp gì cho bạn? 👋</p>
                 </div>
             </div>`;
+        renderSampleQuestions();
         return;
     }
 
-    // Render each message
+    // Hiển thị từng tin nhắn
     data.forEach(message => {
         const isAdmin = message.id_Sender === 'admin';
         const messageHtml = `
@@ -1322,16 +1324,77 @@ function renderChat(data)
                 <div class="d-inline-block ${isAdmin ? 'bg-light' : 'bg-primary text-white'} rounded p-2" 
                      style="position: relative; max-width: 80%; word-break: break-word;">
                     <p class="m-0">${message.message}</p>
-            
                 </div>
             </div>`;
         chatMessages.innerHTML += messageHtml;
-        
     });
 
-    // Scroll to bottom
+    // Cuộn xuống cuối cùng
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
+// Các câu hỏi mẫu
+
+
+
+
+// Hiển thị các câu hỏi mẫu
+function renderSampleQuestions() {
+    const chatMessages = document.getElementById('chatMessages');
+    chatMessages.html = ''; // Xóa các tin nhắn hiện tại
+    const questionsHtml = sampleQuestions.map(question => `
+        <div class="mb-2 animate__animated animate__fadeInLeft">
+            <button class="btn btn-outline-secondary w-100 text-start" onclick="sendSampleQuestion('${question}')">${question}</button>
+        </div>
+    `).join('');
+    chatMessages.innerHTML += questionsHtml;
+}
+
+// Gửi câu hỏi mẫu
+function sendSampleQuestion(question) {
+    const messageInput = document.getElementById('messageInput');
+    messageInput.value = question;
+    sendMessage();
+}
+
+// Ghi đè hàm sendMessage để xử lý câu trả lời tĩnh
+function sendMessage() {
+    const messageInput = document.getElementById('messageInput');
+    const message = messageInput.value.trim();
+    if (message) {
+        const chatMessages = document.getElementById('chatMessages');
+        chatMessages.innerHTML += `<div class="mb-2 text-end">
+            <div class="d-inline-block bg-primary text-white rounded p-2">
+                ${message}
+            </div>
+        </div>`;
+
+        // Kiểm tra nếu tin nhắn là câu hỏi mẫu
+        if (sampleAnswers[message]) {
+            setTimeout(() => {
+                chatMessages.innerHTML += `<div class="mb-2">
+                    <div class="d-inline-block bg-light rounded p-2">
+                        ${sampleAnswers[message]}
+                    </div>
+                </div>`;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 500);
+        }
+
+        messageInput.value = '';
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}
+
+// Gửi câu hỏi mẫu
+function sendSampleQuestion(question) {
+    const messageInput = document.getElementById('messageInput');
+    messageInput.value = question;
+    sendMessage();
+}
+
+// Gọi hàm renderSampleQuestions khi cửa sổ chat được mở
+document.getElementById('chatButton').addEventListener('click', renderSampleQuestions);
 // Sample messages
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -1405,6 +1468,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get SessionId from cookie
   
 });
+
 function loadDoctor(id) {
     $.ajax({
         url: '/api/bac-si',
@@ -1745,6 +1809,39 @@ function registerAppointment() {
             Swal.fire({
                 title: 'Lỗi',
                 text: 'Không thể đăng ký khám bệnh. Vui lòng thử lại sau.',
+                icon: 'error'
+            });
+        }
+    });
+}
+function laydscauhoi()
+{
+    $.ajax({
+        url: '/api/lay-tat-ca-tin-nhan-mau',
+        type: 'GET',
+        success: function (response) 
+        {
+                console.log(response.data);
+
+                if(response.status) {
+                    const activeQuestions = response.data.filter(question => question.status === "Active");
+                    sampleQuestions.push(...activeQuestions.map(question => question.question));
+                    activeQuestions.forEach(function (question) {
+                        sampleAnswers[question.question] = question.reply;
+                        if (question.buttonSamples) {
+                            question.buttonSamples.forEach(function (button) {
+                                sampleAnswers[question.question] += `<a href="${button.link}" class="btn btn-primary me-2">${button.title}</a>`;
+                            });
+                        }
+                    });
+                    console.log(sampleAnswers);
+                }
+        },
+        error: function (err) {
+            console.error('Error loading question:', err);
+            Swal.fire({
+                title: 'Lỗi',
+                text: 'Không thể tải danh sách câu hỏi',
                 icon: 'error'
             });
         }

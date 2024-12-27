@@ -21,8 +21,9 @@ namespace websitebenhvien.Service.Reponser
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly Hubnot _hubnot;
         private readonly Uploadfile _uploadfile;
+        private readonly EmailSender _email;
 
-        public PostReponser(Uploadfile uploadfile,Hubnot hubnot,MyDbcontext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment hostingEnvironment)
+        public PostReponser(EmailSender email,Uploadfile uploadfile,Hubnot hubnot,MyDbcontext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
@@ -30,6 +31,7 @@ namespace websitebenhvien.Service.Reponser
             _hostingEnvironment = hostingEnvironment;
             _hubnot = hubnot;
             _uploadfile=uploadfile;
+            _email = email;
 
         }
         public async Task<News> GetNewsById(string alias_url)
@@ -91,19 +93,18 @@ namespace websitebenhvien.Service.Reponser
                 notification.Createat=DateTime.Now;
                 notification.Url="/trang-quan-tri/quan-ly-tuyen-dung";
                 notification.Status=false ;
-               await _context.Recruitments.AddAsync(data);
-               await _context.Notifications.AddAsync(notification);
-               await _context.SaveChangesAsync();
+                await _context.Recruitments.AddAsync(data);
+                await _context.Notifications.AddAsync(notification);
+                await _context.SaveChangesAsync();
                 await _hubnot.SendNotification();
+                await _email.SendEmailAsync("2024801030185@student.tdmu.edu.vn","Nộp hồ sơ tuyển dụng",recruitment.Name+" "+" đã nộp hồ sơ tuyển dụng vị trí "+" "+recruitment.Position,recruitment.CV_Url);
+            
                return true;
             }
             catch(Exception ex){
                 return false;
             }
         }
-       
-  
-
         public async Task<List<Notification>> GetNotification()
         {
            try

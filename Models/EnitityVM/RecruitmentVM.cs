@@ -21,7 +21,7 @@ namespace websitebenhvien.Models.EnitityVM
         public DateTime ?CreatedAt { get; set; }
         [Required(ErrorMessage = "Vui lòng tải lên CV")]
         public IFormFile CV_Url { get; set; }
-
         public string ?CV { get; set; }
+
     }
 }
