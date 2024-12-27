@@ -1728,47 +1728,18 @@ function loadSpecialties() {
         }
     });
 }
-
 function registerAppointment() {
     const appointmentTimeStr = $('#appointmentTime').val();
-    console.log(appointmentTimeStr);
-
-    if (!appointmentTimeStr) {
-        Swal.fire({
-            title: 'Lỗi',
-            text: 'Vui lòng chọn ngày và giờ khám',
-            icon: 'error'
-        });
-        return;
-    }
-
-    let date;
-    let datePart, hours, minutes;
-    try {
-        // Chuẩn hóa chuỗi thời gian
-        const normalizedString = appointmentTimeStr.replace(/T(\d{1}):/, "T0$1:");
-        [datePart, timePart] = normalizedString.split('T'); // Tách ngày và giờ
-        [hours, minutes] = timePart.split(':'); // Tách giờ và phút
-        const [year, month, day] = datePart.split('-'); // Tách năm, tháng, ngày
-
-        // Tạo đối tượng Date mà không đổi múi giờ
-        date = new Date(year, month - 1, day, hours, minutes);
-
-        if (isNaN(date)) {
-            throw new Error("Invalid date");
-        }
-    } catch (err) {
-        Swal.fire({
-            title: 'Lỗi',
-            text: 'Định dạng ngày giờ không hợp lệ',
-            icon: 'error'
-        });
-        return;
-    }
+    const parts = appointmentTimeStr.split('T');
+    const datePart = parts[0]; // "2024-12-29"
+    const timePart = parts[2] || parts[1].split(':').slice(1).join(':'); // "09:30"
+    
+    // Tạo chuỗi mới
+    const result = `${datePart}T${timePart}:00`;
 
     const appointmentData = {
         Name_doctor: $('#Id_doctor option:selected').text(),
-        Examinationtime: date.toISOString(), // Sử dụng toISOString để lấy giờ chính xác
+        Examinationtime: result,
         name: $('#patientName').val(),
         phone: $('#patientPhone').val(),
         note: $('#patientNote').val(),
@@ -1779,7 +1750,7 @@ function registerAppointment() {
         url: '/api/dang-ky-kb',
         type: 'POST',
         data: appointmentData,
-        success: function (response) {
+        success: function(response) {
             if (response.status) {
                 Swal.fire({
                     title: 'Thành công',
@@ -1796,7 +1767,7 @@ function registerAppointment() {
                 });
             }
         },
-        error: function () {
+        error: function() {
             Swal.fire({
                 title: 'Lỗi',
                 text: 'Không thể đăng ký khám bệnh. Vui lòng thử lại sau.',
@@ -1805,6 +1776,8 @@ function registerAppointment() {
         }
     });
 }
+
+
 function laydscauhoi()
 {
     $.ajax({

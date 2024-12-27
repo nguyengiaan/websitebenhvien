@@ -11,10 +11,13 @@ namespace websitebenhvien.Service.Reponser
     {
         private readonly MyDbcontext _context;
         private readonly Hubnot _hubnot;
-        public WorkScheduleReponser(MyDbcontext context,Hubnot hubnot)
+        private readonly EmailSender _email;
+
+        public WorkScheduleReponser(EmailSender email,MyDbcontext context,Hubnot hubnot)
         {
             _context = context;
             _hubnot = hubnot;
+            _email=email;
         }
         public async Task<bool> AddWorkschedule(WorkdoctorVM workschedule)
         {
@@ -166,7 +169,6 @@ namespace websitebenhvien.Service.Reponser
                 data.note=workschedule.note;
                 data.Status=false;
                 await _context.Makeanappointments.AddAsync(data);
-            
                 notfi.Id_Notification=Guid.NewGuid().ToString();
                 notfi.Createat=DateTime.Now;
                 notfi.Status=false;
@@ -175,7 +177,8 @@ namespace websitebenhvien.Service.Reponser
                 notfi.Description="Khách hàng "+workschedule.name+" đã đăng ký khám bệnh vào lúc "+workschedule.Examinationtime;
                 await _context.Notifications.AddAsync(notfi);
                  await _context.SaveChangesAsync();
-                 await _hubnot.SendNotification();
+                await _hubnot.SendNotification();
+               await _email.SendEmailAsync("2024801030185@student.tdmu.edu.vn", "ĐĂNG KÝ KHÁM BỆNH", "Khách hàng " + workschedule.name + " đã đăng ký khám bệnh vào lúc " + workschedule.Examinationtime+"Số điện thoại "+workschedule.phone,null);
                 return true;
             }
             catch(Exception ex)
