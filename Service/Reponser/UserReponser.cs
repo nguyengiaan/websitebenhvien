@@ -28,9 +28,6 @@ namespace websitebenhvien.Service.Reponser
             _httpContextAccessor = httpContextAccessor;
             _hubnot = hubnot;
         }
-
-     
-
         public async Task<bool> DeleteUser(string id)
         {
             try
@@ -201,8 +198,84 @@ namespace websitebenhvien.Service.Reponser
                 return null;
             }
         }
-        
-     
-    
+        // phần quyền
+        public async Task<List<IdentityRole>> GetRoles()
+        {
+            try
+            {
+                return await _roleManager.Roles.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<Status> AddRole(string roleName)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(roleName))
+                {
+                    return new Status { status = 0, messager = "Tên vai trò không được để trống" };
+                }
+
+                var existingRole = await _roleManager.FindByNameAsync(roleName);
+                if (existingRole != null)
+                {
+                    return new Status { status = 0, messager = "Vai trò đã tồn tại" };
+                }
+
+                var newRole = new IdentityRole(roleName);
+                var result = await _roleManager.CreateAsync(newRole);
+
+                if (result.Succeeded)
+                {
+                    return new Status { status = 1, messager = "Thêm vai trò thành công" };
+                }
+                else
+                {
+                    var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                    return new Status { status = 0, messager = $"Lỗi: {errors}" };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new Status { status = 0, messager = $"Lỗi ngoại lệ: {ex.Message}" };
+            }
+        }
+
+        public async Task<bool> DelRole(string id)
+        {
+            try
+            {
+                // Tìm vai trò theo ID
+                var role = await _roleManager.FindByIdAsync(id);
+                if (role == null)
+                {
+                    // Vai trò không tồn tại
+                    return false;
+                }
+
+                // Xóa vai trò
+                var result = await _roleManager.DeleteAsync(role);
+                if (result.Succeeded)
+                {
+                    // Xóa thành công
+                    return true;
+                }
+                else
+                {
+                    // Xóa thất bại, có thể ghi log chi tiết lỗi từ result.Errors
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý ngoại lệ, ghi log nếu cần
+                return false;
+            }
+        }
+
     }
 }

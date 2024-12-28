@@ -1,4 +1,5 @@
-﻿using websitebenhvien.Models.EnitityVM;
+﻿using Microsoft.AspNetCore.Identity;
+using websitebenhvien.Models.EnitityVM;
 
 namespace websitebenhvien.Service.Interface
 {
@@ -13,8 +14,11 @@ namespace websitebenhvien.Service.Interface
 
         public Task<Status> Login(LoginVM login);
 
-        // chat
+        // Phần quyền
+        public Task<List<IdentityRole>> GetRoles();
 
+        public Task<Status> AddRole(string role);
 
+        public Task<Boolean> DelRole(string Id);
     }
 }

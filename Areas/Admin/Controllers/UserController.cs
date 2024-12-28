@@ -1,5 +1,8 @@
-﻿
+﻿using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using websitebenhvien.Models.EnitityVM;
 using websitebenhvien.Service.Interface;
 
@@ -85,6 +88,51 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-
+        
+        [HttpGet("/api/ds-phan-quyen")]
+        public async Task<IActionResult> GetRoles()
+        {
+            try
+            {
+                var data = await _user.GetRoles();
+                return Json(new { status = true, data = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [Authorize]
+        [HttpPost("/api/them-phan-quyen")]
+        public async Task<IActionResult> AddRole(string role)
+        {
+            try
+            {
+                var data = await _user.AddRole(role);
+                return Json(new { status = true, message = data.messager });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [Authorize]
+        [HttpPost("/api/xoa-quyen")]
+        public async Task<IActionResult> DelRole(string id)
+        {
+            try
+            {
+                var data = await _user.DelRole(id);
+                if(data)
+                {
+                    return Json(new { status = true, message = "Xoá thành công" });
+                }
+                return Json(new { status = false, message = "Xoá thất bại" });
+            }
+            catch(Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
     }
 }
