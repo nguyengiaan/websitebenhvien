@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using websitebenhvien.Models.EnitityVM;
 using websitebenhvien.Service.Interface;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace websitebenhvien.Areas.Admin.Controllers
 {
@@ -116,8 +117,11 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+
         [HttpPost("/api/xoa-quyen")]
+        [Authorize("admin")]
+        [Authorize(Policy = "DeletePolicy")]
+
         public async Task<IActionResult> DelRole(string id)
         {
             try
@@ -130,6 +134,39 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = "Xoá thất bại" });
             }
             catch(Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [HttpGet("/api/ds-phan-quyen-chuc-nang")]
+        [Authorize]
+        public async Task<IActionResult> Getrole()
+        {
+            try
+            {
+                var data = await _user.GetPermissonUser();
+                return Json(new { status = true ,data=data});
+            
+            }
+            catch(Exception ex)
+            {
+                return Json(new { status = false, messager = ex.Message });
+            }
+        }
+        [HttpPost("/api/them-phan-quyen-chuc-nang")]
+        [Authorize]
+        public async Task<IActionResult> AddPeremissionUser(PermissionUserVM pemissionUser)
+        {
+            try
+            {
+                var data = await _user.AddPeremissionUser(pemissionUser);
+                if (data)
+                {
+                    return Json(new { status = true, message = "Thêm thành công" });
+                }
+                return Json(new { status = false, message = "Thêm thất bại" });
+            }
+            catch (Exception ex)
             {
                 return Json(new { status = false, message = ex.Message });
             }

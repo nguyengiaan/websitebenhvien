@@ -277,5 +277,61 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
+        public async Task<List<PemissionUserVM>> GetPermissonUser()
+        {
+            try
+            {
+                var data = await _context.ApplicationUser
+            .Select(user => new PemissionUserVM
+             {
+                 Id_user = user.Id,
+                  Fullname = user.FullName,
+                ds = _context.PermissionUser
+                 . Where(p => p.id_user == user.Id)
+                    .ToList() // Chuyển đổi danh sách đồng bộ tại đây
+              })
+               .ToListAsync();
+
+
+                return data;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<bool> AddPeremissionUser(PermissionUserVM pemissionUser)
+        {
+            try
+            {
+                if(pemissionUser.id_PermissionUser == null)
+                {
+                    var permissionUser = new PermissionUser
+                    {
+                        id_Permission = pemissionUser.id_Permission,
+                        id_user = pemissionUser.id_user
+                    };
+                    _context.PermissionUser.Add(permissionUser);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
+                    var permissionUser = await _context.PermissionUser.FirstOrDefaultAsync(p => p.id_PermissionUser == pemissionUser.id_PermissionUser);
+                    if(permissionUser == null)
+                    {
+                        return false;
+                    }
+                     _context.PermissionUser.Remove(permissionUser);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch(Exception ex)
+            {
+                    return false;
+            }
+        }
     }
 }

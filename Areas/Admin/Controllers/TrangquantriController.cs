@@ -133,6 +133,12 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
+        [Authorize]
+        [Route("/trang-quan-tri/quan-ly-chuc-nang")]
+        public IActionResult Phanquyencn()
+        {
+            return View();
+        }
 
 
 

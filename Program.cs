@@ -31,6 +31,7 @@ builder.Services.AddDbContext<MyDbcontext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<MyDbcontext>()
     .AddDefaultTokenProviders();
+
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
@@ -49,6 +50,10 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("admin", policy => policy.RequireRole("admin"));
     options.AddPolicy("user", policy => policy.RequireRole("user"));
+    options.AddPolicy("CreatePolicy", policy => policy.RequireClaim("Permission", "Create"));
+    options.AddPolicy("EditPolicy", policy => policy.RequireClaim("Permission", "Edit"));
+    options.AddPolicy("DeletePolicy", policy => policy.RequireClaim("Permission", "Delete"));
+    options.AddPolicy("ReadPolicy", policy => policy.RequireClaim("Permission", "Read"));
 });
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
