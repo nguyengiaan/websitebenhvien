@@ -17,8 +17,8 @@
                                 <th>STT</th>
                                 <th>Tên người dùng</th>
                                 <th>Thêm</th>
-                                <th>Xem</th>
                                 <th>Sửa</th>
+                                <th>Xem</th>
                                 <th>Xóa</th>
                    
                             </tr>
@@ -68,107 +68,127 @@
             tbody.empty();
             
             permissions.forEach((permission, index) => {
+         
                 tbody.append(`
                     <tr>
                         <td>${index + 1}</td>
-                        <td>${permission.fullname}</td>
+                        <td>
+                            ${permission.fullname}
+                     
+                       
+                        </td>
                         <td>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input permission-checkbox" 
+                                <input type="checkbox" class="custom-control-input permission-checkbox add-permission" 
                                        id="add-${permission.id_user}"
                                        data-userid="${permission.id_user}" 
-                                       data-permission="1"
-                                       data-idpermissionuser="${permission.ds.map(p => p.id_Permission).join(',')}"
-                                       ${permission.ds.some(p => p.id_Permission === 1) ? 'checked' : ''}>
+                                       data-id-permissionuser="1"
+                                       data-id-permission="${permission.ds?.find(p => p.id_PermissionUser === 1 && p.id_user === permission.id_user)?.id_Permission || ''}"
+                                       ${permission.ds?.some(p => p.id_PermissionUser === 1) ? 'checked' : ''}>
                                 <label class="custom-control-label" for="add-${permission.id_user}"></label>
                             </div>
                         </td>
                         <td>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input permission-checkbox"
-                                       id="view-${permission.id_user}"
-                                       data-userid="${permission.id_user}"
-                                       data-permission="2" 
-                                       data-idpermissionuser="${permission.ds.map(p => p.id_Permission).join(',')}"
-                                       ${permission.ds.some(p => p.id_Permission === 3) ? 'checked' : ''}>
-                                <label class="custom-control-label" for="view-${permission.id_user}"></label>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input permission-checkbox"
+                                <input type="checkbox" class="custom-control-input permission-checkbox edit-permission"
                                        id="edit-${permission.id_user}"
                                        data-userid="${permission.id_user}"
-                                       data-permission="3"
-                                       data-idpermissionuser="${permission.ds.map(p => p.id_Permission).join(',')}"
-                                       ${permission.ds.some(p => p.id_Permission === 2) ? 'checked' : ''}>
+                                       data-id-permissionuser="2" 
+                                       data-id-permission="${permission.ds?.find(p => p.id_PermissionUser === 2 && p.id_user === permission.id_user)?.id_Permission || ''}"
+                                       ${permission.ds?.some(p => p.id_PermissionUser === 2) ? 'checked' : ''}>
                                 <label class="custom-control-label" for="edit-${permission.id_user}"></label>
                             </div>
                         </td>
                         <td>
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input permission-checkbox"
+                                <input type="checkbox" class="custom-control-input permission-checkbox view-permission"
+                                       id="view-${permission.id_user}"
+                                       data-userid="${permission.id_user}"
+                                       data-id-permissionuser="3"
+                                       data-id-permission="${permission.ds?.find(p => p.id_PermissionUser === 3 && p.id_user === permission.id_user)?.id_Permission || ''}"
+                                       ${permission.ds?.some(p => p.id_PermissionUser === 3) ? 'checked' : ''}>
+                                <label class="custom-control-label" for="view-${permission.id_user}"></label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input permission-checkbox delete-permission"
                                        id="delete-${permission.id_user}"
                                        data-userid="${permission.id_user}"
-                                       data-permission="4"
-                                       data-idpermissionuser="${permission.ds.map(p => p.id_Permission).join(',')}"
-                                       ${permission.ds.some(p => p.id_Permission === 4) ? 'checked' : ''}>
+                                       data-id-permissionuser="4"
+                                       data-id-permission="${permission.ds?.find(p => p.id_PermissionUser === 4 && p.id_user === permission.id_user)?.id_Permission || ''}"
+                                       ${permission.ds?.some(p => p.id_PermissionUser === 4) ? 'checked' : ''}>
                                 <label class="custom-control-label" for="delete-${permission.id_user}"></label>
                             </div>
                         </td>
-                       
-                    </tr>
                 `);
             });
-        }
 
-        function editPermissions(userId, userName) {
-            $('#userId').val(userId);
-            $('#userName').text(userName);
-            
-            // Lấy thông tin quyền hiện tại
-            $.ajax({
-                url: '/api/chi-tiet-phan-quyen',
-                type: 'GET',
-                data: { userId: userId },
-                success: function(response) {
-                    if (response.status) {
-                        const permissions = response.data;
-                        $('#canAdd').prop('checked', permissions.canAdd);
-                        $('#canView').prop('checked', permissions.canView);
-                        $('#canEdit').prop('checked', permissions.canEdit);
-                        $('#canDelete').prop('checked', permissions.canDelete);
-                        $('#permissionModal').modal('show');
-                    }
-                }
+            // Xử lý riêng cho từng loại quyền
+            $('.add-permission').on('change', function() {
+                handlePermissionChange($(this), 'Thêm');
+            });
+
+            $('.edit-permission').on('change', function() {
+                handlePermissionChange($(this), 'Sửa'); 
+            });
+
+            $('.view-permission').on('change', function() {
+                handlePermissionChange($(this), 'Xem');
+            });
+
+            $('.delete-permission').on('change', function() {
+                handlePermissionChange($(this), 'Xóa');
             });
         }
 
-        function savePermissions() {
-            var data={
-                userId: $('#userId').val(),
-                canAdd: $('#canAdd').prop('checked'),
-                canView: $('#canView').prop('checked'),
-                canEdit: $('#canEdit').prop('checked'),
-                canDelete: $('#canDelete').prop('checked')
-            }
+        function handlePermissionChange(checkbox, permissionType) {
+            const isChecked = checkbox.prop('checked');
+            const userId = checkbox.data('userid');
+            const permissionId = checkbox.data('id-permission');
+            const permissionUserId = checkbox.data('id-permissionuser');
+
+            const data = {
+                id_user: userId,
+                id_Permission: permissionId,
+                id_PermissionUser: permissionUserId || null
+            };
+            console.log(data)
             $.ajax({
-                url: '/api/cap-nhat-phan-quyen',
+                url: '/api/them-phan-quyen-chuc-nang',
                 type: 'POST',
                 data: data,
+
                 success: function(response) {
                     if (response.status) {
-                        $('#permissionModal').modal('hide');
-                        Swal.fire('Thành công!', 'Cập nhật quyền thành công', 'success');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công!',
+                            text: `Cập nhật quyền ${permissionType} thành công`,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
                         loadPermissions();
                     } else {
-                        Swal.fire('Lỗi!', response.message || 'Có lỗi xảy ra', 'error');
+                        checkbox.prop('checked', !isChecked);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: response.message || `Không thể cập nhật quyền ${permissionType}`
+                        });
                     }
                 },
                 error: function() {
-                    Swal.fire('Lỗi!', 'Không thể cập nhật quyền', 'error');
+                    checkbox.prop('checked', !isChecked);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: `Không thể cập nhật quyền ${permissionType}`
+                    });
                 }
             });
         }
+
+
     </script>
 }

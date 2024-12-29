@@ -91,10 +91,16 @@ namespace websitebenhvien.Areas.Admin.Controllers
         }
         
         [HttpGet("/api/ds-phan-quyen")]
+        [Authorize(Policy = "ReadPoReadlicy")]
         public async Task<IActionResult> GetRoles()
         {
             try
             {
+                if (!User.HasClaim("Permission", "Read"))
+                {
+                    return Json(new { status = false, message = "Bạn không có quyền truy cập!" });
+                }
+
                 var data = await _user.GetRoles();
                 return Json(new { status = true, data = data });
             }
@@ -105,6 +111,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         }
         [Authorize]
         [HttpPost("/api/them-phan-quyen")]
+        
         public async Task<IActionResult> AddRole(string role)
         {
             try
@@ -139,7 +146,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         [HttpGet("/api/ds-phan-quyen-chuc-nang")]
-        [Authorize]
+
         public async Task<IActionResult> Getrole()
         {
             try

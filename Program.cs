@@ -71,7 +71,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
             options.LoginPath = "/dang-nhap";
             options.LogoutPath = "/dang-nhap";
             options.Cookie.HttpOnly = true;
-            options.Cookie.Expiration = TimeSpan.FromDays(1);
+            options.ExpireTimeSpan = TimeSpan.FromDays(1);
             options.SlidingExpiration = true;
         });
 

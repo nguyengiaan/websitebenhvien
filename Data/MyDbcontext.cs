@@ -178,7 +178,7 @@ namespace websitebenhvien.Data
             // phân quyền
             modelBuilder.Entity<PermissionUser>().ToTable("PermissionUser");
             modelBuilder.Entity<PermissionUser>().HasKey(x => x.id_Permission);
-            modelBuilder.Entity<PermissionUser>().HasOne(x => x.Permissions).WithMany(x => x.Users).HasForeignKey(x => x.id_Permission);
+            modelBuilder.Entity<PermissionUser>().HasOne(x => x.Permissions).WithMany(x => x.Users).HasForeignKey(x => x.id_PermissionUser);
             modelBuilder.Entity<PermissionUser>().HasOne(x => x.User).WithMany(x => x.PermissionUsers).HasForeignKey(x => x.id_user);
 
         }

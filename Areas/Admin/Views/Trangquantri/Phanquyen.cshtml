@@ -81,9 +81,16 @@
                         console.log(response.data);
                         displayRoles(response.data);
                     }
+                    else {
+                        Swal.fire('Lỗi!', response.message, 'error');
+                    }
                 },
-                error: function() {
-                    Swal.fire('Lỗi!', 'Không thể tải danh sách quyền', 'error');
+                error: function(response) {
+                    if(response.status === 401) {
+                        window.location.href = '/dang-nhap';
+                    } else {
+                        Swal.fire('Lỗi!', response.message, 'error');
+                    }
                 }
             });
         }
@@ -119,6 +126,9 @@
             $.ajax({
                 url: '/api/them-phan-quyen',
                 type: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + getCookie('token')
+                },
                 data: {role: $('#roleName').val()},
                 success: function(response) {
                     if (response.status) {
@@ -129,8 +139,12 @@
                         Swal.fire('Lỗi!', response.message, 'error');
                     }
                 },
-                error: function() {
-                    Swal.fire('Lỗi!', 'Không thể lưu thông tin quyền', 'error');
+                error: function(xhr) {
+                    if(xhr.status === 401) {
+                        window.location.href = '/dang-nhap';
+                    } else {
+                        Swal.fire('Lỗi!', 'Không thể lưu thông tin quyền', 'error');
+                    }
                 }
             });
         }
@@ -150,6 +164,9 @@
                     $.ajax({
                         url: '/api/xoa-quyen',
                         type: 'POST',
+                        headers: {
+                            'Authorization': 'Bearer ' + getCookie('token')
+                        },
                         data: {id: id},
                         success: function(response) {
                             if (response.status) {
@@ -159,12 +176,22 @@
                                 Swal.fire('Lỗi!', response.message, 'error');
                             }
                         },
-                        error: function() {
-                            Swal.fire('Lỗi!', 'Không thể xóa quyền', 'error');
+                        error: function(xhr) {
+                            if(xhr.status === 401) {
+                                window.location.href = '/dang-nhap';
+                            } else {
+                                Swal.fire('Lỗi!', 'Không thể xóa quyền', 'error');
+                            }
                         }
                     });
                 }
             });
+        }
+
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
         }
     </script>
 }

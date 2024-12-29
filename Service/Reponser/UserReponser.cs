@@ -1,5 +1,7 @@
 ﻿
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using websitebenhvien.Data;
@@ -100,16 +102,35 @@ namespace websitebenhvien.Service.Reponser
                 if (signinResult.Succeeded)
                 {
                     var userRole = await _userManager.GetRolesAsync(username);
+                    var permissionUser = await _context.PermissionUser.Include(x=>x.Permissions)
+                        .Where(p => p.id_user == username.Id)
+                        .ToListAsync();
+                        
                     var authClaims = new List<Claim>
-                   {
-                       new Claim(ClaimTypes.Name, username.FullName),
-                       new Claim(ClaimTypes.NameIdentifier, username.Id),
+                    {
+                        new Claim(ClaimTypes.Name, username.FullName),
+                        new Claim(ClaimTypes.NameIdentifier, username.Id),
+                    };
 
-                   };
                     foreach (var userRoles in userRole)
                     {
                         authClaims.Add(new Claim(ClaimTypes.Role, userRoles));
                     }
+
+                    foreach (var permission in permissionUser)
+                    {
+                        authClaims.Add(new Claim("Permission", permission.Permissions.Title_permision));
+                    }
+
+                    var claimsIdentity = new ClaimsIdentity(authClaims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                     await _httpContextAccessor.HttpContext.SignInAsync(
+                            CookieAuthenticationDefaults.AuthenticationScheme, 
+                         claimsPrincipal
+                         );
+
+
                     status.status = 1;
                     status.messager = "Đăng nhập thành công";
                     return status;
@@ -305,11 +326,22 @@ namespace websitebenhvien.Service.Reponser
         {
             try
             {
-                if(pemissionUser.id_PermissionUser == null)
+                if (pemissionUser.id_Permission == 0)
                 {
+                    Guid guid = Guid.NewGuid();
+                    int randomId = Math.Abs(BitConverter.ToInt32(guid.ToByteArray(), 0)) % 10000;
+                    var existingPermissionUser = await _context.PermissionUser
+                        .FirstOrDefaultAsync(p => p.id_Permission == pemissionUser.id_Permission );
+
+                    if (existingPermissionUser != null)
+                    {
+                        return false; // PermissionUser already exists
+                    }
+
                     var permissionUser = new PermissionUser
                     {
-                        id_Permission = pemissionUser.id_Permission,
+                        id_Permission = randomId,
+                        id_PermissionUser = (int)pemissionUser.id_PermissionUser,
                         id_user = pemissionUser.id_user
                     };
                     _context.PermissionUser.Add(permissionUser);
@@ -318,20 +350,25 @@ namespace websitebenhvien.Service.Reponser
                 }
                 else
                 {
-                    var permissionUser = await _context.PermissionUser.FirstOrDefaultAsync(p => p.id_PermissionUser == pemissionUser.id_PermissionUser);
-                    if(permissionUser == null)
+                    var permissionUser = await _context.PermissionUser
+                        .FirstOrDefaultAsync(p => p.id_PermissionUser == pemissionUser.id_PermissionUser);
+
+                    if (permissionUser == null)
                     {
                         return false;
                     }
-                     _context.PermissionUser.Remove(permissionUser);
+
+                    _context.PermissionUser.Remove(permissionUser);
                     await _context.SaveChangesAsync();
                     return true;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                    return false;
+                // Log the exception (ex) for further analysis
+                return false;
             }
         }
+
     }
 }
