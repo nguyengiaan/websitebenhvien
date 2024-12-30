@@ -1,5 +1,4 @@
-﻿
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
@@ -92,58 +91,77 @@ namespace websitebenhvien.Service.Reponser
                     status.messager = "Sai tên người dùng";
                     return status;
                 }
+
                 if (!await _userManager.CheckPasswordAsync(username, user.Password))
                 {
                     status.status = 0;
                     status.messager = "Sai mật khẩu";
                     return status;
                 }
+
                 var signinResult = await _signInManager.PasswordSignInAsync(user.Username, user.Password, false, false);
                 if (signinResult.Succeeded)
                 {
+                    // Lấy roles và permissions
                     var userRole = await _userManager.GetRolesAsync(username);
-                    var permissionUser = await _context.PermissionUser.Include(x=>x.Permissions)
+                    var permissionUser = await _context.PermissionUser
+                        .Include(x => x.Permissions)
                         .Where(p => p.id_user == username.Id)
                         .ToListAsync();
-                        
+
+                    // Tạo danh sách claims
                     var authClaims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, username.FullName),
                         new Claim(ClaimTypes.NameIdentifier, username.Id),
                     };
 
-                    foreach (var userRoles in userRole)
+                    // Thêm role claims
+                    foreach (var role in userRole)
                     {
-                        authClaims.Add(new Claim(ClaimTypes.Role, userRoles));
+                        authClaims.Add(new Claim(ClaimTypes.Role, role));
                     }
 
+                    // Thêm permission claims
                     foreach (var permission in permissionUser)
                     {
-                        authClaims.Add(new Claim("Permission", permission.Permissions.Title_permision));
+                        if (permission.Permissions != null && !string.IsNullOrEmpty(permission.Permissions.Title_permision))
+                        {
+                            Console.WriteLine($"Adding permission: {permission.Permissions.Title_permision}"); // Log để debug
+                            authClaims.Add(new Claim("Permission", permission.Permissions.Title_permision));
+                        }
                     }
 
+                    // Tạo identity và principal
                     var claimsIdentity = new ClaimsIdentity(authClaims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                     await _httpContextAccessor.HttpContext.SignInAsync(
-                            CookieAuthenticationDefaults.AuthenticationScheme, 
-                         claimsPrincipal
-                         );
+                    // Sign in với claims mới
+                    await _httpContextAccessor.HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        claimsPrincipal,
+                        new AuthenticationProperties
+                        {
+                            IsPersistent = true,
+                            ExpiresUtc = DateTime.UtcNow.AddHours(24)
+                        });
 
+                    // Log để debug
+                    var currentClaims = claimsPrincipal.Claims.Select(c => $"{c.Type}: {c.Value}");
+                    Console.WriteLine("Current claims after login: " + string.Join(", ", currentClaims));
 
                     status.status = 1;
                     status.messager = "Đăng nhập thành công";
                     return status;
                 }
-
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Login error: {ex.Message}"); // Log lỗi
                 return new Status { status = 0, messager = ex.Message };
             }
             return new Status { status = 0, messager = "Đăng nhập thất bại" };
         }
-
         public async Task<Status> RegisterUser(RegisteruserVM registeruser)
         {
             try

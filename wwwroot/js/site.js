@@ -124,7 +124,7 @@ function Header() {
                                          width="25" 
                                          height="25"
                                          loading="lazy"> 
-                                    ${item.title}
+                                  <span style="color:#102e9e">${item.title}</span>
                                 </a>
                             `).join('')}
 

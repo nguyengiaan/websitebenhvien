@@ -78,10 +78,11 @@
                 type: 'GET',
                 success: function(response) {
                     if (response.status) {
-                        console.log(response.data);
+                        console.log(response);
                         displayRoles(response.data);
                     }
                     else {
+                        console.log(response);
                         Swal.fire('Lỗi!', response.message, 'error');
                     }
                 },
@@ -100,15 +101,24 @@
             tbody.empty();
             
             roles.forEach((role, index) => {
+                let actionButtons = '';
+                
+                // Kiểm tra quyền xóa từ claims của user
+                const hasDeletePermission = @Json.Serialize(User.HasClaim("Permission", "Delete"));
+                
+                if (hasDeletePermission) {
+                    actionButtons += `
+                        <button class="btn btn-sm btn-danger" onclick="deleteRole('${role.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+                }
+
                 tbody.append(
                     '<tr>' +
                         '<td>' + (index + 1) + '</td>' +
                         '<td>' + role.name + '</td>' +
-                        '<td>' +
-                            '<button class="btn btn-sm btn-danger" onclick="deleteRole(\'' + role.id + '\')">' +
-                                '<i class="fas fa-trash"></i>' +
-                            '</button>' +
-                        '</td>' +
+                        '<td>' + actionButtons + '</td>' +
                     '</tr>'
                 );
             });
@@ -164,13 +174,11 @@
                     $.ajax({
                         url: '/api/xoa-quyen',
                         type: 'POST',
-                        headers: {
-                            'Authorization': 'Bearer ' + getCookie('token')
-                        },
+                  
                         data: {id: id},
                         success: function(response) {
                             if (response.status) {
-                                Swal.fire('Đã xóa!', 'Quyền đã được xóa thành công.', 'success');
+      
                                 loadRoles();
                             } else {
                                 Swal.fire('Lỗi!', response.message, 'error');

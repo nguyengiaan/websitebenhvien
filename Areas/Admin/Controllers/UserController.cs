@@ -6,6 +6,7 @@ using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using websitebenhvien.Models.EnitityVM;
 using websitebenhvien.Service.Interface;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Security.Claims;
 
 namespace websitebenhvien.Areas.Admin.Controllers
 {
@@ -90,15 +91,18 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         
+         [Authorize]
         [HttpGet("/api/ds-phan-quyen")]
-        [Authorize(Policy = "ReadPoReadlicy")]
+ 
         public async Task<IActionResult> GetRoles()
         {
             try
             {
+
+                var claims = User.Claims.Select(c => new { type = c.Type, value = c.Value }).ToList();
                 if (!User.HasClaim("Permission", "Read"))
                 {
-                    return Json(new { status = false, message = "Bạn không có quyền truy cập!" });
+                    return Json(new { status = false, message = "Bạn không có quyền truy cập!", claims = claims });
                 }
 
                 var data = await _user.GetRoles();
@@ -177,6 +181,21 @@ namespace websitebenhvien.Areas.Admin.Controllers
             {
                 return Json(new { status = false, message = ex.Message });
             }
+        }
+        [HttpGet("/api/test-claims")]
+        [Authorize]
+        public IActionResult TestClaims()
+        {
+            var claims = User.Claims.Select(c => new { Type = c.Type, Value = c.Value }).ToList();
+            var permissions = User.Claims.Where(c => c.Type == "Permission").Select(c => c.Value).ToList();
+            var roles = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+            
+            return Json(new { 
+                AllClaims = claims,
+                Permissions = permissions,
+                Roles = roles,
+                HasReadPermission = User.HasClaim("Permission", "Read")
+            });
         }
     }
 }
