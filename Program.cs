@@ -48,6 +48,8 @@ builder.Services.AddScoped<Uploadfile>();
 builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));
 builder.Services.AddAuthorization(options =>
 {
+    options.AddPolicy("user", policy => policy.RequireRole("user"));
+    options.AddPolicy("admin", policy => policy.RequireRole("admin"));
     options.AddPolicy("CreatePolicy", policy => policy.RequireClaim("Permission", "Create"));
     options.AddPolicy("EditPolicy", policy => policy.RequireClaim("Permission", "Edit"));
     options.AddPolicy("DeletePolicy", policy => policy.RequireClaim("Permission", "Delete"));

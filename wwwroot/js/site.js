@@ -1,4 +1,5 @@
-﻿﻿const connection = new signalR.HubConnectionBuilder()
+﻿﻿
+const connection = new signalR.HubConnectionBuilder()
     .withUrl("/friendHub")
     .build();
 
@@ -29,6 +30,7 @@ $(document).ready(function() {
     ListNews();
     ListShareCustomer();
     loadSpecialties1();
+    loadSpecialties();
     GetFooter();
     laydscauhoi();
     $(window).scroll(function() {
@@ -222,14 +224,14 @@ function Menu() {
                                           transition: all 0.3s ease;
                                           position: relative;
                                           padding: 8px 15px;
-                                          color: #ffffff;">
+                                          color: #0095d9;">
                                     ${menu.title_menu || 'Menu'}
                                     <span style="position: absolute;
                                                 bottom: 0;
                                                 left: 50%;
                                                 width: 0;
                                                 height: 2px;
-                                                background-color: #ffffff;
+                                                background-color: #0095d9;
                                                 transition: all 0.3s ease;
                                                 transform: translateX(-50%);"></span>
                                 </a>
@@ -238,7 +240,7 @@ function Menu() {
                                     style="animation: fadeIn 0.3s ease;
                                            border-radius: 3%;
                                            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-                                           background: linear-gradient(315deg, rgb(18, 80, 220) 0%, rgb(48, 109, 228) 100%);
+                                           background: #ffffff;
                                            width: 100%;
                                            padding: 10px 0;
                                            min-width: 220px;
@@ -264,7 +266,7 @@ function Menu() {
                                                style="font-size: 13px;
                                                       transition: all 0.3s ease;
                                                       padding: 12px 25px;
-                                                      color: #ffffff;
+                                                      color: #0095d9;
                                                       font-weight: 500;
                                                       border-left: 3px solid transparent;
                                                       margin: 2px 0;
@@ -290,14 +292,14 @@ function Menu() {
                                           transition: all 0.3s ease;
                                           position: relative;
                                           padding: 8px 15px;
-                                          color: #ffffff;">
+                                          color: #0095d9;">
                                     ${menu.title_menu || 'Menu'}
                                     <span style="position: absolute;
                                                 bottom: 0;
                                                 left: 50%;
                                                 width: 0;
                                                 height: 2px;
-                                                background-color: #0063EC;
+                                                background-color: #0095d9;
                                                 transition: all 0.3s ease;
                                                 transform: translateX(-50%);"></span>
                                 </a>`;
@@ -312,7 +314,7 @@ function Menu() {
                        style="font-size: 14px;
                               font-family: 'Roboto', sans-serif;
                               font-weight: 600;
-                              color: #ffffff;">
+                              color: #0095d9;">
                         <i class="fas fa-search"></i>
                     </a>
                 </li>`;
@@ -346,10 +348,10 @@ function Menu() {
                         width: 100% !important;
                     }
                     .dropdown-item:hover {
-                        background: rgba(255, 255, 255, 0.3) !important;
+                        background: rgba(0, 149, 217, 0.1) !important;
                         transform: translateX(5px);
-                        border-left: 4px solid #ff0000 !important;
-                        color: #ff0000 !important;
+                        border-left: 4px solid #0095d9 !important;
+                        color: #0095d9 !important;
                         font-weight: 600;
                     }
                     @keyframes fadeIn {
@@ -371,7 +373,7 @@ function Menu() {
                     .dropdown-menu {
                         margin-top: 0;
                         left: 0 !important;
-                        background: linear-gradient(315deg, rgb(18, 80, 220) 0%, rgb(48, 109, 228) 100%);
+                        background: #ffffff;
                         width: 100%;
                     }
                 `;
@@ -402,7 +404,7 @@ function GetSlide() {
                 
                 for (let i = 0; i < res.data.length; i += slidesPerView) {
                     const isActive = i === 0 ? 'active' : '';
-                    const slideHeight = window.innerWidth < 768 ? '250px' : '371px';
+                    const slideHeight = window.innerWidth < 768 ? '250px' : '340px';
                     
                     slidesHtml += `
                         <div class="carousel-item ${isActive}">
@@ -1378,13 +1380,13 @@ function renderChat(data) {
 // Hiển thị các câu hỏi mẫu
 function renderSampleQuestions() {
     const chatMessages = document.getElementById('chatMessages');
-    chatMessages.html = ''; // Xóa các tin nhắn hiện tại
+    chatMessages.innerHTML = ''; // Fix: Changed from .html to .innerHTML
     const questionsHtml = sampleQuestions.map(question => `
         <div class="mb-2 animate__animated animate__fadeInLeft">
             <button class="btn btn-outline-secondary w-100 text-start" onclick="sendSampleQuestion('${question}')">${question}</button>
         </div>
     `).join('');
-    chatMessages.innerHTML += questionsHtml;
+    chatMessages.innerHTML = questionsHtml; // Fix: Changed from += to = to avoid duplicating
 }
 
 // Gửi câu hỏi mẫu
@@ -1825,6 +1827,7 @@ function laydscauhoi()
               
 
                 if(response.status) {
+                    
                     const activeQuestions = response.data.filter(question => question.status === "Active");
                     sampleQuestions.push(...activeQuestions.map(question => question.question));
                     activeQuestions.forEach(function (question) {
@@ -1970,34 +1973,4 @@ function loadSpecialties1() {
     });
 }
 
-/* Carousel */
-document.addEventListener('DOMContentLoaded', function() {
-    const slideItems = document.querySelectorAll('.slide-item');
-    const colors = ['rgba(255, 107, 107, 0.3)', 'rgba(78, 205, 196, 0.3)', 'rgba(69, 183, 209, 0.3)', 
-                  'rgba(150, 206, 180, 0.3)', 'rgba(255, 238, 173, 0.3)', 'rgba(212, 165, 165, 0.3)', 
-                  'rgba(155, 89, 182, 0.3)'];
-    
-    function getRandomColor() {
-        return colors[Math.floor(Math.random() * colors.length)];
-    }
 
-    // Set initial random colors for overlays
-    document.querySelectorAll('.overlay').forEach(overlay => {
-        overlay.style.backgroundColor = getRandomColor();
-    });
-    
-    slideItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const parentContainer = this.closest('.carousel-item');
-            const siblings = parentContainer.querySelectorAll('.slide-item');
-            
-            siblings.forEach(slide => {
-                slide.classList.remove('active');
-                slide.querySelector('.overlay').style.backgroundColor = getRandomColor();
-            });
-            
-            this.classList.add('active');
-        });
-    });
-});
-/* Carousel */

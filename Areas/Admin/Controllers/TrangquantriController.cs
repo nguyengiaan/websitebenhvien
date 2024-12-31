@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace websitebenhvien.Areas.Admin.Controllers
 {
+    [Authorize]
     [Area("Admin")]
     public class TrangquantriController : Controller
     {
@@ -19,7 +20,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
-        [Authorize]
+        [Authorize("admin")]
         public IActionResult Cauhinhdautrang()
         {
             return View();
