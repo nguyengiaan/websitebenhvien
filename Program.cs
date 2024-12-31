@@ -101,8 +101,7 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization(); 
-builder.Services.AddSession();
-app.UseSession();
+
 
 
 app.MapHub<Hubnot>("/friendHub");

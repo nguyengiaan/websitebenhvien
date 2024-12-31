@@ -139,6 +139,12 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
+        [Authorize]
+        [Route("/trang-quan-tri/quan-ly-video")]
+        public IActionResult Quanlyvideo()
+        {
+            return View();
+        }
 
 
 

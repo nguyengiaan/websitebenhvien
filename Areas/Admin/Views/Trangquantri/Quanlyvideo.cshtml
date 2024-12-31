@@ -1,0 +1,320 @@
+@{
+    ViewData["Title"] = "Quản lý video";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-2 text-gray-800">Quản lý video</h1>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách video</h6>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#addVideoModal">
+                <i class="fas fa-plus"></i> Thêm video mới
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm video...">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button" onclick="searchVideos()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered" id="videoTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tiêu đề</th>
+                            <th>Mô tả</th>
+                            <th>Link</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="videoTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Video Modal -->
+<div class="modal fade" id="addVideoModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Thêm video mới</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addVideoForm">
+                    <div class="form-group">
+                        <label>Tiêu đề</label>
+                        <input type="text" class="form-control" id="videoTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả</label>
+                        <textarea class="form-control" id="videoDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Link video</label>
+                        <input type="url" class="form-control" id="videoUrl" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Trạng thái</label>
+                        <select class="form-control" id="videoStatus">
+                            <option value="1">Hiện</option>
+                            <option value="0">Ẩn</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" onclick="saveVideo()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Video Modal -->
+<div class="modal fade" id="editVideoModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chỉnh sửa video</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editVideoForm">
+                    <input type="hidden" id="editVideoId">
+                    <div class="form-group">
+                        <label>Tiêu đề</label>
+                        <input type="text" class="form-control" id="editVideoTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả</label>
+                        <textarea class="form-control" id="editVideoDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Link video</label>
+                        <input type="url" class="form-control" id="editVideoUrl" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Trạng thái</label>
+                        <select class="form-control" id="editVideoStatus">
+                            <option value="1">Hiện</option>
+                            <option value="0">Ẩn</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" onclick="updateVideo()">Cập nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            loadVideos();
+        });
+
+        function loadVideos() {
+            $.ajax({
+                url: '/api/videos',
+                type: 'GET',
+                success: function(response) {
+                    if(response.status) {
+                        renderVideos(response.data);
+                    }
+                },
+                error: function(err) {
+                    Swal.fire({
+                        title: 'Lỗi',
+                        text: 'Không thể tải danh sách video',
+                        icon: 'error'
+                    });
+                }
+            });
+        }
+
+        function renderVideos(videos) {
+            let html = '';
+            videos.forEach(function(video) {
+                html += `
+                    <tr>
+                        <td>${video.id}</td>
+                        <td>${video.title}</td>
+                        <td>${video.description}</td>
+                        <td>${video.url}</td>
+                        <td>${video.status ? 'Hiện' : 'Ẩn'}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="editVideo(${video.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteVideo(${video.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            $('#videoTableBody').html(html);
+        }
+
+        function saveVideo() {
+            const videoData = {
+                title: $('#videoTitle').val(),
+                description: $('#videoDescription').val(),
+                url: $('#videoUrl').val(),
+                status: $('#videoStatus').val() === '1'
+            };
+
+            $.ajax({
+                url: '/api/videos',
+                type: 'POST',
+                data: JSON.stringify(videoData),
+                contentType: 'application/json',
+                success: function(response) {
+                    if(response.status) {
+                        $('#addVideoModal').modal('hide');
+                        loadVideos();
+                        Swal.fire({
+                            title: 'Thành công',
+                            text: 'Thêm video mới thành công',
+                            icon: 'success'
+                        });
+                    }
+                },
+                error: function(err) {
+                    Swal.fire({
+                        title: 'Lỗi',
+                        text: 'Không thể thêm video',
+                        icon: 'error'
+                    });
+                }
+            });
+        }
+
+        function editVideo(id) {
+            $.ajax({
+                url: `/api/videos/${id}`,
+                type: 'GET',
+                success: function(response) {
+                    if(response.status) {
+                        const video = response.data;
+                        $('#editVideoId').val(video.id);
+                        $('#editVideoTitle').val(video.title);
+                        $('#editVideoDescription').val(video.description);
+                        $('#editVideoUrl').val(video.url);
+                        $('#editVideoStatus').val(video.status ? '1' : '0');
+                        $('#editVideoModal').modal('show');
+                    }
+                }
+            });
+        }
+
+        function updateVideo() {
+            const videoData = {
+                id: $('#editVideoId').val(),
+                title: $('#editVideoTitle').val(),
+                description: $('#editVideoDescription').val(),
+                url: $('#editVideoUrl').val(),
+                status: $('#editVideoStatus').val() === '1'
+            };
+
+            $.ajax({
+                url: '/api/videos',
+                type: 'PUT',
+                data: JSON.stringify(videoData),
+                contentType: 'application/json',
+                success: function(response) {
+                    if(response.status) {
+                        $('#editVideoModal').modal('hide');
+                        loadVideos();
+                        Swal.fire({
+                            title: 'Thành công',
+                            text: 'Cập nhật video thành công',
+                            icon: 'success'
+                        });
+                    }
+                },
+                error: function(err) {
+                    Swal.fire({
+                        title: 'Lỗi',
+                        text: 'Không thể cập nhật video',
+                        icon: 'error'
+                    });
+                }
+            });
+        }
+
+        function deleteVideo(id) {
+            Swal.fire({
+                title: 'Xác nhận xóa?',
+                text: "Bạn có chắc chắn muốn xóa video này?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/api/videos/${id}`,
+                        type: 'DELETE',
+                        success: function(response) {
+                            if(response.status) {
+                                loadVideos();
+                                Swal.fire(
+                                    'Đã xóa!',
+                                    'Video đã được xóa thành công.',
+                                    'success'
+                                );
+                            }
+                        },
+                        error: function(err) {
+                            Swal.fire({
+                                title: 'Lỗi',
+                                text: 'Không thể xóa video',
+                                icon: 'error'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+        function searchVideos() {
+            const searchTerm = $('#searchInput').val().toLowerCase();
+            const rows = $('#videoTableBody tr');
+            
+            rows.each(function() {
+                const title = $(this).find('td:eq(1)').text().toLowerCase();
+                const description = $(this).find('td:eq(2)').text().toLowerCase();
+                
+                if(title.includes(searchTerm) || description.includes(searchTerm)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+    </script>
+}
