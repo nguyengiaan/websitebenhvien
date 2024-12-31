@@ -115,6 +115,7 @@ function Header() {
                                           border-radius: 5px;
                                           transition: all 0.3s ease;
                                           background-color: #f8f9fa;
+                                          color:#102e9e;
                                           box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                                     <img src="${index === 0 ? 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png' : 
                                              index === 1 ? 'https://cdn-icons-png.flaticon.com/512/3406/3406886.png' : 
@@ -124,7 +125,7 @@ function Header() {
                                          width="25" 
                                          height="25"
                                          loading="lazy"> 
-                                    ${item.title}
+                                    <span style="color:#102e9e;"> ${item.title} </span>
                                 </a>
                             `).join('')}
 
