@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using websitebenhvien.Data;
 
@@ -11,9 +12,11 @@ using websitebenhvien.Data;
 namespace websitebenhvien.Migrations
 {
     [DbContext(typeof(MyDbcontext))]
-    partial class MyDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20241228032534_up-permission")]
+    partial class uppermission
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -743,10 +746,7 @@ namespace websitebenhvien.Migrations
             modelBuilder.Entity("websitebenhvien.Models.Enitity.PermissionUser", b =>
                 {
                     b.Property<int>("id_Permission")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id_Permission"));
 
                     b.Property<int>("id_PermissionUser")
                         .HasColumnType("int");
@@ -756,8 +756,6 @@ namespace websitebenhvien.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("id_Permission");
-
-                    b.HasIndex("id_PermissionUser");
 
                     b.HasIndex("id_user");
 
@@ -1285,7 +1283,7 @@ namespace websitebenhvien.Migrations
                 {
                     b.HasOne("websitebenhvien.Models.Enitity.Permissions", "Permissions")
                         .WithMany("Users")
-                        .HasForeignKey("id_PermissionUser")
+                        .HasForeignKey("id_Permission")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

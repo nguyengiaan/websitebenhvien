@@ -21,13 +21,14 @@ $(document).ready(function() {
     // Ẩn select language nếu tồn tại
     Header();   
     Menu();
- 
+    GetSlide();
+    loadNews();
     GetSchema();
     ListProduct();
     ListService();
     ListNews();
     ListShareCustomer();
-    loadSpecialties();
+    loadSpecialties1();
     GetFooter();
     laydscauhoi();
     $(window).scroll(function() {
@@ -50,7 +51,6 @@ $(document).ready(function() {
 });
 function changeLanguage(languageCode) {
 var select = document.querySelector('.goog-te-combo');
-console.log(select);
 
 if (select) {
     select.value = languageCode;
@@ -239,22 +239,29 @@ function Menu() {
                                     style="animation: fadeIn 0.3s ease;
                                            border-radius: 3%;
                                            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-                                           background: #0095d9;
+                                           background: linear-gradient(315deg, rgb(18, 80, 220) 0%, rgb(48, 109, 228) 100%);
+                                           width: 100%;
                                            padding: 10px 0;
                                            min-width: 220px;
-
                                            left: 0;">`;
                              
                             // Sort submenu items by order_MenuChild from high to low
                             menu.menu.sort((a, b) => a.order_menu-b.order_menu );
                             
-                            console.log(menu.menu); 
+                    
                             menu.menu.forEach(submenu => {
                                 if (submenu.status) {
+                                    let submenuTitle = submenu.title_MenuChild || 'Submenu';
+                                    // Cắt ngắn tiêu đề nếu dài hơn 25 ký tự
+                                    if (submenuTitle.length > 25) {
+                                        submenuTitle = submenuTitle.substring(0, 25) + '...';
+                                    }
+                                    
                                     html += `
                                         <li>
                                             <a class="dropdown-item" 
                                                href="${submenu.link_MenuChild}" 
+                                               title="${submenu.title_MenuChild}"
                                                style="font-size: 13px;
                                                       transition: all 0.3s ease;
                                                       padding: 12px 25px;
@@ -262,8 +269,11 @@ function Menu() {
                                                       font-weight: 500;
                                                       border-left: 3px solid transparent;
                                                       margin: 2px 0;
-                                                      font-family: 'Roboto', sans-serif;">
-                                                ${submenu.title_MenuChild || 'Submenu'}
+                                                      font-family: 'Roboto', sans-serif;
+                                                      overflow: hidden;
+                                                      text-overflow: ellipsis;
+                                                      white-space: nowrap;">
+                                                ${submenuTitle}
                                             </a>
                                         </li>`;
                                 }
@@ -362,8 +372,8 @@ function Menu() {
                     .dropdown-menu {
                         margin-top: 0;
                         left: 0 !important;
-
-                        background-color: #0095d9!important;
+                        background: linear-gradient(315deg, rgb(18, 80, 220) 0%, rgb(48, 109, 228) 100%);
+                        width: 100%;
                     }
                 `;
                 document.head.appendChild(style);
@@ -384,64 +394,91 @@ function GetSlide() {
         type: "GET",
         success: function (res) {
             if (res.success) {
-                let indicatorsHtml = '';
                 let slidesHtml = '';
-
+                
                 res.data.sort((a, b) => a.sort - b.sort);
 
-                res.data.forEach((slide, index) => {
-                    if (slide.status) {
-                        indicatorsHtml += `
-                            <button type="button" data-bs-target="#carouselExampleIndicators" 
-                                    data-bs-slide-to="${index}" 
-                                    class="${index === 0 ? 'active' : ''}" 
-                                    aria-current="${index === 0 ? 'true' : 'false'}" 
-                                    aria-label="Slide ${index + 1}"></button>`;
-                        slidesHtml += `
-                            <div class="carousel-item ${index === 0 ? 'active' : ''}" >
-                                <a href="${slide.link}" target="_blank">
+                // Group slides into sets of 3 for desktop, 1 for mobile
+                const slidesPerView = window.innerWidth < 768 ? 1 : 3;
+                
+                for (let i = 0; i < res.data.length; i += slidesPerView) {
+                    const isActive = i === 0 ? 'active' : '';
+                    const slideHeight = window.innerWidth < 768 ? '250px' : '371px';
+                    
+                    slidesHtml += `
+                        <div class="carousel-item ${isActive}">
+                            <div class="slide-container rounded-4 overflow-hidden position-relative" style="height: ${slideHeight}; width: 100%;">
+                                <div class="d-flex justify-content-between" style="gap: 4px; height: 100%;">`;
+                    
+                    // Add slides based on screen size
+                    for (let j = i; j < Math.min(i + slidesPerView, res.data.length); j++) {
+                        const slide = res.data[j];
+                        if (slide.status) {
+                            const imgSize = window.innerWidth < 768 ? 
+                                'width: 100%; height: 250px;' : 
+                                'width: 100%; height: 100%;';
+                                
+                            slidesHtml += `
+                                <div class="slide-item position-relative" 
+                                     style="flex: 1; transition: all 0.3s ease; cursor: pointer;">
                                     <img src="/Resources/${slide.slide}" 
-                                         class="d-block w-100"
-                                         style="height: auto; max-height: calc(100vh - 70px); 
-                                                object-fit: cover; 
-                                                border-top: 5px solid #14A1FF;
-                                                position: relative;
-                                                z-index: 0;
-                                                margin-top: 150px;
-                                                "
-                                          
-                                         alt="${slide.title}">
-                                </a>
-                            </div>`;
+                                         class="w-100 h-100" 
+                                         alt="${slide.title}" 
+                                         style="object-fit: cover; cursor: pointer; border-radius: 6px; ${imgSize}">
+                                    <div class="overlay"></div>
+                                </div>`;
+                        }
                     }
-                });
 
-                const html = `
-                    <div id="carouselExampleIndicators" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="1500" style="position: relative; z-index: 0;">
-                        <div class="carousel-indicators">
-                            ${indicatorsHtml}
-                        </div>
-                        <div class="carousel-inner">
-                            ${slidesHtml}
-                        </div>
-                        <button class="carousel-control-prev d-none d-md-flex" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next d-none d-md-flex" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                    </div>`;
+                    slidesHtml += `
+                                </div>
+                            </div>
+                        </div>`;
+                }
 
-                $('#carouselContainer').html(html);
+                $('#carouselContainer').html(slidesHtml);
 
-                // Khởi tạo carousel với tự động chuyển động
-                new bootstrap.Carousel(document.querySelector('#carouselExampleIndicators'), {
+                // Initialize carousel with mainCarousel ID
+                new bootstrap.Carousel(document.querySelector('#mainCarousel'), {
                     interval: 1500,
                     ride: 'carousel',
                     wrap: true
                 });
+
+                // Add the new carousel initialization code
+                const slideItems = document.querySelectorAll('.slide-item');
+                const colors = ['rgba(255, 107, 107, 0.3)', 'rgba(78, 205, 196, 0.3)', 'rgba(69, 183, 209, 0.3)', 
+                              'rgba(150, 206, 180, 0.3)', 'rgba(255, 238, 173, 0.3)', 'rgba(212, 165, 165, 0.3)', 
+                              'rgba(155, 89, 182, 0.3)'];
+                
+                function getRandomColor() {
+                    return colors[Math.floor(Math.random() * colors.length)];
+                }
+
+                // Set initial random colors for overlays
+                document.querySelectorAll('.overlay').forEach(overlay => {
+                    overlay.style.backgroundColor = getRandomColor();
+                });
+                
+                slideItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        const parentContainer = this.closest('.carousel-item');
+                        const siblings = parentContainer.querySelectorAll('.slide-item');
+                        
+                        siblings.forEach(slide => {
+                            slide.classList.remove('active');
+                            slide.querySelector('.overlay').style.backgroundColor = getRandomColor();
+                        });
+                        
+                        this.classList.add('active');
+                    });
+                });
+
+                // Handle resize events
+                window.addEventListener('resize', function() {
+                    GetSlide(); // Reload slides when window is resized
+                });
+
             } else {
                 console.error("Không có dữ liệu slide hợp lệ.");
             }
@@ -818,7 +855,7 @@ function ListNews() {
         type: "GET",
         success: function(response) {
             if (response.status) {
-                console.log(response.data); 
+             
                 displayNewsCarousel(response.data);
             }
         },
@@ -1022,7 +1059,7 @@ function ListShareCustomer() {
         type: "GET",
         success: function(response) {
             if (response.status) {
-                console.log(response.data);
+          
                 displayShareCustomerCarousel(response.data);
             }
         },
@@ -1276,7 +1313,7 @@ function getSessionId()
         }
 
     }
-    console.log(cookies);
+ 
     return null;
 }
 // xem tin nhắn khách hàng 
@@ -1286,7 +1323,7 @@ function ViewChat() {
         console.log("SessionId cookie not found");
         return;
     }
-    console.log(sessionId);
+
     $.ajax({
         url: "/api/lay-tin-nhan",
         type: "POST",
@@ -1402,8 +1439,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
-                console.log("Latitude:", position.coords.latitude);
-                console.log("Longitude:", position.coords.longitude);
+            
+               
             },
             (error) => {
                 console.error("Error obtaining location:", error);
@@ -1476,7 +1513,7 @@ function loadDoctor(id) {
         type: 'POST',
         data: { id: id },
         success: function (response) {
-            console.log(response.data);
+
             let options = '<option value="">-- Chọn bác sĩ --</option>'; 
             response.data.forEach(function (doctor) {
                 options += `<option value="${doctor.id_doctor}">${doctor.name}</option>`;
@@ -1515,6 +1552,7 @@ function loadDoctorSchedule(doctorId) {
     }
 
     const today = new Date();
+    today.setHours(0, 0, 0, 0); // Set to start of the day
     
     calendarContainer.innerHTML = '<div class="text-center"><i class="fas fa-spinner fa-spin"></i> Đang tải lịch làm việc...</div>';
 
@@ -1526,7 +1564,12 @@ function loadDoctorSchedule(doctorId) {
         },
         success: function(response) {
             if (response.status && response.data) {
-                const workSchedules = response.data.workschedules;
+                const workSchedules = response.data.workschedules.filter(schedule => {
+                    const scheduleDate = new Date(schedule.date);
+                    scheduleDate.setHours(0, 0, 0, 0); // Set to start of the day
+                    return scheduleDate >= today;
+                });
+          
                 if (!workSchedules || workSchedules.length === 0) {
                     calendarContainer.innerHTML = '<div class="alert alert-info">Bác sĩ chưa có lịch làm việc</div>';
                     return;
@@ -1542,40 +1585,25 @@ function loadDoctorSchedule(doctorId) {
                                 <option value="">-- Vui lòng chọn ngày --</option>
                 `;
 
-                let hasAvailableDates = false;
-                for(let i = 0; i < 30; i++) {
-                    const date = new Date();
-                    date.setDate(today.getDate() + i);
-                    
-                    // Format date to match server format (YYYY-MM-DD)
-                    const dateString = date.toISOString().split('T')[0];
-                    
-                    const schedule = workSchedules.find(s => {
-                        const scheduleDate = new Date(s.date);
-                        return scheduleDate.toISOString().split('T')[0] === dateString;
+                workSchedules.forEach(schedule => {
+                    const scheduleDate = new Date(schedule.date);
+                    const formattedDate = scheduleDate.toLocaleDateString('vi-VN', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
                     });
 
-                    if(schedule) {
-                        hasAvailableDates = true;
-                        const formattedDate = new Intl.DateTimeFormat('vi-VN', {
-                            weekday: 'long',
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        }).format(date);
-
-                        calendarHtml += `<option value="${dateString}" 
-                            data-morning="${schedule.morning}" 
-                            data-afternoon="${schedule.afternoon}"
-                            data-evening="${schedule.evening}"
-                            data-id-schedule="${schedule.id_workschedule}">${formattedDate}</option>`;
-                    }
-                }
-
-                if (!hasAvailableDates) {
-                    calendarContainer.innerHTML = '<div class="alert alert-info">Không có lịch khám trong 30 ngày tới</div>';
-                    return;
-                }
+                    calendarHtml += `
+                        <option value="${schedule.date}" 
+                                data-morning="${schedule.morning}" 
+                                data-afternoon="${schedule.afternoon}" 
+                                data-evening="${schedule.evening}" 
+                                data-id-schedule="${schedule.id}">
+                            ${formattedDate}
+                        </option>
+                    `;
+                });
 
                 calendarHtml += `
                             </select>
@@ -1630,11 +1658,11 @@ function loadDoctorSchedule(doctorId) {
                             timeSlots += `
                                 <div class="col-12 mb-2 mt-3">
                                     <div class="time-period">
-                                        <small class="text-muted"><i class="fas fa-sun me-1"></i>Buổi chiều (13h-17h)</small>
+                                        <small class="text-muted"><i class="fas fa-sun me-1"></i>Buổi chiều (13h-16h)</small>
                                     </div>
                                 </div>
                             `;
-                            for(let hour = 13; hour <= 17; hour++) {
+                            for(let hour = 13; hour <= 16; hour++) {
                                 timeSlots += `
                                     <div class="col-6 col-md-3">
                                         <input type="radio" class="btn-check" name="timeSlot" id="time${hour}00" value="${String(hour).padStart(2, '0')}:00">
@@ -1738,47 +1766,18 @@ function loadSpecialties() {
         }
     });
 }
-
 function registerAppointment() {
     const appointmentTimeStr = $('#appointmentTime').val();
-    console.log(appointmentTimeStr);
-
-    if (!appointmentTimeStr) {
-        Swal.fire({
-            title: 'Lỗi',
-            text: 'Vui lòng chọn ngày và giờ khám',
-            icon: 'error'
-        });
-        return;
-    }
-
-    let date;
-    let datePart, hours, minutes;
-    try {
-        // Chuẩn hóa chuỗi thời gian
-        const normalizedString = appointmentTimeStr.replace(/T(\d{1}):/, "T0$1:");
-        [datePart, timePart] = normalizedString.split('T'); // Tách ngày và giờ
-        [hours, minutes] = timePart.split(':'); // Tách giờ và phút
-        const [year, month, day] = datePart.split('-'); // Tách năm, tháng, ngày
-
-        // Tạo đối tượng Date mà không đổi múi giờ
-        date = new Date(year, month - 1, day, hours, minutes);
-
-        if (isNaN(date)) {
-            throw new Error("Invalid date");
-        }
-    } catch (err) {
-        Swal.fire({
-            title: 'Lỗi',
-            text: 'Định dạng ngày giờ không hợp lệ',
-            icon: 'error'
-        });
-        return;
-    }
+    const parts = appointmentTimeStr.split('T');
+    const datePart = parts[0]; // "2024-12-29"
+    const timePart = parts[2] || parts[1].split(':').slice(1).join(':'); // "09:30"
+    
+    // Tạo chuỗi mới
+    const result = `${datePart}T${timePart}:00`;
 
     const appointmentData = {
         Name_doctor: $('#Id_doctor option:selected').text(),
-        Examinationtime: `${datePart}T${hours}:${minutes}:00`, // Giữ nguyên định dạng gốc
+        Examinationtime: result,
         name: $('#patientName').val(),
         phone: $('#patientPhone').val(),
         note: $('#patientNote').val(),
@@ -1789,7 +1788,7 @@ function registerAppointment() {
         url: '/api/dang-ky-kb',
         type: 'POST',
         data: appointmentData,
-        success: function (response) {
+        success: function(response) {
             if (response.status) {
                 Swal.fire({
                     title: 'Thành công',
@@ -1806,7 +1805,7 @@ function registerAppointment() {
                 });
             }
         },
-        error: function () {
+        error: function() {
             Swal.fire({
                 title: 'Lỗi',
                 text: 'Không thể đăng ký khám bệnh. Vui lòng thử lại sau.',
@@ -1815,6 +1814,8 @@ function registerAppointment() {
         }
     });
 }
+
+
 function laydscauhoi()
 {
     $.ajax({
@@ -1822,7 +1823,7 @@ function laydscauhoi()
         type: 'GET',
         success: function (response) 
         {
-                console.log(response.data);
+              
 
                 if(response.status) {
                     const activeQuestions = response.data.filter(question => question.status === "Active");
@@ -1835,7 +1836,7 @@ function laydscauhoi()
                             });
                         }
                     });
-                    console.log(sampleAnswers);
+         
                 }
         },
         error: function (err) {
@@ -1848,3 +1849,156 @@ function laydscauhoi()
         }
     });
 }
+function loadNews() 
+{
+    $.ajax({
+        url: "/Allinone/NewsList",
+        type: "GET",
+        success: function(response) {
+            if (response.status) {
+
+               var html = '';
+               response.data.forEach(function(news) {
+                if (news.status) {
+                    // Check if news is within last week
+                    const oneWeekAgo = new Date();
+                    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                    const newsDate = new Date(news.created_at);
+                    const isNew = newsDate > oneWeekAgo;
+
+                    html += `<a href="${news.alias_url}" class="list-group-item list-group-item-action p-3 border-bottom hover-effect rounded-start-4 position-relative">
+                        <div class="news-item">
+                            <h6 class="mb-2 text-primary fw-bold">${news.title}</h6>
+                            ${isNew ? '<span class="badge new-label position-absolute top-0 end-0 m-2 fw-bold">MỚI</span>' : ''}
+                            <div class="d-flex align-items-center text-muted mb-2">
+                                <i class="far fa-clock me-2"></i>
+                                <small>${news.createat.split('T')[0]}</small>
+                            </div>
+                            <p class="mb-0 text-muted" style="font-size: 0.9rem; line-height: 1.4;">
+                                ${news.title}...
+                            </p>
+                        </div>
+                    </a>`;
+                }
+               });
+               $('.list-group').html(html);
+            }
+        },
+        error: function(error) {
+            console.log("Error:", error);
+        }
+    });
+    
+}
+function loadSpecialties1() {
+    $.ajax({
+        url: '/api/chuyen-khoa-catogery',
+        type: 'GET',
+        success: function(response) {
+            if(response.data) {
+                const gradients = [
+                    'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
+                    'linear-gradient(135deg, #56ab2f 0%, #a8e063 100%)', 
+                    'linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%)',
+                    'linear-gradient(135deg, #00c6fb 0%, #005bea 100%)',
+                    'linear-gradient(135deg, #f85032 0%, #e73827 100%)'
+                ];
+
+                let html = `
+                <div id="specialtyCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">`;
+
+                // Desktop: 4 items per slide, Mobile: 1 item per slide
+                const itemsPerSlide = window.innerWidth < 768 ? 1 : 4;
+                
+                for(let i = 0; i < response.data.length; i += itemsPerSlide) {
+                    const isActive = i === 0 ? 'active' : '';
+                    html += `<div class="carousel-item ${isActive}">
+                            <div class="row row-cols-1 row-cols-md-4">`;
+                    
+                    // Add items for this slide
+                    for(let j = i; j < Math.min(i + itemsPerSlide, response.data.length); j++) {
+                        const specialty = response.data[j];
+                        const gradientIndex = j % gradients.length;
+                        const gradient = gradients[gradientIndex];
+                        const textColorClass = gradientIndex === 1 ? 'text-success' : 
+                                             gradientIndex === 2 ? 'text-warning' :
+                                             gradientIndex === 3 ? 'text-info' :
+                                             gradientIndex === 4 ? 'text-danger' : 'text-primary';
+
+                        html += `
+                            <div class="col ${itemsPerSlide === 1 ? 'col-12' : 'mb-4 mb-md-0'}">
+                                <div class="card border-0 text-center h-100 text-white rounded-4" 
+                                     style="background: ${gradient}; animation: float 3s ease-in-out infinite ${j * 0.5}s;">
+                                    <div class="card-body" style="width: 100%; height: 300px;">
+                                        <div class="specialty-image-container mb-3">
+                                            <img src="/Resources/${specialty.thumnail}" 
+                                                 alt="${specialty.title}" 
+                                                 class="rounded-circle shadow" 
+                                                 style="width: 120px; height: 120px; object-fit: cover;">
+                                        </div>
+                                        <h5 class="card-title fw-bold">${specialty.title}</h5>
+                                     
+                                        <a href="${specialty.alias_url}" class="btn btn-light ${textColorClass} fw-bold shadow" 
+                                           style="border-radius: 25px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
+                                            Xem chi tiết
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>`;
+                    }
+                    html += `</div></div>`;
+                }
+
+                html += `
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#specialtyCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#specialtyCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>`;
+
+                $('#specialtyCarousel').html(html);
+            }
+        },
+        error: function(error) {
+            console.error('Error loading specialties:', error);
+        }
+    });
+}
+
+/* Carousel */
+document.addEventListener('DOMContentLoaded', function() {
+    const slideItems = document.querySelectorAll('.slide-item');
+    const colors = ['rgba(255, 107, 107, 0.3)', 'rgba(78, 205, 196, 0.3)', 'rgba(69, 183, 209, 0.3)', 
+                  'rgba(150, 206, 180, 0.3)', 'rgba(255, 238, 173, 0.3)', 'rgba(212, 165, 165, 0.3)', 
+                  'rgba(155, 89, 182, 0.3)'];
+    
+    function getRandomColor() {
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    // Set initial random colors for overlays
+    document.querySelectorAll('.overlay').forEach(overlay => {
+        overlay.style.backgroundColor = getRandomColor();
+    });
+    
+    slideItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const parentContainer = this.closest('.carousel-item');
+            const siblings = parentContainer.querySelectorAll('.slide-item');
+            
+            siblings.forEach(slide => {
+                slide.classList.remove('active');
+                slide.querySelector('.overlay').style.backgroundColor = getRandomColor();
+            });
+            
+            this.classList.add('active');
+        });
+    });
+});
+/* Carousel */

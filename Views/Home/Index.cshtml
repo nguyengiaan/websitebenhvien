@@ -6,27 +6,23 @@
         <!-- Carousel Section -->
         <div class="col-lg-10">
             <div class="card shadow rounded-4 border-0">
-                <div class="carousel slide rounded-4 overflow-hidden " data-bs-ride="carousel" id="mainCarousel">
-                    <div class="carousel-inner" style="height: 371px!important;">
-                        <div class="carousel-item active">
-                            <img src="/Images/demo.jpg" class="d-block w-100" alt="Slide 1" style="height: 100%; width: 100%; object-fit: cover ;">
-
-                        </div>
-                        <div class="carousel-item" style="height: 371px!important;">
-                            <img src="/Images/demo2.jpg" class="d-block w-100" alt="Slide 2" style="height: 100%; width: 100%; object-fit: cover ;">
-
-                        </div>
-
+                <div id="mainCarousel" class="carousel slide rounded-4 overflow-hidden" data-bs-ride="carousel">
+                    <div class="carousel-inner" id="carouselContainer">
+                      
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    
+                    <button class="carousel-control-prev custom-carousel-btn" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+                        <i class="fas fa-chevron-left"></i>
                         <span class="visually-hidden">Previous</span>
                     </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <button class="carousel-control-next custom-carousel-btn" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+                        <i class="fas fa-chevron-right"></i>
                         <span class="visually-hidden">Next</span>
                     </button>
                 </div>
+
+
+       
             </div>
         </div>
 
@@ -35,42 +31,14 @@
             <div class="card shadow rounded-4 border-0 h-100 news-card" style="height: 371px;">
                 <div class="card-header bg-primary text-white py-3 rounded-top-4 d-flex align-items-center" style="background: linear-gradient(315deg, rgb(18, 80, 220) 0%, rgb(48, 109, 228) 100%)">
                     <i class="fas fa-newspaper me-2 fa-lg"></i>
-                    <h5 class="mb-0 fw-bold" style="font-family: Roboto;">Tin tức & Sự kiện</h5>
+                    <h5 class="mb-0 fw-bold" style="font-family: Roboto:  !important; font-size: 15px;">TIN TỨC VÀ SỰ KIỆN</h5>
                 </div>
-                <div class="card-body p-0" style="background-color: #ffffff!important; border-radius: 10px;">
-                    <div class="list-group list-group-flush">
-                        <a href="#" class="list-group-item list-group-item-action p-3 border-bottom hover-effect rounded-start-4 position-relative">
-                            <div class="news-item">
-                                <h6 class="mb-2 text-primary fw-bold">
-                                    Chương trình khám sức khỏe miễn phí
-                                </h6>
-                                <span class="badge new-label position-absolute top-0 end-0 m-2 fw-bold">MỚI</span>
-                                <div class="d-flex align-items-center text-muted mb-2">
-                                    <i class="far fa-clock me-2"></i>
-                                    <small>3 ngày trước</small>
-                                </div>
-                                <p class="mb-0 text-muted" style="font-size: 0.9rem; line-height: 1.4;">
-                                    Bệnh viện tổ chức chương trình khám sức khỏe miễn phí...
-                                </p>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action p-3 border-bottom hover-effect rounded-start-4 position-relative">
-                            <div class="news-item">
-                                <h6 class="mb-2 text-primary fw-bold">
-                                    Khai trương khoa mới
-                                </h6>
-                                <span class="badge new-label position-absolute top-0 end-0 m-2 fw-bold">MỚI</span>
-                                <div class="d-flex align-items-center text-muted mb-2">
-                                    <i class="far fa-clock me-2"></i>
-                                    <small>5 ngày trước</small>
-                                </div>
-                                <p class="mb-0 text-muted" style="font-size: 0.9rem; line-height: 1.4;">
-                                    Khoa Nội tiết chính thức đi vào hoạt động...
-                                </p>
-                            </div>
-                        </a>
+                <div class="card-body p-0" style="background-color: #ffffff!important; border-radius: 10px; height: 300px; overflow-y: auto;">
+                    <div class="list-group list-group-flush" style="max-height: 300px;">
+                        <!-- Tin tức sẽ được thêm vào đây, giới hạn 3 tin -->
                     </div>
                 </div>
+          
             </div>
         </div>
 
@@ -133,90 +101,14 @@
         <div class="col-lg-9">
             <div class="card shadow rounded-4 border-0">
                 <div class="card-header bg-primary text-white py-3 rounded-top-4" style="background: linear-gradient(315deg, rgb(18, 80, 220) 0%, rgb(48, 109, 228) 100%)">
-                    <h4 class="mb-0 fw-bold" style="font-family: Roboto;"><i class="fas fa-hospital-user me-2"></i>Chuyên khoa</h4>
+                    <h4 class="mb-0 fw-bold" style="font-family: Roboto:!important;font-size: 15px;"><i class="fas fa-hospital-user me-2"></i>CHUYÊN KHOA</h4>
                 </div>
                 <div class="card-body">
                     <div id="specialtyCarousel" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <div class="row g-4 flex-nowrap">
-                                    <div class="col-md-3">
-                                        <div class="card border-0 text-center h-100 bg-gradient-primary text-white rounded-4" style="background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); animation: float 3s ease-in-out infinite;">
-                                            <div class="card-body">
-                                                <div class="specialty-image-container mb-3">
-                                                    <img src="https://cdn.pixabay.com/photo/2020/03/14/17/05/virus-4931227_1280.jpg" alt="Khoa Nội" class="rounded-circle shadow" style="width: 120px; height: 120px; object-fit: cover;">
-                                                </div>
-                                                <h5 class="card-title fw-bold">Khoa Nội</h5>
-                                                <p class="card-text">Chăm sóc và điều trị bệnh nội khoa với đội ngũ chuyên gia hàng đầu.</p>
-                                                <button class="btn btn-light text-primary fw-bold shadow" style="border-radius: 25px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">Xem chi tiết</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="card border-0 text-center h-100 bg-gradient-success text-white rounded-4" style="background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%); animation: float 3s ease-in-out infinite 0.5s;">
-                                            <div class="card-body">
-                                                <div class="specialty-image-container mb-3">
-                                                    <img src="https://cdn.pixabay.com/photo/2020/03/14/17/05/virus-4931227_1280.jpg" alt="Khoa Ngoại" class="rounded-circle shadow" style="width: 120px; height: 120px; object-fit: cover;">
-                                                </div>
-                                                <h5 class="card-title fw-bold">Khoa Ngoại</h5>
-                                                <p class="card-text">Dịch vụ phẫu thuật chất lượng cao với trang thiết bị hiện đại.</p>
-                                                <button class="btn btn-light text-success fw-bold shadow" style="border-radius: 25px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">Xem chi tiết</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="card border-0 text-center h-100 bg-gradient-warning text-white rounded-4" style="background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%); animation: float 3s ease-in-out infinite 1s;">
-                                            <div class="card-body">
-                                                <div class="specialty-image-container mb-3">
-                                                    <img src="https://cdn.pixabay.com/photo/2020/03/14/17/05/virus-4931227_1280.jpg" alt="Khoa Sản" class="rounded-circle shadow" style="width: 120px; height: 120px; object-fit: cover;">
-                                                </div>
-                                                <h5 class="card-title fw-bold">Khoa Sản</h5>
-                                                <p class="card-text">Chăm sóc mẹ và bé với môi trường an toàn và ấm áp.</p>
-                                                <button class="btn btn-light text-warning fw-bold shadow" style="border-radius: 25px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">Xem chi tiết</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="card border-0 text-center h-100 bg-gradient-info text-white rounded-4" style="background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%); animation: float 3s ease-in-out infinite 1.5s;">
-                                            <div class="card-body">
-                                                <div class="specialty-image-container mb-3">
-                                                    <img src="https://cdn.pixabay.com/photo/2020/03/14/17/05/virus-4931227_1280.jpg" alt="Khoa Nhi" class="rounded-circle shadow" style="width: 120px; height: 120px; object-fit: cover;">
-                                                </div>
-                                                <h5 class="card-title fw-bold">Khoa Nhi</h5>
-                                                <p class="card-text">Chăm sóc sức khỏe trẻ em với đội ngũ bác sĩ giàu kinh nghiệm.</p>
-                                                <button class="btn btn-light text-info fw-bold shadow" style="border-radius: 25px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">Xem chi tiết</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="carousel-item">
-                                <div class="row g-4 flex-nowrap">
-                                    <div class="col-md-3">
-                                        <div class="card border-0 text-center h-100 bg-gradient-danger text-white rounded-4" style="background: linear-gradient(135deg, #f85032 0%, #e73827 100%); animation: float 3s ease-in-out infinite;">
-                                            <div class="card-body">
-                                                <div class="specialty-image-container mb-3">
-                                                    <img src="https://cdn.pixabay.com/photo/2020/03/14/17/05/virus-4931227_1280.jpg" alt="Khoa Tim mạch" class="rounded-circle shadow" style="width: 120px; height: 120px; object-fit: cover;">
-                                                </div>
-                                                <h5 class="card-title fw-bold">Khoa Tim mạch</h5>
-                                                <p class="card-text">Chẩn đoán và điều trị các bệnh về tim mạch.</p>
-                                                <button class="btn btn-light text-danger fw-bold shadow" style="border-radius: 25px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">Xem chi tiết</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Thêm các khoa khác tương tự -->
-                                </div>
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#specialtyCarousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#specialtyCarousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
+                 
                     </div>
+                       
+                
                 </div>
             </div>
         </div>

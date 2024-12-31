@@ -107,11 +107,11 @@
         </div>
 
         <!-- Social Media Buttons -->
-        <a href="https://zalo.me/your-zalo-id" target="_blank" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center mb-2 animate__animated animate__bounceIn" style="width: 50px; height: 50px; background: #0068ff; border: none;">
+        <a href="https://zalo.me/02743535777" target="_blank" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center mb-2 animate__animated animate__bounceIn" style="width: 50px; height: 50px; background: #0068ff; border: none;">
             <img src="/Images/zalo_sharelogo.png" alt="Zalo" style="width: 30px; height: 30px;" class="animate__animated animate__tada animate__delay-1s">
         </a>
 
-        <a href="https://www.facebook.com/your-facebook-page" target="_blank" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center mb-2 animate__animated animate__bounceIn animate__delay-1s" style="width: 50px; height: 50px; background: #1877f2; border: none;">
+        <a href="https://www.facebook.com/benhvienmyphuoc?locale=vi_VN" target="_blank" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center mb-2 animate__animated animate__bounceIn animate__delay-1s" style="width: 50px; height: 50px; background: #1877f2; border: none;">
             <i class="fab fa-facebook-f fa-lg animate__animated animate__tada animate__delay-2s" style="color: white;"></i>
         </a>
 
@@ -122,8 +122,9 @@
     </div>
 
     <div id="google_translate_element" class="ms-2" style="display: none;"></div>
-    <div class="https-indicator">
-    <i class="fas fa-lock"></i> Secure
+
+
+
 </div>
 
 
@@ -153,47 +154,81 @@
         window.addEventListener('scroll', checkFade);
     </script>
     <script>
-        // Snowfall effect
+        // Mai flower effect for Tet
         (function() {
-            const snowflakeCount = 100;
-            const snowflakes = [];
+            const flowerCount = 50;
+            const flowers = [];
 
-            for (let i = 0; i < snowflakeCount; i++) {
-                const snowflake = document.createElement('div');
-                snowflake.classList.add('snowflake');
-                document.body.appendChild(snowflake);
-                snowflakes.push(snowflake);
+            for (let i = 0; i < flowerCount; i++) {
+                const flower = document.createElement('div');
+                flower.classList.add('mai-flower');
+                // Create 5 petals for each flower
+                for (let j = 0; j < 5; j++) {
+                    const petal = document.createElement('div');
+                    petal.classList.add('petal');
+                    flower.appendChild(petal);
+                }
+                const center = document.createElement('div');
+                center.classList.add('flower-center');
+                flower.appendChild(center);
+                document.body.appendChild(flower);
+                flowers.push(flower);
             }
 
-            function animateSnowflakes() {
-                snowflakes.forEach(snowflake => {
+            function animateFlowers() {
+                flowers.forEach(flower => {
                     const x = Math.random() * window.innerWidth;
                     const y = Math.random() * window.innerHeight;
-                    const size = Math.random() * 5 + 2;
-                    const duration = Math.random() * 5 + 5;
+                    const size = Math.random() * 15 + 20;
+                    const duration = Math.random() * 8 + 10;
+                    const rotation = Math.random() * 360;
 
-                    snowflake.style.left = `${x}px`;
-                    snowflake.style.top = `${y}px`;
-                    snowflake.style.width = `${size}px`;
-                    snowflake.style.height = `${size}px`;
-                    snowflake.style.animationDuration = `${duration}s`;
+                    flower.style.left = `${x}px`;
+                    flower.style.top = `${y}px`;
+                    flower.style.width = `${size}px`;
+                    flower.style.height = `${size}px`;
+                    flower.style.transform = `rotate(${rotation}deg)`;
+                    flower.style.animationDuration = `${duration}s`;
                 });
             }
 
-            animateSnowflakes();
-            window.addEventListener('resize', animateSnowflakes);
+            animateFlowers();
+            window.addEventListener('resize', animateFlowers);
         })();
     </script>
     <style>
-        .snowflake {
+        .mai-flower {
             position: fixed;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.8;
             pointer-events: none;
             animation: fall linear infinite;
         }
 
+        .petal {
+            position: absolute;
+            width: 40%;
+            height: 40%;
+            background: #ffeb3b;
+            border-radius: 50%;
+            transform-origin: 100% 100%;
+        }
+
+        .petal:nth-child(1) { transform: rotate(0deg) translateX(50%); }
+        .petal:nth-child(2) { transform: rotate(72deg) translateX(50%); }
+        .petal:nth-child(3) { transform: rotate(144deg) translateX(50%); }
+        .petal:nth-child(4) { transform: rotate(216deg) translateX(50%); }
+        .petal:nth-child(5) { transform: rotate(288deg) translateX(50%); }
+
+        .flower-center {
+            position: absolute;
+            width: 20%;
+            height: 20%;
+            background: #ffd700;
+            border-radius: 50%;
+            top: 40%;
+            left: 40%;
+        }
+
+     
     </style>
     @await RenderSectionAsync("Styles", required: false)
     @await RenderSectionAsync("Scripts", required: false)

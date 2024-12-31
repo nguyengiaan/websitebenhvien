@@ -63,6 +63,10 @@ namespace websitebenhvien.Data
 
         public DbSet<ButtonSample> ButtonSamples { get; set; }
 
+        public DbSet<Permissions> Permissions { get; set; }
+
+        public DbSet<PermissionUser> PermissionUser { get; set; }
+
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -168,13 +172,14 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<ButtonSample>().ToTable("ButtonSample");
             modelBuilder.Entity<ButtonSample>().HasKey(x => x.Id_ButtonSample);
             modelBuilder.Entity<ButtonSample>().HasOne(x => x.SampleMessage).WithMany(x => x.ButtonSamples).HasForeignKey(x => x.Id_SampleMessage);
-
-
-
-
-
-
-
+            // quyền 
+            modelBuilder.Entity<Permissions>().ToTable("Permissions");
+            modelBuilder.Entity<Permissions>().HasKey(x => x.Id);
+            // phân quyền
+            modelBuilder.Entity<PermissionUser>().ToTable("PermissionUser");
+            modelBuilder.Entity<PermissionUser>().HasKey(x => x.id_Permission);
+            modelBuilder.Entity<PermissionUser>().HasOne(x => x.Permissions).WithMany(x => x.Users).HasForeignKey(x => x.id_PermissionUser);
+            modelBuilder.Entity<PermissionUser>().HasOne(x => x.User).WithMany(x => x.PermissionUsers).HasForeignKey(x => x.id_user);
 
         }
     }

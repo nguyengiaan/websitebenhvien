@@ -31,6 +31,7 @@ builder.Services.AddDbContext<MyDbcontext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<MyDbcontext>()
     .AddDefaultTokenProviders();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
@@ -47,8 +48,10 @@ builder.Services.AddScoped<Uploadfile>();
 builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("admin", policy => policy.RequireRole("admin"));
-    options.AddPolicy("user", policy => policy.RequireRole("user"));
+    options.AddPolicy("CreatePolicy", policy => policy.RequireClaim("Permission", "Create"));
+    options.AddPolicy("EditPolicy", policy => policy.RequireClaim("Permission", "Edit"));
+    options.AddPolicy("DeletePolicy", policy => policy.RequireClaim("Permission", "Delete"));
+    options.AddPolicy("ReadPolicy", policy => policy.RequireClaim("Permission", "Read"));
 });
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
@@ -66,7 +69,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
             options.LoginPath = "/dang-nhap";
             options.LogoutPath = "/dang-nhap";
             options.Cookie.HttpOnly = true;
-            options.Cookie.Expiration = TimeSpan.FromDays(1);
+            options.ExpireTimeSpan = TimeSpan.FromDays(1);
             options.SlidingExpiration = true;
         });
 
@@ -97,7 +100,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuthorization(); 
+
+
+
 app.MapHub<Hubnot>("/friendHub");
 // Route cho Areas
 app.MapControllerRoute(
