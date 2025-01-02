@@ -66,46 +66,7 @@ function Header() {
         success: function (res) {
             if (res.data) {
                 const headerHtml = `
-                    <div class="header-top d-none d-md-flex align-items-center mb-2" aria-label="Emergency Contact Information">
-                        <div class="emergency-contacts" role="contentinfo">
-                            <p class="m-0 text-danger fw-bold mt-1" style="font-size: 18px; letter-spacing: 0.5px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);">
-                                <span class="emergency-number" aria-label="Emergency Number">
-                                    <i class="fas fa-ambulance fa-lg me-2 ambulance-icon" aria-hidden="true" style="color: #ff0000; transform-style: preserve-3d; animation: moveAmbulance 2s infinite;"></i>
-                                    <span class="contact-badge" style="border: 2px solid #ff0000; padding: 4px 8px; border-radius: 5px; margin-right: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transform: perspective(1000px) rotateX(5deg);">
-                                        <span style="color: #ff0000;">Cấp cứu 24/24: <a href="tel:${res.data[0].telephone}" style="color: #ff0000 !important; text-decoration: none;">${res.data[0].telephone}</a></span>
-                                    </span>
-                                </span>
-                                <span class="hotline-number" aria-label="Hotline Number">
-                                    <i class="fas fa-phone-volume fa-lg me-2 phone-icon" aria-hidden="true" style="color: #ff0000; transform-style: preserve-3d; animation: ringPhone 1s infinite;"></i>
-                                    <span class="contact-badge" style="border: 2px solid #ff0000; padding: 4px 8px; border-radius: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transform: perspective(1000px) rotateX(5deg);">
-                                        <span style="color: #ff0000;">Hotline 24/24: <a href="tel:02743535777" style="color: #ff0000 !important; text-decoration: none;">0274 3535 777</a></span>
-                                    </span>
-                                </span>
-                            </p>
-                            <style>
-                                @keyframes moveAmbulance {
-                                    0% { transform: translateX(0) rotate(0deg); }
-                                    25% { transform: translateX(5px) rotate(5deg); }
-                                    75% { transform: translateX(-5px) rotate(-5deg); }
-                                    100% { transform: translateX(0) rotate(0deg); }
-                                }
-                                @keyframes ringPhone {
-                                    0% { transform: rotate(-15deg); }
-                                    50% { transform: rotate(15deg); }
-                                    100% { transform: rotate(-15deg); }
-                                }
-                                .contact-badge {
-                                    transition: transform 0.3s ease;
-                                }
-                                .contact-badge:hover {
-                                    transform: perspective(1000px) rotateX(5deg) translateY(-3px) !important;
-                                }
-                            </style>
-                        </div>
-                    </div>
-
-                    <nav class="header-navigation d-flex flex-column align-items-end" role="navigation">
-                        <div class="nav-links d-none d-md-flex flex-wrap justify-content-center justify-content-md-end gap-3 mb-2">
+                             <div class="nav-links d-none d-md-flex flex-wrap justify-content-center justify-content-md-end gap-3 mb-2">
                             ${res.data[0].titleheader.map((item, index) => `
                                 <a href="${item.link}" 
                                    class="nav-link text-decoration-none text-dark d-flex align-items-center"
@@ -126,7 +87,7 @@ function Header() {
                                          width="25" 
                                          height="25"
                                          loading="lazy"> 
-                                  <span style="color:#102e9e">${item.title}</span>
+                                  <span style="color:#000000">${item.title}</span>
                                 </a>
                             `).join('')}
 
@@ -171,6 +132,64 @@ function Header() {
                                 </button>
                             </div>
                         </div>
+                  
+
+                    <nav class="header-navigation d-flex flex-column align-items-end" role="navigation">
+                        <div class="header-top d-none d-md-flex align-items-center mb-3" aria-label="Emergency Contact Information">
+                            <div class="emergency-contacts px-4" role="contentinfo">
+                                <p class="m-0 text-danger fw-bold mt-2" style="font-size: 18px; letter-spacing: 0.5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.1);">
+                                    <span class="emergency-number me-4" aria-label="Emergency Number">
+                                        <i class="fas fa-ambulance fa-lg me-3 ambulance-icon" aria-hidden="true" style="color: #ff0000; transform-style: preserve-3d; animation: moveAmbulance 2s infinite;"></i>
+                                        <span class="contact-badge" style="border: 2px solid #ff0000; padding: 6px 15px; border-radius: 8px; margin-right: 20px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); background: rgba(255,255,255,0.9);">
+                                            <span style="color: #ff0000;">Cấp cứu 24/24: <a href="tel:${res.data[0].telephone}" style="color: #ff0000 !important; text-decoration: none; font-weight: 700;">${res.data[0].telephone}</a></span>
+                                        </span>
+                                    </span>
+                                    <span class="social-icons ms-4" aria-label="Social Media Links">
+                                        <a href="https://www.youtube.com/@benhvienmyphuoc3250" target="_blank" class="social-link me-4" style="text-decoration: none;">
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/2560px-YouTube_full-color_icon_%282017%29.svg.png" 
+                                                 alt="YouTube"
+                                                 width="32"
+                                                 height="32"
+                                                 style="border-radius: 50%; transition: transform 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                        </a>
+                                        <a href="https://www.facebook.com/benhvienmyphuoc?locale=vi_VN" target="_blank" class="social-link me-4" style="text-decoration: none;">
+                                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1024px-Facebook_Logo_%282019%29.png"
+                                                 alt="Facebook"
+                                                 width="32" 
+                                                 height="32"
+                                                 style="border-radius: 50%; transition: transform 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                        </a>
+                                        <a href="https://zalo.me/3218616946017588505" target="_blank" class="social-link" style="text-decoration: none;">
+                                            <img src="/Images/zalo_sharelogo.png"
+                                                 alt="Facebook"
+                                                 width="32" 
+                                                 height="32"
+                                                 style="border-radius: 50%; transition: transform 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                        </a>
+                                    </span>
+                                </p>
+                                <style>
+                                    @keyframes moveAmbulance {
+                                        0% { transform: translateX(0) rotate(0deg); }
+                                        25% { transform: translateX(5px) rotate(5deg); }
+                                        75% { transform: translateX(-5px) rotate(-5deg); }
+                                        100% { transform: translateX(0) rotate(0deg); }
+                                    }
+                                    .contact-badge {
+                                        transition: all 0.3s ease;
+                                    }
+                                    .contact-badge:hover {
+                                        transform: translateY(-2px);
+                                        box-shadow: 0 5px 8px rgba(0,0,0,0.2);
+                                    }
+                                    .social-link img:hover {
+                                        transform: scale(1.15);
+                                        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                                    }
+                                </style>
+                            </div>
+                        </div>
+                    </nav>
                     </nav>`;
 
                 $('#header-contact').html(headerHtml);
@@ -348,10 +367,10 @@ function Menu() {
                         width: 100% !important;
                     }
                     .dropdown-item:hover {
-                        background: rgba(0, 149, 217, 0.1) !important;
+                        background: rgba(255, 0, 0, 0.1) !important;
                         transform: translateX(5px);
-                        border-left: 4px solid #0095d9 !important;
-                        color: #0095d9 !important;
+                        border-left: 4px solid red !important;
+                        color: red !important;
                         font-weight: 600;
                     }
                     @keyframes fadeIn {
@@ -391,7 +410,7 @@ function Menu() {
 }
 function GetSlide() {
     $.ajax({
-        url: "/Pagemain/GetSlides",
+        url: "/Pagemain/GetSlides", 
         type: "GET",
         success: function (res) {
             if (res.success) {
@@ -399,85 +418,55 @@ function GetSlide() {
                 
                 res.data.sort((a, b) => a.sort - b.sort);
 
-                // Group slides into sets of 3 for desktop, 1 for mobile
-                const slidesPerView = window.innerWidth < 768 ? 1 : 3;
-                
-                for (let i = 0; i < res.data.length; i += slidesPerView) {
-                    const isActive = i === 0 ? 'active' : '';
-                    const slideHeight = window.innerWidth < 768 ? '250px' : '340px';
-                    
-                    slidesHtml += `
-                        <div class="carousel-item ${isActive}">
-                            <div class="slide-container rounded-4 overflow-hidden position-relative" style="height: ${slideHeight}; width: 100%;">
-                                <div class="d-flex justify-content-between" style="gap: 4px; height: 100%;">`;
-                    
-                    // Add slides based on screen size
-                    for (let j = i; j < Math.min(i + slidesPerView, res.data.length); j++) {
-                        const slide = res.data[j];
-                        if (slide.status) {
-                            const imgSize = window.innerWidth < 768 ? 
-                                'width: 100%; height: 250px;' : 
-                                'width: 100%; height: 100%;';
-                                
-                            slidesHtml += `
-                                <div class="slide-item position-relative" 
-                                     style="flex: 1; transition: all 0.3s ease; cursor: pointer;">
-                                    <img src="/Resources/${slide.slide}" 
-                                         class="w-100 h-100" 
-                                         alt="${slide.title}" 
-                                         style="object-fit: cover; cursor: pointer; border-radius: 6px; ${imgSize}">
-                                    <div class="overlay"></div>
-                                </div>`;
-                        }
+                // Generate one slide per image
+                res.data.forEach((slide, index) => {
+                    if (slide.status) {
+                        const isActive = index === 0 ? 'active' : '';
+                        const slideHeight = window.innerWidth < 768 ? '375px' : '428px';
+                        
+                        slidesHtml += `
+                            <div class="carousel-item ${isActive}">
+                                <a href="${slide.link || '#'}" class="text-decoration-none">
+                                    <div class="slide-container rounded-4 overflow-hidden position-relative" 
+                                         style="height: ${slideHeight}; width: 100%;">
+                                        <div class="slide-item position-relative" 
+                                             style="width: 100%; height: 100%; transition: all 0.3s ease; cursor: pointer;">
+                                            <img src="/Resources/${slide.slide}" 
+                                                 class="w-100 h-100" 
+                                                 alt="${slide.title}"
+                                                 loading="eager"
+                                                 decoding="sync" 
+                                                 style="object-fit: cover; cursor: pointer; border-radius: 6px; 
+                                                        image-rendering: -webkit-optimize-contrast;
+                                                        image-rendering: crisp-edges;
+                                                        -webkit-backface-visibility: hidden;
+                                                        backface-visibility: hidden;
+                                                        transform: translateZ(0);
+                                                        -webkit-font-smoothing: subpixel-antialiased;">
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>`;
                     }
-
-                    slidesHtml += `
-                                </div>
-                            </div>
-                        </div>`;
-                }
+                });
 
                 $('#carouselContainer').html(slidesHtml);
 
-                // Initialize carousel with mainCarousel ID
+                // Initialize carousel with higher quality transitions
                 new bootstrap.Carousel(document.querySelector('#mainCarousel'), {
                     interval: 1500,
                     ride: 'carousel',
-                    wrap: true
+                    wrap: true,
+                    touch: true
                 });
 
-                // Add the new carousel initialization code
-                const slideItems = document.querySelectorAll('.slide-item');
-                const colors = ['rgba(255, 107, 107, 0.3)', 'rgba(78, 205, 196, 0.3)', 'rgba(69, 183, 209, 0.3)', 
-                              'rgba(150, 206, 180, 0.3)', 'rgba(255, 238, 173, 0.3)', 'rgba(212, 165, 165, 0.3)', 
-                              'rgba(155, 89, 182, 0.3)'];
-                
-                function getRandomColor() {
-                    return colors[Math.floor(Math.random() * colors.length)];
-                }
-
-                // Set initial random colors for overlays
-                document.querySelectorAll('.overlay').forEach(overlay => {
-                    overlay.style.backgroundColor = getRandomColor();
-                });
-                
-                slideItems.forEach(item => {
-                    item.addEventListener('click', function() {
-                        const parentContainer = this.closest('.carousel-item');
-                        const siblings = parentContainer.querySelectorAll('.slide-item');
-                        
-                        siblings.forEach(slide => {
-                            slide.classList.remove('active');
-                            slide.querySelector('.overlay').style.backgroundColor = getRandomColor();
-                        });
-                        
-                        this.classList.add('active');
-                    });
-                });
-
-                // Handle resize events
+                // Handle resize events with debouncing
+                let resizeTimeout;
                 window.addEventListener('resize', function() {
-                    GetSlide(); // Reload slides when window is resized
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(() => {
+                        GetSlide();
+                    }, 250);
                 });
 
             } else {
@@ -1827,18 +1816,19 @@ function laydscauhoi()
               
 
                 if(response.status) {
-                    
                     const activeQuestions = response.data.filter(question => question.status === "Active");
                     sampleQuestions.push(...activeQuestions.map(question => question.question));
                     activeQuestions.forEach(function (question) {
-                        sampleAnswers[question.question] = question.reply;
+                        let answerHtml = question.reply;
+                        answerHtml += '<div class="mt-3">';
                         if (question.buttonSamples) {
                             question.buttonSamples.forEach(function (button) {
-                                sampleAnswers[question.question] += `<a href="${button.link}" class="btn btn-primary me-2">${button.title}</a>`;
+                                answerHtml += `<a href="${button.link}" class="btn btn-primary me-2">${button.title}</a>`;
                             });
                         }
+                        answerHtml += '</div>';
+                        sampleAnswers[question.question] = answerHtml;
                     });
-         
                 }
         },
         error: function (err) {
@@ -1858,7 +1848,7 @@ function loadNews()
         type: "GET",
         success: function(response) {
             if (response.status) {
-
+                    console.log(response.data);
                var html = '';
                response.data.forEach(function(news) {
                 if (news.status) {
@@ -1868,22 +1858,38 @@ function loadNews()
                     const newsDate = new Date(news.created_at);
                     const isNew = newsDate > oneWeekAgo;
 
-                    html += `<a href="${news.alias_url}" class="list-group-item list-group-item-action p-3 border-bottom hover-effect rounded-start-4 position-relative">
-                        <div class="news-item">
-                            <h6 class="mb-2 text-primary fw-bold">${news.title}</h6>
-                            ${isNew ? '<span class="badge new-label position-absolute top-0 end-0 m-2 fw-bold">MỚI</span>' : ''}
-                            <div class="d-flex align-items-center text-muted mb-2">
-                                <i class="far fa-clock me-2"></i>
-                                <small>${news.createat.split('T')[0]}</small>
+                    html += `<a href="${news.alias_url}" class="list-group-item list-group-item-action p-3 border-bottom hover-effect rounded-4 position-relative" style="transition: all 0.3s ease; border-left: 4px solid #0095d9;">
+                        <div class="news-item d-flex">
+                            <div class="news-image me-3" style="width: 100px; min-width: 100px;">
+                                <img src="/Resources/${news.url}" alt="${news.title}" class="img-fluid rounded" style="width: 100px; height: 80px; object-fit: cover;">
                             </div>
-                            <p class="mb-0 text-muted" style="font-size: 0.9rem; line-height: 1.4;">
-                                ${news.title}...
-                            </p>
+                            <div class="news-content">
+                                <h6 class="mb-2 fw-bold" style="color: #0095d9">${news.title}</h6>
+                                ${isNew ? '<span class="badge position-absolute top-0 end-0 m-2 fw-bold" style="background-color: #0095d9">MỚI</span>' : ''}
+                                <div class="d-flex align-items-center mb-2" style="color: #000000">
+                                    <i class="far fa-clock me-2"></i>
+                                    <small>${news.createat.split('T')[0]}</small>
+                                </div>
+                                <p class="mb-0" style="color: #000000; font-size: 0.95rem; line-height: 1.5;">
+                                    ${news.title}...
+                                </p>
+                            </div>
                         </div>
                     </a>`;
                 }
                });
                $('.list-group').html(html);
+
+               // Add hover effect styles
+               $('<style>')
+                    .text(`
+                        .list-group-item:hover {
+                            transform: translateY(-3px);
+                            box-shadow: 0 5px 15px rgba(0, 149, 217, 0.3);
+                            border-color: #0095d9 !important;
+                        }
+                    `)
+                    .appendTo('head');
             }
         },
         error: function(error) {
@@ -1899,11 +1905,21 @@ function loadSpecialties1() {
         success: function(response) {
             if(response.data) {
                 const gradients = [
-                    'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
-                    'linear-gradient(135deg, #56ab2f 0%, #a8e063 100%)', 
-                    'linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%)',
-                    'linear-gradient(135deg, #00c6fb 0%, #005bea 100%)',
-                    'linear-gradient(135deg, #f85032 0%, #e73827 100%)'
+                    'linear-gradient(135deg, #0095d9 0%, #006699 100%)',
+                    'linear-gradient(135deg, #00b3ff 0%, #0095d9 100%)',
+                    'linear-gradient(135deg, #33ccff 0%, #0095d9 100%)',
+                    'linear-gradient(135deg, #66e0ff 0%, #0095d9 100%)', 
+                    'linear-gradient(135deg, #99ebff 0%, #0095d9 100%)',
+                    'linear-gradient(135deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)',
+                    'linear-gradient(135deg, #0093E9 0%, #80D0C7 100%)',
+                    'linear-gradient(135deg, #8EC5FC 0%, #E0C3FC 100%)',
+                    'linear-gradient(135deg, #D9AFD9 0%, #97D9E1 100%)',
+                    'linear-gradient(135deg, #00B4DB 0%, #0083B0 100%)',
+                    'linear-gradient(135deg, #1CB5E0 0%, #000851 100%)',
+                    'linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%)',
+                    'linear-gradient(135deg, #396afc 0%, #2948ff 100%)',
+                    'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
+                    'linear-gradient(135deg, #FC466B 0%, #3F5EFB 100%)'
                 ];
 
                 let html = `
@@ -1941,7 +1957,7 @@ function loadSpecialties1() {
                                         </div>
                                         <h5 class="card-title fw-bold">${specialty.title}</h5>
                                      
-                                        <a href="${specialty.alias_url}" class="btn btn-light ${textColorClass} fw-bold shadow" 
+                                        <a href="${specialty.alias_url}" class="btn btn-light  fw-bold shadow" 
                                            style="border-radius: 25px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
                                             Xem chi tiết
                                         </a>
