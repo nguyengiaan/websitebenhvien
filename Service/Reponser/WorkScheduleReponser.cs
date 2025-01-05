@@ -159,6 +159,29 @@ namespace websitebenhvien.Service.Reponser
         {
             try
             {
+                if(workschedule.Id_Specialty==0 || workschedule.Name_doctor=="Không có"){
+                    var data1=new Registerhealth();
+                    data1.Examinationtime=workschedule.Examinationtime;
+                    data1.name=workschedule.name;
+                    data1.phone=workschedule.phone;
+                    data1.note=workschedule.note;
+                    data1.Status=false;
+                    var notfi1=new Notification();
+                    notfi1.Id_Notification=Guid.NewGuid().ToString();
+                    notfi1.Createat=DateTime.Now;
+                    notfi1.Status=false;
+                    notfi1.Url="/trang-quan-tri/dang-ky-kham-suc-khoe";
+                    notfi1.Title="Bạn có một bệnh nhân mới";
+                    notfi1.Description="Khách hàng "+workschedule.name+" đã đăng ký khám sức khoẻ vào lúc "+workschedule.Examinationtime;
+                    await _context.Registerhealths.AddAsync(data1);
+                    await _context.Notifications.AddAsync(notfi1);
+                    await _hubnot.SendNotification();
+                    await _email.SendEmailAsync("2024801030185@student.tdmu.edu.vn", "ĐĂNG KÝ KHÁM BỆNH", "Khách hàng " + workschedule.name + " đã đăng ký khám sức khoẻ vào lúc " + workschedule.Examinationtime+"Số điện thoại "+workschedule.phone,null);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                else
+                {
                 var data= new Makeanappointment();
                 var notfi=new Notification();
                 data.Id_Specialty=workschedule.Id_Specialty;
@@ -176,10 +199,12 @@ namespace websitebenhvien.Service.Reponser
                 notfi.Title="Bạn có một bệnh nhân mới";
                 notfi.Description="Khách hàng "+workschedule.name+" đã đăng ký khám bệnh vào lúc "+workschedule.Examinationtime;
                 await _context.Notifications.AddAsync(notfi);
-                 await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 await _hubnot.SendNotification();
-               await _email.SendEmailAsync("2024801030185@student.tdmu.edu.vn", "ĐĂNG KÝ KHÁM BỆNH", "Khách hàng " + workschedule.name + " đã đăng ký khám bệnh vào lúc " + workschedule.Examinationtime+"Số điện thoại "+workschedule.phone,null);
+                await _email.SendEmailAsync("2024801030185@student.tdmu.edu.vn", "ĐĂNG KÝ KHÁM BỆNH", "Khách hàng " + workschedule.name + " đã đăng ký khám bệnh vào lúc " + workschedule.Examinationtime+"Số điện thoại "+workschedule.phone,null);
                 return true;
+                }
+                return false;
             }
             catch(Exception ex)
             {
@@ -273,6 +298,74 @@ namespace websitebenhvien.Service.Reponser
                     await _context.SaveChangesAsync();
                     return true;
                 }   
+                return false;
+            }
+            catch(Exception ex){
+                return false;
+            }
+        }
+
+        public  async Task<(List<MakeanappointmentVM> ds, int total)> GetAppointmentSK(int page, int pageSize, string search)
+        {
+             try
+          {
+            var query = _context.Registerhealths.AsQueryable();
+            
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(x => x.name.Contains(search) );
+            }
+            var totalItems = await query.CountAsync();
+            var totalpages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+                var result = await query.Select(x => new MakeanappointmentVM {
+                    Id_makeanappointment = x.Id_Registerhealth,
+                    Examinationtime = x.Examinationtime,
+                    name = x.name,
+                    phone = x.phone,
+                    note = x.note,
+                    Status=x.Status,
+
+
+                })
+            .OrderByDescending(x => x.Id_makeanappointment)
+            .Skip((page-1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+            return (result, totalpages);
+          }
+          catch(Exception ex)
+          {
+            return (null, 0);
+          }
+        }
+
+        public async Task<bool> DeleteAppointmentSK(int id)
+        {
+            try{
+                var data=await _context.Registerhealths.FindAsync(id);
+                if(data!=null){
+                    _context.Registerhealths.Remove(data);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch(Exception ex){
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateAppointmentSK(int id)
+        {
+            try{
+                var data=await _context.Registerhealths.FindAsync(id);
+                if(data!=null){
+                    data.Status=!data.Status;
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
                 return false;
             }
             catch(Exception ex){

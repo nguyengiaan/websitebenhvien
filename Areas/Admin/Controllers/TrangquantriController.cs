@@ -13,6 +13,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             _hostingEnvironment = hostingEnvironment;
 
         }
+
         [Authorize]
 
         [Route("trang-quan-tri")]
@@ -20,7 +21,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
-        [Authorize("admin")]
+        [Authorize]
         public IActionResult Cauhinhdautrang()
         {
             return View();
@@ -104,7 +105,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
-
+        [AllowAnonymous]
         [Route("/dang-nhap")]
         public IActionResult Dangnhap()
         {
@@ -143,6 +144,12 @@ namespace websitebenhvien.Areas.Admin.Controllers
         [Authorize]
         [Route("/trang-quan-tri/quan-ly-video")]
         public IActionResult Quanlyvideo()
+        {
+            return View();
+        }
+        [Authorize]
+        [Route("/trang-quan-tri/dang-ky-kham-sk")]
+        public IActionResult Dangkykhambenhsk()
         {
             return View();
         }

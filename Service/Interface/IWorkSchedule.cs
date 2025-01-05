@@ -21,5 +21,18 @@ namespace websitebenhvien.Service.Interface
         // cập nhật lịch khám bệnh 
         public Task<Boolean> UpdateAppointment(int id);
 
+        // danh sách lịch khám sức khoẻ
+        public Task<(List<MakeanappointmentVM> ds, int total)> GetAppointmentSK(int page, int pageSize, string search);
+
+        // xóa lịch khám sức khoẻ
+        public Task<Boolean> DeleteAppointmentSK(int id);
+        // cập nhật lịch khám sức khoẻ
+        public Task<Boolean> UpdateAppointmentSK(int id);
+        
+
+
+
+
     }
 }
+

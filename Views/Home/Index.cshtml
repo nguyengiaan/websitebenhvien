@@ -125,22 +125,27 @@
                     </h4>
                     <form id="consultForm" class="needs-validation" novalidate>
                         <div class="btn-group w-100 mb-3" role="group">
-                            <input type="radio" class="btn-check" name="visitType" id="regular" value="regular" checked>
-                            <label class="btn btn-outline-primary rounded-start" for="regular">
-                                <i class="fas fa-hospital me-1"></i>Thông thường
+                            <input type="radio" class="btn-check" name="visitType" id="specialty" value="specialty" checked onchange="toggleSpecialtyFields()">
+                            <label class="btn btn-outline-primary rounded-start" for="specialty">
+                                <i class="fas fa-stethoscope me-1"></i>Khám chuyên khoa
                             </label>
 
-
+                            <input type="radio" class="btn-check" name="visitType" id="checkup" value="checkup" onchange="toggleSpecialtyFields()">
+                            <label class="btn btn-outline-primary rounded-end" for="checkup">
+                                <i class="fas fa-heartbeat me-1"></i>Khám sức khỏe
+                            </label>
                         </div>
 
+                   
+
                         <div class="form-floating mb-3">
-                            <select class="form-select border-0 bg-light" id="Id_specialty" required>
+                            <select class="form-select border-0 bg-light" id="Id_specialty" >
                             </select>
                             <label for="Id_specialty">Chuyên khoa</label>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <select class="form-select border-0 bg-light" id="Id_doctor" required>
+                            <select class="form-select border-0 bg-light" id="Id_doctor" >
                             </select>
                             <label for="Id_doctor">Bác sĩ</label>
                         </div>

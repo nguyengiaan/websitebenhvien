@@ -1757,7 +1757,17 @@ function loadSpecialties() {
     });
 }
 function registerAppointment() {
-    const appointmentTimeStr = $('#appointmentTime').val();
+    let appointmentTimeStr = $('#appointmentTime').val() || $('#appointmentTimeSK').val();
+    if (appointmentTimeStr && !appointmentTimeStr.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}T\d{2}:\d{2}$/)) {
+        const date = new Date(appointmentTimeStr);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        appointmentTimeStr = `${year}-${month}-${day}T00:00:00T${hours}:${minutes}`;
+    }
+    console.log(appointmentTimeStr);
     const parts = appointmentTimeStr.split('T');
     const datePart = parts[0]; // "2024-12-29"
     const timePart = parts[2] || parts[1].split(':').slice(1).join(':'); // "09:30"
@@ -1766,18 +1776,28 @@ function registerAppointment() {
     const result = `${datePart}T${timePart}:00`;
 
     const appointmentData = {
-        Name_doctor: $('#Id_doctor option:selected').text(),
+        Name_doctor: $('#Id_doctor option:selected').text() || 'Không có',
         Examinationtime: result,
         name: $('#patientName').val(),
         phone: $('#patientPhone').val(),
         note: $('#patientNote').val(),
-        Id_Specialty: $('#Id_specialty').val()
+        Id_Specialty: $('#Id_specialty').val() || '0'
     };
 
     $.ajax({
         url: '/api/dang-ky-kb',
         type: 'POST',
         data: appointmentData,
+        beforeSend: function() {
+            Swal.fire({
+                title: 'Đang xử lý...',
+                text: 'Vui lòng chờ trong giây lát',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        },
         success: function(response) {
             if (response.status) {
                 Swal.fire({
@@ -1988,5 +2008,78 @@ function loadSpecialties1() {
         }
     });
 }
+function toggleSpecialtyFields() {
+    const specialtyFields = document.querySelectorAll('#Id_specialty, #Id_doctor');
+    const isCheckup = document.getElementById('checkup').checked;
+    const appointmentTimeContainer = document.getElementById('appointmentTimeContainer');
 
+    specialtyFields.forEach(field => {
+        field.closest('.form-floating').style.display = isCheckup ? 'none' : 'block';
+    });
 
+    if (isCheckup) {
+        if (!appointmentTimeContainer) {
+            const container = document.createElement('div');
+            container.id = 'appointmentTimeContainer';
+            container.className = 'form-floating mb-3';
+
+            // Tạo giá trị ngày bắt đầu và ngày kết thúc
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Đặt giờ về 0
+            const todayStr = today.toLocaleDateString('en-GB').split('/').reverse().join('-'); // Format: YYYY-MM-DD
+
+            const nextYear = new Date(today);
+            nextYear.setFullYear(nextYear.getFullYear() + 1);
+            const maxDate = nextYear.toLocaleDateString('en-GB').split('/').reverse().join('-'); // Format: YYYY-MM-DD
+
+            // Tạo container input
+            container.innerHTML = `
+                <input type="datetime-local" 
+                       class="form-control" 
+                       id="appointmentTimeSK" 
+                       name="appointmentTimeSK"
+                       min="${todayStr}T07:00"
+                       max="${maxDate}T16:00"
+                       step="1800"
+                       required>
+                <label for="appointmentTimeSK">Chọn ngày và giờ khám</label>
+                <small class="text-muted text-danger" style="color:red!important">
+                    Thời gian làm việc: 7h-11h và 13h-16h
+                </small>
+            `;
+
+            const parentElement = specialtyFields[0].closest('.form-floating').parentNode;
+            parentElement.insertBefore(container, specialtyFields[0].closest('.form-floating'));
+
+            // Xử lý sự kiện khi chọn thời gian
+            const appointmentTimeSK = container.querySelector('#appointmentTimeSK');
+            appointmentTimeSK.addEventListener('change', function () {
+                const selectedDateTime = new Date(this.value);
+                
+                // Kiểm tra giờ hợp lệ (7h-11h và 13h-16h)
+                const hours = selectedDateTime.getHours();
+                const isValidTime = (hours >= 7 && hours < 11) || (hours >= 13 && hours < 16);
+                
+                if (!isValidTime) {
+                    alert('Vui lòng chọn thời gian trong khung giờ làm việc: 7h-11h và 13h-16h');
+                    this.value = ''; // Reset giá trị
+                    return;
+                }
+
+                // Chuyển đổi thành định dạng yyyy-MM-ddThh:mm
+                const year = selectedDateTime.getFullYear();
+                const month = String(selectedDateTime.getMonth() + 1).padStart(2, '0');
+                const day = String(selectedDateTime.getDate()).padStart(2, '0');
+                const minutes = String(selectedDateTime.getMinutes()).padStart(2, '0');
+
+                // Format thành yyyy-MM-ddT00:00:00Thh:mm
+                const formattedDate = `${year}-${month}-${day}T00:00:00T${hours}:${minutes}`;
+                console.log(`Ngày giờ đã chọn: ${formattedDate}`);
+            });
+        }
+    } else {
+        if (appointmentTimeContainer) {
+            appointmentTimeContainer.remove();
+        }
+    }
+}
