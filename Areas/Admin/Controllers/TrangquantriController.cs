@@ -14,92 +14,91 @@ namespace websitebenhvien.Areas.Admin.Controllers
 
         }
 
-        [Authorize]
-
+        [Authorize(Roles = "admin,Trangquantri")]
         [Route("trang-quan-tri")]
         public IActionResult Index()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles = "admin,Dautrang")]
         public IActionResult Cauhinhdautrang()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles = "admin,Slidetrangchu")]
         public IActionResult Slidetrang()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles = "admin,Chantrang")]
         public IActionResult Chantrang()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles = "admin,Logokhachhang")]
         public IActionResult Logokhachhang()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles = "admin,Chiasekhachhang")]
         public IActionResult Chiasekhachhang()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles = "admin,Thoigianlamviec")]
         public IActionResult Thoigianlamviec()
 
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles = "admin,Danhsachmenu")]
         public  IActionResult Trangnoidung()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles = "admin,Danhmucbaiviet")]
         public IActionResult Danhmuctintuc()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles = "admin,Baiviet")]
         [Route("/trang-quan-tri/quan-ly-tin-tuc")]
         public IActionResult Tintuc()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles = "admin,Danhmucsanpham")]
         [Route("/trang-quan-tri/quan-ly-danh-muc-san-pham")]
 
         public IActionResult Danhmucsanpham()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles = "admin,Sanpham")]
         [Route("/trang-quan-tri/quan-ly-san-pham")]
         public IActionResult Sanpham()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [Route("/trang-quan-tri/quan-ly-tai-khoan")]
         public IActionResult Taikhoan()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles ="Quanlytuyendung,admin")]
         [Route("/trang-quan-tri/quan-ly-tuyen-dung")]
         public IActionResult Tuyendung()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles ="Danhsachtinnhan,admin")]
         [Route("/trang-quan-tri/quan-ly-tin-nhan")]
         public IActionResult TinNhan()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles ="Quanlychuyenkhoa,admin")]
         [Route("/trang-quan-tri/quan-ly-chuyen-khoa")]
         public IActionResult Chuyenkhoa()
         {
@@ -111,31 +110,31 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles ="Quanlybacsi,admin")]
         [Route("/trang-quan-tri/quan-ly-bac-si")]
         public IActionResult Bacsi()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles ="Dangkykhambenh,admin")]
         [Route("/trang-quan-tri/dang-ky-kham-benh")]
         public IActionResult Dangkykhambenh()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles ="Tinnhanmau,admin")]
         [Route("/trang-quan-tri/quan-ly-tin-mau")]
         public IActionResult Tinmau()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [Route("/trang-quan-tri/quan-ly-phan-quyen")]
         public IActionResult Phanquyen()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [Route("/trang-quan-tri/quan-ly-chuc-nang")]
         public IActionResult Phanquyencn()
         {
@@ -147,12 +146,19 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles ="Dangkykhamsuckhoe,admin")]
         [Route("/trang-quan-tri/dang-ky-kham-sk")]
         public IActionResult Dangkykhambenhsk()
         {
             return View();
         }
+        [Authorize]
+        [Route("/trang-loi")]
+        public IActionResult Trangloi()
+        {
+            return View();
+        }
+
 
 
 

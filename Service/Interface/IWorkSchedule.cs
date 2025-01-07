@@ -28,7 +28,13 @@ namespace websitebenhvien.Service.Interface
         public Task<Boolean> DeleteAppointmentSK(int id);
         // cập nhật lịch khám sức khoẻ
         public Task<Boolean> UpdateAppointmentSK(int id);
+        // sơ đồ các thông số khám bệnh 
         
+        public Task<RegisterChart> GetRegisterChart();  
+
+        // sơ đồ dăng ký khám bệnh theo ngày 
+        public Task<List<Charthealthdate>> GetCharthealthdate();  
+
 
 
 

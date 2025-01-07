@@ -197,5 +197,29 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+        [Authorize]
+        [HttpGet("/api/tao-bieu-do-dang-ky")]
+        public async Task<IActionResult> GetRegisterChart()
+        {
+            try{
+                var data = await _workSchedule.GetRegisterChart();
+                return Json(new { status = true, data = data });
+            }
+            catch(Exception ex){
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [Authorize]
+        [HttpGet("/api/lay-danh-sach-dang-ky-theo-ngay")]
+        public async Task<IActionResult> GetCharthealthdate()
+        {
+            try{
+                var data = await _workSchedule.GetCharthealthdate();
+                return Json(new { status = true, data = data });
+            }
+            catch(Exception ex){
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
     }
 }

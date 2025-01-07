@@ -372,5 +372,73 @@ namespace websitebenhvien.Service.Reponser
                 return false;
             }
         }
+
+        public async Task<RegisterChart> GetRegisterChart()
+        {
+           try
+           {
+            var data=new RegisterChart();
+            data.Songuoidksk=await _context.Registerhealths.CountAsync();
+            data.Songuoidkskcd=await _context.Registerhealths.Where(x=>x.Status==false).CountAsync();
+            data.Songuoidkdd=await _context.Registerhealths.Where(x=>x.Status==true).CountAsync();
+            data.Songuoidkb=await _context.Makeanappointments.CountAsync();
+            data.Songuoidkkbcd=await _context.Makeanappointments.Where(x=>x.Status==false).CountAsync();
+            data.Songuoidkkbdd=await _context.Makeanappointments.Where(x=>x.Status==true).CountAsync();
+            return data;
+           }
+           catch(Exception ex)
+           {
+                return null;
+           }
+        }
+
+        public async Task<List<Charthealthdate>> GetCharthealthdate()
+        {
+          try
+          {
+            var result = await (from rh in _context.Registerhealths
+                              group rh by rh.Examinationtime.Date into g
+                              select new Charthealthdate
+                              {
+                                  Date = g.Key,
+                                  CountSK = g.Count()
+                              }).ToListAsync();
+
+            var appointmentData = await (from ma in _context.Makeanappointments
+                                       group ma by ma.Examinationtime.Date into g 
+                                       select new
+                                       {
+                                           Date = g.Key,
+                                           CountKB = g.Count()
+                                       }).ToListAsync();
+
+            foreach (var item in result)
+            {
+                var appointment = appointmentData.FirstOrDefault(x => x.Date == item.Date);
+                if (appointment != null)
+                {
+                    item.CountKB = appointment.CountKB;
+                }
+            }
+
+            foreach (var appointment in appointmentData)
+            {
+                if (!result.Any(x => x.Date == appointment.Date))
+                {
+                    result.Add(new Charthealthdate
+                    {
+                        Date = appointment.Date,
+                        CountSK = 0,
+                        CountKB = appointment.CountKB
+                    });
+                }
+            }
+            return result.OrderBy(x => x.Date).ToList();
+          }
+        catch(Exception ex)
+          {
+            return null;
+          }
+        }
     }
 }

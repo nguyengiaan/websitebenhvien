@@ -91,20 +91,12 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         
-         [Authorize]
+        [Authorize(Roles = "admin")]
         [HttpGet("/api/ds-phan-quyen")]
- 
         public async Task<IActionResult> GetRoles()
         {
             try
             {
-
-                var claims = User.Claims.Select(c => new { type = c.Type, value = c.Value }).ToList();
-                if (!User.HasClaim("Permission", "Read"))
-                {
-                    return Json(new { status = false, message = "Bạn không có quyền truy cập!", claims = claims });
-                }
-
                 var data = await _user.GetRoles();
                 return Json(new { status = true, data = data });
             }
@@ -129,9 +121,9 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost("/api/xoa-quyen")]
-        [Authorize("admin")]
-        [Authorize(Policy = "DeletePolicy")]
+   
 
         public async Task<IActionResult> DelRole(string id)
         {
@@ -149,6 +141,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+        [Authorize(Roles = "admin")]
         [HttpGet("/api/ds-phan-quyen-chuc-nang")]
 
         public async Task<IActionResult> Getrole()
@@ -182,20 +175,51 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [HttpGet("/api/test-claims")]
-        [Authorize]
-        public IActionResult TestClaims()
+        [Authorize(Roles = "admin")]
+        [HttpPost("/api/ds-roles-user")]
+        public async Task<IActionResult> GetRolesUser(string id)
         {
-            var claims = User.Claims.Select(c => new { Type = c.Type, Value = c.Value }).ToList();
-            var permissions = User.Claims.Where(c => c.Type == "Permission").Select(c => c.Value).ToList();
-            var roles = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-            
-            return Json(new { 
-                AllClaims = claims,
-                Permissions = permissions,
-                Roles = roles,
-                HasReadPermission = User.HasClaim("Permission", "Read")
-            });
+            try
+            {
+                var data = await _user.GetRolesUser(id);
+                return Json(new { status = true, data = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [Authorize(Roles = "admin")]
+        [HttpPost("/api/update-roles-user")]
+        public async Task<IActionResult> UpdateRolesUser(string id, string idrole)
+        {
+            try
+            {
+                var data = await _user.UpdateRolesUser(id, idrole);
+                return Json(new { status = true, message = "Cập nhật thành công" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [Authorize]
+        [Route("/trang-quan-tri/dang-xuat")]
+        public async Task<IActionResult> Logout()
+        {       
+            try
+            {
+                var data = await _user.Logout();
+                if(data)
+                {
+                    return RedirectToAction("Dangnhap", "Trangquantri", new { area = "Admin" });
+                }
+                return Json(new { status = false, message = "Đăng xuất thất bại" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
         }
     }
 }

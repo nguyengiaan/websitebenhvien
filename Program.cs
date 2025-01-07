@@ -27,7 +27,6 @@ builder.Services.AddDbContext<MyDbcontext>(options =>
                 maxRetryDelay: TimeSpan.FromSeconds(30), // Thời gian chờ tối đa giữa các lần thử lại
                 errorNumbersToAdd: null); // Có thể chỉ định mã lỗi cụ thể để thử lại
         }));
-
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<MyDbcontext>()
     .AddDefaultTokenProviders();
@@ -50,6 +49,7 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("user", policy => policy.RequireRole("user"));
     options.AddPolicy("admin", policy => policy.RequireRole("admin"));
+    
     options.AddPolicy("CreatePolicy", policy => policy.RequireClaim("Permission", "Create"));
     options.AddPolicy("EditPolicy", policy => policy.RequireClaim("Permission", "Edit"));
     options.AddPolicy("DeletePolicy", policy => policy.RequireClaim("Permission", "Delete"));
@@ -63,7 +63,7 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/dang-nhap";
-    options.AccessDeniedPath = "/dang-nhap";
+    options.AccessDeniedPath = "/trang-loi";
 });
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(options =>
@@ -103,9 +103,6 @@ app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization(); 
-
-
-
 app.MapHub<Hubnot>("/friendHub");
 // Route cho Areas
 app.MapControllerRoute(
