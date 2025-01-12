@@ -97,7 +97,7 @@ namespace websitebenhvien.Service.Reponser
                 await _context.Notifications.AddAsync(notification);
                 await _context.SaveChangesAsync();
                 await _hubnot.SendNotification();
-                await _email.SendEmailAsync("2024801030185@student.tdmu.edu.vn","Nộp hồ sơ tuyển dụng",recruitment.Name+" "+" đã nộp hồ sơ tuyển dụng vị trí "+" "+recruitment.Position,recruitment.CV_Url);
+                await _email.SendEmailAsync("nguyenvannamht02@gmail.com","Nộp hồ sơ tuyển dụng",recruitment.Name+" "+" đã nộp hồ sơ tuyển dụng vị trí "+" "+recruitment.Position,recruitment.CV_Url);
             
                return true;
             }

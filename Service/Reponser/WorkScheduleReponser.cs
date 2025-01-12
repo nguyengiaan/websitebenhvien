@@ -178,7 +178,7 @@ namespace websitebenhvien.Service.Reponser
                 await _context.Notifications.AddAsync(notfi);
                  await _context.SaveChangesAsync();
                 await _hubnot.SendNotification();
-               await _email.SendEmailAsync("2024801030185@student.tdmu.edu.vn", "ĐĂNG KÝ KHÁM BỆNH", "Khách hàng " + workschedule.name + " đã đăng ký khám bệnh vào lúc " + workschedule.Examinationtime+"Số điện thoại "+workschedule.phone,null);
+               await _email.SendEmailAsync("nguyenvannamht02@gmail.com", "ĐĂNG KÝ KHÁM BỆNH", "Khách hàng " + workschedule.name + " đã đăng ký khám bệnh vào lúc " + workschedule.Examinationtime+"Số điện thoại "+workschedule.phone,null);
                 return true;
             }
             catch(Exception ex)
