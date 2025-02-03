@@ -130,6 +130,33 @@ function Header() {
                                          loading="lazy"
                                          style="cursor: pointer; transition: transform 0.2s ease; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); object-fit: contain;">
                                 </button>
+
+                                <button onclick="changeLanguage('ko')"
+                                        class="language-btn"
+                                        aria-label="Switch to Korean"
+                                        style="border: none; background: none; padding: 0;">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/2000px-Flag_of_South_Korea.svg.png"
+                                         alt="Korean Flag"
+                                         class="language-flag"
+                                         width="30"
+                                         height="20"
+                                         loading="lazy"
+                                         style="cursor: pointer; transition: transform 0.2s ease; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); object-fit: contain;">
+                                </button>
+
+                                <button onclick="changeLanguage('ja')"
+                                        class="language-btn"
+                                        aria-label="Switch to Japanese"
+                                        style="border: none; background: none; padding: 0;">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Japan.svg/2000px-Flag_of_Japan.svg.png"
+                                         alt="Japanese Flag"
+                                         class="language-flag"
+                                         width="30"
+                                         height="20"
+                                         loading="lazy"
+                                         style="cursor: pointer; transition: transform 0.2s ease; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); object-fit: contain;">
+                                </button>
+
                             </div>
                         </div>
                   

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using websitebenhvien.Data;
 
@@ -11,9 +12,11 @@ using websitebenhvien.Data;
 namespace websitebenhvien.Migrations
 {
     [DbContext(typeof(MyDbcontext))]
-    partial class MyDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20250112075551_add_Index")]
+    partial class add_Index
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -921,19 +924,6 @@ namespace websitebenhvien.Migrations
                     b.HasKey("Id_Recruitment");
 
                     b.ToTable("Recruitment", (string)null);
-                });
-
-            modelBuilder.Entity("websitebenhvien.Models.Enitity.Recruitmentpost", b =>
-                {
-                    b.Property<int>("id_recruitmentpost")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id_recruitmentpost"));
-
-                    b.HasKey("id_recruitmentpost");
-
-                    b.ToTable("Recruitmentpost", (string)null);
                 });
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Registerhealth", b =>

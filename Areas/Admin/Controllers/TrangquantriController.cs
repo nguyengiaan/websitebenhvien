@@ -152,12 +152,19 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
+
         [Authorize]
         [Route("/trang-loi")]
         public IActionResult Trangloi()
         {
             return View();
         }
+        [Authorize(Roles ="Dangtintuyendung,admin")]
+        public IActionResult Dangtintuyendung()
+        {
+            return View();
+        }
+
 
 
 
