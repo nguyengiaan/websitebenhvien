@@ -12,7 +12,7 @@
     <script type="text/javascript">
         function googleTranslateElementInit() {
             new google.translate.TranslateElement(
-                { pageLanguage: 'vi', includedLanguages: 'vi,en,zh-CN'},
+                { pageLanguage: 'vi', includedLanguages: 'vi,en,zh-CN,ja,ko'},
                 'google_translate_element'
             );
         }
@@ -130,7 +130,7 @@
                  data-autopopup="0" 
                  data-width="350" 
                  data-height="450"
-style="justify-content: center !important; align-items: center !important; margin-bottom: 160px !important;">
+                    style="justify-content: center !important; align-items: center !important; margin-bottom: 160px !important;">
     <div class="position-fixed bottom-0 end-0 m-4 d-flex flex-column gap-3 margin-right: 50px !important;" style="z-index: 1000;">
         <!-- Zalo Chat Widget -->
         <div class="d-flex flex-column align-items-end gap-3" style="margin-right: 82px!important;">
@@ -144,7 +144,10 @@ style="justify-content: center !important; align-items: center !important; margi
             <div class="chat-box-wrapper">
                 <!-- Chat Button -->
                 <button id="chatButton" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center position-relative animate__animated animate__pulse animate__infinite" 
-                        style="width: 50px; height: 50px; background: linear-gradient(45deg, #0063EC, #00a5ff); border: none; transition: all 0.3s ease;">
+                        style="width: 50px; height: 50px; background: linear-gradient(45deg, #0063EC, #00a5ff); border: none; transition: all 0.3s ease;"
+                        data-bs-toggle="tooltip" 
+                        data-bs-placement="left"
+                        title="Tôi có thể giúp gì cho bạn?">
                     <i class="fas fa-comments fa-lg" style="color: white; filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));"></i>
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
                           style="font-size: 0.6rem;" id="count-notification">
@@ -152,6 +155,9 @@ style="justify-content: center !important; align-items: center !important; margi
                     </span>
                     <div class="ripple position-absolute w-100 h-100 rounded-circle" style="animation: ripple 1.5s linear infinite; border: 2px solid #fff; opacity: 0;"></div>
                     <div class="bell-shake"></div>
+                    <div class="position-absolute" style="bottom: 100%; right: 0; margin-bottom: 10px; background: rgba(0,0,0,0.8); color: white; padding: 8px 12px; border-radius: 4px; font-size: 14px; display: none;" id="chatTooltip">
+                        Tôi có thể giúp gì cho bạn?
+                    </div>
                 </button>
 
                 <!-- Chat Window -->

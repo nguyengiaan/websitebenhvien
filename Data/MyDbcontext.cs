@@ -69,6 +69,8 @@ namespace websitebenhvien.Data
 
         public DbSet<Registerhealth> Registerhealths { get; set; }
 
+        public DbSet<Recruitmentpost> Recruitmentposts { get; set; }
+
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -185,6 +187,11 @@ namespace websitebenhvien.Data
             // đăng ký khám sức khoẻ 
             modelBuilder.Entity<Registerhealth>().ToTable("Registerhealth");
             modelBuilder.Entity<Registerhealth>().HasKey(x => x.Id_Registerhealth);
+            // tuyển dụng
+            modelBuilder.Entity<Recruitmentpost>().ToTable("Recruitmentpost");
+            modelBuilder.Entity<Recruitmentpost>().HasKey(x => x.id_recruitmentpost);
+      
+
 
 
         }

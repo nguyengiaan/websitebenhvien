@@ -46,6 +46,11 @@ public class HomeController : Controller
     {
         return View();
     }
+    [HttpGet("/tuyen-dung")]
+    public IActionResult tuyendung()
+    {
+        return View();
+    }
 
     
 
