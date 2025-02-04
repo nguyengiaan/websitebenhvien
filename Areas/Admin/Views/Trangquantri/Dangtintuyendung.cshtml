@@ -1,13 +1,13 @@
 @{
-    ViewData["Title"] = "Quản lý tin tức";
+    ViewData["Title"] = "Đăng tin tuyển dụng";
     
 }
 <div class="container-fluid">
     <div class="card">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h5 class="mb-0 fw-bold">Quản lý tin tức</h5>
+            <h5 class="mb-0 fw-bold">Quản lý tuyển dụng</h5>
             <button class="btn btn-primary rounded-pill px-4" onclick="openNewsModal()">
-                <i class="fas fa-plus me-2"></i>Thêm tin tức
+                <i class="fas fa-plus me-2"></i>Đăng tin tuyển dụng
             </button>
         </div>
 
@@ -21,11 +21,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <select class="form-select" id="categoryFilter" onchange="filterByCategory()">
-                        <option value="">Tất cả danh mục</option>
-                    </select>
-                </div>
+                
             </div>
 
             <div class="table-responsive">
@@ -33,12 +29,10 @@
                     <thead class="bg-light">
                         <tr>
                             <th class="ps-4" style="width: 5%">STT</th>
-                            <th style="width: 20%">Tiêu đề</th>
-                            <th style="width: 15%">Ảnh đại diện</th>
-                            <th style="width: 15%">Danh mục</th>
+                            <th style="width: 20%">Vị trí ứng tuyển</th>
+                            <th style="width: 15%">Trạng thái tuyển dụng</th>
                             <th style="width: 15%">Ngày đăng</th>
-                            <th style="width: 20%">Đường dẫn</th>
-                            <th style="width: 10%">Bài viết nổi bật</th>
+                            <th style="width: 10%">Trạng thái ẩn hiện</th>
                             <th style="width: 25%" class="text-center">Thao tác</th>
                         </tr>
                     </thead>
@@ -64,68 +58,44 @@
             <div class="modal-header bg-primary text-white py-3">
                 <h4 class="modal-title fw-bold" id="modalTitle">
                     <i class="fas fa-newspaper me-2"></i>
-                    Thêm tin tức
+                    Đăng tin tuyển dụng
                 </h4>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-light">
                 <div class="container-fluid py-3">
                     <form id="newsForm" class="bg-white rounded-3 shadow-sm p-4">
-                        <input type="hidden" id="id_News" name="id_News">
+                        <input type="hidden" id="id_recruitmentpost" name="id_recruitmentpost">
                         
                         <div class="row g-4 mb-4">
-                            <div class="col-md-8">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="form-label fw-bold text-primary fs-5 mb-3">
-                                        <i class="fas fa-heading me-2"></i>Tiêu đề
+                                        <i class="fas fa-heading me-2"></i>Vị trí tuyển dụng
                                     </label>
                                     <input type="text" class="form-control form-control-lg shadow-sm" 
-                                           id="title" name="title" required 
-                                           onchange="generateNewsAlias(this.value)"
-                                           placeholder="Nhập tiêu đề bài viết...">
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label class="form-label fw-bold text-primary fs-5 mb-3">
-                                        <i class="fas fa-folder me-2"></i>Danh mục
-                                    </label>
-                                    <select class="form-select form-select-lg shadow-sm" 
-                                            id="id_Categorynews" name="id_Categorynews"
-                                            onchange="generateNewsAlias($('#title').val())">
-                                    </select>
+                                           id="title_recruitmentpost" name="title_recruitmentpost" required 
+                                     
+                                           placeholder="Nhập vị trí tuyển dụng ">
                                 </div>
                             </div>
                         </div>
-
-                        <div class="form-group mb-4">
-                            <label class="form-label fw-bold text-primary fs-5 mb-3">
-                                <i class="fas fa-link me-2"></i>Đường dẫn
-                            </label>
-                            <input type="text" class="form-control form-control-lg shadow-sm" 
-                                   id="alias_url" name="alias_url"
-                                   placeholder="Đường dẫn sẽ được tự động tạo...">
-                        </div>
-
-                        <div class="form-group mb-4">
-                            <label class="form-label fw-bold text-primary fs-5 mb-3">
-                                <i class="fas fa-image me-2"></i>Hình ảnh đại diện
-                            </label>
-                            <div class="input-group input-group-lg shadow-sm">
-                                <input type="file" class="form-control" id="formFile" name="formFile">
-                                <button class="btn btn-outline-primary btn-lg px-4" type="button" onclick="openElfinder()">
-                                    <i class="fas fa-folder-open me-2"></i>Chọn ảnh
-                                </button>
-                            </div>
-                        </div>
-
                         <div class="form-group">
                             <label class="form-label fw-bold text-primary fs-5 mb-3">
-                                <i class="fas fa-edit me-2"></i>Mô tả
+                                <i class="fas fa-edit me-2"></i>Trạng thái tuyển dụng 
                             </label>
-                            <textarea id="description" name="description" class="summernote"></textarea>
+                            <select class="form-select form-select-lg shadow-sm" id="Status" name="Status">
+                                <option value="Đang tuyển">Đang tuyển</option>
+                                <option value="Tạm dừng">Tạm dừng</option>
+                            </select>
                         </div>
+                        <div class="form-group">
+                            <label class="form-label fw-bold text-primary fs-5 mb-3">
+                                <i class="fas fa-edit me-2"></i>Mô tả tuyển dụng 
+                            </label>
+                            <textarea id="Content_recruitmentpost" name="Content_recruitmentpost" class="summernote"></textarea>
+                        </div>
+                  
                     </form>
                 </div>
             </div>
@@ -145,7 +115,7 @@
 }
 <partial name="_Summernote" model="summenote" />
 @section Scripts {
-    <script>
+    <script> 
         let currentPage = 1;
         const pageSize = 20;
         $(document).ready(function() {
@@ -155,10 +125,8 @@
                 $('#id_News').val('');
                 $('#modalTitle').text('Thêm tin tức');
             });
-            loadCategories();
-            loadNews();
+ 
         });
-
         function openElfinder() {
             var fm = $('<div/>').dialogelfinder({
                 url: '@Url.Action("Connector", "Filemanager")',
@@ -196,25 +164,6 @@
                         });
                 }
             }).dialogelfinder('instance');
-        }
-
-        function loadCategories() {
-            $.ajax({
-                url: '/Allinone/ListCatogeryNews',
-                type: 'GET',
-                success: function(response) {
-                    if (response.status) {
-                        const categories = response.data;
-                        $('#categoryFilter').empty().append('<option value="">Tất cả danh mục</option>');
-                        $('#id_Categorynews').empty();
-                        
-                        categories.forEach(category => {
-                            $('#categoryFilter').append(`<option value="${category.id_Categorynews}">${category.title}</option>`);
-                            $('#id_Categorynews').append(`<option value="${category.id_Categorynews}">${category.title}</option>`);
-                        });
-                    }
-                }
-            });
         }
         function loadNews(page = 1) {
             $.ajax({
@@ -349,30 +298,9 @@
             `);
         }
 
-        function getCategoryName(categoryId) {
-            const category = $('#categoryFilter option[value="' + categoryId + '"]').text();
-            return category || '';
-        }
 
-        function generateNewsAlias(title) {
-            const alias = title.toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .replace(/[đĐ]/g, 'd')
-                .replace(/([^0-9a-z-\s])/g, '')
-                .replace(/(\s+)/g, '-')
-                .replace(/-+/g, '-')
-                .replace(/^-+|-+$/g, '');
-            const categoryAlias = $('#id_Categorynews option:selected').text().toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .replace(/[đĐ]/g, 'd')
-                .replace(/([^0-9a-z-\s])/g, '')
-                .replace(/(\s+)/g, '-')
-                .replace(/-+/g, '-')
-                .replace(/^-+|-+$/g, '');
-            $('#alias_url').val( "/chi-tiet-tin/" + alias);
-        }
+
+      
 
         function openNewsModal() {
             $('#modalTitle').text('Thêm tin tức');
@@ -391,12 +319,19 @@
 
         // Các hàm CRUD sẽ được thêm vào đây khi có API tương ứng
         function saveNews() {
-            // Get form data
             const form = $('#newsForm')[0];
-            const formData = new FormData(form);
-            var id=$('#id_News').val();
-            // Validate required fields
-            if (!formData.get('title') || !formData.get('id_Categorynews')) {
+            const formData = new FormData();
+            var id = $('#id_recruitmentpost').val();
+            var title_recruitmentpost = $('#title_recruitmentpost').val();
+            var Content_recruitmentpost = $('#Content_recruitmentpost').summernote('code');
+            var Status = $('#Status').val();
+            
+            formData.append('id_recruitmentpost', id);
+            formData.append('title_recruitmentpost', title_recruitmentpost);
+            formData.append('Content_recruitmentpost', Content_recruitmentpost);
+            formData.append('Status', Status);
+
+            if (!title_recruitmentpost || !Content_recruitmentpost) {
                 Swal.fire({
                     title: 'Lỗi!',
                     text: 'Vui lòng điền đầy đủ thông tin bắt buộc',
@@ -406,64 +341,38 @@
                 return;
             }
 
-            // Add description from summernote
-            formData.set('description', $('#description').summernote('code'));
+            Swal.fire({
+                title: 'Đang xử lý...',
+                text: 'Vui lòng chờ',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            console.log(formData);
 
-            // Send AJAX request
             $.ajax({
-                url: '/Allinone/AddNews',
+                url: '/api-tuyen-dung-benh-vien',
                 type: 'POST',
                 data: formData,
                 processData: false,
                 contentType: false,
-                beforeSend: function() {    
-                    Swal.fire({
-                        title: 'Chờ một xíu....',
-                        html: `
-                            <div class="text-center">
-                                <img src="https://i.pinimg.com/originals/fe/a5/33/fea5336ece9573d235870d51b8d28e7a.gif" width="100" height="100" alt="Loading..." />
-                                <div class="progress mt-3" style="height: 20px;">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
-                                         role="progressbar" 
-                                         style="width: 0%"
-                                         aria-valuenow="0" 
-                                         aria-valuemin="0" 
-                                         aria-valuemax="100">
-                                    </div>
-                                </div>
-                            </div>
-                        `,
-                        showConfirmButton: false,
-                        allowOutsideClick: false,
-                        background: '#ffffff',
-                        didOpen: () => {
-                            let progress = 0;
-                            const bar = document.querySelector('.progress-bar');
-                            const interval = setInterval(() => {
-                                progress += 2;
-                                bar.style.width = progress + '%';
-                                bar.setAttribute('aria-valuenow', progress);
-                                if (progress >= 100) {
-                                    clearInterval(interval);
-                                }
-                            }, 50);
-                        }
-                    });
-                },
                 success: function(response) {
+                    Swal.close();
                     if (response.status) {
-                        Swal.close();
                         $('#newsModal').modal('hide');
                         loadNews(currentPage);
-                        $('#description').summernote('code', '');
+                        $('#Content_recruitmentpost').summernote('code', '');
                         $('#newsForm')[0].reset();
+                        
                         Swal.fire({
-    title: id ? 'Cập nhật' : 'Thêm',
-    text: id ? 'Cập nhật thành công' : 'Thêm thành công',
-    icon: 'success',
-    confirmButtonText: 'OK'
-});
-
+                            title: id ? 'Cập nhật' : 'Thêm',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
                     } else {
                         Swal.fire({
                             title: 'Lỗi!',
@@ -474,6 +383,7 @@
                     }
                 },
                 error: function(xhr, status, error) {
+                    Swal.close();
                     Swal.fire({
                         title: 'Lỗi!',
                         text: 'Có lỗi xảy ra khi kết nối với server',
@@ -484,7 +394,7 @@
             });
         }
 
-        function deleteNews(id) {
+function deleteNews(id) {
 
             Swal.fire({
                 title: 'Xác nhận xóa?',

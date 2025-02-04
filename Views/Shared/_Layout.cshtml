@@ -5,11 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/trangchu.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/websitebenhvien.styles.css" asp-append-version="true" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <script type="text/javascript">
+    <!-- Lazy load CSS -->
+    <link rel="preload" href="~/lib/bootstrap/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"></noscript>
+    
+    <link rel="preload" href="~/css/trangchu.css" as="style" onload="this.onload=null;this.rel='stylesheet'" asp-append-version="true">
+    <noscript><link rel="stylesheet" href="~/css/trangchu.css" asp-append-version="true"></noscript>
+    
+    <link rel="preload" href="~/websitebenhvien.styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'" asp-append-version="true">
+    <noscript><link rel="stylesheet" href="~/websitebenhvien.styles.css" asp-append-version="true"></noscript>
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
+
+    <!-- Defer non-critical scripts -->
+    <script type="text/javascript" defer>
         function googleTranslateElementInit() {
             new google.translate.TranslateElement(
                 { pageLanguage: 'vi', includedLanguages: 'vi,en,zh-CN,ja,ko'},
@@ -25,7 +35,8 @@
         <div class="row d-flex bg-white h-70" style="height: 105px;"  >
             <div class="col-md-5 col-12 d-flex justify-content-center align-items-center ">
                 <a href="/" >
-                    <img src="/Images/Logo-rm.png" alt="Emergency" class="me-2" style="height: 83px; width: auto; padding-right: 100px;">
+                    <!-- Lazy load image -->
+                    <img src="/Images/Logo-rm.png" alt="Emergency" class="me-2" style="height: 83px; width: auto; padding-right: 100px;" loading="lazy">
                 </a>
             </div>
             <div class="col-md-7 col-12 d-none d-md-flex flex-column" id="header-contact">    
@@ -216,16 +227,20 @@
 
 </div>
 
-<script src="https://sp.zalo.me/plugins/sdk.js"></script>
-    <script src="~/lib/aspnet-signalr/signalr.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<!-- Lazy load scripts -->
+<script src="https://sp.zalo.me/plugins/sdk.js" defer></script>
+<script src="~/lib/aspnet-signalr/signalr.js" defer></script>
+<script src="~/lib/jquery/dist/jquery.min.js" defer></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
+<script src="~/js/site.js" asp-append-version="true" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js" defer></script>
+
+<!-- Preload critical CSS -->
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"></noscript>
  
     <!-- Script xử lý nút cuộn lên đầu trang -->
-    <script>
+    <script defer>
         // Xử lý hiệu ứng fade-in khi cuộn
         function checkFade() {
             const fadeElements = document.querySelectorAll('.fade-in');
@@ -238,13 +253,24 @@
             });
         }
 
+        // Intersection Observer for lazy loading
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    checkFade();
+                }
+            });
+        });
+
         // Gọi hàm khi trang tải và khi cuộn
-        window.addEventListener('load', checkFade);
-        window.addEventListener('scroll', checkFade);
+        document.addEventListener('DOMContentLoaded', () => {
+            checkFade();
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        });
     </script>
-    <script>
-        // Mai flower effect for Tet
-        (function() {
+    <script defer>
+        // Mai flower effect for Tet - Load only when needed
+        document.addEventListener('DOMContentLoaded', () => {
             const flowerCount = 50;
             const flowers = [];
 
@@ -265,31 +291,38 @@
             }
 
             function animateFlowers() {
-                flowers.forEach(flower => {
-                    const x = Math.random() * window.innerWidth;
-                    const y = Math.random() * window.innerHeight;
-                    const size = Math.random() * 15 + 20;
-                    const duration = Math.random() * 8 + 10;
-                    const rotation = Math.random() * 360;
+                requestAnimationFrame(() => {
+                    flowers.forEach(flower => {
+                        const x = Math.random() * window.innerWidth;
+                        const y = Math.random() * window.innerHeight;
+                        const size = Math.random() * 15 + 20;
+                        const duration = Math.random() * 8 + 10;
+                        const rotation = Math.random() * 360;
 
-                    flower.style.left = `${x}px`;
-                    flower.style.top = `${y}px`;
-                    flower.style.width = `${size}px`;
-                    flower.style.height = `${size}px`;
-                    flower.style.transform = `rotate(${rotation}deg)`;
-                    flower.style.animationDuration = `${duration}s`;
+                        flower.style.left = `${x}px`;
+                        flower.style.top = `${y}px`;
+                        flower.style.width = `${size}px`;
+                        flower.style.height = `${size}px`;
+                        flower.style.transform = `rotate(${rotation}deg)`;
+                        flower.style.animationDuration = `${duration}s`;
+                    });
                 });
             }
 
             animateFlowers();
-            window.addEventListener('resize', animateFlowers);
-        })();
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(animateFlowers, 150);
+            });
+        });
     </script>
     <style>
         .mai-flower {
             position: fixed;
             pointer-events: none;
             animation: fall linear infinite;
+            will-change: transform;
         }
 
         .petal {
@@ -299,6 +332,7 @@
             background: #ffeb3b;
             border-radius: 50%;
             transform-origin: 100% 100%;
+            will-change: transform;
         }
 
         .petal:nth-child(1) { transform: rotate(0deg) translateX(50%); }
@@ -315,6 +349,7 @@
             border-radius: 50%;
             top: 40%;
             left: 40%;
+            will-change: transform;
         }
 
      

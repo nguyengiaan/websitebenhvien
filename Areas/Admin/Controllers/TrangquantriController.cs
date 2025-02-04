@@ -160,6 +160,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             return View();
         }
         [Authorize(Roles ="Dangtintuyendung,admin")]
+        [Route("/trang-quan-tri/dang-tin-tuyen-dung")]
         public IActionResult Dangtintuyendung()
         {
             return View();

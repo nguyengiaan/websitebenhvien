@@ -1,6 +1,6 @@
-﻿namespace websitebenhvien.Models.Enitity
+namespace websitebenhvien.Models.EnitityVM
 {
-    public class Recruitmentpost
+    public class RecruitmentpostVM
     {
         public int id_recruitmentpost;
 
@@ -10,9 +10,9 @@
 
         public string Status;
 
-        public bool Statuson;
+        public bool ? Statuson;
 
-        public DateTime Date_recruitmentpost;
+        public DateTime ?Date_recruitmentpost;
 
     }
 }
