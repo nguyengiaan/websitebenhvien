@@ -1,0 +1,56 @@
+@{
+    ViewData["Title"] = "Không có quyền truy cập";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="text-center">
+        <div class="error mx-auto" data-text="403">403</div>
+        <p class="lead text-gray-800 mb-5">Không có quyền truy cập</p>
+        <p class="text-gray-500 mb-0">Có vẻ như bạn không có quyền truy cập vào trang này...</p>
+        
+        <div class="mt-4">
+            <img src="https://http.cat/403" alt="403 Cat" class="img-fluid rounded shadow" style="max-width: 500px;">
+        </div>
+
+        <a href="/trang-quan-tri" class="mt-4 d-inline-block">&larr; Quay lại trang chủ</a>
+    </div>
+</div>
+
+<style>
+.error {
+    color: #5a5c69;
+    font-size: 7rem;
+    position: relative;
+    line-height: 1;
+    width: 12.5rem;
+}
+
+.error:before {
+    content: attr(data-text);
+    position: absolute;
+    left: -2px;
+    text-shadow: 1px 0 #4e73df;
+    top: 0;
+    color: #5a5c69;
+    background: #f8f9fc;
+    overflow: hidden;
+    clip: rect(0,900px,0,0);
+    animation: noise-anim-2 3s infinite linear alternate-reverse;
+}
+
+.error:after {
+    content: attr(data-text);
+    position: absolute;
+    left: 2px;
+    text-shadow: -1px 0 #e74a3b;
+    top: 0;
+    color: #5a5c69;
+    background: #f8f9fc;
+    overflow: hidden;
+    clip: rect(0,900px,0,0);
+    animation: noise-anim 2s infinite linear alternate-reverse;
+}
+
+
+</style>

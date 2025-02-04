@@ -1,0 +1,237 @@
+@{
+    ViewData["Title"] = "Quản lý đăng ký khám sức khoẻ";
+
+}
+
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Quản lý đăng ký khám sức khoẻ</h4>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+             
+                <div class="col-md-3">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm...">
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="appointmentTable">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên bệnh nhân</th>
+                            <th>Số điện thoại</th>
+                            <th>Thời gian khám</th>
+                            <th>Ghi chú</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <div id="pagination" class="float-start"></div>
+                </div>
+             
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let currentPage = 1;
+        const pageSize = 20;
+
+        $(document).ready(function() {
+            loadAppointments();
+
+            $('#searchInput').on('keyup', function() {
+                loadAppointments();
+            });
+
+            $('#specialtyFilter').on('change', function() {
+                loadAppointments();
+            });
+
+            $('#pageSize').on('change', function() {
+                loadAppointments();
+            });
+        });
+
+   
+        function loadAppointments() {
+            const searchTerm = $('#searchInput').val();
+            const specialtyId = $('#specialtyFilter').val();
+
+            $.ajax({
+                url: '/api/lay-danh-sach-dang-ky-kham-sk',
+                type: 'POST',
+                data: {
+                    page: currentPage,
+                    pageSize: pageSize,
+                    search: searchTerm,
+                },
+                success: function(response) {
+                    if(response.status){
+                        console.log(response);
+                        renderAppointments(response.data);
+                        renderPagination(response.total, currentPage);
+                    }
+                }
+            });
+        }
+
+        function renderAppointments(appointments) {
+            let html = '';
+            appointments.forEach((item, index) => {
+                html += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td>${item.phone}</td>
+                        <td>${formatDateTime(item.examinationtime)}</td>
+                        <td>${item.note || ''}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">${item.status ? 'Đã xác nhận' : 'Chưa xác nhận'}</span>
+                                <button class="btn btn-${item.status ? 'success' : 'warning'} btn-sm" 
+                                        onclick="toggleStatus(${item.id_makeanappointment})">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="deleteAppointment(${item.id_makeanappointment})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            $('#appointmentTable tbody').html(html);
+        }
+        function renderPagination(totalPages, currentPage) {
+            let html = '';
+            
+            // Previous button
+            html += `
+                <button class="btn btn-outline-primary btn-sm me-1" 
+                        onclick="changePage(${currentPage - 1})"
+                        ${currentPage === 1 ? 'disabled' : ''}>
+                    &laquo;
+                </button>
+            `;
+
+            // Calculate range of pages to show
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            
+            // Adjust start if end is maxed out
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
+
+            // First page + ellipsis
+            if (startPage > 1) {
+                html += `
+                    <button class="btn btn-outline-primary btn-sm me-1" onclick="changePage(1)">1</button>
+                    ${startPage > 2 ? '<span class="me-1">...</span>' : ''}
+                `;
+            }
+
+            // Page numbers
+            for (let i = startPage; i <= endPage; i++) {
+                html += `
+                    <button class="btn btn-${currentPage === i ? 'primary' : 'outline-primary'} btn-sm me-1" 
+                            onclick="changePage(${i})">
+                        ${i}
+                    </button>
+                `;
+            }
+
+            // Last page + ellipsis
+            if (endPage < totalPages) {
+                html += `
+                    ${endPage < totalPages - 1 ? '<span class="me-1">...</span>' : ''}
+                    <button class="btn btn-outline-primary btn-sm me-1" onclick="changePage(${totalPages})">${totalPages}</button>
+                `;
+            }
+
+            // Next button
+            html += `
+                <button class="btn btn-outline-primary btn-sm me-1"
+                        onclick="changePage(${currentPage + 1})"
+                        ${currentPage === totalPages ? 'disabled' : ''}>
+                    &raquo;
+                </button>
+            `;
+
+            $('#pagination').html(html);
+        }
+
+        function changePage(page) {
+            if (page >= 1 && page <= totalPages) {
+                currentPage = page;
+                loadAppointments();
+            }
+        }
+
+        function deleteAppointment(id) {
+            Swal.fire({
+                title: 'Xác nhận xóa?',
+                text: "Bạn có chắc chắn muốn xóa lịch khám này?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `/api/xoa-lich-kham-sk`,
+                        type: 'POST',
+                        data: {
+                            id: id
+                        },
+                        success: function(response) {
+                            if (response.status) {
+                                Swal.fire('Thành công', 'Đã xóa lịch khám', 'success');
+                                loadAppointments();
+                            } else {
+                                Swal.fire('Lỗi', response.message, 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        function formatDateTime(dateTimeStr) {
+            const date = new Date(dateTimeStr);
+            return date.toLocaleString('vi-VN');
+        }
+
+        function toggleStatus(id) {
+            $.ajax({
+                url: `/api/cap-nhat-lich-kham-sk`,
+                type: 'POST',
+                data: { id: id },
+                success: function(response) {
+                    if(response.status){
+                        Swal.fire('Thành công', 'Đã cập nhật trạng thái', 'success');
+                        loadAppointments();
+                    }else{
+                        Swal.fire('Lỗi', response.message, 'error');
+                    }
+                }
+            });
+        }
+    </script>
+}
+

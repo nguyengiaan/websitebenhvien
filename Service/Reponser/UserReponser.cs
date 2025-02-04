@@ -57,13 +57,13 @@ namespace websitebenhvien.Service.Reponser
 
                 foreach (var user in users)
                 {
-                    var role = (await _userManager.GetRolesAsync(user)).FirstOrDefault(); // Gọi bất đồng bộ
+            
                     data.Add(new RegisteruserVM
                     {
                         Id = user.Id,
                         Username = user.UserName,
                         FullName = user.FullName,
-                        Role = role,
+       
                         Password = user.PasswordHash,
                     });
                 }
@@ -122,34 +122,7 @@ namespace websitebenhvien.Service.Reponser
                         authClaims.Add(new Claim(ClaimTypes.Role, role));
                     }
 
-                    // Thêm permission claims
-                    foreach (var permission in permissionUser)
-                    {
-                        if (permission.Permissions != null && !string.IsNullOrEmpty(permission.Permissions.Title_permision))
-                        {
-                            Console.WriteLine($"Adding permission: {permission.Permissions.Title_permision}"); // Log để debug
-                            authClaims.Add(new Claim("Permission", permission.Permissions.Title_permision));
-                        }
-                    }
-
-                    // Tạo identity và principal
-                    var claimsIdentity = new ClaimsIdentity(authClaims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                    // Sign in với claims mới
-                    await _httpContextAccessor.HttpContext.SignInAsync(
-                        CookieAuthenticationDefaults.AuthenticationScheme,
-                        claimsPrincipal,
-                        new AuthenticationProperties
-                        {
-                            IsPersistent = true,
-                            ExpiresUtc = DateTime.UtcNow.AddHours(24)
-                        });
-
-                    // Log để debug
-                    var currentClaims = claimsPrincipal.Claims.Select(c => $"{c.Type}: {c.Value}");
-                    Console.WriteLine("Current claims after login: " + string.Join(", ", currentClaims));
-
+                
                     status.status = 1;
                     status.messager = "Đăng nhập thành công";
                     return status;
@@ -189,15 +162,6 @@ namespace websitebenhvien.Service.Reponser
                         status.messager = "Cập nhật thất bại";
                         return status;
                     }
-
-                    // Cập nhật role nếu khác với role hiện tại
-                    var currentRoles = await _userManager.GetRolesAsync(existingUser);
-                    if (!currentRoles.Contains(registeruser.Role))
-                    {
-                        await _userManager.RemoveFromRolesAsync(existingUser, currentRoles);
-                        await _userManager.AddToRoleAsync(existingUser, registeruser.Role);
-                    }
-
                     status.status = 1;
                     status.messager = "Cập nhật thành công";
                     return status;
@@ -219,14 +183,7 @@ namespace websitebenhvien.Service.Reponser
                     return status;
                 }
 
-                if (!await _roleManager.RoleExistsAsync(registeruser.Role))
-                {
-                    await _roleManager.CreateAsync(new IdentityRole(registeruser.Role));
-                }
-                if (await _roleManager.RoleExistsAsync(registeruser.Role))
-                {
-                    await _userManager.AddToRoleAsync(newUser, registeruser.Role);
-                }
+           
 
                 status.status = 1;
                 status.messager = "Đăng ký thành công";
@@ -242,7 +199,7 @@ namespace websitebenhvien.Service.Reponser
         {
             try
             {
-                return await _roleManager.Roles.ToListAsync();
+                return await _roleManager.Roles.OrderBy(x => x.Id).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -388,5 +345,98 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
+        public async Task<List<RolesuserVM>> GetRolesUser(string id)
+        {
+            try
+            {
+                // Lấy tất cả các roles từ bảng Roles
+                var allRoles = await _roleManager.Roles.ToListAsync();
+
+                // Lấy các role của user hiện tại
+                var userRoles = await _context.UserRoles
+                    .Where(ur => ur.UserId == id)
+                    .Select(ur => ur.RoleId)
+                    .ToListAsync();
+
+                // Chuyển đổi sang RolesuserVM và đánh dấu các role mà user có
+                var result = allRoles.Select(r => new RolesuserVM
+                {
+                    id = r.Id,
+                    name = r.Name,
+                    isSelected = userRoles.Contains(r.Id)
+                }).ToList();
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+  public async Task<bool> UpdateRolesUser(string id, string idrole)
+{
+    try
+    {
+        var user = await _context.ApplicationUser.FindAsync(id);
+        var role = await _roleManager.FindByIdAsync(idrole);
+
+        // Kiểm tra xem user đã có role này chưa
+        var hasRole = await _userManager.IsInRoleAsync(user, role.Name);
+        if (hasRole)
+        {
+            // Nếu đã có role thì xóa role đó
+            var result = await _userManager.RemoveFromRoleAsync(user, role.Name);
+            if (result.Succeeded)
+            {
+                // Xóa các claims liên quan đến role
+                var claims = await _userManager.GetClaimsAsync(user);
+                foreach (var claim in claims.Where(c => c.Type == ClaimTypes.Role && c.Value == role.Name))
+                {
+                    await _userManager.RemoveClaimAsync(user, claim);
+                }
+            }
+        }
+        else
+        {
+            // Nếu chưa có role thì thêm role mới
+            var result = await _userManager.AddToRoleAsync(user, role.Name);
+            if (result.Succeeded)
+            {
+                // Thêm claim role mới
+                var claim = new Claim(ClaimTypes.Role, role.Name);
+                await _userManager.AddClaimAsync(user, claim);
+            }
+        }
+
+        // Chỉ làm mới phiên nếu đang chỉnh sửa tài khoản hiện tại
+        var currentUser = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+        if (currentUser.Id == user.Id) // Đảo ngược điều kiện - chỉ refresh khi sửa chính tài khoản của mình
+        {
+            await _signInManager.RefreshSignInAsync(currentUser);
+        }
+
+        return true;
+    }
+    catch (Exception ex)
+    {
+        // Log lỗi nếu cần thiết
+        return false;
+    }
+}
+
+
+        public async Task<bool> Logout()
+        {
+          try
+          {
+              await _signInManager.SignOutAsync();
+             return true;
+          } 
+          catch (Exception ex)
+          {
+            return false;
+          }
+        }
     }
 }

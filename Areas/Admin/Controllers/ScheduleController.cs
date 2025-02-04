@@ -154,5 +154,72 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
      
         }
+        // danh sách lịch khám sức khoẻ
+        [Authorize]
+        [HttpPost("/api/lay-danh-sach-dang-ky-kham-sk")]
+        public async Task<IActionResult> GetAppointmentSK(int page, int pageSize, string search)
+        {
+            try{
+                var data = await _workSchedule.GetAppointmentSK(page, pageSize, search);
+                return Json(new { status = true, data = data.ds, total = data.total, page = page, pageSize = pageSize });
+            }
+            catch(Exception ex){
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [Authorize]
+        [HttpPost("/api/xoa-lich-kham-sk")]
+        public async Task<IActionResult> DeleteAppointmentSK(int id)
+        {
+            try{
+                var data = await _workSchedule.DeleteAppointmentSK(id);
+                if(data){
+                    return Json(new { status = true, message = "Đã xóa lịch khám sức khoẻ" });
+                }
+                return Json(new { status = false, message = "Không thể xóa lịch khám sức khoẻ" });
+            }
+            catch(Exception ex){
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [Authorize]
+        [HttpPost("/api/cap-nhat-lich-kham-sk")]
+        public async Task<IActionResult> UpdateAppointmentSK(int id)
+        {
+            try{
+                var data = await _workSchedule.UpdateAppointmentSK(id);
+                if(data){
+                    return Json(new { status = true, message = "Đã cập nhật trạng thái" });
+                }
+                return Json(new { status = false, message = "Không thể cập nhật trạng thái" });
+            }
+            catch(Exception ex){
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [Authorize]
+        [HttpGet("/api/tao-bieu-do-dang-ky")]
+        public async Task<IActionResult> GetRegisterChart()
+        {
+            try{
+                var data = await _workSchedule.GetRegisterChart();
+                return Json(new { status = true, data = data });
+            }
+            catch(Exception ex){
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+        [Authorize]
+        [HttpGet("/api/lay-danh-sach-dang-ky-theo-ngay")]
+        public async Task<IActionResult> GetCharthealthdate()
+        {
+            try{
+                var data = await _workSchedule.GetCharthealthdate();
+                return Json(new { status = true, data = data });
+            }
+            catch(Exception ex){
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
     }
 }

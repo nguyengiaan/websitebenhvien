@@ -25,5 +25,14 @@ namespace websitebenhvien.Service.Interface
 
         public Task<bool> AddPeremissionUser(PermissionUserVM pemissionUser);
 
+        public Task<List<RolesuserVM>> GetRolesUser(string id);
+
+        public Task<bool> UpdateRolesUser(string id, string idrole);
+
+
+        public Task<bool> Logout();
+
+    
+
     }
 }

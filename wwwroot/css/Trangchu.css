@@ -763,3 +763,16 @@ header {
   font-size: 1.2rem;
 }
 /* Carousel */
+/* End Carousel */
+/*menu*/
+@keyframes dropdownFade {
+  from {
+      opacity: 0;
+      transform: translateY(-10px) translateZ(20px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0) translateZ(20px);
+  }
+}
+/* End menu */

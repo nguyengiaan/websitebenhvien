@@ -29,20 +29,88 @@
                 </a>
             </div>
             <div class="col-md-7 col-12 d-none d-md-flex flex-column" id="header-contact">    
-
             </div>
 
             
         </div>
         
-        <nav class="navbar navbar-expand-lg" style="background: linear-gradient(315deg, rgb(18, 80, 220) 0%, rgb(48, 109, 228) 100%);width: 100%; padding-top: 8px;">
+        <nav class="navbar navbar-expand-lg" style="background-color:#ffffff; width: 100%; padding-top: 8px;">
             <div class="container-fluid">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav mx-auto" id="menu">
+                    <ul class="navbar-nav mx-auto" id="menu" style="perspective: 1500px; transform-style: preserve-3d;">
                     </ul>
+                    <style>
+                        #menu .nav-item {
+                            transform-style: preserve-3d;
+                            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                            position: relative;
+                            border-radius: 2px;
+                        }
+                        #menu .nav-item:hover {
+                            transform: translateZ(40px) scale(1.08);
+                            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+                        }
+                        #menu .nav-link {
+                            background: linear-gradient(165deg, rgba(255,255,255,0.95), rgba(240,240,240,0.9));
+                            box-shadow: 5px 5px 15px rgba(0,0,0,0.1),
+                                      -5px -5px 15px rgba(255,255,255,0.9),
+                                      inset 3px 3px 5px rgba(255,255,255,0.5),
+                                      inset -3px -3px 5px rgba(0,0,0,0.05);
+                            border-radius: 4px;
+                            margin: 8px;
+                            padding: 12px 25px;
+                            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                            position: relative;
+                            overflow: hidden;
+                        }
+                        #menu .nav-link::before {
+                            content: '';
+                            position: absolute;
+                            top: 0;
+                            left: -100%;
+                            width: 100%;
+                            height: 100%;
+                            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+                            transition: 0.5s;
+                        }
+                        #menu .nav-link:hover {
+                            background: linear-gradient(165deg, rgba(255,255,255,1), rgba(245,245,245,0.95));
+                            transform: translateZ(20px) translateY(-2px);
+                            box-shadow: 8px 8px 20px rgba(0,0,0,0.15),
+                                      -8px -8px 20px rgba(255,255,255,1),
+                                      inset 2px 2px 5px rgba(255,255,255,0.5),
+                                      inset -2px -2px 5px rgba(0,0,0,0.05);
+                        }
+                        #menu .nav-link:hover::before {
+                            left: 100%;
+                        }
+                        #menu .dropdown-menu {
+                            background: rgba(255, 255, 255, 0.95);
+                            backdrop-filter: blur(20px);
+                            border: 1px solid rgba(255, 255, 255, 0.5);
+                            border-radius: 6px;
+                            transform-style: preserve-3d;
+                            transform: translateZ(30px);
+                            box-shadow: 0 20px 35px rgba(0,0,0,0.12);
+                            animation: dropdownFade 0.3s ease-out;
+                        }
+                  
+                        #menu .dropdown-item {
+                            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                            border-radius: 4px;
+                            margin: 8px;
+                            padding: 10px 20px;
+                            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                        }
+                        #menu .dropdown-item:hover {
+                            background: rgba(255,255,255,0.95);
+                            transform: translateX(5px) scale(1.03);
+                            box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+                        }
+                    </style>
                 </div>
             </div>
         </nav>
@@ -55,71 +123,86 @@
    
 </footer>
     <!-- Nút cuộn lên đầu trang -->
-    <div class="position-fixed bottom-0 end-0 m-4 d-flex flex-column gap-3" style="z-index: 1000;">
-        <!-- Chat box -->
-        <div class="chat-box-wrapper">
-            <!-- Chat Button -->
-           <button id="chatButton" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center position-relative animate__animated animate__pulse animate__infinite" 
-        style="width: 50px; height: 50px; background: linear-gradient(45deg, #0063EC, #00a5ff); border: none; transition: all 0.3s ease;">
-    <i class="fas fa-comments fa-lg" style="color: white; filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));"></i>
-    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger  " 
-          style="font-size: 0.6rem;" id="count-notification">
-        <i class="fas fa-bell text-white" id="count-notification"></i>
-    </span>
-    <div class="ripple position-absolute w-100 h-100 rounded-circle" style="animation: ripple 1.5s linear infinite; border: 2px solid #fff; opacity: 0;"></div>
-    <div class="bell-shake">
-    
-    </div>
-</button>
+<div class="zalo-chat-widget" 
+                 id="zalo-chat-widget" 
+                 data-oaid="3218616946017588505" 
+                 data-welcome-message="Xin chào! Mình có thể giúp gì cho bạn?" 
+                 data-autopopup="0" 
+                 data-width="350" 
+                 data-height="450"
+style="justify-content: center !important; align-items: center !important; margin-bottom: 160px !important;">
+    <div class="position-fixed bottom-0 end-0 m-4 d-flex flex-column gap-3 margin-right: 50px !important;" style="z-index: 1000;">
+        <!-- Zalo Chat Widget -->
+        <div class="d-flex flex-column align-items-end gap-3" style="margin-right: 82px!important;">
+            <!-- Zalo Chat Widget -->
 
 
-            <!-- Chat Window -->
-            <div id="chatWindow" class="card position-absolute bottom-100 mb-2 animate__animated animate__fadeIn" style="width: 300px; display: none; right: 0; transform-origin: bottom right;">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" style="border-radius: 10px 10px 0 0;">
-                    <h6 class="m-0 new-label">
-                        <i class="fas fa-circle text-success me-2 " style="font-size: 10px;"></i>
-                        Chat với chúng tôi
-                    </h6>
-                    <button type="button" class="btn-close btn-close-white animate__animated animate__rotateIn" id="closeChatBtn" style="transition: transform 0.3s;" onmouseover="this.style.transform='rotate(90deg)';" onmouseout="this.style.transform='rotate(0deg)';"></button>
-                </div>
-                <div class="card-body" style="height: 300px; overflow-y: auto; scroll-behavior: smooth;" id="chatMessages">
-                    <!-- Welcome message -->
-                    <div class="mb-2 animate__animated animate__fadeInLeft">
-                        <div class="d-inline-block bg-light rounded p-2" style="position: relative;">
-                            <p class="m-0">Xin chào! Chúng tôi có thể giúp gì cho bạn? 👋</p>
-                            <div class="typing-indicator animate__animated animate__fadeIn">
-                                <span></span>
-                                <span></span>
-                                <span></span>
+                
+            </div>
+
+            <!-- Chat box -->
+            <div class="chat-box-wrapper">
+                <!-- Chat Button -->
+                <button id="chatButton" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center position-relative animate__animated animate__pulse animate__infinite" 
+                        style="width: 50px; height: 50px; background: linear-gradient(45deg, #0063EC, #00a5ff); border: none; transition: all 0.3s ease;">
+                    <i class="fas fa-comments fa-lg" style="color: white; filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
+                          style="font-size: 0.6rem;" id="count-notification">
+                        <i class="fas fa-bell text-white" id="count-notification"></i>
+                    </span>
+                    <div class="ripple position-absolute w-100 h-100 rounded-circle" style="animation: ripple 1.5s linear infinite; border: 2px solid #fff; opacity: 0;"></div>
+                    <div class="bell-shake"></div>
+                </button>
+
+                <!-- Chat Window -->
+                <div id="chatWindow" class="card position-absolute bottom-100 mb-2 animate__animated animate__fadeIn" style="width: 300px; display: none; right: 0; transform-origin: bottom right;">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" style="border-radius: 10px 10px 0 0;">
+                        <h6 class="m-0 new-label">
+                            <i class="fas fa-circle text-success me-2" style="font-size: 10px;"></i>
+                            Chat với chúng tôi
+                        </h6>
+                        <button type="button" class="btn-close btn-close-white animate__animated animate__rotateIn" id="closeChatBtn" style="transition: transform 0.3s;" onmouseover="this.style.transform='rotate(90deg)';" onmouseout="this.style.transform='rotate(0deg)';"></button>
+                    </div>
+                    <div class="card-body" style="height: 300px; overflow-y: auto; scroll-behavior: smooth;" id="chatMessages">
+                        <!-- Welcome message -->
+                        <div class="mb-2 animate__animated animate__fadeInLeft">
+                            <div class="d-inline-block bg-light rounded p-2" style="position: relative;">
+                                <p class="m-0">Xin chào! Chúng tôi có thể giúp gì cho bạn? 👋</p>
+                                <div class="typing-indicator animate__animated animate__fadeIn">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="card-footer animate__animated animate__fadeInUp" style="border-radius: 0 0 10px 10px;">
-                    <div class="input-group">
-                        <input type="text" id="messageInput" class="form-control" placeholder="Nhập tin nhắn..." style="border-radius: 20px 0 0 20px;">
-                        <button class="btn btn-primary animate__animated animate__pulse animate__infinite" id="sendMessageBtn" style="border-radius: 0 20px 20px 0; transition: all 0.3s;">
-                            <i class="fas fa-paper-plane" style="transition: transform 0.3s;"></i>
-                        </button>
+                    <div class="card-footer animate__animated animate__fadeInUp" style="border-radius: 0 0 10px 10px;">
+                        <div class="input-group">
+                            <input type="text" id="messageInput" class="form-control" placeholder="Nhập tin nhắn..." style="border-radius: 20px 0 0 20px;">
+                            <button class="btn btn-primary animate__animated animate__pulse animate__infinite" id="sendMessageBtn" style="border-radius: 0 20px 20px 0; transition: all 0.3s;">
+                                <i class="fas fa-paper-plane" style="transition: transform 0.3s;"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Facebook Button -->
+            <a href="https://www.facebook.com/benhvienmyphuoc?locale=vi_VN" target="_blank" 
+               class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center animate__animated animate__bounceIn animate__delay-1s" 
+               style="width: 50px; height: 50px; background: #1877f2; border: none;">
+                <i class="fab fa-facebook-f fa-lg animate__animated animate__tada animate__delay-2s" style="color: white;"></i>
+            </a>
+
+            <!-- Back to top button -->
+            <button id="backToTop" 
+                    class="btn btn-primary rounded-circle shadow animate__animated animate__bounceIn animate__delay-2s" 
+                    style="width: 50px; height: 50px;">
+                <i class="fas fa-arrow-up animate__animated animate__bounce animate__infinite"></i>
+            </button>
         </div>
-
-        <!-- Social Media Buttons -->
-        <a href="https://zalo.me/02743535777" target="_blank" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center mb-2 animate__animated animate__bounceIn" style="width: 50px; height: 50px; background: #0068ff; border: none;">
-            <img src="/Images/zalo_sharelogo.png" alt="Zalo" style="width: 30px; height: 30px;" class="animate__animated animate__tada animate__delay-1s">
-        </a>
-
-        <a href="https://www.facebook.com/benhvienmyphuoc?locale=vi_VN" target="_blank" class="btn btn-primary rounded-circle shadow d-flex align-items-center justify-content-center mb-2 animate__animated animate__bounceIn animate__delay-1s" style="width: 50px; height: 50px; background: #1877f2; border: none;">
-            <i class="fab fa-facebook-f fa-lg animate__animated animate__tada animate__delay-2s" style="color: white;"></i>
-        </a>
-
-        <!-- Back to top button -->
-        <button id="backToTop" class="btn btn-primary rounded-circle shadow animate__animated animate__bounceIn animate__delay-2s" style="width: 50px; height: 50px; display: none;">
-            <i class="fas fa-arrow-up animate__animated animate__bounce animate__infinite"></i>
-        </button>
     </div>
+       
 
     <div id="google_translate_element" class="ms-2" style="display: none;"></div>
 
@@ -127,7 +210,7 @@
 
 </div>
 
-
+<script src="https://sp.zalo.me/plugins/sdk.js"></script>
     <script src="~/lib/aspnet-signalr/signalr.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

@@ -28,13 +28,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <select class="form-control" id="roleFilter">
-                                <option value="">Tất cả quyền</option>
-                                <option value="admin">Admin</option>
-                                <option value="user">User</option>
-                            </select>
-                        </div>
                     </div>
 
                     <table class="table table-bordered table-hover">
@@ -43,8 +36,7 @@
                                 <th>ID</th>
                                 <th>Họ tên</th>
                                 <th>Tên đăng nhập</th>
-                                <th>Quyền</th>
-                  
+       
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
@@ -99,15 +91,7 @@
                         <div class="invalid-feedback">Vui lòng nhập mật khẩu người dùng</div>
                         <small class="form-text text-muted">Để trống nếu không muốn thay đổi mật khẩu</small>
                     </div>
-                    <div class="form-group">
-                        <label>Quyền</label>
-                        <select class="form-control" id="role" name="role" required>
-                            <option value="">Chọn quyền</option>
-                            <option value="admin">Admin</option>
-                            <option value="user">User</option>
-                        </select>
-                        <div class="invalid-feedback">Vui lòng chọn quyền người dùng</div>
-                    </div>
+                  
                 </form>
             </div>
             <div class="modal-footer">
@@ -117,14 +101,58 @@
         </div>
     </div>
 </div>
+<!-- Modal Thêm quyền -->
+<div class="modal fade" id="modal-permission">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h4 class="modal-title"><i class="fas fa-user-shield mr-2"></i>Thêm quyền người dùng</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" onclick="$('#modal-permission').modal('hide')">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="permissionForm">
+                    <input type="hidden" id="userId" name="userId">
+                    <div class="form-group">
+                        <label class="font-weight-bold">Tên người dùng</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" class="form-control form-control-lg" id="userName" name="userName" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Danh sách quyền</label>
+                        <div class="permission-list p-3 border rounded" style="max-height: 300px; overflow-y: auto;">
+                           
+                          
+                        </div>
+                    </div>
+                </form>
+            </div>
+           
+        </div>
+    </div>
+</div>
+
 
 @section scripts {
     <script>
         $(document).ready(function() {
+            $(document).on('click', '.permission-user', function() {
+                var userId = $(this).data('id');
+                var userName = $(this).data('username');
+                $('#userId').val(userId);
+                $('#userName').val(userName);
+                $('#modal-permission').modal('show');
+                loadRoles(userId);
+            });
             // Reset form khi đóng modal
             $('#modal-add').on('hidden.bs.modal', function() {
                 $('#userForm')[0].reset();
-                $('#userId').val('');
+                $('#Id').val('');
        
             });
             let currentPage = 1;
@@ -184,7 +212,6 @@
                             <td>${index + 1}</td>
                             <td>${item.fullName}</td>
                             <td>${item.username}</td>
-                            <td>${item.role}</td>
                    
                             <td>
                                 <button class="btn btn-info btn-sm edit-user" data-id="${item.id}" data-fullname="${item.fullName}" data-username="${item.username}" data-role="${item.role}" data-password="${item.password}">
@@ -192,6 +219,9 @@
                                 </button>
                                 <button class="btn btn-danger btn-sm delete-user" data-id="${item.id}">
                                     <i class="fas fa-trash"></i>
+                                </button>
+                                 <button class="btn btn-warning btn-sm permission-user" data-id="${item.id}" data-fullname="${item.fullName}" data-username="${item.username}" >
+                                    <i class="fas fa-user-shield"></i>
                                 </button>
                             </td>
                         </tr>
@@ -273,8 +303,6 @@
                 loadUsers(1, $('#searchInput').val(), $(this).val());
             });
 
-
-
             // Xử lý thêm/sửa user
             $('#saveUser').click(function() {
                 let formData = new FormData($('#userForm')[0]);
@@ -336,7 +364,6 @@
                 });
             });
         });
-
         function updateStatus(userId) {
             $.ajax({
                 url: '/Allinone/UpdateUserStatus',
@@ -345,6 +372,37 @@
                 success: function(response) {
                     if (response.status) {
                         loadUsers(currentPage, $('#searchInput').val(), $('#roleFilter').val());
+                    }
+                }
+            });
+        }
+        function loadRoles(id) {
+            $.ajax({
+                url: '/api/ds-roles-user',
+                type: 'POST',
+                data: { id: id },
+                success: function(response) {
+                   var html = '';
+                   response.data.forEach(function(item, index) {
+                    html += `<div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="permission${index}" name="permissions[]" value="${item.id}" ${item.isSelected ? 'checked' : ''} onchange="updateRole('${id}','${item.id}')"
+>
+                                <label class="custom-control-label" for="permission${index}">${item.name}</label>
+                            </div>`;
+                   });
+                   $('.permission-list').html(html);
+                }
+            });
+        }
+        function updateRole(iduser,idrole) {
+            $.ajax({
+                url: '/api/update-roles-user',
+                type: 'POST',
+                data: { id: iduser, idrole: idrole },
+                success: function(response) {
+                    if (response.status) {
+                        swal.fire("Thành công", response.message, "success");
+                        loadRoles(iduser);
                     }
                 }
             });

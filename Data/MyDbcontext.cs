@@ -67,6 +67,8 @@ namespace websitebenhvien.Data
 
         public DbSet<PermissionUser> PermissionUser { get; set; }
 
+        public DbSet<Registerhealth> Registerhealths { get; set; }
+
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -180,6 +182,10 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<PermissionUser>().HasKey(x => x.id_Permission);
             modelBuilder.Entity<PermissionUser>().HasOne(x => x.Permissions).WithMany(x => x.Users).HasForeignKey(x => x.id_PermissionUser);
             modelBuilder.Entity<PermissionUser>().HasOne(x => x.User).WithMany(x => x.PermissionUsers).HasForeignKey(x => x.id_user);
+            // đăng ký khám sức khoẻ 
+            modelBuilder.Entity<Registerhealth>().ToTable("Registerhealth");
+            modelBuilder.Entity<Registerhealth>().HasKey(x => x.Id_Registerhealth);
+
 
         }
     }

@@ -104,15 +104,14 @@
                 let actionButtons = '';
                 
                 // Kiểm tra quyền xóa từ claims của user
-                const hasDeletePermission = @Json.Serialize(User.HasClaim("Permission", "Delete"));
-                
-                if (hasDeletePermission) {
+      
+           
                     actionButtons += `
                         <button class="btn btn-sm btn-danger" onclick="deleteRole('${role.id}')">
                             <i class="fas fa-trash"></i>
                         </button>
                     `;
-                }
+                
 
                 tbody.append(
                     '<tr>' +
@@ -178,6 +177,7 @@
                         data: {id: id},
                         success: function(response) {
                             if (response.status) {
+                                Swal.fire('Thành công!', response.message, 'success');
       
                                 loadRoles();
                             } else {
