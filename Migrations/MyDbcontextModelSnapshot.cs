@@ -1136,6 +1136,36 @@ namespace websitebenhvien.Migrations
                     b.ToTable("Titleheader", (string)null);
                 });
 
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Videos", b =>
+                {
+                    b.Property<int>("Id_video")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_video"));
+
+                    b.Property<DateTime>("Created_at_video")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description_video")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Link_video")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status_video")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title_video")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id_video");
+
+                    b.ToTable("Videos", (string)null);
+                });
+
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Workschedule", b =>
                 {
                     b.Property<int>("Id_workschedule")

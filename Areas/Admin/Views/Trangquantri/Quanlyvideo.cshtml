@@ -4,7 +4,7 @@
 }
 
 <div class="container-fluid">
-    <h1 class="h3 mb-2 text-gray-800">Quản lý video</h1>
+
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Danh sách video</h6>
@@ -31,14 +31,28 @@
                         <tr>
                             <th>ID</th>
                             <th>Tiêu đề</th>
+                            <th>Video</th>
                             <th>Mô tả</th>
-                            <th>Link</th>
+
+                            <th>Ngày đăng</th>
                             <th>Trạng thái</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody id="videoTableBody">
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="7">
+                                <div class="d-flex justify-content-center">
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination" id="pagination">
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -47,7 +61,7 @@
 
 <!-- Add Video Modal -->
 <div class="modal fade" id="addVideoModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Thêm video mới</h5>
@@ -57,23 +71,25 @@
             </div>
             <div class="modal-body">
                 <form id="addVideoForm">
+                    <input type="hidden" id="Id_video" name="Id_video">
                     <div class="form-group">
                         <label>Tiêu đề</label>
-                        <input type="text" class="form-control" id="videoTitle" required>
+                        <input type="text" class="form-control" id="Title_video" name="Title_video" required>
                     </div>
                     <div class="form-group">
                         <label>Mô tả</label>
-                        <textarea class="form-control" id="videoDescription" rows="3"></textarea>
+                        <textarea class="form-control" id="Description_video" name="Description_video" rows="3"></textarea>
                     </div>
                     <div class="form-group">
                         <label>Link video</label>
-                        <input type="url" class="form-control" id="videoUrl" required>
+                        <input type="file" class="form-control" id="formFile" name="formFile" required>
                     </div>
+        
                     <div class="form-group">
                         <label>Trạng thái</label>
-                        <select class="form-control" id="videoStatus">
-                            <option value="1">Hiện</option>
-                            <option value="0">Ẩn</option>
+                        <select class="form-control" id="Status_video" name="Status_video">
+                            <option value="true">Hiện</option>
+                            <option value="false">Ẩn</option>
                         </select>
                     </div>
                 </form>
@@ -86,61 +102,28 @@
     </div>
 </div>
 
-<!-- Edit Video Modal -->
-<div class="modal fade" id="editVideoModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Chỉnh sửa video</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="editVideoForm">
-                    <input type="hidden" id="editVideoId">
-                    <div class="form-group">
-                        <label>Tiêu đề</label>
-                        <input type="text" class="form-control" id="editVideoTitle" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Mô tả</label>
-                        <textarea class="form-control" id="editVideoDescription" rows="3"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Link video</label>
-                        <input type="url" class="form-control" id="editVideoUrl" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Trạng thái</label>
-                        <select class="form-control" id="editVideoStatus">
-                            <option value="1">Hiện</option>
-                            <option value="0">Ẩn</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary" onclick="updateVideo()">Cập nhật</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 @section Scripts {
     <script>
         $(document).ready(function() {
-            loadVideos();
+            loadVideos('',1,20);
         });
 
-        function loadVideos() {
+        function loadVideos(search,page, pageSize) {
             $.ajax({
-                url: '/api/videos',
+                url: '/api-get-all-video',
                 type: 'GET',
+                data: {
+                    search: search,
+                    page: page,
+                    pageSize: pageSize
+                },
                 success: function(response) {
                     if(response.status) {
+                     
                         renderVideos(response.data);
+                        renderPagination(response.pageIndex, response.totalPages);
                     }
                 },
                 error: function(err) {
@@ -153,21 +136,91 @@
             });
         }
 
+        function renderPagination(currentPage, totalPages) {
+            let html = '';
+            const maxPagesToShow = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+            let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+
+            if (endPage - startPage + 1 < maxPagesToShow) {
+                startPage = Math.max(1, endPage - maxPagesToShow + 1);
+            }
+            
+            // Previous button
+            html += `
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="javascript:void(0)" ${currentPage !== 1 ? `onclick="loadVideos('',${currentPage-1},20)"` : ''} aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            `;
+
+            // First page
+            if (startPage > 1) {
+                html += `
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="loadVideos('',1,20)">1</a>
+                    </li>
+                `;
+                if (startPage > 2) {
+                    html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                }
+            }
+
+            // Page numbers
+            for(let i = startPage; i <= endPage; i++) {
+                html += `
+                    <li class="page-item ${currentPage === i ? 'active' : ''}">
+                        <a class="page-link" href="javascript:void(0)" onclick="loadVideos('',${i},20)">${i}</a>
+                    </li>
+                `;
+            }
+
+            // Last page
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                }
+                html += `
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="loadVideos('',${totalPages},20)">${totalPages}</a>
+                    </li>
+                `;
+            }
+
+            // Next button
+            html += `
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="javascript:void(0)" ${currentPage !== totalPages ? `onclick="loadVideos('',${currentPage+1},20)"` : ''} aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            `;
+
+            $('#pagination').html(html);
+        }
+
         function renderVideos(videos) {
             let html = '';
-            videos.forEach(function(video) {
+            videos.forEach(function(video,index) {
                 html += `
                     <tr>
-                        <td>${video.id}</td>
-                        <td>${video.title}</td>
-                        <td>${video.description}</td>
-                        <td>${video.url}</td>
-                        <td>${video.status ? 'Hiện' : 'Ẩn'}</td>
+                        <td>${index+1}</td>
+                        <td>${video.title_video}</td>
                         <td>
-                            <button class="btn btn-sm btn-primary" onclick="editVideo(${video.id})">
+                            <video width="100%" height="90px" controls>
+                                <source src="/Resources/${video.link_video}" type="video/mp4">
+                                Trình duyệt của bạn không hỗ trợ video.
+                            </video>
+                        </td>
+                        <td>${video.description_video}</td>
+                        <td>${video.created_at_video.split('T')[0]}</td>
+                        <td>${video.status_video ? 'Hiện' : 'Ẩn'}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="editVideo('${video.id_video}','${video.title_video}','${video.description_video}','${video.created_at_video}','${video.status_video}')">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteVideo(${video.id})">
+                            <button class="btn btn-sm btn-danger" onclick="deleteVideo(${video.id_video})">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </td>
@@ -178,27 +231,23 @@
         }
 
         function saveVideo() {
-            const videoData = {
-                title: $('#videoTitle').val(),
-                description: $('#videoDescription').val(),
-                url: $('#videoUrl').val(),
-                status: $('#videoStatus').val() === '1'
-            };
-
+            var formData = new FormData($('#addVideoForm')[0]);
             $.ajax({
-                url: '/api/videos',
+                url: '/api-video-benh-vien',
                 type: 'POST',
-                data: JSON.stringify(videoData),
-                contentType: 'application/json',
+                data: formData,
+                contentType: false,
+                processData: false,
                 success: function(response) {
                     if(response.status) {
-                        $('#addVideoModal').modal('hide');
-                        loadVideos();
                         Swal.fire({
                             title: 'Thành công',
                             text: 'Thêm video mới thành công',
                             icon: 'success'
                         });
+                        $('#addVideoModal').modal('hide');
+                        $('#addVideoForm')[0].reset();
+                        loadVideos('',1,20);
                     }
                 },
                 error: function(err) {
@@ -211,57 +260,12 @@
             });
         }
 
-        function editVideo(id) {
-            $.ajax({
-                url: `/api/videos/${id}`,
-                type: 'GET',
-                success: function(response) {
-                    if(response.status) {
-                        const video = response.data;
-                        $('#editVideoId').val(video.id);
-                        $('#editVideoTitle').val(video.title);
-                        $('#editVideoDescription').val(video.description);
-                        $('#editVideoUrl').val(video.url);
-                        $('#editVideoStatus').val(video.status ? '1' : '0');
-                        $('#editVideoModal').modal('show');
-                    }
-                }
-            });
-        }
-
-        function updateVideo() {
-            const videoData = {
-                id: $('#editVideoId').val(),
-                title: $('#editVideoTitle').val(),
-                description: $('#editVideoDescription').val(),
-                url: $('#editVideoUrl').val(),
-                status: $('#editVideoStatus').val() === '1'
-            };
-
-            $.ajax({
-                url: '/api/videos',
-                type: 'PUT',
-                data: JSON.stringify(videoData),
-                contentType: 'application/json',
-                success: function(response) {
-                    if(response.status) {
-                        $('#editVideoModal').modal('hide');
-                        loadVideos();
-                        Swal.fire({
-                            title: 'Thành công',
-                            text: 'Cập nhật video thành công',
-                            icon: 'success'
-                        });
-                    }
-                },
-                error: function(err) {
-                    Swal.fire({
-                        title: 'Lỗi',
-                        text: 'Không thể cập nhật video',
-                        icon: 'error'
-                    });
-                }
-            });
+        function editVideo(id_video, title_video, description_video, created_at_video, status_video) {
+            $('#Id_video').val(id_video);
+            $('#Title_video').val(title_video);
+            $('#Description_video').val(description_video);
+            $('#Status_video').val(status_video === 'true' ? 'true' : 'false');
+            $('#addVideoModal').modal('show');
         }
 
         function deleteVideo(id) {
@@ -277,11 +281,12 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/api/videos/${id}`,
-                        type: 'DELETE',
+                        url: `/api-delete-video`,
+                        type: 'POST',
+                        data:{id:id},
                         success: function(response) {
                             if(response.status) {
-                                loadVideos();
+                                loadVideos('',1,20);
                                 Swal.fire(
                                     'Đã xóa!',
                                     'Video đã được xóa thành công.',
@@ -302,19 +307,8 @@
         }
 
         function searchVideos() {
-            const searchTerm = $('#searchInput').val().toLowerCase();
-            const rows = $('#videoTableBody tr');
-            
-            rows.each(function() {
-                const title = $(this).find('td:eq(1)').text().toLowerCase();
-                const description = $(this).find('td:eq(2)').text().toLowerCase();
-                
-                if(title.includes(searchTerm) || description.includes(searchTerm)) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
+            var search = $('#searchInput').val();
+            loadVideos(search,1,20);
         }
     </script>
 }

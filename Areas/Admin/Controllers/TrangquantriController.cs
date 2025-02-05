@@ -140,7 +140,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles ="Quanlyvideo,admin")]
         [Route("/trang-quan-tri/quan-ly-video")]
         public IActionResult Quanlyvideo()
         {

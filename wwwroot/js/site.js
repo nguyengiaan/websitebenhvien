@@ -24,6 +24,7 @@ $(document).ready(function() {
     Menu();
     GetSlide();
     loadNews();
+    Getallvideo();
     GetSchema();
     ListProduct();
     ListService();
@@ -66,7 +67,7 @@ function Header() {
         success: function (res) {
             if (res.data) {
                 const headerHtml = `
-                             <div class="nav-links d-none d-md-flex flex-wrap justify-content-center justify-content-md-end gap-3 mb-2">
+                             <div class="nav-links d-flex flex-wrap justify-content-center justify-content-md-end gap-3 mb-2">
                             ${res.data[0].titleheader.map((item, index) => `
                                 <a href="${item.link}" 
                                    class="nav-link text-decoration-none text-dark d-flex align-items-center"
@@ -93,7 +94,7 @@ function Header() {
 
                             <div class="language-selector d-flex gap-3" role="navigation" aria-label="Language Selection">
                                 <button onclick="changeLanguage('vi')" 
-                                        class="language-btn" 
+                                        class="language-btn d-block" 
                                         aria-label="Switch to Vietnamese"
                                         style="border: none; background: none; padding: 0;">
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/2000px-Flag_of_Vietnam.svg.png"
@@ -106,7 +107,7 @@ function Header() {
                                 </button>
 
                                 <button onclick="changeLanguage('en')"
-                                        class="language-btn"
+                                        class="language-btn d-block"
                                         aria-label="Switch to English"
                                         style="border: none; background: none; padding: 0;">
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/1280px-Flag_of_the_United_Kingdom_%283-5%29.svg.png"
@@ -119,7 +120,7 @@ function Header() {
                                 </button>
 
                                 <button onclick="changeLanguage('zh-CN')"
-                                        class="language-btn"
+                                        class="language-btn d-block"
                                         aria-label="Switch to Chinese"
                                         style="border: none; background: none; padding: 0;">
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/2000px-Flag_of_the_People%27s_Republic_of_China.svg.png"
@@ -132,7 +133,7 @@ function Header() {
                                 </button>
 
                                 <button onclick="changeLanguage('ko')"
-                                        class="language-btn"
+                                        class="language-btn d-block"
                                         aria-label="Switch to Korean"
                                         style="border: none; background: none; padding: 0;">
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/2000px-Flag_of_South_Korea.svg.png"
@@ -145,7 +146,7 @@ function Header() {
                                 </button>
 
                                 <button onclick="changeLanguage('ja')"
-                                        class="language-btn"
+                                        class="language-btn d-block"
                                         aria-label="Switch to Japanese"
                                         style="border: none; background: none; padding: 0;">
                                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Japan.svg/2000px-Flag_of_Japan.svg.png"
@@ -2017,12 +2018,14 @@ function loadSpecialties1() {
 
                 html += `
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#specialtyCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#specialtyCarousel" data-bs-slide="prev" 
+                            style="width: 30px; height: 30px; background: rgba(0,0,0,0.5); border-radius: 50%; margin: auto 10px;">
+                        <span class="carousel-control-prev-icon" aria-hidden="true" style="width: 15px; height: 15px;"></span>
                         <span class="visually-hidden">Previous</span>
                     </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#specialtyCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <button class="carousel-control-next" type="button" data-bs-target="#specialtyCarousel" data-bs-slide="next"
+                            style="width: 30px; height: 30px; background: rgba(0,0,0,0.5); border-radius: 50%; margin: auto 10px;">
+                        <span class="carousel-control-next-icon" aria-hidden="true" style="width: 15px; height: 15px;"></span>
                         <span class="visually-hidden">Next</span>
                     </button>
                 </div>`;
@@ -2109,4 +2112,49 @@ function toggleSpecialtyFields() {
             appointmentTimeContainer.remove();
         }
     }
+}
+function Getallvideo() {
+    $.ajax({
+        url: '/api-lay-tat-ca-video',
+        type: 'GET',
+        success: function(response) {
+            if (response.status) {
+                let html = '';
+                response.data.forEach((item, index) => {
+                    html += `
+                        <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                            <div class="video-wrapper position-relative">
+                                <div class="ratio ratio-16x9 rounded-bottom-4 overflow-hidden shadow-lg hover-scale"
+                                     style="transition: transform 0.3s ease; height: 334px;">
+                                <video class="w-100 h-100" controls>
+                                    <source src="/Resources/${item.link_video}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                $('#videoCarousel').html(`
+                    <div class="carousel-inner">
+                        ${html}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#videoCarousel" data-bs-slide="prev" 
+                            style="width: 30px; height: 30px; background: rgba(0,0,0,0.5); border-radius: 50%; top: 50%; transform: translateY(-50%); left: 10px;">
+                        <span class="carousel-control-prev-icon" aria-hidden="true" style="width: 15px; height: 15px;"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#videoCarousel" data-bs-slide="next"
+                            style="width: 30px; height: 30px; background: rgba(0,0,0,0.5); border-radius: 50%; top: 50%; transform: translateY(-50%); right: 10px;">
+                        <span class="carousel-control-next-icon" aria-hidden="true" style="width: 15px; height: 15px;"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                `);
+            }
+        },
+        error: function(error) {
+            console.log('Error:', error);
+        }
+    });
 }
