@@ -17,7 +17,7 @@ namespace websitebenhvien.Service.Reponser
             _context = context;
             _uploadfile = uploadfile;
         }
-        public async Task<bool> AddRecruitment(RecruitmentpostVM recruitmentpost)
+        public async Task<bool> AddRecruitment(Postpersonnel recruitmentpost)
         {
             try
             {
@@ -26,38 +26,37 @@ namespace websitebenhvien.Service.Reponser
                     var data = await _context.Recruitmentposts.FindAsync(recruitmentpost.id_recruitmentpost);
                     if (data != null)
                     {
-                        data.title_recruitmentpost = recruitmentpost.title_recruitmentpost;
+                        data.title_recruitmentpost = recruitmentpost.title_recruitmentpost ?? throw new ArgumentException("Title cannot be null");
                         data.Content_recruitmentpost = recruitmentpost.Content_recruitmentpost;
                         data.Status = recruitmentpost.Status;
-                        data.Statuson =true;
+                        data.Statuson = true;
                         await _context.SaveChangesAsync();
                         return true;
                     }
                 }
                 else
                 {
-                    var data = new Recruitmentpost
+                    var data = new Postpersonnel
                     {
-                        title_recruitmentpost = recruitmentpost.title_recruitmentpost,
+                        title_recruitmentpost = recruitmentpost.title_recruitmentpost ?? throw new ArgumentException("Title cannot be null"),
                         Date_recruitmentpost = DateTime.Now,
                         Content_recruitmentpost = recruitmentpost.Content_recruitmentpost,
                         Status = recruitmentpost.Status,
-                        Statuson = true,
+                        Statuson = true
                     };
-                    await _context.Recruitmentposts.AddAsync(data);
+
+                    await _context.postpersonnel.AddAsync(data);
                     await _context.SaveChangesAsync();
                     return true;
                 }
                 return false;
-               
-          
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
-
         }
+
         // video
         public async Task<bool> AddVideo(VideosVM video)
         {
@@ -194,6 +193,147 @@ namespace websitebenhvien.Service.Reponser
             catch(Exception ex)
             {
                 return null;
+            }
+        }
+        // machine
+        public async Task<bool> AddMachine(MachineVM machine)
+        {
+            try
+            {
+                if(machine.Id_machine > 0)
+                {
+                    var data = await _context.Machines.FindAsync(machine.Id_machine);
+                    if (data != null)
+                    {
+                        if (machine.formFile != null)
+                        {
+                            var link = _uploadfile.SaveMedia(machine.formFile);
+                            if (link.Item1 == 1)
+                            {
+                                _uploadfile.DeleteMedia(data.Image_machine);
+                                data.Image_machine = link.Item2;
+                            }
+                        }
+                        data.Name_machine = machine.Name_machine;
+                        data.Description_machine = machine.Description_machine;
+                        data.Status = machine.Status;
+           
+
+                        await _context.SaveChangesAsync();
+                        return true;
+                    }
+                }
+                else
+                {
+                    var data = new Machine
+                    {
+                        Name_machine = machine.Name_machine,
+                        Description_machine = machine.Description_machine,
+                        Status = machine.Status,
+                        CreatedBy = DateTime.Now,
+                    };
+                    if (machine.formFile != null)
+                    {
+                        var link = _uploadfile.SaveMedia(machine.formFile);
+                        if (link.Item1 == 1)
+                        {
+                            data.Image_machine = link.Item2;
+                        }
+                    }
+                    await _context.Machines.AddAsync(data);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<(int Totalpages, List<MachineVM> Data)> GetAllMachine(string search, int page, int pageSize)
+        {
+            try
+            {
+                if(search==null)
+                {
+                    var totalpage = (int)Math.Ceiling((double)_context.Machines.Count() / pageSize);
+                   
+                    var data = new List<MachineVM>();
+                    data = await _context.Machines.OrderByDescending(x => x.CreatedBy).Skip((page - 1) * pageSize).Take(pageSize).Select(x => new MachineVM
+                    {
+                        Id_machine = x.Id_machine,
+                        Name_machine = x.Name_machine,
+                        Description_machine = x.Description_machine,
+                        Status = x.Status,
+                        Image_machine = x.Image_machine,
+                        CreatedBy = x.CreatedBy,
+                    }).ToListAsync();
+                    return (totalpage, data);
+
+                }
+                else
+                {
+                    var totalpage = (int)Math.Ceiling((double)_context.Machines.Where(x => x.Name_machine.Contains(search)).Count() / pageSize);
+                    var data = new List<MachineVM>();
+                    data = await _context.Machines.Where(x => x.Name_machine.Contains(search)).OrderByDescending(x => x.CreatedBy).Skip((page - 1) * pageSize).Take(pageSize).Select(x => new MachineVM
+                    {
+                        Id_machine = x.Id_machine,
+                        Name_machine = x.Name_machine,
+                        Description_machine = x.Description_machine,
+                        Status = x.Status,
+                        Image_machine = x.Image_machine,
+                        CreatedBy = x.CreatedBy,
+                    }).ToListAsync();
+                    return (totalpage, data);
+
+                }
+                
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> DeleteMachine(int id)
+        {
+            try
+            {
+                var data = await _context.Machines.FindAsync(id);
+                if(data!=null)
+                {
+                    _uploadfile.DeleteMedia(data.Image_machine);
+                     _context.Machines.Remove(data);
+                   await _context.SaveChangesAsync();
+                    return true;
+
+                }
+                return false;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public async Task<List<MachineVM>> GetMachineClient()
+        {
+            try
+            {
+                var data= await _context.Machines.Where(x => x.Status == true).Select(x => new MachineVM
+                {
+                    Name_machine = x.Name_machine,
+                    Description_machine = x.Description_machine,
+                    Image_machine = x.Image_machine,
+                }).ToListAsync();
+                return data;
+            }
+            catch (Exception ex)
+            {
+                return null;
+
             }
         }
     }

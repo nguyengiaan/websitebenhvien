@@ -1,10 +1,8 @@
 @{
     ViewData["Title"] = "Đăng tin tuyển dụng";
-
 }
 
 <div class="container-fluid">
-
     <div class="card border-0 shadow-sm">
         <div class="card-header bg-white py-3">
             <div class="row g-3 align-items-center">
@@ -16,8 +14,8 @@
                 <div class="col-md-6">
                     <div class="input-group">
                         <input type="text" class="form-control border-end-0" id="searchInput"
-                               placeholder="Tìm kiếm danh mục...">
-                        <button class="btn btn-outline-secondary border-start-0" onclick="searchCategories()">
+                               placeholder="Tìm kiếm tin tuyển dụng...">
+                        <button class="btn btn-outline-secondary border-start-0" onclick="searchRecruitments()">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
@@ -32,12 +30,13 @@
                         <tr>
                             <th class="ps-4" style="width: 5%">STT</th>
                             <th style="width: 25%">Tiêu đề</th>
-                            <th style="width: 25%">Đường dẫn</th>
-                            <th style="width: 30%">Mô tả</th>
+                            <th style="width: 15%">Ngày đăng</th>
+                            <th style="width: 15%">Trạng thái</th>
+                            <th style="width: 25%">Nội dung</th>
                             <th style="width: 15%" class="text-center">Thao tác</th>
                         </tr>
                     </thead>
-                    <tbody id="categoryTableBody">
+                    <tbody id="recruitmentTableBody">
                     </tbody>
                 </table>
             </div>
@@ -53,108 +52,154 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="categoryModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade" id="recruitmentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen">
         <div class="modal-content border-0">
-            <div class="modal-header border-bottom-0">
-                <h5 class="modal-title fw-bold" id="modalTitle">Thêm tuyển dụng</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-primary text-white border-bottom-0 py-3">
+                <h4 class="modal-title fw-bold" id="modalTitle">
+                    <i class="fas fa-file-alt me-2"></i>
+                    Thêm tin tuyển dụng
+                </h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form id="categoryForm">
+            <div class="modal-body p-4">
+                <form id="recruitmentForm" class="container-fluid">
                     <input type="hidden" id="id_recruitmentpost" name="id_recruitmentpost" value="0">
-                    <div class="mb-3">
-                        <label class="form-label">Tiêu đề tuyển dụng</label>
-                        <input type="text" class="form-control" id="title_recruitmentpost" name="title_recruitmentpost" >
+                    
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <label class="form-label h5 fw-bold">Tiêu đề tuyển dụng <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg shadow-sm" 
+                                   id="title_recruitmentpost" name="title_recruitmentpost" required 
+                                   placeholder="Nhập tiêu đề tin tuyển dụng..."
+                                   style="border-radius: 10px;">
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Trạng thái tuyển dụng</label>
-                        <select class="form-control" id="Status" name="Status">
-                            <option value="1">Đang tuyển dụng</option>
-                            <option value="0">Ngừng tuyển dụng</option>
-						</select>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label h5 fw-bold">Trạng thái</label>
+                            <select class="form-select form-select-lg shadow-sm" 
+                                    id="Status" name="Status"
+                                    style="border-radius: 10px;">
+                                <option value="1">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    Đang tuyển dụng
+                                </option>
+                                <option value="0">
+                                    <i class="fas fa-times-circle text-danger"></i>
+                                    Ngừng tuyển dụng
+                                </option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Mô tả tuyển dụng</label>
-                        <textarea class="form-control" id="Content_recruitmentpost" name="Content_recruitmentpost" rows="3"></textarea>
+
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <label class="form-label h5 fw-bold">Nội dung tuyển dụng <span class="text-danger">*</span></label>
+                            <div class="shadow-sm rounded">
+                                <textarea id="Content_recruitmentpost" name="Content_recruitmentpost" 
+                                          class="summernote"></textarea>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer border-top-0">
-                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary rounded-pill px-4" onclick="savetuyendung()">Lưu</button>
+            <div class="modal-footer border-top-0 py-4 bg-light">
+                <div class="container-fluid">
+                    <div class="row justify-content-end">
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-light btn-lg rounded-pill px-5 me-3 shadow-sm" 
+                                    data-bs-dismiss="modal">
+                                <i class="fas fa-times me-2"></i>Đóng
+                            </button>
+                            <button type="button" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm" 
+                                    onclick="saveRecruitment()">
+                                <i class="fas fa-save me-2"></i>Lưu
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+@{
+    var summenote = new websitebenhvien.Models.EnitityVM.Summenote(".summernote");
+}
+<partial name="_Summernote" model="summenote" />
+
 @section Scripts {
     <script>
         let currentPage = 1;
-        const pageSize = 10;
+        const pageSize = 20;
 
         $(document).ready(function() {
-            loadCategories();
+            loadRecruitments();
+            $('#Date_recruitmentpost').val(new Date().toISOString().slice(0,16));
         });
 
-        function loadCategories(page = 1) {
+        function loadRecruitments(page = 1) {
             $.ajax({
-                url: '/Allinone/ListCatogeryNews',
+                url: '/api-tuyen-dung-benh-vien/danh-sach',
                 type: 'GET',
                 success: function(response) {
                     if (response.status) {
                         currentPage = page;
                         const allData = response.data;
 
-                        // Tìm kiếm nếu có
                         const searchTerm = $('#searchInput').val().toLowerCase();
                         const filteredData = allData.filter(item =>
-                            item.title.toLowerCase().includes(searchTerm) ||
-                            item.description?.toLowerCase().includes(searchTerm) ||
-                            item.alias_url.toLowerCase().includes(searchTerm)
+                            item.title_recruitmentpost.toLowerCase().includes(searchTerm) ||
+                            item.Content_recruitmentpost?.toLowerCase().includes(searchTerm)
                         );
 
-                        // Tính toán phân trang
                         const totalItems = filteredData.length;
                         const totalPages = Math.ceil(totalItems / pageSize);
                         const startIndex = (page - 1) * pageSize;
                         const endIndex = Math.min(startIndex + pageSize, totalItems);
 
-                        // Lấy dữ liệu cho trang hiện tại
                         const paginatedData = filteredData.slice(startIndex, endIndex);
 
-                        renderCategories(paginatedData);
+                        renderRecruitments(paginatedData);
                         renderPagination(totalPages, page);
                     }
                 },
                 error: function(xhr, status, error) {
                     Swal.fire({
                         title: 'Lỗi!',
-                        text: 'Không thể tải danh sách danh mục',
+                        text: 'Không thể tải danh sách tuyển dụng',
                         icon: 'error'
                     });
                 }
             });
         }
 
-        function renderCategories(categories) {
+        function renderRecruitments(recruitments) {
             let html = '';
-            categories.forEach((category, index) => {
+            recruitments.forEach((item, index) => {
+                const status = item.Status == 1 ? 
+                    '<span class="badge bg-success">Đang tuyển dụng</span>' : 
+                    '<span class="badge bg-secondary">Ngừng tuyển dụng</span>';
+                const date = new Date(item.Date_recruitmentpost).toLocaleDateString('vi-VN');
+                
                 html += `
-                    <tr class="align-middle">
+                    <tr>
                         <td class="ps-4">${(currentPage - 1) * pageSize + index + 1}</td>
-                        <td>${category.title}</td>
-                        <td>${category.alias_url}</td>
-                        <td>${category.description || 'Chưa có mô tả'}</td>
+                        <td>${item.title_recruitmentpost}</td>
+                        <td>${date}</td>
+                        <td>${status}</td>
+                        <td>${item.Content_recruitmentpost ? item.Content_recruitmentpost.substring(0, 100) + '...' : ''}</td>
                         <td class="text-center">
                             <div class="btn-group">
                                 <button class="btn btn-outline-primary btn-sm"
-                                        onclick="editCategory('${category.id_Categorynews}', '${category.title}', '${category.alias_url}', '${category.description}')"
+                                        onclick="editRecruitment(${item.id_recruitmentpost})"
                                         title="Chỉnh sửa">
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn btn-outline-danger btn-sm"
-                                        onclick="deleteCategory('${category.id_Categorynews}')"
+                                        onclick="deleteRecruitment(${item.id_recruitmentpost})"
                                         title="Xóa">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -163,7 +208,7 @@
                     </tr>
                 `;
             });
-            $('#categoryTableBody').html(html);
+            $('#recruitmentTableBody').html(html);
         }
 
         function renderPagination(totalPages, currentPage) {
@@ -171,7 +216,7 @@
             for (let i = 1; i <= totalPages; i++) {
                 html += `
                     <li class="page-item ${i === currentPage ? 'active' : ''}">
-                        <a class="page-link" href="#" onclick="loadCategories(${i})">${i}</a>
+                        <a class="page-link" href="#" onclick="loadRecruitments(${i})">${i}</a>
                     </li>
                 `;
             }
@@ -179,49 +224,64 @@
         }
 
         function showAddModal() {
-            $('#modalTitle').text('Thêm danh mục');
-            $('#categoryForm')[0].reset();
-            $('#id_Categorynews').val('');
-            $('#categoryModal').modal('show');
-        }
-        function editCategory(id, title, alias_url, description) {
-            $('#modalTitle').text('Sửa danh mục');
-            $('#id_Categorynews').val(id);
-            $('#title').val(title);
-            $('#alias_url').val(alias_url);
-            $('#description').val(description);
-            $('#categoryModal').modal('show');
+            $('#modalTitle').text('Thêm tin tuyển dụng');
+            $('#recruitmentForm')[0].reset();
+            $('#id_recruitmentpost').val('0');
+            $('#Date_recruitmentpost').val(new Date().toISOString().slice(0,16));
+            $('#Content_recruitmentpost').summernote('code', '');
+            $('#recruitmentModal').modal('show');
         }
 
-        function savetuyendung() {
-			var id=$('#id_recruitmentpost').val();
-			var title=$('#title_recruitmentpost').val();
-			var status=$('#Status').val();
-            var content=$('#Content_recruitmentpost').val();
-			if (title == '' || content =='' ) {
-				Swal.fire({
-					title: 'Lỗi!',
-					text: 'Thiếu thông tin',
-					icon: 'error'
-				});
-				return;
-			}
-	
+        function editRecruitment(id) {
+            $.ajax({
+                url: `/api-tuyen-dung-benh-vien/${id}`,
+                type: 'GET',
+                success: function(response) {
+                    if (response.status) {
+                        const data = response.data;
+                        $('#modalTitle').text('Sửa tin tuyển dụng');
+                        $('#id_recruitmentpost').val(data.id_recruitmentpost);
+                        $('#title_recruitmentpost').val(data.title_recruitmentpost);
+                        $('#Status').val(data.Status);
+                        $('#Date_recruitmentpost').val(new Date(data.Date_recruitmentpost).toISOString().slice(0,16));
+                        $('#Content_recruitmentpost').summernote('code', data.Content_recruitmentpost);
+                        $('#recruitmentModal').modal('show');
+                    }
+                }
+            });
+        }
+
+        function saveRecruitment() {
+            const id = $('#id_recruitmentpost').val();
+            const title = $('#title_recruitmentpost').val();
+            const status = $('#Status').val();
+            const content = $('#Content_recruitmentpost').summernote('code');
+
+            if (!title || !content) {
+                Swal.fire({
+                    title: 'Lỗi!',
+                    text: 'Vui lòng điền đầy đủ thông tin',
+                    icon: 'error'
+                });
+                return;
+            }
+
+    
+
             $.ajax({
                 url: '/api-tuyen-dung-benh-vien',
                 type: 'POST',
-                data: {id:id,title_recruitmentpost:title,Content_recruitmentpost:content,Status:status},
+                data:{id:id,title_recruitmentpost:title,Content_recruitmentpost:content,Status:status},
+                
                 success: function(response) {
-                      if (response.status) {
-                        $('#categoryModal').modal('hide');
+                    if (response.status) {
+                        $('#recruitmentModal').modal('hide');
                         Swal.fire({
                             title: 'Thành công!',
-                            text: isNew ? 'Thêm danh mục thành công' : 'Cập nhật danh mục thành công',
+                            text: id == '0' ? 'Thêm tin tuyển dụng thành công' : 'Cập nhật tin tuyển dụng thành công',
                             icon: 'success'
                         });
-                        $('#categoryForm')[0].reset();
-                        loadCategories(currentPage);
-
+                        loadRecruitments(currentPage);
                     } else {
                         Swal.fire({
                             title: 'Lỗi!',
@@ -233,10 +293,10 @@
             });
         }
 
-        function deleteCategory(id) {
+        function deleteRecruitment(id) {
             Swal.fire({
                 title: 'Xác nhận xóa?',
-                text: "Bạn có chắc chắn muốn xóa danh mục này?",
+                text: "Bạn có chắc chắn muốn xóa tin tuyển dụng này?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -246,17 +306,16 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: '/Allinone/DeleteCatogery',
-                        type: 'POST',
-                        data: { id: id },
+                        url: `/api-tuyen-dung-benh-vien/${id}`,
+                        type: 'DELETE',
                         success: function(response) {
                             if (response.status) {
                                 Swal.fire({
                                     title: 'Thành công!',
-                                    text: 'Xóa danh mục thành công',
+                                    text: 'Xóa tin tuyển dụng thành công',
                                     icon: 'success'
                                 });
-                                loadCategories(currentPage);
+                                loadRecruitments(currentPage);
                             } else {
                                 Swal.fire({
                                     title: 'Lỗi!',
@@ -270,32 +329,15 @@
             });
         }
 
-        function searchCategories() {
+        function searchRecruitments() {
             currentPage = 1;
-            loadCategories();
+            loadRecruitments();
         }
 
         $('#searchInput').on('keypress', function(e) {
             if (e.which === 13) {
-                searchCategories();
+                searchRecruitments();
             }
         });
-        function generateAlias(str) {
-            // Chuyển về chữ thường
-            str = str.toLowerCase();
-
-            // Xóa dấu
-            str = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-
-            // Thay thế ký tự đặc biệt bằng dấu gạch ngang
-            str = str.replace(/[^a-z0-9 -]/g, '')
-                    .replace(/\s+/g, '-')     // Thay khoảng trắng bằng dấu gạch ngang
-                    .replace(/-+/g, '-');      // Xóa nhiều dấu gạch ngang liên tiếp
-
-            // Xóa dấu gạch ngang ở đầu và cuối
-            str = str.replace(/^-+|-+$/g, '');
-            $('#categoryForm').find('#alias_url').val('/bai-viet/' + str);
-            return 'bai-viet/' + str;
-        }
     </script>
 }

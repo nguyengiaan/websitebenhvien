@@ -26,7 +26,9 @@ $(document).ready(function() {
     loadNews();
     Getallvideo();
     GetSchema();
+    GetAllEquipment();
     ListProduct();
+
     ListService();
     ListNews();
     ListShareCustomer();
@@ -2151,6 +2153,68 @@ function Getallvideo() {
                         <span class="visually-hidden">Next</span>
                     </button>
                 `);
+            }
+        },
+        error: function(error) {
+            console.log('Error:', error);
+        }
+    });
+}
+function GetAllEquipment() {
+    $.ajax({
+        url: '/api-lay-tat-ca-may',
+        type: 'GET',
+        success: function(response) {
+            if (response.status) {
+                let carouselItems = '';
+                const itemsPerSlide = 6;
+                const totalItems = response.data.length;
+                
+                for (let i = 0; i < totalItems; i += itemsPerSlide) {
+                    const isActive = i === 0 ? 'active' : '';
+                    let slideHtml = '<div class="carousel-item ' + isActive + '"><div class="row g-4">';
+                    
+                    for (let j = i; j < Math.min(i + itemsPerSlide, totalItems); j++) {
+                        const item = response.data[j];
+                        slideHtml += `
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="equipment-card fade-in">
+                                    <div class="equipment-image">
+                                        <img src="/Resources/${item.image_machine}" alt="${item.name_machine}" class="img-fluid">
+                                        <div class="equipment-overlay">
+                                            <h4>${item.name_machine}</h4>
+                                            <p>${item.description_machine}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    slideHtml += '</div></div>';
+                    carouselItems += slideHtml;
+                }
+
+                $('#carasoul').html(`
+                    <div id="equipmentCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            ${carouselItems}
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#equipmentCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#equipmentCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                `);
+
+                // Auto slide every 5 seconds
+                $('#equipmentCarousel').carousel({
+                    interval: 5000
+                });
             }
         },
         error: function(error) {

@@ -165,12 +165,12 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
-
-
-
-
-
-
+        [Authorize(Roles ="Quanlythietbi,admin")]
+        [Route("/trang-quan-tri/Quan-ly-thiet-bi")]
+        public IActionResult Quanlythietbi()
+        {
+            return View();
+        }
     }
 }
 

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using websitebenhvien.Data;
 
@@ -11,9 +12,11 @@ using websitebenhvien.Data;
 namespace websitebenhvien.Migrations
 {
     [DbContext(typeof(MyDbcontext))]
-    partial class MyDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20250206012315_up_table_machine")]
+    partial class up_table_machine
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -582,8 +585,9 @@ namespace websitebenhvien.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_machine"));
 
-                    b.Property<DateTime>("CreatedBy")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description_machine")
                         .IsRequired()
@@ -597,8 +601,9 @@ namespace websitebenhvien.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id_machine");
 
@@ -810,42 +815,6 @@ namespace websitebenhvien.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Permissions", (string)null);
-                });
-
-            modelBuilder.Entity("websitebenhvien.Models.Enitity.Postpersonnel", b =>
-                {
-                    b.Property<int>("id_recruitmentpost")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id_recruitmentpost"));
-
-                    b.Property<string>("Content_recruitmentpost")
-                        .IsRequired()
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date_recruitmentpost")
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Statuson")
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("bit");
-
-                    b.Property<string>("title_recruitmentpost")
-                        .IsRequired()
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id_recruitmentpost");
-
-                    b.ToTable("Postpersonnel", (string)null);
                 });
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Postrelate", b =>

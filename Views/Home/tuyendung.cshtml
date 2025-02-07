@@ -1,36 +1,108 @@
 <div class="container mt-5">
-    <h1 class="text-center mb-5" style="color: #2c3e50; font-weight: 700; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);">
+    <h1 class="text-center mb-4" style="color: #2c3e50; font-weight: 700; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);">
         <i class="fas fa-briefcase me-2"></i>Thông Tin Tuyển Dụng
     </h1>
+
+    <!-- Phần lý do chọn bệnh viện -->
+    <div class="why-choose-us mb-5 position-relative overflow-hidden" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+        <div class="container py-5">
+            <h2 class="text-center mb-5" style="color: #2c3e50; font-weight: 700;">
+                <span class="position-relative">
+                    <i class="fas fa-heart me-2 text-danger animate__animated animate__heartBeat animate__infinite"></i>
+                    Tại sao chọn Bệnh viện Mỹ Phước?
+                    <span class="position-absolute bottom-0 start-50 translate-middle-x" style="width: 50%; height: 3px; background: linear-gradient(90deg, transparent, #2c3e50, transparent);"></span>
+                </span>
+            </h2>
+            
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-lg rounded-4 transform-hover" 
+                         style="transition: all 0.3s ease;">
+                        <div class="card-body text-center p-5">
+                            <div class="icon-wrapper mb-4">
+                                <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center" 
+                                     style="width: 90px; height: 90px; background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);">
+                                    <i class="fas fa-user-md fa-2x text-white"></i>
+                                </div>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3" style="color: #2c3e50;">Môi trường chuyên nghiệp</h5>
+                            <p class="card-text text-muted">Làm việc trong môi trường y tế hiện đại, được trang bị đầy đủ thiết bị tiên tiến với đội ngũ chuyên gia hàng đầu</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-lg rounded-4 transform-hover"
+                         style="transition: all 0.3s ease;">
+                        <div class="card-body text-center p-5">
+                            <div class="icon-wrapper mb-4">
+                                <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center"
+                                     style="width: 90px; height: 90px; background: linear-gradient(135deg, #2dce89 0%, #1f8f62 100%);">
+                                    <i class="fas fa-graduation-cap fa-2x text-white"></i>
+                                </div>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3" style="color: #2c3e50;">Cơ hội phát triển</h5>
+                            <p class="card-text text-muted">Được đào tạo chuyên sâu và có nhiều cơ hội thăng tiến trong sự nghiệp với lộ trình rõ ràng</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-lg rounded-4 transform-hover"
+                         style="transition: all 0.3s ease;">
+                        <div class="card-body text-center p-5">
+                            <div class="icon-wrapper mb-4">
+                                <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center"
+                                     style="width: 90px; height: 90px; background: linear-gradient(135deg, #f6365b 0%, #d40b33 100%);">
+                                    <i class="fas fa-hand-holding-heart fa-2x text-white"></i>
+                                </div>
+                            </div>
+                            <h5 class="card-title fw-bold mb-3" style="color: #2c3e50;">Phúc lợi hấp dẫn</h5>
+                            <p class="card-text text-muted">Chế độ đãi ngộ cạnh tranh, bảo hiểm đầy đủ cùng nhiều đặc quyền dành cho nhân viên</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="position-absolute" style="width: 150px; height: 150px; background: radial-gradient(circle, rgba(13,110,253,0.1) 0%, rgba(13,110,253,0) 70%); top: -75px; left: -75px; border-radius: 50%;"></div>
+        <div class="position-absolute" style="width: 100px; height: 100px; background: radial-gradient(circle, rgba(220,53,69,0.1) 0%, rgba(220,53,69,0) 70%); bottom: -50px; right: -50px; border-radius: 50%;"></div>
+    </div>
 
     <!-- Phần tin tức tuyển dụng -->
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <!-- Thanh tìm kiếm -->
-           
-            <!-- Bộ lọc -->
-       
+            <div class="job-listings bg-white rounded-3 shadow-sm p-4 mb-5">
+                <h3 class="text-center mb-4" style="color: #2c3e50;">
+                    <i class="fas fa-list-alt me-2"></i>Vị trí đang tuyển
+                </h3>
 
-            <div class="job-cards" id="recruitmentCards" style="max-height: 800px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #6a7886 #f8f9fa;">
-                <!-- Nhân viên Tổng đài -->
-              
-                <div class="job-card mb-4">
-                    <div class="card border-0 shadow-sm hover-shadow">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="d-flex align-items-center">
-                               
-                                    <div>
-                                        <h5 class="mb-1">Nhân viên Tổng đài</h5>
-                                        <span class="text-muted small">
-                                            <i class="fas fa-map-marker-alt me-1"></i>Bình Dương
-                                        </span>
+                <div class="job-cards" id="recruitmentCards" style="max-height: 800px; overflow-y: auto; scrollbar-width: thin;">
+                    <!-- Các vị trí tuyển dụng -->
+                    <div class="job-card mb-4">
+                        <div class="card border-0 shadow-sm hover-shadow">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="d-flex align-items-center">
+                           
+                                        <div>
+                                            <h5 class="mb-1">Nhân viên Tổng đài</h5>
+                                            <span class="text-muted small">
+                                                <i class="fas fa-map-marker-alt me-1"></i>Bình Dương
+                                            </span>
+                                        </div>
                                     </div>
+                                    <span class="badge bg-success">Mới</span>
                                 </div>
-                                <span class="badge bg-success">Mới</span>
-                            </div>
-                         
-                              
+                                <div class="job-info mb-3">
+                                    <span class="badge bg-light text-dark me-2">
+                                        <i class="far fa-clock me-1"></i>Full-time
+                                    </span>
+                               
+                                    <span class="badge bg-light text-dark">
+                                        <i class="fas fa-money-bill-wave me-1"></i>Thỏa thuận
+                                    </span>
+                                </div>
                                 <button class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#details1">
                                     Xem chi tiết <i class="fas fa-chevron-down ms-1"></i>
                                 </button>
@@ -38,180 +110,85 @@
                             <div class="collapse mt-3" id="details1">
                                 <div class="card card-body bg-light">
                                     <h6 class="fw-bold">Yêu cầu công việc:</h6>
-                                    <ul class="mb-0">
+                                    <ul class="mb-3">
                                         <li>Tốt nghiệp Cao đẳng trở lên</li>
                                         <li>Kỹ năng giao tiếp tốt</li>
                                         <li>Có kinh nghiệm trong lĩnh vực chăm sóc khách hàng</li>
                                     </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                  <div class="job-card mb-4">
-                    <div class="card border-0 shadow-sm hover-shadow">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="d-flex align-items-center">
-                               
-                                    <div>
-                                        <h5 class="mb-1">Nhân viên Tổng đài</h5>
-                                        <span class="text-muted small">
-                                            <i class="fas fa-map-marker-alt me-1"></i>Bình Dương
-                                        </span>
-                                    </div>
-                                </div>
-                                <span class="badge bg-success">Mới</span>
-                            </div>
-                         
-                            
-                                <button class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#details2">
-                                    Xem chi tiết <i class="fas fa-chevron-down ms-1"></i>
-                                </button>
-                            </div>
-                            <div class="collapse mt-3" id="details2">
-                                <div class="card card-body bg-light">
-                                    <h6 class="fw-bold">Yêu cầu công việc:</h6>
+                                    <h6 class="fw-bold">Quyền lợi:</h6>
                                     <ul class="mb-0">
-                                        <li>Tốt nghiệp Cao đẳng trở lên</li>
-                                        <li>Kỹ năng giao tiếp tốt</li>
-                                        <li>Có kinh nghiệm trong lĩnh vực chăm sóc khách hàng</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                       <div class="job-card mb-4">
-                    <div class="card border-0 shadow-sm hover-shadow">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="d-flex align-items-center">
-                               
-                                    <div>
-                                        <h5 class="mb-1">Nhân viên Tổng đài</h5>
-                                        <span class="text-muted small">
-                                            <i class="fas fa-map-marker-alt me-1"></i>Bình Dương
-                                        </span>
-                                    </div>
-                                </div>
-                                <span class="badge bg-success">Mới</span>
-                            </div>
-                         
-                               
-                                <button class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#details3">
-                                    Xem chi tiết <i class="fas fa-chevron-down ms-1"></i>
-                                </button>
-                            </div>
-                            <div class="collapse mt-3" id="details3">
-                                <div class="card card-body bg-light">
-                                    <h6 class="fw-bold">Yêu cầu công việc:</h6>
-                                    <ul class="mb-0">
-                                        <li>Tốt nghiệp Cao đẳng trở lên</li>
-                                        <li>Kỹ năng giao tiếp tốt</li>
-                                        <li>Có kinh nghiệm trong lĩnh vực chăm sóc khách hàng</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                       <div class="job-card mb-4">
-                    <div class="card border-0 shadow-sm hover-shadow">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <div class="d-flex align-items-center">
-                               
-                                    <div>
-                                        <h5 class="mb-1">Nhân viên Tổng đài</h5>
-                                        <span class="text-muted small">
-                                            <i class="fas fa-map-marker-alt me-1"></i>Bình Dương
-                                        </span>
-                                    </div>
-                                </div>
-                                <span class="badge bg-success">Mới</span>
-                            </div>
-                         
-                             
-                                <button class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#details4">
-                                    Xem chi tiết <i class="fas fa-chevron-down ms-1"></i>
-                                </button>
-                            </div>
-                            <div class="collapse mt-3" id="details4">
-                                <div class="card card-body bg-light">
-                                    <h6 class="fw-bold">Yêu cầu công việc:</h6>
-                                    <ul class="mb-0">
-                                        <li>Tốt nghiệp Cao đẳng trở lên</li>
-                                        <li>Kỹ năng giao tiếp tốt</li>
-                                        <li>Có kinh nghiệm trong lĩnh vực chăm sóc khách hàng</li>
+                                        <li>Môi trường làm việc chuyên nghiệp</li>
+                                        <li>Được đào tạo và phát triển</li>
+                                        <li>Chế độ BHXH, BHYT đầy đủ</li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-          
             </div>
 
-                <!-- Form đăng ký ứng tuyển -->
-                <div class="recruitment-form mt-4 bg-light rounded-3 shadow border-0 " >
-                    <div class="p-3 bg-primary text-white rounded-top">
-                        <h5 class="text-center mb-0">
-                            <i class="fas fa-paper-plane me-2"></i>Đăng ký ứng tuyển
-                        </h5>
-                    </div>
-                    
-                    <form id="recruitmentForm" class="needs-validation p-3" novalidate>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="Name" name="Name" placeholder="Họ và tên" required>
-                                    <label for="Name"><i class="far fa-user me-1"></i>Họ và tên</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="Position" name="Position" placeholder="Vị trí ứng tuyển" required>
-                                    <label for="Position"><i class="fas fa-briefcase me-1"></i>Vị trí ứng tuyển</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="tel" class="form-control" id="Phone" name="Phone" placeholder="Số điện thoại" required>
-                                    <label for="Phone"><i class="fas fa-phone me-1"></i>Số điện thoại</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="email" class="form-control" id="Email" name="Email" placeholder="Email" required>
-                                    <label for="Email"><i class="far fa-envelope me-1"></i>Email</label>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="upload-cv p-3 border rounded bg-light text-center">
-                                    <i class="fas fa-cloud-upload-alt text-primary mb-2"></i>
-                                    <h6 class="mb-2">Tải lên CV của bạn</h6>
-                                    <input type="file" class="form-control" id="CV_Url" name="CV_Url" accept=".pdf,.doc,.docx">
-                                    <small class="text-muted d-block mt-1">PDF, DOC, DOCX (Max 5MB)</small>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="form-floating">
-                                    <textarea class="form-control" id="Note" name="Note" style="height: 100px" placeholder="Thư giới thiệu"></textarea>
-                                    <label for="Note"><i class="fas fa-pen me-1"></i>Thư giới thiệu</label>
-                                </div>
-                            </div>
-
-                            <div class="col-12 text-center">
-                                <button type="button" onclick="SubmitRecruitment()" class="btn btn-primary px-4 py-2 rounded-pill">
-                                    <i class="fas fa-paper-plane me-2"></i>Gửi đơn ứng tuyển
-                                </button>
+            <!-- Form đăng ký ứng tuyển -->
+            <div class="recruitment-form bg-white rounded-3 shadow">
+                <div class="p-4 bg-primary text-white rounded-top">
+                    <h4 class="text-center mb-0">
+                        <i class="fas fa-paper-plane me-2"></i>Đăng ký ứng tuyển
+                    </h4>
+                </div>
+                
+                <form id="recruitmentForm" class="needs-validation p-4" novalidate>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Name" name="Name" placeholder="Họ và tên" required>
+                                <label for="Name"><i class="far fa-user me-1"></i>Họ và tên</label>
                             </div>
                         </div>
-                    </form>
-                </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Position" name="Position" placeholder="Vị trí ứng tuyển" required>
+                                <label for="Position"><i class="fas fa-briefcase me-1"></i>Vị trí ứng tuyển</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="tel" class="form-control" id="Phone" name="Phone" placeholder="Số điện thoại" required>
+                                <label for="Phone"><i class="fas fa-phone me-1"></i>Số điện thoại</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="Email" name="Email" placeholder="Email" required>
+                                <label for="Email"><i class="far fa-envelope me-1"></i>Email</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="upload-cv p-4 border rounded bg-light text-center">
+                                <i class="fas fa-cloud-upload-alt fa-2x text-primary mb-3"></i>
+                                <h6 class="mb-2">Tải lên CV của bạn</h6>
+                                <input type="file" class="form-control" id="CV_Url" name="CV_Url" accept=".pdf,.doc,.docx">
+                                <small class="text-muted d-block mt-2">Hỗ trợ định dạng: PDF, DOC, DOCX (Tối đa 5MB)</small>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="Note" name="Note" style="height: 120px" placeholder="Thư giới thiệu"></textarea>
+                                <label for="Note"><i class="fas fa-pen me-1"></i>Thư giới thiệu</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 text-center">
+                            <button type="button" onclick="SubmitRecruitment()" class="btn btn-primary px-5 py-3 rounded-pill">
+                                <i class="fas fa-paper-plane me-2"></i>Gửi đơn ứng tuyển
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -219,26 +196,24 @@
 
 @section Styles{
     <style>
-        .hover-shadow:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        .hover-card {
             transition: all 0.3s ease;
         }
 
-        .icon-box {
-            width: 50px;
-            height: 50px;
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+
+        .icon-wrapper {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .bg-primary-light {
-            background-color: rgba(13, 110, 253, 0.1);
-        }
-
-        .bg-info-light {
-            background-color: rgba(13, 202, 240, 0.1);
+            border-radius: 50%;
+            background: rgba(13, 110, 253, 0.1);
         }
 
         .form-control, .form-select {
@@ -269,23 +244,30 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
         }
-                     #recruitmentCards::-webkit-scrollbar {
-                        width: 8px;
-                    }
-                    
-                    #recruitmentCards::-webkit-scrollbar-track {
-                        background: #f8f9fa;
-                        border-radius: 4px;
-                    }
-                    
-                    #recruitmentCards::-webkit-scrollbar-thumb {
-                        background: #2c3e50;
-                        border-radius: 4px;
-                    }
-                    
-                    #recruitmentCards::-webkit-scrollbar-thumb:hover {
-                        background: #1a252f;
-                    }
+
+        #recruitmentCards::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #recruitmentCards::-webkit-scrollbar-track {
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        #recruitmentCards::-webkit-scrollbar-thumb {
+            background: #2c3e50;
+            border-radius: 4px;
+        }
+        
+        #recruitmentCards::-webkit-scrollbar-thumb:hover {
+            background: #1a252f;
+        }
+
+        .why-choose-us {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            padding: 3rem 0;
+            border-radius: 1rem;
+        }
     </style>
 }
 
