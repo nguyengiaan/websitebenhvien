@@ -1,17 +1,23 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using websitebenhvien.Migrations;
 using websitebenhvien.Models;
+using websitebenhvien.Models.Enitity;
+using websitebenhvien.Service.Interface;
 
 namespace websitebenhvien.Controllers;
 
 public class HomeController : Controller
 {
+
     
     private readonly ILogger<HomeController> _logger;
+    private readonly IRecruitment _recruitment;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger,IRecruitment recruitment)
     {
         _logger = logger;
+        _recruitment= recruitment;
     }
     public IActionResult Index()
     {
@@ -47,9 +53,21 @@ public class HomeController : Controller
         return View();
     }
     [HttpGet("/tuyen-dung")]
-    public IActionResult tuyendung()
+    public async Task<IActionResult> tuyendung()
     {
-        return View();
+        try
+        {
+            var data = await _recruitment.Getallpostrecruiment();
+            if(data != null)
+            {
+                return View(data);
+            }
+            return View(new List<Postpersonnel>());
+        }
+        catch (Exception ex)
+        {
+            return Json(new { status = false, message = ex.Message });
+        }
     }
 
     

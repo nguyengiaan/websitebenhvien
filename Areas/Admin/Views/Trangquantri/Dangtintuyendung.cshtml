@@ -28,11 +28,11 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light">
                         <tr>
-                            <th class="ps-4" style="width: 5%">STT</th>
+                            <th class="ps-4" style="width: 5%">Mã tuyển dụng</th>
                             <th style="width: 25%">Tiêu đề</th>
                             <th style="width: 15%">Ngày đăng</th>
-                            <th style="width: 15%">Trạng thái</th>
-                            <th style="width: 25%">Nội dung</th>
+                            <th style="width: 15%">Trạng thái tuyển dụng</th>
+                            <th style="width: 25%">Trạng thái ẩn hiện</th>
                             <th style="width: 15%" class="text-center">Thao tác</th>
                         </tr>
                     </thead>
@@ -132,65 +132,68 @@
 
 @section Scripts {
     <script>
-        let currentPage = 1;
-        const pageSize = 20;
+        var page=1
+        var pagesize=20
+        var searchtt
 
         $(document).ready(function() {
-            loadRecruitments();
+            loadRecruitments(searchtt,page,pagesize);
             $('#Date_recruitmentpost').val(new Date().toISOString().slice(0,16));
         });
 
-        function loadRecruitments(page = 1) {
+        function loadRecruitments(search,page, pageSize)
+        {
             $.ajax({
-                url: '/api-tuyen-dung-benh-vien/danh-sach',
-                type: 'GET',
+                url: '/api-lay-tuyen-dung-benh-vien',
+                type: 'POST',
+                data: {
+                    search: search,
+                    page: page,
+                    pageSize: pageSize
+                },
                 success: function(response) {
-                    if (response.status) {
-                        currentPage = page;
-                        const allData = response.data;
-
-                        const searchTerm = $('#searchInput').val().toLowerCase();
-                        const filteredData = allData.filter(item =>
-                            item.title_recruitmentpost.toLowerCase().includes(searchTerm) ||
-                            item.Content_recruitmentpost?.toLowerCase().includes(searchTerm)
-                        );
-
-                        const totalItems = filteredData.length;
-                        const totalPages = Math.ceil(totalItems / pageSize);
-                        const startIndex = (page - 1) * pageSize;
-                        const endIndex = Math.min(startIndex + pageSize, totalItems);
-
-                        const paginatedData = filteredData.slice(startIndex, endIndex);
-
-                        renderRecruitments(paginatedData);
-                        renderPagination(totalPages, page);
+                    if(response.status) {
+                  
+                        renderRecruitments(response.data);
+                        renderPagination(response.totalpage, response.pageindex);
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function(err) {
                     Swal.fire({
-                        title: 'Lỗi!',
-                        text: 'Không thể tải danh sách tuyển dụng',
+                        title: 'Lỗi',
+                        text: 'Không thể tải danh sách video',
                         icon: 'error'
                     });
                 }
             });
+          
         }
 
         function renderRecruitments(recruitments) {
             let html = '';
             recruitments.forEach((item, index) => {
-                const status = item.Status == 1 ? 
+                const status = item.status == 1 ?
                     '<span class="badge bg-success">Đang tuyển dụng</span>' : 
                     '<span class="badge bg-secondary">Ngừng tuyển dụng</span>';
                 const date = new Date(item.Date_recruitmentpost).toLocaleDateString('vi-VN');
                 
                 html += `
                     <tr>
-                        <td class="ps-4">${(currentPage - 1) * pageSize + index + 1}</td>
+                        <td class="ps-4">TD${item.id_recruitmentpost}</td>
                         <td>${item.title_recruitmentpost}</td>
-                        <td>${date}</td>
+                        <td>${item.date_recruitmentpost.split('T')[0]}</td>
+
                         <td>${status}</td>
-                        <td>${item.Content_recruitmentpost ? item.Content_recruitmentpost.substring(0, 100) + '...' : ''}</td>
+                        <td><div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="status_${item.id_recruitmentpost}"
+                                    ${item.statuson ? 'checked' : ''}
+                                    onchange="updateNewsStatus(${item.id_recruitmentpost})">
+                                <label class="form-check-label" for="status_${item.id_recruitmentpost}">
+                                    ${item.statuson ? 'Hiện' : 'Ẩn'}
+                                </label>
+                            </div></td>
+
                         <td class="text-center">
                             <div class="btn-group">
                                 <button class="btn btn-outline-primary btn-sm"
@@ -211,15 +214,67 @@
             $('#recruitmentTableBody').html(html);
         }
 
-        function renderPagination(totalPages, currentPage) {
+        function renderPagination( totalPages, currentPage) {
             let html = '';
-            for (let i = 1; i <= totalPages; i++) {
+
+            if (totalPages <= 5) {
+                // Show all pages if total pages <= 5
+                for (let i = 1; i <= totalPages; i++) {
+                    html += `
+                        <li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="loadRecruitments('', ${i}, ${pagesize})">${i}</a>
+                        </li>
+                    `;
+                }
+            } else {
+                // Add Previous button
                 html += `
-                    <li class="page-item ${i === currentPage ? 'active' : ''}">
-                        <a class="page-link" href="#" onclick="loadRecruitments(${i})">${i}</a>
+                    <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                        <a class="page-link" href="#" onclick="loadRecruitments('', ${currentPage - 1}, ${pagesize})">&laquo;</a>
+                    </li>
+                `;
+
+                // Show first page
+                html += `
+                    <li class="page-item ${currentPage === 1 ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="loadRecruitments('', 1, ${pagesize})">1</a>
+                    </li>
+                `;
+
+                // Add ellipsis if needed
+                if (currentPage > 3) {
+                    html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                }
+
+                // Show pages around current page
+                for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+                    html += `
+                        <li class="page-item ${i === currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="loadRecruitments('', ${i}, ${pagesize})">${i}</a>
+                        </li>
+                    `;
+                }
+
+                // Add ellipsis if needed
+                if (currentPage < totalPages - 2) {
+                    html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                }
+
+                // Show last page
+                html += `
+                    <li class="page-item ${currentPage === totalPages ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="loadRecruitments('', ${totalPages}, ${pagesize})">${totalPages}</a>
+                    </li>
+                `;
+
+                // Add Next button
+                html += `
+                    <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                        <a class="page-link" href="#" onclick="loadRecruitments('', ${currentPage + 1}, ${pagesize})">&raquo;</a>
                     </li>
                 `;
             }
+
             $('#pagination').html(html);
         }
 
@@ -234,17 +289,19 @@
 
         function editRecruitment(id) {
             $.ajax({
-                url: `/api-tuyen-dung-benh-vien/${id}`,
-                type: 'GET',
+                url: `/api-lay-tuyen-dung-chi-tiet`,
+                type: 'POST',
+                data:{id:id},
                 success: function(response) {
                     if (response.status) {
+
+           
                         const data = response.data;
                         $('#modalTitle').text('Sửa tin tuyển dụng');
                         $('#id_recruitmentpost').val(data.id_recruitmentpost);
                         $('#title_recruitmentpost').val(data.title_recruitmentpost);
-                        $('#Status').val(data.Status);
-                        $('#Date_recruitmentpost').val(new Date(data.Date_recruitmentpost).toISOString().slice(0,16));
-                        $('#Content_recruitmentpost').summernote('code', data.Content_recruitmentpost);
+                        $('#Status').val(data.status);
+                        $('#Content_recruitmentpost').summernote('code', data.content_recruitmentpost);
                         $('#recruitmentModal').modal('show');
                     }
                 }
@@ -281,7 +338,7 @@
                             text: id == '0' ? 'Thêm tin tuyển dụng thành công' : 'Cập nhật tin tuyển dụng thành công',
                             icon: 'success'
                         });
-                        loadRecruitments(currentPage);
+                        loadRecruitments('',page,pagesize);
                     } else {
                         Swal.fire({
                             title: 'Lỗi!',
@@ -306,8 +363,9 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
-                        url: `/api-tuyen-dung-benh-vien/${id}`,
-                        type: 'DELETE',
+                        url: `/api-xoa-tuyen-dung-benh-vien`,
+                        type: 'POST',
+                        data:{id:id},
                         success: function(response) {
                             if (response.status) {
                                 Swal.fire({
@@ -315,7 +373,7 @@
                                     text: 'Xóa tin tuyển dụng thành công',
                                     icon: 'success'
                                 });
-                                loadRecruitments(currentPage);
+                                loadRecruitments('',page,pagesize);
                             } else {
                                 Swal.fire({
                                     title: 'Lỗi!',
@@ -329,14 +387,33 @@
             });
         }
 
-        function searchRecruitments() {
-            currentPage = 1;
-            loadRecruitments();
-        }
+		function updateNewsStatus(id) {
+	
+			$.ajax({
+                url: `/api-thay-doi-trang-thai-tin-tuyen-dung`,
+				type: 'POST',
+				data:{id:id},
+				success: function(response) {
+					if (response.status) {
+                     loadRecruitments(searchtt,page,pagesize)
+					} else {
+						Swal.fire({
+							title: 'Lỗi!',
+							text: response.message,
+							icon: 'error'
+						});
+					}
+				}
+			});
+		}
+    
 
         $('#searchInput').on('keypress', function(e) {
             if (e.which === 13) {
-                searchRecruitments();
+
+                searchtt=$('#searchInput').val();
+                loadRecruitments(searchtt,page,pagesize)
+
             }
         });
     </script>

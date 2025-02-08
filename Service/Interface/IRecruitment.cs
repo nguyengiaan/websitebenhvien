@@ -6,6 +6,17 @@ namespace websitebenhvien.Service.Interface
     public interface IRecruitment
     {
         public Task<Boolean> AddRecruitment(Postpersonnel recruitmentpost);
+
+        public Task<(int Totalpages, List<Postpersonnel> Data)> GetAllRecruitment(string search, int page, int pageSize);
+
+        public Task<Boolean> DeleteRecruitment(int id);
+
+        public Task<Postpersonnel> GetPostpersonnelID(int id);
+
+        public Task<Boolean> OnchangePost(int id);
+
+        public Task<List<Postpersonnel>> Getallpostrecruiment();
+
         //video 
         public Task<Boolean> AddVideo(VideosVM video);
 

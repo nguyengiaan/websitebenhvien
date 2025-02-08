@@ -13,7 +13,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             _recruitment = recruitment;
         }
-        [Authorize]
+        [Authorize(Roles = "admin,Dangtintuyendung")]
         [HttpPost("/api-tuyen-dung-benh-vien")]
         public async Task<IActionResult> dangtintuyendung(int id, string title_recruitmentpost, string Content_recruitmentpost, string Status)
         {
@@ -24,7 +24,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 recruitmentpost.title_recruitmentpost = title_recruitmentpost;
                 recruitmentpost.Content_recruitmentpost = Content_recruitmentpost;
                 recruitmentpost.Status = Status;
-               
+
                 var data = await _recruitment.AddRecruitment(recruitmentpost);
                 if (data == true)
                 {
@@ -40,6 +40,87 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
 
+        }
+        [Authorize(Roles = "admin,Dangtintuyendung")]
+        [HttpPost("/api-xoa-tuyen-dung-benh-vien")]
+        public async Task<IActionResult> Deleterecruitment(int id)
+        {
+            try
+            {
+                var data = await _recruitment.DeleteRecruitment(id);
+                if (data)
+                {
+                    return Json(new { status = true, message = "Xóa tin tuyển dụng thành công" });
+                }
+                else
+                {
+                    return Json(new { status = false, message = "Xóa tin tuyển dụng thất bại" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+
+        [Authorize(Roles = "admin,Dangtintuyendung")]
+        [HttpPost("/api-lay-tuyen-dung-benh-vien")]
+        public async Task<IActionResult> getallrecruitment(string search, int page, int pageSize)
+        {
+            try
+            {
+                var data = await _recruitment.GetAllRecruitment(search, page, pageSize);
+                return Json(new { status = true, data = data.Data, totalpage = data.Totalpages, pageindex = page });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+
+        [Authorize(Roles = "admin,Dangtintuyendung")]
+        [HttpPost("/api-lay-tuyen-dung-chi-tiet")]
+        public async Task<IActionResult> GetPostpersonnelID(int id)
+        {
+            try
+            {
+                var data = await _recruitment.GetPostpersonnelID(id);
+                if (data != null)
+                {
+                    return Json(new { status = true,data=data });
+                }
+                else
+                {
+                    return Json(new { status = false });
+                }
+                return Json(new { status = false });
+            }
+            catch(Exception ex)
+            {
+                return Json(new { status = false,message=ex.Message });
+            }
+        }
+
+        [Authorize(Roles = "admin,Dangtintuyendung")]
+        [HttpPost("/api-thay-doi-trang-thai-tin-tuyen-dung")]
+        public async Task<IActionResult> OnchangePost(int id)
+        {
+            try
+            {
+                var data = await _recruitment.OnchangePost(id);
+                if (data)
+                {
+                    return Json(new { status = true });
+                }
+                else
+                {
+                    return Json(new { status = false, message = "Thay đổi trạng thái thất bại" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
         }
         // video 
         [Authorize]
@@ -186,5 +267,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+       
+      
     }
 }

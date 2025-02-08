@@ -2,17 +2,17 @@
 {
     public class Postpersonnel
     {
-        public int id_recruitmentpost;
+        public int id_recruitmentpost { get; set; }
 
 
-        public string title_recruitmentpost;
+        public string title_recruitmentpost { get; set; }
 
-        public string Content_recruitmentpost;
+        public string Content_recruitmentpost { get; set; }
 
-        public string Status;
+        public string Status { get; set; }
 
-        public bool Statuson;
+        public bool Statuson { get; set; }
 
-        public DateTime Date_recruitmentpost;
+        public DateTime Date_recruitmentpost { get; set; }
     }
 }

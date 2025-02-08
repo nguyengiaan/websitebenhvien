@@ -23,7 +23,7 @@ namespace websitebenhvien.Service.Reponser
             {
                 if (recruitmentpost.id_recruitmentpost > 0)
                 {
-                    var data = await _context.Recruitmentposts.FindAsync(recruitmentpost.id_recruitmentpost);
+                    var data = await _context.postpersonnel.FindAsync(recruitmentpost.id_recruitmentpost);
                     if (data != null)
                     {
                         data.title_recruitmentpost = recruitmentpost.title_recruitmentpost ?? throw new ArgumentException("Title cannot be null");
@@ -56,7 +56,125 @@ namespace websitebenhvien.Service.Reponser
                 throw ex;
             }
         }
+        public async Task<(int Totalpages, List<Postpersonnel> Data)> GetAllRecruitment(string search, int page, int pageSize)
+        {
+            try
+            {
+                if (search == null)
+                {
+                    var totalitem = await _context.postpersonnel.CountAsync();
+                    var totalpage = (int)Math.Ceiling((double)totalitem / pageSize);
+                    var data = new List<Postpersonnel>();
+                    data = await _context.postpersonnel.AsNoTracking().Select(x => new Postpersonnel
+                    {
+                        id_recruitmentpost = x.id_recruitmentpost,
+                        title_recruitmentpost = x.title_recruitmentpost,
+                        Date_recruitmentpost = x.Date_recruitmentpost,
+                        Status = x.Status,
+                        Statuson = x.Statuson,
+                    }).OrderByDescending(x => x.Date_recruitmentpost).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                    return (totalpage, data);
+                }
+                else
+                {
+                    var totalitem = await _context.postpersonnel.Where(x => x.title_recruitmentpost.Contains(search)).CountAsync();
+                    var totalpage = (int)Math.Ceiling((double)totalitem / pageSize);
+                    var data = new List<Postpersonnel>();
+                    data = await _context.postpersonnel.AsNoTracking().Select(x => new Postpersonnel
+                    {
+                        id_recruitmentpost = x.id_recruitmentpost,
+                        title_recruitmentpost = x.title_recruitmentpost,
+                        Date_recruitmentpost = x.Date_recruitmentpost,
+                        Status = x.Status,
+                        Statuson = x.Statuson,
+                    }).Where(x => x.title_recruitmentpost.Contains(search)).OrderByDescending(x => x.Date_recruitmentpost).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+                    return (totalpage, data);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public async Task<bool> DeleteRecruitment(int id)
+        {
+            try
+            {
+                var data=await _context.postpersonnel.FindAsync(id);
 
+                if(data == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    _context.postpersonnel.Remove(data);
+                    await _context.SaveChangesAsync();
+                    return true;
+
+                }
+                return false;
+            }
+            catch(Exception ex)
+            {
+                return false;
+
+            }
+        }
+        public async Task<Postpersonnel> GetPostpersonnelID(int id)
+        {
+            try
+            {
+                var data = await _context.postpersonnel.FindAsync(id);
+                if(data==null)
+                {
+                    return null;
+
+                }
+                else
+                {
+                    return data;
+                }
+                return null;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
+        public async Task<bool> OnchangePost(int id)
+        {
+            try
+            {
+                var data=await _context.postpersonnel.FindAsync(id);
+                if (data == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    data.Statuson = !data.Statuson;
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        public async Task<List<Postpersonnel>> Getallpostrecruiment()
+        {
+            try
+            {
+                var data = await _context.postpersonnel.Where(x => x.Statuson == true).ToListAsync();
+                return data;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         // video
         public async Task<bool> AddVideo(VideosVM video)
         {
@@ -336,5 +454,7 @@ namespace websitebenhvien.Service.Reponser
 
             }
         }
+
+    
     }
 }

@@ -77,6 +77,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         });
 
 var app = builder.Build();
+app.UseStatusCodePages(context =>
+{
+    if (context.HttpContext.Response.StatusCode == 403)
+    {
+        context.HttpContext.Response.Redirect("/");
+    }
+    return Task.CompletedTask;
+});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
