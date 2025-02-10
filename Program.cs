@@ -41,6 +41,7 @@ builder.Services.AddScoped<IPost, PostReponser>();
 builder.Services.AddScoped<ISpecialty, SpecialtyReponser>();
 builder.Services.AddScoped<IWorkSchedule, WorkScheduleReponser>();
 builder.Services.AddScoped<ISamplemessager, SampleReponser>();
+builder.Services.AddScoped<IRecruitment, RecruitmentReponser>();
 builder.Services.AddScoped<EmailSender>();
 builder.Services.AddScoped<Hubnot>();
 builder.Services.AddScoped<Uploadfile>();
@@ -76,6 +77,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         });
 
 var app = builder.Build();
+app.UseStatusCodePages(context =>
+{
+    if (context.HttpContext.Response.StatusCode == 403)
+    {
+        context.HttpContext.Response.Redirect("/");
+    }
+    return Task.CompletedTask;
+});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

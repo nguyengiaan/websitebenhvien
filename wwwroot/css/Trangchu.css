@@ -775,4 +775,25 @@ header {
       transform: translateY(0) translateZ(20px);
   }
 }
+
 /* End menu */
+/* Hide Google Translate bar */
+.VIpgJd-ZVi9od-ORHb {
+    display: none !important;
+}
+
+.VIpgJd-ZVi9od-ORHb-OEVmcd {
+    display: none !important;
+}
+
+.goog-te-banner-frame {
+    display: none !important;
+}
+
+.goog-te-banner-frame.skiptranslate {
+    display: none !important;
+}
+
+body {
+    top: 0 !important;
+}

@@ -71,6 +71,12 @@ namespace websitebenhvien.Data
 
         public DbSet<Recruitmentpost> Recruitmentposts { get; set; }
 
+        public DbSet<Videos> Videos { get; set; }
+
+        public DbSet<Machine> Machines { get; set; }
+        public DbSet<Postpersonnel> postpersonnel { get; set; }
+
+
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -190,7 +196,26 @@ namespace websitebenhvien.Data
             // tuyển dụng
             modelBuilder.Entity<Recruitmentpost>().ToTable("Recruitmentpost");
             modelBuilder.Entity<Recruitmentpost>().HasKey(x => x.id_recruitmentpost);
-      
+            // video
+            modelBuilder.Entity<Videos>().ToTable("Videos");
+            modelBuilder.Entity<Videos>().HasKey(x => x.Id_video);
+            // thiết bị 
+            modelBuilder.Entity<Machine>().ToTable("Machine");
+            modelBuilder.Entity<Machine>().HasKey(x => x.Id_machine);
+
+            // bài viết tuyển dụng nhân sự
+            modelBuilder.Entity<Postpersonnel>().ToTable("Postpersonnel");
+
+            modelBuilder.Entity<Postpersonnel>().HasKey(x => x.id_recruitmentpost);
+            modelBuilder.Entity<Postpersonnel>().Property(x => x.id_recruitmentpost).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Postpersonnel>().Property(x => x.title_recruitmentpost).HasMaxLength(int.MaxValue);
+            modelBuilder.Entity<Postpersonnel>().Property(x => x.Content_recruitmentpost).HasMaxLength(int.MaxValue);
+            modelBuilder.Entity<Postpersonnel>().Property(x => x.Status).HasMaxLength(int.MaxValue);
+            modelBuilder.Entity<Postpersonnel>().Property(x => x.Statuson).HasMaxLength(int.MaxValue);
+            modelBuilder.Entity<Postpersonnel>().Property(x => x.Date_recruitmentpost).HasMaxLength(int.MaxValue);
+
+            // bài viết tuyển dụng
+
 
 
 

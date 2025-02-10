@@ -140,7 +140,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Roles ="Quanlyvideo,admin")]
         [Route("/trang-quan-tri/quan-ly-video")]
         public IActionResult Quanlyvideo()
         {
@@ -160,16 +160,17 @@ namespace websitebenhvien.Areas.Admin.Controllers
             return View();
         }
         [Authorize(Roles ="Dangtintuyendung,admin")]
+        [Route("/trang-quan-tri/dang-tin-tuyen-dung")]
         public IActionResult Dangtintuyendung()
         {
             return View();
         }
-
-
-
-
-
-
+        [Authorize(Roles ="Quanlythietbi,admin")]
+        [Route("/trang-quan-tri/Quan-ly-thiet-bi")]
+        public IActionResult Quanlythietbi()
+        {
+            return View();
+        }
     }
 }
 

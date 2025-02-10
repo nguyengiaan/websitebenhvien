@@ -574,6 +574,37 @@ namespace websitebenhvien.Migrations
                     b.ToTable("Logocustomer", (string)null);
                 });
 
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Machine", b =>
+                {
+                    b.Property<int>("Id_machine")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_machine"));
+
+                    b.Property<DateTime>("CreatedBy")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description_machine")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image_machine")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name_machine")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id_machine");
+
+                    b.ToTable("Machine", (string)null);
+                });
+
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Makeanappointment", b =>
                 {
                     b.Property<int>("Id_Make")
@@ -779,6 +810,42 @@ namespace websitebenhvien.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Permissions", (string)null);
+                });
+
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Postpersonnel", b =>
+                {
+                    b.Property<int>("id_recruitmentpost")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id_recruitmentpost"));
+
+                    b.Property<string>("Content_recruitmentpost")
+                        .IsRequired()
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date_recruitmentpost")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Statuson")
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("bit");
+
+                    b.Property<string>("title_recruitmentpost")
+                        .IsRequired()
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id_recruitmentpost");
+
+                    b.ToTable("Postpersonnel", (string)null);
                 });
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Postrelate", b =>
@@ -1134,6 +1201,36 @@ namespace websitebenhvien.Migrations
                     b.HasIndex("Id_header");
 
                     b.ToTable("Titleheader", (string)null);
+                });
+
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Videos", b =>
+                {
+                    b.Property<int>("Id_video")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_video"));
+
+                    b.Property<DateTime>("Created_at_video")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description_video")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Link_video")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status_video")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title_video")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id_video");
+
+                    b.ToTable("Videos", (string)null);
                 });
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Workschedule", b =>

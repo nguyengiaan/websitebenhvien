@@ -10,6 +10,8 @@
 
         public string Status;
 
+        public bool Statuson;
+
         public DateTime Date_recruitmentpost;
 
     }

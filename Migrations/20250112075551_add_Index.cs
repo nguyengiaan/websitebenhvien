@@ -10,10 +10,7 @@ namespace websitebenhvien.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateIndex(
-                name: "IX_News",
-                table: "News",
-                column: "Alias_url");
+            
       
 
         }

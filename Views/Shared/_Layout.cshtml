@@ -5,11 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/trangchu.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/websitebenhvien.styles.css" asp-append-version="true" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <script type="text/javascript">
+    <!-- Lazy load CSS -->
+    <link rel="preload" href="~/lib/bootstrap/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"></noscript>
+    
+    <link rel="preload" href="~/css/trangchu.css" as="style" onload="this.onload=null;this.rel='stylesheet'" asp-append-version="true">
+    <noscript><link rel="stylesheet" href="~/css/trangchu.css" asp-append-version="true"></noscript>
+    
+    <link rel="preload" href="~/websitebenhvien.styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'" asp-append-version="true">
+    <noscript><link rel="stylesheet" href="~/websitebenhvien.styles.css" asp-append-version="true"></noscript>
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
+
+    <!-- Defer non-critical scripts -->
+    <script type="text/javascript" defer>
         function googleTranslateElementInit() {
             new google.translate.TranslateElement(
                 { pageLanguage: 'vi', includedLanguages: 'vi,en,zh-CN,ja,ko'},
@@ -22,16 +32,88 @@
 <body>
     
      <header >
-        <div class="row d-flex bg-white h-70" style="height: 105px;"  >
-            <div class="col-md-5 col-12 d-flex justify-content-center align-items-center ">
-                <a href="/" >
-                    <img src="/Images/Logo-rm.png" alt="Emergency" class="me-2" style="height: 83px; width: auto; padding-right: 100px;">
+        <div class="row d-flex bg-white h-70" style="height: auto; min-height: 105px; padding: 10px 0;">
+            <div class="col-md-5 col-12 d-flex flex-column flex-md-row justify-content-between align-items-center">
+                <a href="/" class="mb-3 mb-md-0 text-center" style="padding-left: 0; padding-left: 0;">
+                    <!-- Lazy load image -->
+                    <img src="/Images/Logo-rm.png" alt="Emergency" class="img-fluid ps-md-5" style="max-height: 83px; width: auto; margin-left: 0;" loading="lazy">
                 </a>
+                <!-- Language buttons for mobile -->
+                <div class="language-selector d-flex d-md-none flex-wrap justify-content-center gap-3 mt-2 p-2" 
+                     style="background: rgba(248,249,250,0.95); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <button onclick="changeLanguage('vi')" 
+                            class="language-btn d-flex flex-column align-items-center" 
+                            aria-label="Switch to Vietnamese" 
+                            style="border:none; background:none; padding:8px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/2000px-Flag_of_Vietnam.svg.png" 
+                             alt="Vietnamese Flag" 
+                             class="language-flag mb-1" 
+                             width="35" 
+                             height="24" 
+                             loading="lazy" 
+                             style="cursor:pointer; transition:transform 0.2s ease; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.15);">
+                        <span style="font-size: 12px; color: #666;">VN</span>
+                    </button>
+
+                    <button onclick="changeLanguage('en')" 
+                            class="language-btn d-flex flex-column align-items-center" 
+                            aria-label="Switch to English" 
+                            style="border:none; background:none; padding:8px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/1280px-Flag_of_the_United_Kingdom_%283-5%29.svg.png" 
+                             alt="English Flag" 
+                             class="language-flag mb-1" 
+                             width="35" 
+                             height="24" 
+                             loading="lazy" 
+                             style="cursor:pointer; transition:transform 0.2s ease; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.15);">
+                        <span style="font-size: 12px; color: #666;">EN</span>
+                    </button>
+
+                    <button onclick="changeLanguage('zh-CN')" 
+                            class="language-btn d-flex flex-column align-items-center" 
+                            aria-label="Switch to Chinese" 
+                            style="border:none; background:none; padding:8px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/2000px-Flag_of_the_People%27s_Republic_of_China.svg.png" 
+                             alt="Chinese Flag" 
+                             class="language-flag mb-1" 
+                             width="35" 
+                             height="24" 
+                             loading="lazy" 
+                             style="cursor:pointer; transition:transform 0.2s ease; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.15);">
+                        <span style="font-size: 12px; color: #666;">CN</span>
+                    </button>
+
+                    <button onclick="changeLanguage('ko')" 
+                            class="language-btn d-flex flex-column align-items-center" 
+                            aria-label="Switch to Korean" 
+                            style="border:none; background:none; padding:8px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/2000px-Flag_of_South_Korea.svg.png" 
+                             alt="Korean Flag" 
+                             class="language-flag mb-1" 
+                             width="35" 
+                             height="24" 
+                             loading="lazy" 
+                             style="cursor:pointer; transition:transform 0.2s ease; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.15);">
+                        <span style="font-size: 12px; color: #666;">KR</span>
+                    </button>
+
+                    <button onclick="changeLanguage('ja')" 
+                            class="language-btn d-flex flex-column align-items-center" 
+                            aria-label="Switch to Japanese" 
+                            style="border:none; background:none; padding:8px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Japan.svg/2000px-Flag_of_Japan.svg.png" 
+                             alt="Japanese Flag" 
+                             class="language-flag mb-1" 
+                             width="35" 
+                             height="24" 
+                             loading="lazy" 
+                             style="cursor:pointer; transition:transform 0.2s ease; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.15);">
+                        <span style="font-size: 12px; color: #666;">JP</span>
+                    </button>
+                </div>
             </div>
             <div class="col-md-7 col-12 d-none d-md-flex flex-column" id="header-contact">    
             </div>
-
-            
         </div>
         
         <nav class="navbar navbar-expand-lg" style="background-color:#ffffff; width: 100%; padding-top: 8px;">
@@ -210,115 +292,61 @@
     </div>
        
 
-    <div id="google_translate_element" class="ms-2" style="display: none;"></div>
+    <div id="google_translate_element" class="ms-2" style="display: none;" ></div>
 
 
 
 </div>
 
+<!-- Scripts -->
 <script src="https://sp.zalo.me/plugins/sdk.js"></script>
-    <script src="~/lib/aspnet-signalr/signalr.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="~/lib/aspnet-signalr/signalr.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+<!-- CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
  
     <!-- Script xử lý nút cuộn lên đầu trang -->
     <script>
+        
         // Xử lý hiệu ứng fade-in khi cuộn
         function checkFade() {
             const fadeElements = document.querySelectorAll('.fade-in');
             fadeElements.forEach(element => {
                 const elementTop = element.getBoundingClientRect().top;
                 const windowHeight = window.innerHeight;
-                if (elementTop < windowHeight * 0.9) {
-                    element.classList.add('visible');
+                if (elementTop < windowHeight * 0.95) { // Tăng ngưỡng hiển thị
+                    requestAnimationFrame(() => {
+                        element.classList.add('visible');
+                        element.style.transition = 'opacity 0.3s ease-out'; // Giảm thời gian transition
+                    });
                 }
             });
         }
 
-        // Gọi hàm khi trang tải và khi cuộn
-        window.addEventListener('load', checkFade);
-        window.addEventListener('scroll', checkFade);
-    </script>
-    <script>
-        // Mai flower effect for Tet
-        (function() {
-            const flowerCount = 50;
-            const flowers = [];
-
-            for (let i = 0; i < flowerCount; i++) {
-                const flower = document.createElement('div');
-                flower.classList.add('mai-flower');
-                // Create 5 petals for each flower
-                for (let j = 0; j < 5; j++) {
-                    const petal = document.createElement('div');
-                    petal.classList.add('petal');
-                    flower.appendChild(petal);
+        // Intersection Observer với threshold cao hơn để phát hiện sớm hơn
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    requestAnimationFrame(checkFade);
                 }
-                const center = document.createElement('div');
-                center.classList.add('flower-center');
-                flower.appendChild(center);
-                document.body.appendChild(flower);
-                flowers.push(flower);
-            }
+            });
+        }, {
+            threshold: 0.2 // Giảm ngưỡng để phát hiện sớm hơn
+        });
 
-            function animateFlowers() {
-                flowers.forEach(flower => {
-                    const x = Math.random() * window.innerWidth;
-                    const y = Math.random() * window.innerHeight;
-                    const size = Math.random() * 15 + 20;
-                    const duration = Math.random() * 8 + 10;
-                    const rotation = Math.random() * 360;
-
-                    flower.style.left = `${x}px`;
-                    flower.style.top = `${y}px`;
-                    flower.style.width = `${size}px`;
-                    flower.style.height = `${size}px`;
-                    flower.style.transform = `rotate(${rotation}deg)`;
-                    flower.style.animationDuration = `${duration}s`;
-                });
-            }
-
-            animateFlowers();
-            window.addEventListener('resize', animateFlowers);
-        })();
+        // Gọi hàm ngay khi DOM load xong
+        document.addEventListener('DOMContentLoaded', () => {
+            requestAnimationFrame(() => {
+                checkFade();
+                document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+            });
+        });
     </script>
-    <style>
-        .mai-flower {
-            position: fixed;
-            pointer-events: none;
-            animation: fall linear infinite;
-        }
 
-        .petal {
-            position: absolute;
-            width: 40%;
-            height: 40%;
-            background: #ffeb3b;
-            border-radius: 50%;
-            transform-origin: 100% 100%;
-        }
-
-        .petal:nth-child(1) { transform: rotate(0deg) translateX(50%); }
-        .petal:nth-child(2) { transform: rotate(72deg) translateX(50%); }
-        .petal:nth-child(3) { transform: rotate(144deg) translateX(50%); }
-        .petal:nth-child(4) { transform: rotate(216deg) translateX(50%); }
-        .petal:nth-child(5) { transform: rotate(288deg) translateX(50%); }
-
-        .flower-center {
-            position: absolute;
-            width: 20%;
-            height: 20%;
-            background: #ffd700;
-            border-radius: 50%;
-            top: 40%;
-            left: 40%;
-        }
-
-     
-    </style>
     @await RenderSectionAsync("Styles", required: false)
     @await RenderSectionAsync("Scripts", required: false)
 </body>
