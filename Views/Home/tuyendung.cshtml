@@ -1,6 +1,5 @@
 @model IEnumerable<websitebenhvien.Models.Enitity.Postpersonnel>
 
-
 <div class="container mt-5">
     <h1 class="text-center mb-4" style="color: #2c3e50; font-weight: 700; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);">
         <i class="fas fa-briefcase me-2"></i>Thông Tin Tuyển Dụng
@@ -16,14 +15,14 @@
                     <span class="position-absolute bottom-0 start-50 translate-middle-x" style="width: 50%; height: 3px; background: linear-gradient(90deg, transparent, #2c3e50, transparent);"></span>
                 </span>
             </h2>
-            
+
             <div class="row g-4 justify-content-center">
                 <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-lg rounded-4 transform-hover" 
+                    <div class="card h-100 border-0 shadow-lg rounded-4 transform-hover"
                          style="transition: all 0.3s ease;">
                         <div class="card-body text-center p-5">
                             <div class="icon-wrapper mb-4">
-                                <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center" 
+                                <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center"
                                      style="width: 90px; height: 90px; background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);">
                                     <i class="fas fa-user-md fa-2x text-white"></i>
                                 </div>
@@ -67,7 +66,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="position-absolute" style="width: 150px; height: 150px; background: radial-gradient(circle, rgba(13,110,253,0.1) 0%, rgba(13,110,253,0) 70%); top: -75px; left: -75px; border-radius: 50%;"></div>
         <div class="position-absolute" style="width: 100px; height: 100px; background: radial-gradient(circle, rgba(220,53,69,0.1) 0%, rgba(220,53,69,0) 70%); bottom: -50px; right: -50px; border-radius: 50%;"></div>
     </div>
@@ -104,8 +103,6 @@
                                         {
                                             <span class="badge bg-danger">Ngưng tuyển</span>
                                         }
-
-                                   
                                     </div>
                                     <div class="job-info mb-3">
                                         <span class="badge bg-light text-dark me-2">
@@ -121,10 +118,7 @@
                                 </div>
                                 <div class="collapse mt-3" id="details-@item.id_recruitmentpost">
                                     <div class="card card-body bg-light">
-
                                         @Html.Raw(item.Content_recruitmentpost)
-                                        
-                                   
                                     </div>
                                 </div>
                             </div>
@@ -140,7 +134,7 @@
                         <i class="fas fa-paper-plane me-2"></i>Đăng ký ứng tuyển
                     </h4>
                 </div>
-                
+
                 <form id="recruitmentForm" class="needs-validation p-4" novalidate>
                     <div class="row g-4">
                         <div class="col-md-6">
@@ -171,12 +165,32 @@
                             </div>
                         </div>
 
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Address" name="Address" placeholder="Địa chỉ" required>
+                                <label for="Address"><i class="fas fa-map-marker-alt me-1"></i>Địa chỉ</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <select class="form-select" id="Sex" name="Sex" required>
+                              
+                                    <option value="Nam">Nam</option>
+                                    <option value="Nữ">Nữ</option>
+                                  
+                                </select>
+                                <label for="Gender"><i class="fas fa-venus-mars me-1"></i>Giới tính</label>
+                            </div>
+                        </div>
+
                         <div class="col-12">
                             <div class="upload-cv p-4 border rounded bg-light text-center">
                                 <i class="fas fa-cloud-upload-alt fa-2x text-primary mb-3"></i>
                                 <h6 class="mb-2">Tải lên CV của bạn</h6>
-                                <input type="file" class="form-control" id="CV_Url" name="CV_Url" accept=".pdf,.doc,.docx">
+                                <input type="file" class="form-control" id="CV_Url" name="CV_Url" accept=".pdf,.doc,.docx" >
                                 <small class="text-muted d-block mt-2">Hỗ trợ định dạng: PDF, DOC, DOCX (Tối đa 5MB)</small>
+                                    <small id="fileError" class="text-danger d-block mt-2" style="display: none;"></small>
                             </div>
                         </div>
 
@@ -199,16 +213,16 @@
     </div>
 </div>
 
-@section Styles{
+@section Styles {
     <style>
         .hover-card {
             transition: all 0.3s ease;
         }
 
-        .hover-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-        }
+            .hover-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+            }
 
         .icon-wrapper {
             width: 80px;
@@ -226,47 +240,47 @@
             padding: 0.75rem 1rem;
         }
 
-        .form-control:focus, .form-select:focus {
-            border-color: #0d6efd;
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-        }
+            .form-control:focus, .form-select:focus {
+                border-color: #0d6efd;
+                box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            }
 
         .upload-cv {
             border: 2px dashed #dee2e6 !important;
             transition: all 0.3s ease;
         }
 
-        .upload-cv:hover {
-            border-color: #0d6efd !important;
-            background-color: rgba(13, 110, 253, 0.05) !important;
-        }
+            .upload-cv:hover {
+                border-color: #0d6efd !important;
+                background-color: rgba(13, 110, 253, 0.05) !important;
+            }
 
         .btn-primary {
             transition: all 0.3s ease;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
-        }
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+            }
 
         #recruitmentCards::-webkit-scrollbar {
             width: 8px;
         }
-        
+
         #recruitmentCards::-webkit-scrollbar-track {
             background: #f8f9fa;
             border-radius: 4px;
         }
-        
+
         #recruitmentCards::-webkit-scrollbar-thumb {
             background: #2c3e50;
             border-radius: 4px;
         }
-        
-        #recruitmentCards::-webkit-scrollbar-thumb:hover {
-            background: #1a252f;
-        }
+
+            #recruitmentCards::-webkit-scrollbar-thumb:hover {
+                background: #1a252f;
+            }
 
         .why-choose-us {
             background: linear-gradient(to right, #f8f9fa, #e9ecef);
@@ -276,12 +290,37 @@
     </style>
 }
 
-@section Scripts{
+@section Scripts {
     <script>
-        function SubmitRecruitment(){
+    $(document).ready(function() {
+                    $('#CV_Url').on('change', function() {
+                var file = this.files[0]; // Lấy file được chọn
+                var fileError = $('#fileError'); // Phần tử hiển thị thông báo lỗi
+
+                // Kiểm tra định dạng file
+                var allowedExtensions = /(\.pdf|\.doc|\.docx)$/i;
+                if (!allowedExtensions.exec(file.name)) {
+                    fileError.text('Định dạng file không hợp lệ. Chỉ chấp nhận file PDF, DOC, DOCX.').show();
+                    this.value = ''; // Xóa file đã chọn
+                    return false;
+                }
+
+                // Kiểm tra kích thước file (tối đa 5MB)
+                var maxSize = 5 * 1024 * 1024; // 5MB
+                if (file.size > maxSize) {
+                    fileError.text('Kích thước file vượt quá 5MB.').show();
+                    this.value = ''; // Xóa file đã chọn
+                    return false;
+                }
+
+                // Nếu file hợp lệ, ẩn thông báo lỗi
+                fileError.hide();
+            });
+        });
+   function SubmitRecruitment(){
             var form = $('#recruitmentForm')[0];
             var data = new FormData(form);
-            
+
             $.ajax({
                 url: "/api/ungtuyencv",
                 type: "POST",

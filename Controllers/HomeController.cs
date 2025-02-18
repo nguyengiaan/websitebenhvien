@@ -1,5 +1,7 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using websitebenhvien.Data;
 using websitebenhvien.Migrations;
 using websitebenhvien.Models;
 using websitebenhvien.Models.Enitity;
@@ -13,11 +15,13 @@ public class HomeController : Controller
     
     private readonly ILogger<HomeController> _logger;
     private readonly IRecruitment _recruitment;
+    private readonly MyDbcontext _context;
 
-    public HomeController(ILogger<HomeController> logger,IRecruitment recruitment)
+    public HomeController(ILogger<HomeController> logger,IRecruitment recruitment,MyDbcontext context)
     {
         _logger = logger;
         _recruitment= recruitment;
+        _context = context;
     }
     public IActionResult Index()
     {
@@ -33,9 +37,14 @@ public class HomeController : Controller
         return View();
     }
     [HttpGet("/chi-tiet-tin/{alias_url}")]
-    public IActionResult PostDetail()
+    public async Task<IActionResult> PostDetail()
     {
-        return View();
+      
+
+            return View();
+       
+     
+       
     }
      [HttpGet("/chuyen-khoa")]
     public IActionResult Specialty()

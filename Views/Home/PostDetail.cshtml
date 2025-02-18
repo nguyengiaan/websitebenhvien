@@ -1,26 +1,22 @@
-@{
-    ViewData["Title"] = "Chi tiết bài viết";
-
-}
 
 <div class="container mt-5">
     <div class="row">
         <!-- Nội dung bài viết -->
         <div class="col-lg-12">
             <article class="post-content bg-white p-4 rounded-3 shadow-sm">
-                <h1 class="post-title fw-bold mb-4" id="post-title">Tiêu đề bài viết</h1>
+                <h1 class="post-title fw-bold mb-4" id="post-title">Loading....</h1>
                 
                 <div class="post-meta mb-4 d-flex align-items-center">
                     <span class="me-4 d-flex align-items-center">
                         <i class="far fa-calendar-alt me-2 text-danger"></i>
-                        <span class="fw-bold text-danger" id="post-date">Ngày đăng: 01/01/2024</span>
+                        <span class="fw-bold text-danger" id="post-date">Loading....</span>
                     </span>
               
                 </div>
 
               
                 <div class="post-body" id="post-body">
-                 
+                    
                 </div>
              
             </article>
@@ -108,41 +104,54 @@
             var facebookShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(currentUrl);
             window.open(facebookShareUrl, '_blank', 'width=600,height=400');
         }
-        function GetNewsById(){
-            var currentUrl = window.location.pathname;
-            var segments = currentUrl.split('/');
-            var alias_url = "/chi-tiet-tin/" + segments[segments.length - 1];
-            console.log(alias_url);
-            $.ajax({
-                url: "/Post/PostDetail",
-                type: "POST",
-                data: { alias_url: alias_url },
-                success: function(response){
-             
-                    $('#post-title').text( response.data.title);
-                    $('#post-date').text("Ngày đăng: " + response.data.createat.split('T')[0]);
-                    $('#post-author').text('Tác giả: Admin');
-                    $('#post-body').html(response.data.description).css({
-                        'font-size': '14px',
-                        'padding': '10px', 
-                        'word-wrap': 'break-word',
-                        'max-width': '100%'
-                    }).find('img, table').css({
-                        'max-width': '100%',
-                        'height': 'auto',
-                        'object-fit': 'contain'
-                    });
-                    $('#post-body table').css({
-                        'display': 'block',
-                        'overflow-x': 'auto',
-                        'width': '100%'
-                    }).find('td').css({
-                        'min-width': '120px',
-                        'white-space': 'nowrap'
-                    });
-                }
+ function GetNewsById() {
+    var currentUrl = window.location.pathname;
+    var segments = currentUrl.split('/');
+    var alias_url = "/chi-tiet-tin/" + segments[segments.length - 1];
+    console.log(alias_url);
+    
+    $.ajax({
+        url: "/Post/PostDetail",
+        type: "POST",
+        data: { alias_url: alias_url },
+        success: function(response) {
+    
+            var postData = response.data;
+            console.log("hello")
+            // Gán dữ liệu vào nội dung bài viết
+            $('#post-title').text(postData.title);
+            $('#post-date').text("Ngày đăng: " + postData.createat.split('T')[0]);
+            $('#post-author').text('Tác giả: Admin');
+            $('#post-body').html(postData.description).css({
+                'font-size': '14px',
+                'padding': '10px', 
+                'word-wrap': 'break-word',
+                'max-width': '100%'
+            }).find('img, table,input[type="image"]').css({
+                'max-width': '100%',
+                'height': 'auto',
+                'object-fit': 'contain'
             });
+
+            $('#post-body table').css({
+                'display': 'block',
+                'overflow-x': 'auto',
+                'width': '100%'
+            }).find('td').css({
+                'min-width': '120px',
+                'white-space': 'nowrap'
+            });
+       
+
+
+            // Cập nhật các thẻ meta trong layout
+            $('meta[property="og:title"]').attr("content", postData.title);
+            $('meta[property="og:image"]').attr("content", window.location.origin + "/Resources/" + postData.url);
+            $('meta[property="og:url"]').attr("content", window.location.href);
         }
+    });
+}
+
         function GetNewsByCategory(){
             var currentUrl = window.location.pathname;
             var segments = currentUrl.split('/');

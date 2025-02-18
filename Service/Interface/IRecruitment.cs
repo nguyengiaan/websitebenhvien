@@ -29,8 +29,8 @@ namespace websitebenhvien.Service.Interface
         public Task<Boolean> AddMachine(MachineVM machine);
 
         public Task<(int Totalpages, List<MachineVM> Data)> GetAllMachine(string search, int page, int pageSize);
-        public Task<Boolean> DeleteMachine(int id); 
 
+        public Task<Boolean> DeleteMachine(int id); 
 
         public Task<List<MachineVM>> GetMachineClient();
 

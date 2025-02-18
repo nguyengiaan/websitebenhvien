@@ -387,6 +387,24 @@ namespace websitebenhvien.Migrations
                     b.ToTable("Doctor", (string)null);
                 });
 
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Email", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Email", (string)null);
+                });
+
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Feeldoctor", b =>
                 {
                     b.Property<int>("Id_Feeldoctor")

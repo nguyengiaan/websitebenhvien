@@ -1,5 +1,4 @@
-﻿﻿
-const connection = new signalR.HubConnectionBuilder()
+﻿﻿const connection = new signalR.HubConnectionBuilder()
     .withUrl("/friendHub")
     .build();
 
@@ -243,7 +242,7 @@ function Header() {
 function Menu() {
     $.ajax({
         url: "/Pagemain/ListMenu",
-        type: "GET", 
+        type: "GET",
         success: function (res) {
             if (res.success) {
                 let html = '';
@@ -251,78 +250,61 @@ function Menu() {
                 // Sắp xếp menu theo `order_menu`
                 res.data.sort((a, b) => a.order_menu - b.order_menu);
 
-                // Thêm nút tìm kiếm
-         
-
                 res.data.forEach(menu => {
                     if (menu.status) {
                         html += `<li class="nav-item px-2 ${menu.menu && menu.menu.length > 0 ? 'dropdown' : ''}" 
-                                   style="transition: all 0.3s ease; border-right: 1px solid #ccc;">`;
+                                   style="transition: all 0.3s ease;">`;
 
                         if (menu.menu && menu.menu.length > 0) {
                             html += `
-                                <a class="nav-link" 
+                                <a class="nav-link d-flex align-items-center justify-content-between" 
                                    href="${menu.link_menu}" 
                                    id="menu${menu.id_menu}" 
                                    role="button"
                                    aria-expanded="false" 
-                                   style="font-size: 14px; 
+                                   style="font-size: clamp(12px, 3vw, 14px);
                                           font-family: 'Roboto', sans-serif; 
                                           font-weight: 600; 
                                           white-space: nowrap;
                                           transition: all 0.3s ease;
                                           position: relative;
-                                          padding: 8px 15px;
+                                          padding: clamp(6px, 2vw, 8px) clamp(10px, 3vw, 15px);
                                           color: #0095d9;">
-                                    ${menu.title_menu || 'Menu'}
-                                    <span style="position: absolute;
-                                                bottom: 0;
-                                                left: 50%;
-                                                width: 0;
-                                                height: 2px;
-                                                background-color: #0095d9;
-                                                transition: all 0.3s ease;
-                                                transform: translateX(-50%);"></span>
+                                    <span class="menu-title">${menu.title_menu || 'Menu'}</span>
+                                    <i class="fas fa-chevron-down ms-2 mobile-dropdown-toggle" 
+                                       style="font-size: clamp(10px, 2.5vw, 12px); transition: transform 0.3s ease;"></i>
+                                    <span class="underline-animation"></span>
                                 </a>
                                 <ul class="dropdown-menu" 
                                     aria-labelledby="menu${menu.id_menu}"
                                     style="animation: fadeIn 0.3s ease;
-                                           border-radius: 3%;
-                                           box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+                                           border-radius: 8px;
+                                           box-shadow: 0 4px 12px rgba(0,0,0,0.1);
                                            background: #ffffff;
                                            width: 100%;
-                                           padding: 10px 0;
-                                           min-width: 220px;
-                                           left: 0;">`;
+                                           padding: 8px 0;
+                                           min-width: min(220px, 90vw);">`;
                              
-                            // Sort submenu items by order_MenuChild from high to low
-                            menu.menu.sort((a, b) => a.order_menu-b.order_menu );
+                            menu.menu.sort((a, b) => a.order_menu-b.order_menu);
                             
-                    
                             menu.menu.forEach(submenu => {
                                 if (submenu.status) {
                                     let submenuTitle = submenu.title_MenuChild || 'Submenu';
-                                    // Cắt ngắn tiêu đề nếu dài hơn 25 ký tự
-                                    if (submenuTitle.length > 25) {
-                                        submenuTitle = submenuTitle.substring(0, 25) + '...';
-                                    }
+                                    submenuTitle = submenuTitle.length > 25 ? submenuTitle.substring(0, 25) + '...' : submenuTitle;
                                     
                                     html += `
                                         <li>
                                             <a class="dropdown-item" 
                                                href="${submenu.link_MenuChild}" 
                                                title="${submenu.title_MenuChild}"
-                                               style="font-size: 13px;
+                                               style="font-size: clamp(11px, 2.8vw, 13px);
                                                       transition: all 0.3s ease;
-                                                      padding: 12px 25px;
+                                                      padding: clamp(8px, 2vw, 12px) clamp(15px, 4vw, 25px);
                                                       color: #0095d9;
                                                       font-weight: 500;
                                                       border-left: 3px solid transparent;
                                                       margin: 2px 0;
-                                                      font-family: 'Roboto', sans-serif;
-                                                      overflow: hidden;
-                                                      text-overflow: ellipsis;
-                                                      white-space: nowrap;">
+                                                      font-family: 'Roboto', sans-serif;">
                                                 ${submenuTitle}
                                             </a>
                                         </li>`;
@@ -334,103 +316,151 @@ function Menu() {
                             html += `
                                 <a class="nav-link" 
                                    href="${menu.link_menu}" 
-                                   style="font-size: 14px;
+                                   style="font-size: clamp(12px, 3vw, 14px);
                                           font-family: 'Roboto', sans-serif;
                                           font-weight: 600;
                                           white-space: nowrap;
                                           transition: all 0.3s ease;
                                           position: relative;
-                                          padding: 8px 15px;
+                                          padding: clamp(6px, 2vw, 8px) clamp(10px, 3vw, 15px);
                                           color: #0095d9;">
                                     ${menu.title_menu || 'Menu'}
-                                    <span style="position: absolute;
-                                                bottom: 0;
-                                                left: 50%;
-                                                width: 0;
-                                                height: 2px;
-                                                background-color: #0095d9;
-                                                transition: all 0.3s ease;
-                                                transform: translateX(-50%);"></span>
+                                    <span class="underline-animation"></span>
                                 </a>`;
                         }
 
                         html += `</li>`;
                     }
                 });
+
+                // Nút tìm kiếm
                 html += `
                 <li class="nav-item px-2">
-                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#searchModal"
-                       style="font-size: 14px;
+                    <a class="nav-link search-link" href="#" data-bs-toggle="modal" data-bs-target="#searchModal"
+                       style="font-size: clamp(12px, 3vw, 14px);
                               font-family: 'Roboto', sans-serif;
                               font-weight: 600;
-                              color: #0095d9;">
+                              color: #0095d9;
+                              padding: clamp(6px, 2vw, 8px);">
                         <i class="fas fa-search"></i>
                     </a>
                 </li>`;
 
-                // Thêm modal tìm kiếm
+                // Modal tìm kiếm tối ưu cho mobile
                 const searchModal = `
-                    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="searchModalLabel">Tìm kiếm</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <h5 class="modal-title fs-6">Tìm kiếm</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
                                 <div class="modal-body">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Nhập từ khóa tìm kiếm..." aria-label="Search">
-                                        <button class="btn btn-primary" type="button">
+                                        <input type="text" 
+                                               class="form-control" 
+                                               placeholder="Nhập từ khóa tìm kiếm..."
+                                               style="font-size: clamp(14px, 3.5vw, 16px);">
+                                        <button class="btn btn-primary">
                                             <i class="fas fa-search"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
 
-                // Thêm CSS cho hiệu ứng hover
                 const style = document.createElement('style');
                 style.textContent = `
-                    .nav-link:hover span {
-                        width: 100% !important;
+                    .underline-animation {
+                        position: absolute;
+                        bottom: 0;
+                        left: 50%;
+                        width: 0;
+                        height: 2px;
+                        background-color: #0095d9;
+                        transition: all 0.3s ease;
+                        transform: translateX(-50%);
+                    }
+                    .nav-link:hover .underline-animation {
+                        width: 100%;
+                    }
+                    .dropdown-item {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
                     }
                     .dropdown-item:hover {
-                        background: rgba(255, 0, 0, 0.1) !important;
+                        background: rgba(0, 149, 217, 0.1);
                         transform: translateX(5px);
-                        border-left: 4px solid red !important;
-                        color: red !important;
-                        font-weight: 600;
+                        border-left: 4px solid #0095d9;
+                        color: #0095d9 !important;
                     }
-                    @keyframes fadeIn {
-                        from {
-                            opacity: 0;
-                            transform: translateY(-10px);
+                    @media (max-width: 991px) {
+                        .nav-item {
+                            border-bottom: 1px solid rgba(0,0,0,0.1);
+                            width: 100%;
                         }
-                        to {
-                            opacity: 1;
-                            transform: translateY(0);
+                        .nav-item:last-child {
+                            border-bottom: none;
+                        }
+                        .dropdown-menu {
+                            border: none;
+                            box-shadow: none;
+                            padding-left: 1rem;
+                        }
+                        .mobile-dropdown-toggle.rotated {
+                            transform: rotate(180deg);
                         }
                     }
-                    .dropdown:hover .dropdown-menu {
-                        display: block;
-                    }
-                    .nav-item:last-child {
-                        border-right: none;
-                    }
-                    .dropdown-menu {
-                        margin-top: 0;
-                        left: 0 !important;
-                        background: #ffffff;
-                        width: 100%;
+                    @media (min-width: 992px) {
+                        .dropdown:hover .dropdown-menu {
+                            display: block;
+                        }
+                        .mobile-dropdown-toggle {
+                            display: none;
+                        }
                     }
                 `;
                 document.head.appendChild(style);
 
-                // Gắn HTML đã tạo vào phần tử menu
+                // Mobile dropdown handling
+                const initMobileMenu = () => {
+                    $('.mobile-dropdown-toggle').off().on('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const $toggle = $(this);
+                        const $dropdownMenu = $toggle.closest('.nav-item').find('.dropdown-menu');
+                        
+                        $('.dropdown-menu').not($dropdownMenu).slideUp(200);
+                        $('.mobile-dropdown-toggle').not($toggle).removeClass('rotated');
+                        
+                        $dropdownMenu.slideToggle(200);
+                        $toggle.toggleClass('rotated');
+                    });
+
+                    $(document).on('click', function(e) {
+                        if (!$(e.target).closest('.nav-item').length) {
+                            $('.dropdown-menu').slideUp(200);
+                            $('.mobile-dropdown-toggle').removeClass('rotated');
+                        }
+                    });
+                };
+
                 $('#menu').html(html);
                 $('body').append(searchModal);
+                initMobileMenu();
+
+                // Xử lý resize window
+                let resizeTimer;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => {
+                        $('.dropdown-menu').removeAttr('style');
+                        $('.mobile-dropdown-toggle').removeClass('rotated');
+                    }, 250);
+                });
             }
         },
         error: function (err) {
@@ -440,8 +470,8 @@ function Menu() {
 }
 function GetSlide() {
     $.ajax({
-        url: "/Pagemain/GetSlides", 
-        type: "GET",
+        url: "/Pagemain/GetSlides",
+        type: "GET", 
         success: function (res) {
             if (res.success) {
                 let slidesHtml = '';
@@ -452,13 +482,31 @@ function GetSlide() {
                 res.data.forEach((slide, index) => {
                     if (slide.status) {
                         const isActive = index === 0 ? 'active' : '';
-                        const slideHeight = window.innerWidth < 768 ? '375px' : '428px';
+                        let slideHeight, slideWidth;
+                        
+                        // Responsive dimensions based on screen width
+                        if (window.innerWidth < 576) { // Mobile phones
+                            slideHeight = '200px';
+                            slideWidth = '100%';
+                        } else if (window.innerWidth < 768) { // Large phones
+                            slideHeight = '250px';
+                            slideWidth = '100%';
+                        } else if (window.innerWidth < 992) { // Tablets/iPads
+                            slideHeight = '300px';
+                            slideWidth = '100%';
+                        } else if (window.innerWidth < 1200) { // Small desktops
+                            slideHeight = '350px';
+                            slideWidth = '100%';
+                        } else { // Large desktops
+                            slideHeight = '428px';
+                            slideWidth = '100%';
+                        }
                         
                         slidesHtml += `
                             <div class="carousel-item ${isActive}">
                                 <a href="${slide.link || '#'}" class="text-decoration-none">
-                                    <div class="slide-container rounded-4 overflow-hidden position-relative" 
-                                         style="height: ${slideHeight}; width: 100%;">
+                                    <div class="slide-container rounded-4 overflow-hidden position-relative d-flex align-items-center justify-content-center" 
+                                         style="height: ${slideHeight}; width: ${slideWidth}; background-color: white;">
                                         <div class="slide-item position-relative" 
                                              style="width: 100%; height: 100%; transition: all 0.3s ease; cursor: pointer;">
                                             <img src="/Resources/${slide.slide}" 

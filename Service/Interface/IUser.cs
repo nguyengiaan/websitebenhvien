@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using websitebenhvien.Models.Enitity;
 using websitebenhvien.Models.EnitityVM;
 
 
@@ -31,8 +33,31 @@ namespace websitebenhvien.Service.Interface
 
 
         public Task<bool> Logout();
+        // quản lý email 
+        public Task<Models.Enitity.Email> GetEmail();
 
-    
+
+        public Task<Boolean> Updateemail(int id, string email);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 }

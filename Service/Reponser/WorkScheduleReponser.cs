@@ -159,7 +159,9 @@ namespace websitebenhvien.Service.Reponser
         {
             try
             {
-                if(workschedule.Id_Specialty==0 || workschedule.Name_doctor=="Không có"){
+                var email = await _context.Emails.FirstOrDefaultAsync();
+                if (workschedule.Id_Specialty==0 || workschedule.Name_doctor=="Không có"){
+                 
                     var data1=new Registerhealth();
                     data1.Examinationtime=workschedule.Examinationtime;
                     data1.name=workschedule.name;
@@ -176,7 +178,7 @@ namespace websitebenhvien.Service.Reponser
                     await _context.Registerhealths.AddAsync(data1);
                     await _context.Notifications.AddAsync(notfi1);
                     await _hubnot.SendNotification();
-                    await _email.SendEmailAsync("2024801030185@student.tdmu.edu.vn", "ĐĂNG KÝ KHÁM BỆNH", "Khách hàng " + workschedule.name + " đã đăng ký khám sức khoẻ vào lúc " + workschedule.Examinationtime+"Số điện thoại "+workschedule.phone,null);
+                    await _email.SendEmailAsync(email.email, "ĐĂNG KÝ KHÁM BỆNH", "Khách hàng " + workschedule.name + " đã đăng ký khám sức khoẻ vào lúc " + workschedule.Examinationtime+"Số điện thoại "+workschedule.phone,null);
                     await _context.SaveChangesAsync();
                     return true;
                 }
@@ -201,7 +203,7 @@ namespace websitebenhvien.Service.Reponser
                 await _context.Notifications.AddAsync(notfi);
                 await _context.SaveChangesAsync();
                 await _hubnot.SendNotification();
-                await _email.SendEmailAsync("2024801030185@student.tdmu.edu.vn", "ĐĂNG KÝ KHÁM BỆNH", "Khách hàng " + workschedule.name + " đã đăng ký khám bệnh vào lúc " + workschedule.Examinationtime+"Số điện thoại "+workschedule.phone,null);
+                await _email.SendEmailAsync(email.email, "ĐĂNG KÝ KHÁM BỆNH", "Khách hàng " + workschedule.name + " đã đăng ký khám bệnh vào lúc " + workschedule.Examinationtime+"Số điện thoại "+workschedule.phone,null);
                 return true;
                 }
                 return false;

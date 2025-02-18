@@ -77,6 +77,8 @@ namespace websitebenhvien.Data
         public DbSet<Postpersonnel> postpersonnel { get; set; }
 
 
+        public DbSet<Email> Emails { get; set; }
+
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -214,7 +216,10 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<Postpersonnel>().Property(x => x.Statuson).HasMaxLength(int.MaxValue);
             modelBuilder.Entity<Postpersonnel>().Property(x => x.Date_recruitmentpost).HasMaxLength(int.MaxValue);
 
-            // bài viết tuyển dụng
+            // Email nhân sự
+            modelBuilder.Entity<Email>().ToTable("Email");
+            modelBuilder.Entity<Email>().HasKey(x => x.id);
+            modelBuilder.Entity<Email>().Property(x => x.email).HasMaxLength(int.MaxValue);
 
 
 
