@@ -5,6 +5,7 @@ using websitebenhvien.Helper;
 using websitebenhvien.Models.Enitity;
 using websitebenhvien.Models.EnitityVM;
 using websitebenhvien.Service.Interface;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace websitebenhvien.Service.Reponser
 {
@@ -122,6 +123,9 @@ namespace websitebenhvien.Service.Reponser
                     data.Result.Alias_url = news.Alias_url;
                     data.Result.Description = news.Description;
                     data.Result.Id_Categorynews = news.Id_Categorynews;
+                    data.Result.Descriptionshort=news.Descriptionshort;
+                    data.Result.Keyword = news.Keyword;
+                    data.Result.SchemaMakup = news.SchemaMakup;
                     await _context.SaveChangesAsync();
                     return true;
                 }
@@ -143,7 +147,10 @@ namespace websitebenhvien.Service.Reponser
                     data.Description = news.Description;
                     data.Id_Categorynews = news.Id_Categorynews;
                     data.Createat = DateTime.Now;
+                    data.Descriptionshort = news.Descriptionshort;
+                    data.Keyword = news.Keyword;
                     data.Status = true;
+                    data.SchemaMakup = news.SchemaMakup;
 
                     _context.News.Add(data);
                     await _context.SaveChangesAsync();
@@ -157,31 +164,61 @@ namespace websitebenhvien.Service.Reponser
             }
         }
      
-        public async Task<List<NewsVM>> Listnews()
+        public async Task<(int Totalpages,List<NewsVM>ds) > Listnews(string search, int page, int pagesize)
         {
             try
             {
-                // Sử dụng AsNoTracking() để không track entities và tăng hiệu suất
-                var data = await _context.News
-                    .AsNoTracking()
-                    .Select(x => new NewsVM
-                    {
-                        Id_News = x.Id_News,
-                        Title = x.Title,
-                        Url = x.Url,
-                        Alias_url = x.Alias_url,
-                        Id_Categorynews = x.Id_Categorynews,
-                        Createat = x.Createat,
-                        Status = x.Status
-                    })
-                    .OrderByDescending(x => x.Createat)
-                    .ToListAsync();
+                if (search == null)
+                {
+                    var totalItems = await _context.News.CountAsync();
+                    var totalPages = (int)Math.Ceiling(totalItems / (double)pagesize);
+                    var data = await _context.News
+                        .Select(x => new NewsVM
+                        {
+                            Id_News = x.Id_News,
+                            Title = x.Title,
+                            Url = x.Url,
+                            Alias_url = x.Alias_url,
+                            Id_Categorynews = x.Id_Categorynews,
+                            Createat = x.Createat,
+                            Status = x.Status
+                        })
+                        .OrderByDescending(x => x.Createat)
+                        .Skip((page - 1) * pagesize)
+                        .Take(pagesize)
+                        .ToListAsync();
+                    return (totalPages,data);
+                }
+                else
+                {
+                    var totalItems = await _context.News
+                        .Where(x => x.Title.Contains(search))
+                        .CountAsync();
+                    var totalPages = (int)Math.Ceiling(totalItems / (double)pagesize);
+                    var data = await _context.News
+                        .Where(x => x.Title.Contains(search))
+                        .Select(x => new NewsVM
+                        {
+                            Id_News = x.Id_News,
+                            Title = x.Title,
+                            Url = x.Url,
+                            Alias_url = x.Alias_url,
+                            Id_Categorynews = x.Id_Categorynews,
+                            Createat = x.Createat,
+                            Status = x.Status
+                        })
+                        .OrderByDescending(x => x.Createat)
+                        .Skip((page - 1) * pagesize)
+                        .Take(pagesize)
+                        .ToListAsync();
+                    return (totalPages, data);
 
-                return data;
+                }
+
             }
             catch (Exception)
             {
-                return null;
+                return (0, null);
             }
         }
 
@@ -192,6 +229,7 @@ namespace websitebenhvien.Service.Reponser
             {
                 var data = await _context.News.FindAsync(id);
                 _context.News.Remove(data);
+                _uploadfile.DeleteMedia(data.Url);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -217,7 +255,11 @@ namespace websitebenhvien.Service.Reponser
                 Url = x.Url,
                 Alias_url = x.Alias_url,
                 Id_Categorynews = x.Id_Categorynews,
-                Createat = x.Createat
+                Createat = x.Createat,
+                Descriptionshort=x.Descriptionshort,
+                Keyword=x.Keyword,
+                SchemaMakup=x.SchemaMakup,
+
             })
             .FirstOrDefaultAsync();
 

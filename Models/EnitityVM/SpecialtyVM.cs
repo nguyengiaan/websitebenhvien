@@ -13,15 +13,11 @@ namespace websitebenhvien.Models.EnitityVM
         [Required(ErrorMessage = "Thiết bị không được để trống")]
 
         public string Machine { get; set; }
-        [Required(ErrorMessage = "Phương pháp không được để trống")]
 
-        public string Method { get; set; }
         [Required(ErrorMessage = "Dịch vụ không được để trống")]
 
         public string Service { get; set; }
-        [Required(ErrorMessage = "Thành tựu không được để trống")]
 
-        public string Achievement { get; set; }
 
         public string ?Thumnail { get; set; }
         [Required(ErrorMessage = "Đường dẫn không được để trống")]

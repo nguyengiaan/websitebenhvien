@@ -736,9 +736,18 @@ namespace websitebenhvien.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Descriptionshort")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Id_Categorynews")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Keyword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SchemaMakup")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -1146,10 +1155,6 @@ namespace websitebenhvien.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_Specialty"));
 
-                    b.Property<string>("Achievement")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Alias_url")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1159,10 +1164,6 @@ namespace websitebenhvien.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Machine")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Method")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

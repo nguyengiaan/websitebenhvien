@@ -19,15 +19,14 @@ connection.on("ReceiveNotification", function () {
 
 $(document).ready(function() {
     // Ẩn select language nếu tồn tại
-    Header();   
-    Menu();
+  
+    
     GetSlide();
     loadNews();
     Getallvideo();
     GetSchema();
     GetAllEquipment();
     ListProduct();
-
     ListService();
     ListNews();
     ListShareCustomer();
@@ -45,9 +44,6 @@ $(document).ready(function() {
     $('#btnRegister').click(function(){
         registerAppointment();
     });
-
-
-
     $('#backToTop').click(function() {
         $('html, body').animate({scrollTop: 0}, 'slow');
         return false;
@@ -1946,7 +1942,7 @@ function loadNews()
         type: "GET",
         success: function(response) {
             if (response.status) {
-                    console.log(response.data);
+                
                var html = '';
                response.data.forEach(function(news) {
                 if (news.status) {

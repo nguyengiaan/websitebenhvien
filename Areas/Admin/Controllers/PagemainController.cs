@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using websitebenhvien.Models.Enitity;
@@ -13,9 +14,12 @@ namespace websitebenhvien.Areas.Admin.Controllers
     {
         private readonly IPageMain _page;
 
-        public PagemainController(IPageMain page)
+        private readonly IMemoryCache _cache;
+
+        public PagemainController(IPageMain page, IMemoryCache cache)
         {
             _page = page;
+            _cache= cache;
         }
 
         [HttpPost]
@@ -101,12 +105,18 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             try
             {
-                var data = await _page.GetSlide();
-                return Json(new { success = true, data = data });
+            if (!_cache.TryGetValue("slides", out List<Slidepage> slides))
+            {
+                slides = await _page.GetSlide();
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                .SetSlidingExpiration(TimeSpan.FromMinutes(30));
+                _cache.Set("slides", slides, cacheEntryOptions);
+            }
+            return Json(new { success = true, data = slides });
             }
             catch (Exception ex)
             {
-                return Json(new { success = false, message = "Có lỗi xảy ra" });
+            return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
         [HttpPost]

@@ -866,6 +866,388 @@ body {
 }
 @media (max-width: 768px) {
   main {
-    padding-top: 250px !important;
+    padding-top: 170px !important;
   }
 }
+/* header */
+@keyframes moveAmbulance {
+  0% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(5px) rotate(5deg); }
+  75% { transform: translateX(-5px) rotate(-5deg); }
+  100% { transform: translateX(0) rotate(0deg); }
+}
+
+.ambulance-icon {
+  color: #ff0000;
+  transform-style: preserve-3d;
+  animation: moveAmbulance 2s infinite;
+}
+
+.contact-badge {
+  border: 2px solid #ff0000;
+  padding: 6px 15px;
+  border-radius: 8px;
+  margin-right: 20px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  background: rgba(255,255,255,0.9);
+  transition: all 0.3s ease;
+}
+
+.contact-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 8px rgba(0,0,0,0.2);
+}
+
+.social-link img {
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.social-link img:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.language-flag {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  object-fit: contain;
+}
+
+.nav-link {
+  font-size: clamp(12px, 3vw, 14px);
+  font-family: 'Roboto', sans-serif;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: clamp(6px, 2vw, 8px) clamp(10px, 3vw, 15px);
+  color: #0095d9;
+}
+
+.underline-animation {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #0095d9;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover .underline-animation {
+  width: 100%;
+}
+
+@media (max-width: 991px) {
+  .nav-item {
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      width: 100%;
+  }
+  .nav-item:last-child {
+      border-bottom: none;
+  }
+  .dropdown-menu {
+      border: none;
+      box-shadow: none;
+      padding-left: 1rem;
+  }
+  .mobile-dropdown-toggle.rotated {
+      transform: rotate(180deg);
+  }
+}
+
+@media (min-width: 992px) {
+  .dropdown:hover .dropdown-menu {
+      display: block;
+  }
+  .mobile-dropdown-toggle {
+      display: none;
+  }
+}
+.link-contact{
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  padding: 8px 15px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+@keyframes moveAmbulance {
+  0% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(5px) rotate(5deg); }
+  75% { transform: translateX(-5px) rotate(-5deg); }
+  100% { transform: translateX(0) rotate(0deg); }
+}
+.contact-badge {
+  transition: all 0.3s ease;
+}
+.contact-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 8px rgba(0,0,0,0.2);
+}
+.social-link img:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.youtube-icon{
+  border-radius: 50%; transition: transform 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.nav-links{
+  padding-right: 200px!important;
+}
+.header-navigation{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+.sub-menu{
+  font-size: clamp(12px, 3vw, 10px);
+   font-family: 'Roboto', sans-serif;
+     font-weight: 600;
+     white-space: nowrap;
+     transition: all 0.3s ease;
+      position: relative;
+       padding: clamp(6px, 2vw, 8px) clamp(10px, 3vw, 15px);
+     color: #0095d9;
+}
+.sub-menu-son{
+                                              font-size: clamp(11px, 2.8vw, 7px);
+                                              transition: all 0.3s ease;
+                                              padding: clamp(8px, 2vw, 12px) clamp(15px, 4vw, 25px);
+                                              color: #0095d9 !important;
+                                              font-weight: 500;
+                                              border-left: 3px solid transparent;
+                                              margin: 2px 0;
+                                              font-family: 'Roboto', sans-serif;
+}
+.sub-menu-son:hover{
+    
+    background-color:#fd8a8a33 !important ;
+}
+.menu-title:hover {
+  color: red !important;
+}
+.sub-menu:hover{
+  background-color: #fd8a8a33 !important;
+}
+
+
+/* Additional styles for extra small devices */
+@media (max-width: 576px) {
+  #logo-img {
+    height: 70px;
+    margin-left: 20px !important;
+  }
+  #logo-container
+  {
+     display: flex !important;
+     flex-direction: row !important;
+     justify-content: flex-start !important;
+
+  }
+
+  .navbar-toggler {
+    padding: 4px 8px;
+  }
+
+  .nav-link {
+    font-size: 14px;
+  }
+}
+
+/* Language selector styles */
+.language-selector {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 20px;
+}
+
+.language-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.language-flag {
+  width: 30px;
+  height: 20px;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.language-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Mobile styles for language selector */
+@media (max-width: 991px) {
+  .language-selector {
+    justify-content: center;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .language-flag {
+    width: 25px;
+    height: 16px;
+  }
+
+  /* Add this to your existing mobile menu styles */
+  .navbar-collapse {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: #f4f8fa;
+    padding: 0;
+    z-index: 1000;
+  }
+
+  /* Move language selector to top of mobile menu */
+  .language-selector {
+    order: -1;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 576px) {
+  .language-selector {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .language-flag {
+    width: 22px;
+    height: 15px;
+  }
+}
+
+/* Mobile styles cho menu-logo-gg */
+.menu-logo-gg {
+    margin-top: 10px;
+}
+
+/* Style cho language selector trên mobile */
+@media (max-width: 767.98px) {
+    .menu-logo-gg .language-selector {
+        background-color: #f8f9fa;
+        padding: 5px;
+        border-radius: 4px;
+    }
+
+    .menu-logo-gg .language-btn {
+        transition: transform 0.2s;
+    }
+
+    .menu-logo-gg .language-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .menu-logo-gg .language-flag {
+        border: 1px solid #e9ecef;
+    }
+
+    /* Style cho contact links trên mobile */
+    .menu-logo-gg .contact-links .btn {
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 4px;
+        color: #6c757d;
+        border: 1px solid #6c757d;
+        transition: all 0.3s ease;
+    }
+
+    .menu-logo-gg .contact-links .btn:hover {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    /* Container cho toàn bộ phần mobile menu */
+    .menu-logo-gg .d-md-none {
+        background-color: white;
+        padding: 8px;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Căn chỉnh khoảng cách */
+    .menu-logo-gg .d-flex.flex-row {
+        padding: 5px;
+    }
+
+    /* Thêm đường phân cách giữa language selector và contact links */
+    .menu-logo-gg .language-selector::after {
+        content: '';
+        display: inline-block;
+        width: 1px;
+        height: 20px;
+        background-color: #dee2e6;
+        margin: 0 8px;
+        vertical-align: middle;
+    }
+}
+
+/* Animation khi hover */
+@media (max-width: 767.98px) {
+    .menu-logo-gg .btn,
+    .menu-logo-gg .language-btn {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .menu-logo-gg .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            120deg,
+            transparent,
+            rgba(255,255,255,0.3),
+            transparent
+        );
+        transition: 0.5s;
+    }
+
+    .menu-logo-gg .btn:hover::before {
+        left: 100%;
+    }
+}
+
+
+
+@media (min-width: 750px) and (max-width: 910px) {
+    #logo-container {
+        display: flex;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100%;
+    }
+    #logo-img{
+      padding-left: 200px;
+    }
+    #contact-link{
+      width: 100% !important;
+      flex-grow: 1!important;
+    
+
+    }
+    .link-contact{
+      font-size: 12px !important;
+    }
+   
+}
+

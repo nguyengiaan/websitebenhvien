@@ -1,0 +1,178 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model websitebenhvien.Models.EnitityVM.Header_trangchu
+<header>
+    <div class="row d-flex bg-white h-70" style="height: auto; min-height: 105px; padding: 10px 0;">
+        <div class="col-lg-4 col-md-12 d-flex flex-column flex-md-row justify-content-between align-items-center" id="logo-container">
+            <div>
+                @foreach (var a in @Model.headers)
+                {
+                    <a href="/" class="mb-3 mb-md-0 text-center" style="padding-left: 0;">
+                        <img src="/Resources/@a.logo" alt="" id="logo-img" class="img-fluid ps-md-5" style="width: auto; margin-left: 0;" loading="lazy">
+                    </a>
+                }
+            </div>
+            <div class="d-md-none d-flex h-100 flex-column w-25 align-items-center mt-5">
+                <div class="d-flex flex-row justify-content-between">
+                    <button onclick="changeLanguage('vi')" class="language-btn" aria-label="Switch to Vietnamese" style="border: none; background: none; padding: 5px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/2000px-Flag_of_Vietnam.svg.png" alt="Vietnamese Flag" class="language-flag" width="30" height="20" loading="lazy">
+                    </button>
+                    <button onclick="changeLanguage('en')" class="language-btn" aria-label="Switch to English" style="border: none; background: none; padding: 0;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/1280px-Flag_of_the_United_Kingdom_%283-5%29.svg.png" alt="English Flag" class="language-flag" width="30" height="20" loading="lazy">
+                    </button>
+                </div>
+                <div class="d-flex flex-row justify-content-between">
+                    <button onclick="changeLanguage('zh-CN')" class="language-btn" aria-label="Switch to Chinese" style="border: none; background: none; padding: 5px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/2000px-Flag_of_the_People%27s_Republic_of_China.svg.png" alt="Chinese Flag" class="language-flag" width="30" height="20" loading="lazy">
+                    </button>
+                    <button onclick="changeLanguage('ko')" class="language-btn" aria-label="Switch to Korean" style="border: none; background: none; padding: 5px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/2000px-Flag_of_South_Korea.svg.png" alt="Korean Flag" class="language-flag" width="30" height="20" loading="lazy">
+                    </button>
+                    <button onclick="changeLanguage('ja')" class="language-btn" aria-label="Switch to Japanese" style="border: none; background: none; padding: 0;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Japan.svg/2000px-Flag_of_Japan.svg.png" alt="Japanese Flag" class="language-flag" width="30" height="20" loading="lazy">
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 d-none d-md-block d-md-flex flex-column align-items-center justify-content-center" id="header-contact">
+            <div class="nav-links d-flex flex-wrap justify-content-center justify-content-md-end gap-3 mb-2" id="contact-link">
+                @if (Model.headers != null)
+                {
+                    @foreach (var item in Model.headers)
+                    {
+                        @foreach (var a in item.titleheader)
+                        {
+                            <a href="@a.link" class="nav-link text-decoration-none text-dark d-flex align-items-center link-contact" role="button">
+                                <span class="span-contact">@a.title</span>
+                            </a>
+                        }
+                    }
+                }
+                <div class="language-selector d-flex gap-3 flex-row" role="navigation" aria-label="Language Selection">
+                    <button onclick="changeLanguage('vi')" class="language-btn" aria-label="Switch to Vietnamese" style="border: none; background: none; padding: 0;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/2000px-Flag_of_Vietnam.svg.png" alt="Vietnamese Flag" class="language-flag" width="30" height="20" loading="lazy">
+                    </button>
+                    <button onclick="changeLanguage('en')" class="language-btn" aria-label="Switch to English" style="border: none; background: none; padding: 0;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/1280px-Flag_of_the_United_Kingdom_%283-5%29.svg.png" alt="English Flag" class="language-flag" width="30" height="20" loading="lazy">
+                    </button>
+                    <button onclick="changeLanguage('zh-CN')" class="language-btn" aria-label="Switch to Chinese" style="border: none; background: none; padding: 0;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/2000px-Flag_of_the_People%27s_Republic_of_China.svg.png" alt="Chinese Flag" class="language-flag" width="30" height="20" loading="lazy">
+                    </button>
+                    <button onclick="changeLanguage('ko')" class="language-btn" aria-label="Switch to Korean" style="border: none; background: none; padding: 0;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/2000px-Flag_of_South_Korea.svg.png" alt="Korean Flag" class="language-flag" width="30" height="20" loading="lazy">
+                    </button>
+                    <button onclick="changeLanguage('ja')" class="language-btn" aria-label="Switch to Japanese" style="border: none; background: none; padding: 0;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Japan.svg/2000px-Flag_of_Japan.svg.png" alt="Japanese Flag" class="language-flag" width="30" height="20" loading="lazy">
+                    </button>
+                </div>
+                <nav class="header-navigation d-flex flex-column align-items-end w-100" role="navigation" id="navigation">
+                    <div class="header-top d-none d-md-flex align-items-center mb-3" aria-label="Emergency Contact Information">
+                        <div class="emergency-contacts px-4" role="contentinfo">
+                            <p class="m-0 text-danger fw-bold mt-2" style="font-size: 18px; letter-spacing: 0.5px; text-shadow: 1px 1px 3px rgba(0,0,0,0.1);">
+                                <span class="emergency-number me-4" aria-label="Emergency Number">
+                                    <i class="fas fa-ambulance fa-lg me-3 ambulance-icon" aria-hidden="true" style="color: #ff0000; transform-style: preserve-3d; animation: moveAmbulance 2s infinite;"></i>
+                                    <span class="contact-badge" style="border: 2px solid #ff0000; padding: 6px 15px; border-radius: 8px; margin-right: 20px; box-shadow: 0 3px 6px rgba(0,0,0,0.15); background: rgba(255,255,255,0.9);">
+                                        @foreach (var a in Model.headers)
+                                        {
+                                            <span style="color: #ff0000;">Cấp cứu 24/24: <a href="#" style="color: #ff0000 !important; text-decoration: none; font-weight: 700;"></a>@a.telephone</span>
+                                        }
+                                    </span>
+                                </span>
+                                <span class="social-icons ms-4" aria-label="Social Media Links">
+                                    <a href="https://www.youtube.com/" target="_blank" class="social-link me-4" style="text-decoration: none;">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/YouTube_full-color_icon_%282017%29.svg/2560px-YouTube_full-color_icon_%282017%29.svg.png" alt="YouTube" width="32" height="32" class="youtube-icon">
+                                    </a>
+                                    <a href="https://www.facebook.com/benhvienmyphuoc?locale=vi_VN" target="_blank" class="social-link me-4" style="text-decoration: none;">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Facebook_Logo_%282019%29.png/1024px-Facebook_Logo_%282019%29.png" alt="Facebook" width="32" height="32" class="youtube-icon">
+                                    </a>
+                                    <a href="https://zalo.me/3218616946017588505" target="_blank" class="social-link" style="text-decoration: none;">
+                                        <img src="/Images/zalo_sharelogo.png" alt="Zalo" width="32" height="32" class="youtube-icon">
+                                    </a>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg" style="background-color:#ffffff; width: 100%; padding-top: 8px;">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" style="border: 2px solid #0095d9; padding: 8px 12px;">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto" id="menu" style="perspective: 1500px; transform-style: preserve-3d;">
+                    @if (Model.menus != null)
+                    {
+                        @foreach (var menu in Model.menus.Where(m => m.Status == true).OrderBy(m => m.Order_menu))
+                        {
+                            <li class="nav-item px-1 @(menu.Menu?.Any() == true ? "dropdown" : "")" style="transition: all 0.3s ease;">
+                                <a class="nav-link d-flex align-items-center justify-content-between sub-menu" 
+                                   href="@menu.Link_menu" 
+                                   id="menu@(menu.Id_menu)" 
+                                   role="button" 
+                                   @(menu.Menu?.Any() == true ? "data-bs-toggle=dropdown aria-expanded=false" : "") 
+                                   style="transition: all 0.3s ease; padding: 8px 10px; font-size: 0.95rem;">
+                                    <span>@menu.Title_menu</span>
+                                    @if (menu.Menu?.Any() == true)
+                                    {
+                                        <i class="fas fa-chevron-down ms-1"></i>
+                                    }
+                                </a>
+                                @if (menu.Menu?.Any() == true)
+                                {
+                                    <ul class="dropdown-menu shadow-lg" style="border-radius: 6px; border: none;">
+                                        @foreach (var submenu in menu.Menu.OrderBy(sm => sm.Order_menu))
+                                        {
+                                            <li>
+                                                <a class="dropdown-item sub-menu-son" 
+                                                   href="@submenu.Link_MenuChild" 
+                                                   title="@submenu.Title_MenuChild" 
+                                                   style="transition: all 0.3s ease; padding: 8px 15px; font-size: 0.9rem;">
+                                                    @submenu.Title_MenuChild
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </li>
+                        }
+                    }
+                    <li class="nav-item px-1">
+                        <a class="nav-link search-link sub-menu" 
+                           href="#" 
+                           data-bs-toggle="modal" 
+                           data-bs-target="#searchModal" 
+                           style="transition: all 0.3s ease; padding: 8px 10px;">
+                            <i class="fas fa-search"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="d-block d-md-none">
+                <span class="contact-badge" 
+                      style="display: inline-block;
+                             background: linear-gradient(135deg, #ff4d4d, #ff0000);
+                             padding: 10px 10px;
+                             border-radius: 50px;
+                             box-shadow: 0 4px 15px rgba(255,0,0,0.2);">
+                    @foreach (var a in Model.headers)
+                    {
+                        <span style="color: #ffffff; font-weight: 700;">
+                            Cấp cứu 24/24: 
+                            <a href="#" style="color: #ffffff !important; text-decoration: none;">@a.telephone</a>
+                        </span>
+                    }
+                </span>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<style>
+
+</style>

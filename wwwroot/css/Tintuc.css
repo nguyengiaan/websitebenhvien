@@ -1,0 +1,75 @@
+﻿
+.post-body input[type="image"] {
+    width: 100%;
+    height: auto;
+    border: none;
+}
+
+.post-body img {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+}
+table {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    display: block;
+}
+.post-body span {
+    width: 100%;
+    height: auto;
+}
+
+table tbody tr td {
+    width: 100%;
+    height: auto;
+    max-height: 500px; /* Giới hạn chiều cao tối đa */
+    overflow-y: auto; /* Thêm thanh cuộn dọc khi nội dung vượt quá */
+    padding: 10px;
+    word-wrap: break-word; /* Ngắt từ khi quá dài */
+}
+
+/* Tùy chỉnh thanh cuộn */
+table tbody tr td::-webkit-scrollbar {
+    width: 8px;
+}
+
+table tbody tr td::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+table tbody tr td::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+table tbody tr td::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+   .post-body span {
+        width: 100%;
+        height: auto;
+        display: inline-block;
+        max-width: 100%;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+    }
+  @media screen and (max-width: 768px) {
+        .post-body span {
+            font-size: 95%;
+        }
+    }
+
+    @media screen and (max-width: 576px) {
+        .post-body span {
+            font-size: 90%;
+        }
+    }
+
+    @media screen and (max-width: 375px) {
+        .post-body span {
+            font-size: 85%;
+        }
+    }

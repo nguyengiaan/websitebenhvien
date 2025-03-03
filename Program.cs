@@ -12,6 +12,8 @@ using websitebenhvien.Config;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using websitebenhvien.Helper;
+using AspNetCoreRateLimit;
+using websitebenhvien.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +48,13 @@ builder.Services.AddScoped<EmailSender>();
 builder.Services.AddScoped<Hubnot>();
 builder.Services.AddScoped<Uploadfile>();
 builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));
+builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
+builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+builder.Services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+builder.Services.AddInMemoryRateLimiting();
+builder.Services.AddMemoryCache();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddAuthorization(options =>
 {
@@ -99,7 +108,8 @@ if (!Directory.Exists(uploadsPath))
 {
     Directory.CreateDirectory(uploadsPath);
 }
-
+app.UseIpRateLimiting();
+app.UseCustomRateLimit();
 app.UseStaticFiles(
     new StaticFileOptions
     {

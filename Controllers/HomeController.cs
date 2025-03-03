@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using websitebenhvien.Data;
 using websitebenhvien.Migrations;
 using websitebenhvien.Models;
@@ -16,15 +17,23 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly IRecruitment _recruitment;
     private readonly MyDbcontext _context;
+    private readonly IAllinone _allinone;
+    private readonly IMemoryCache _cache;
 
-    public HomeController(ILogger<HomeController> logger,IRecruitment recruitment,MyDbcontext context)
+    public HomeController(ILogger<HomeController> logger,IRecruitment recruitment,MyDbcontext context,IAllinone allinone, IMemoryCache cache)
     {
         _logger = logger;
         _recruitment= recruitment;
         _context = context;
+        _allinone = allinone;
+        _cache = cache;
     }
     public IActionResult Index()
     {
+        ViewData["Title"] = "Bệnh Viện Đa Khoa Mỹ Phước";
+        ViewData["Description"] = "Bệnh Viện Đa Khoa Mỹ Phước cung cấp dịch vụ y tế chất lượng cao với đội ngũ bác sĩ chuyên nghiệp và trang thiết bị hiện đại.";
+        ViewData["Keywords"] = "Bệnh Viện Đa Khoa, Mỹ Phước, dịch vụ y tế, bác sĩ chuyên nghiệp, trang thiết bị hiện đại";
+        ViewData["Image"] = "https://benhvienmyphuoc.com.vn/Images/Logo-rm.png";
         return View();
     }
     public IActionResult Privacy()
@@ -36,17 +45,37 @@ public class HomeController : Controller
     {
         return View();
     }
-    [HttpGet("/chi-tiet-tin/{alias_url}")]
-    public async Task<IActionResult> PostDetail()
+    [HttpGet()]
+    [Route("/chi-tiet-tin/{alias_url}")]
+    public async Task<IActionResult> PostDetail(string alias_url)
     {
-      
+        try
+        {
+            var cacheKey = $"PostDetail_{alias_url}";
+            if (!_cache.TryGetValue(cacheKey, out News data))
+            {
+                var alias = "/chi-tiet-tin/" + alias_url;
+                data = await _context.News.Where(x => x.Alias_url == alias).AsNoTracking().FirstOrDefaultAsync();
+                if (data == null)
+                {
+                    return NotFound();
+                }
 
-            return View();
-       
-     
-       
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(30));
+
+                _cache.Set(cacheKey, data, cacheEntryOptions);
+            }
+
+            return View(data);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching post detail");
+            return NotFound();
+        }
     }
-     [HttpGet("/chuyen-khoa")]
+    [HttpGet("/chuyen-khoa")]
     public IActionResult Specialty()
     {
         return View();
