@@ -19,14 +19,16 @@ public class HomeController : Controller
     private readonly MyDbcontext _context;
     private readonly IAllinone _allinone;
     private readonly IMemoryCache _cache;
+    private readonly IForbusiness _forbusiness;
 
-    public HomeController(ILogger<HomeController> logger,IRecruitment recruitment,MyDbcontext context,IAllinone allinone, IMemoryCache cache)
+    public HomeController(ILogger<HomeController> logger,IRecruitment recruitment,MyDbcontext context,IAllinone allinone, IMemoryCache cache,IForbusiness forbusiness)
     {
         _logger = logger;
         _recruitment= recruitment;
         _context = context;
         _allinone = allinone;
         _cache = cache;
+        _forbusiness= forbusiness;
     }
     public IActionResult Index()
     {
@@ -108,8 +110,23 @@ public class HomeController : Controller
         }
     }
 
-    
 
+    [Route("/danh-cho-doanh-nghiep")]
+    public async Task<IActionResult> Danhchodoanhnghiep()
+    {
+        try
+        {
+            var data = await _forbusiness.Getbusinesstrue();
+            return View(data);
+        }
+        catch (Exception e)
+        {
+            return Json(new { status = false, message = e.Message });
+
+
+
+        }
+    }
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

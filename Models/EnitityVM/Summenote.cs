@@ -20,7 +20,7 @@
             [""color"", [""color"", ""forecolor"", ""backcolor""]],
             [""para"", [""ul"", ""ol"", ""paragraph"", ""floatLeft"", ""floatNone"", ""floatRight""]],
             [""height"", [""height""]],
-            [""insert"", [""link"", ""video"", ""table"", ""elfinder"", ""picture""]],
+            [""insert"", [""link"", ""video"", ""table"", ""elfinder""]],
             [""misc"", [""codeview"", ""fullscreen"", ""help""]]
         ]";
     }

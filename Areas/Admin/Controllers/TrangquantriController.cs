@@ -177,7 +177,15 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
-      
+        [Authorize(Roles = "Quanlydoanhnghiep,admin")]
+        [Route("/trang-quan-tri/Quan-ly-doanh-nghiep")]
+        public IActionResult Quanlydoanhnghiep()
+        {
+            return View();
+        }
+
+
+
     }
 }
 
