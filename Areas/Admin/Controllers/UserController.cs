@@ -19,17 +19,17 @@ namespace websitebenhvien.Areas.Admin.Controllers
             _user = user;
         }
         [HttpPost]
-        public  async Task<IActionResult> RegisterUser(RegisteruserVM registeruser)
+        public async Task<IActionResult> RegisterUser(RegisteruserVM registeruser)
         {
             try
             {
-               
-                  if (!ModelState.IsValid)
-                    {
-                        // Trả về thông báo lỗi từ ModelState
-                        var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                        return Json(new { status = false, message = string.Join(", ", errors), errors });
-                    }
+
+                if (!ModelState.IsValid)
+                {
+                    // Trả về thông báo lỗi từ ModelState
+                    var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                    return Json(new { status = false, message = string.Join(", ", errors), errors });
+                }
                 var data = await _user.RegisterUser(registeruser);
                 if (data.status == 1)
                 {
@@ -41,7 +41,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             {
                 return Json(new { status = false, message = ex.Message });
 
-            }  
+            }
         }
         [HttpGet]
         public async Task<IActionResult> GetRegisterUsers()
@@ -49,7 +49,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             try
             {
                 var data = await _user.GetRegisterUsers();
-                return Json(new { status = true, data=data });
+                return Json(new { status = true, data = data });
             }
             catch (Exception ex)
             {
@@ -90,7 +90,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        
+
         [Authorize(Roles = "admin")]
         [HttpGet("/api/ds-phan-quyen")]
         public async Task<IActionResult> GetRoles()
@@ -107,7 +107,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         }
         [Authorize]
         [HttpPost("/api/them-phan-quyen")]
-        
+
         public async Task<IActionResult> AddRole(string role)
         {
             try
@@ -123,20 +123,20 @@ namespace websitebenhvien.Areas.Admin.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost("/api/xoa-quyen")]
-   
+
 
         public async Task<IActionResult> DelRole(string id)
         {
             try
             {
                 var data = await _user.DelRole(id);
-                if(data)
+                if (data)
                 {
                     return Json(new { status = true, message = "Xoá thành công" });
                 }
                 return Json(new { status = false, message = "Xoá thất bại" });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Json(new { status = false, message = ex.Message });
             }
@@ -149,10 +149,10 @@ namespace websitebenhvien.Areas.Admin.Controllers
             try
             {
                 var data = await _user.GetPermissonUser();
-                return Json(new { status = true ,data=data});
-            
+                return Json(new { status = true, data = data });
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Json(new { status = false, messager = ex.Message });
             }
@@ -206,11 +206,11 @@ namespace websitebenhvien.Areas.Admin.Controllers
         [Authorize]
         [Route("/trang-quan-tri/dang-xuat")]
         public async Task<IActionResult> Logout()
-        {       
+        {
             try
             {
                 var data = await _user.Logout();
-                if(data)
+                if (data)
                 {
                     return RedirectToAction("Dangnhap", "Trangquantri", new { area = "Admin" });
                 }
@@ -220,6 +220,42 @@ namespace websitebenhvien.Areas.Admin.Controllers
             {
                 return Json(new { status = false, message = ex.Message });
             }
+        }
+        [Authorize(Roles = "admin,Quanlyemail")]
+        [HttpGet("/api/lay-email")]
+        public async Task<IActionResult> GetEmail()
+        {
+            try
+            {
+                var data = await _user.GetEmail();
+                return Json(new { status = true, data = data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { status = false, message = ex.Message });
+            }
+        }
+
+        [Authorize(Roles="admin,Quanlyemail")]
+        [HttpPost("/api-update-email")]
+        public async Task<IActionResult> UpdateEmail(int id,string email)
+        {
+            try
+            {
+                var data = await _user.Updateemail(id, email);
+                if(data)
+                {
+                    return Json(new { status = true, message = "Cập nhật thành công" });
+                }
+                
+                    return Json(new { status = false, message = "Cập nhật thất bại" });
+               
+            } catch (Exception ex)
+            {
+
+                return Json(new { status = false, message = ex.Message });
+            }
+
         }
     }
 }

@@ -171,6 +171,13 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
+        [Authorize(Roles = "Quanlyemail,admin")]
+        [Route("/trang-quan-tri/Quan-ly-email")]
+        public IActionResult Quanlyemail()
+        {
+            return View();
+        }
+      
     }
 }
 

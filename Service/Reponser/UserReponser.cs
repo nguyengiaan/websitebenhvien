@@ -374,7 +374,7 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
-  public async Task<bool> UpdateRolesUser(string id, string idrole)
+         public async Task<bool> UpdateRolesUser(string id, string idrole)
 {
     try
     {
@@ -425,7 +425,6 @@ namespace websitebenhvien.Service.Reponser
     }
 }
 
-
         public async Task<bool> Logout()
         {
           try
@@ -437,6 +436,38 @@ namespace websitebenhvien.Service.Reponser
           {
             return false;
           }
+        }
+        // email
+        public async Task<Email> GetEmail()
+        {
+            try
+            {
+                var data =await _context.Emails.FirstOrDefaultAsync();
+                return data;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<bool> Updateemail(int id,string email)
+        {
+            try
+            {
+                var data = await _context.Emails.FindAsync(id);
+                if(data!=null)
+                {
+                    data.email = email;
+                    await _context.SaveChangesAsync();
+                    return true;
+
+                 }
+                return false;
+            }catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

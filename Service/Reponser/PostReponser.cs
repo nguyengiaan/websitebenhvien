@@ -70,6 +70,7 @@ namespace websitebenhvien.Service.Reponser
         // nộp cv tuyển dụng
         public async Task<bool> SubmitRecruitment(RecruitmentVM recruitment)
         {
+            var email = await _context.Emails.FirstOrDefaultAsync();
             try
             {
                 var data=new Recruitment();
@@ -97,7 +98,7 @@ namespace websitebenhvien.Service.Reponser
                 await _context.Notifications.AddAsync(notification);
                 await _context.SaveChangesAsync();
                 await _hubnot.SendNotification();
-                await _email.SendEmailAsync("nguyenvannamht02@gmail.com","Nộp hồ sơ tuyển dụng",recruitment.Name+" "+" đã nộp hồ sơ tuyển dụng vị trí "+" "+recruitment.Position,recruitment.CV_Url);
+                await _email.SendEmailAsync(email.email,"Nộp hồ sơ tuyển dụng",recruitment.Name+" "+" đã nộp hồ sơ tuyển dụng vị trí "+" "+recruitment.Position,recruitment.CV_Url);
             
                return true;
             }

@@ -46,6 +46,7 @@ builder.Services.AddScoped<EmailSender>();
 builder.Services.AddScoped<Hubnot>();
 builder.Services.AddScoped<Uploadfile>();
 builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));
+builder.Services.AddServerSideBlazor();
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("user", policy => policy.RequireRole("user"));
@@ -111,7 +112,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
-app.UseAuthorization(); 
+app.UseAuthorization();
+app.MapBlazorHub();
 app.MapHub<Hubnot>("/friendHub");
 // Route cho Areas
 app.MapControllerRoute(
@@ -130,6 +132,9 @@ app.MapControllerRoute(
     name: "bai-viet-detail",
     defaults: new { controller = "Home", action = "PostDetail" },
     pattern: "chi-tiet-tin/{alias_url}");
+
+
+
 
 
 app.Run();
