@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using websitebenhvien.Models.EnitityVM;
 using websitebenhvien.Service.Interface;
 
@@ -66,6 +67,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         //Tin tức
+        [Authorize(Roles = "admin,Baiviet")]
         [HttpPost]
         public async Task<IActionResult> AddNews(NewsVM news)
         {
@@ -88,20 +90,21 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [HttpGet]
-        public async Task<IActionResult> Listnews()
+        [Authorize(Roles = "admin,Baiviet")]
+        [HttpPost]
+        public async Task<IActionResult> Listnews(string search,int page,int pagesize)
         {
             try
             {
-                var data = await _allinone.Listnews();
-                return Json(new { status = true, data });
+                var data = await _allinone.Listnews(search,page,pagesize);
+                return Json(new { status = true, data=data.ds ,pageindex=page ,totalpage=data.Totalpages});
             }
             catch (Exception ex)
             {
                 return Json(new { status = false, message = ex.Message });
             }
         }
-
+        [Authorize(Roles = "admin,Baiviet")]
         [HttpPost]
         public async Task<IActionResult> DeleteNews(int  id)
         {
@@ -115,6 +118,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+         [Authorize(Roles = "admin,Baiviet")]
         [HttpPost]
         public async Task<IActionResult> GetNewsById(int id)
         {

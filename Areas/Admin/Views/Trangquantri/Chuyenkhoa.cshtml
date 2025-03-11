@@ -79,7 +79,7 @@
 
                                     <div class="mb-4">
                                         <label class="form-label fw-bold">
-                                            <i class="fas fa-info-circle me-2"></i>Thông tin giới thiệu
+                                            <i class="fas fa-info-circle me-2"></i>Giới thiệu chung
                                         </label>
                                         <textarea class="form-control summernote" id="introduction" name="introduction"></textarea>
                                     </div>
@@ -95,12 +95,19 @@
                                             <i class="fas fa-image me-2"></i>Ảnh đại diện
                                         </label>
                                         <div class="input-group">
-                                            <input type="file" class="form-control" id="formFile" name="formFile">
+                                            <input type="file" class="form-control" id="formFile" name="formFile" onchange="previewImage(this)">
                                             <button class="btn btn-outline-primary" type="button">
                                                 <i class="fas fa-upload"></i>
                                             </button>
                                         </div>
                                     </div>
+                            <div id="imagePreviewContainer" class="mt-3" style="display:none;">
+                                <img id="imagePreview" src="" alt="Preview" style="max-width: 200px; max-height: 200px;" class="img-thumbnail">
+                                <button type="button" class="btn btn-danger btn-sm mt-2" onclick="removeImage()">
+                                    <i class="fas fa-trash me-1"></i>
+                                </button>
+                            </div>     
+
                                 </div>
                             </div>
                         </div>
@@ -112,17 +119,12 @@
                                 <div class="card-body">
                                     <div class="mb-4">
                                         <label class="form-label fw-bold">
-                                            <i class="fas fa-tools me-2"></i>Thiết bị
+                                            <i class="fas fa-tools me-2"></i>Cơ sở vật chất thiết bị
                                         </label>
                                         <textarea class="form-control summernote" id="machine" name="machine"></textarea>
                                     </div>
 
-                                    <div class="mb-4">
-                                        <label class="form-label fw-bold">
-                                            <i class="fas fa-procedures me-2"></i>Kỹ thuật điều trị
-                                        </label>
-                                        <textarea class="form-control summernote" id="method" name="method"></textarea>
-                                    </div>
+                    
                                 </div>
                             </div>
                         </div>
@@ -130,19 +132,14 @@
                         <div class="col-md-6">
                             <div class="card shadow-sm mb-3">
                                 <div class="card-body">
-                                    <div class="mb-4">
+                                    <div class="mb-12">
                                         <label class="form-label fw-bold">
-                                            <i class="fas fa-hand-holding-medical me-2"></i>Dịch vụ
+                                            <i class="fas fa-hand-holding-medical me-2"></i>Dịch vụ y tế tại khoa
                                         </label>
                                         <textarea class="form-control summernote" id="service" name="service"></textarea>
                                     </div>
 
-                                    <div class="mb-4">
-                                        <label class="form-label fw-bold">
-                                            <i class="fas fa-award me-2"></i>Thành tựu nổi bật
-                                        </label>
-                                        <textarea class="form-control summernote" id="achievement" name="achievement"></textarea>
-                                    </div>
+                         
                                 </div>
                             </div>
                         </div>
@@ -186,7 +183,7 @@
         $('#previewImage').attr('src', '').addClass('d-none'); // Reset preview image
 
     });
-            loadCategories(1,20);
+            loadCategories(currentPage,pageSize);
         });
         function loadCategories(page,pageSize) {
             $.ajax({
@@ -236,74 +233,77 @@
                 }
             });
         }
-        function renderPagination(totalPages, currentPage) {
-            let html = '';
-            
-            if (totalPages <= 5) {
-                // Show all pages if total pages <= 5
-                for (let i = 1; i <= totalPages; i++) {
-                    html += `
-                        <li class="page-item ${i === currentPage ? 'active' : ''}">
-                            <a class="page-link" href="#" onclick="loadCategories(${i})">${i}</a>
-                        </li>
-                    `;
+        function renderPagination( totalPages, currentPage) {
+                    let html = '';
+
+                    if (totalPages <= 5) {
+                        // Show all pages if total pages <= 5
+                        for (let i = 1; i <= totalPages; i++) {
+                            html += `
+                                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                                    <a class="page-link" href="#" onclick="loadCategories( ${i}, ${pageSize})">${i}</a>
+                                </li>
+                            `;
+                        }
+                    } else {
+                        // Add Previous button
+                        html += `
+                            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                                <a class="page-link" href="#" onclick="loadCategories( ${currentPage - 1}, ${pageSize})">&laquo;</a>
+                            </li>
+                        `;
+
+                        // Show first page
+                        html += `
+                            <li class="page-item ${currentPage === 1 ? 'active' : ''}">
+                                <a class="page-link" href="#" onclick="loadCategories( 1, ${pageSize})">1</a>
+                            </li>
+                        `;
+
+                        // Add ellipsis if needed
+                        if (currentPage > 3) {
+                            html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                        }
+
+                        // Show pages around current page
+                        for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+                            html += `
+                                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                                    <a class="page-link" href="#" onclick="loadCategories( ${i}, ${pageSize})">${i}</a>
+                                </li>
+                            `;
+                        }
+
+                        // Add ellipsis if needed
+                        if (currentPage < totalPages - 2) {
+                            html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                        }
+
+                        // Show last page
+                        html += `
+                            <li class="page-item ${currentPage === totalPages ? 'active' : ''}">
+                                <a class="page-link" href="#" onclick="loadCategories(${totalPages}, ${pageSize})">${totalPages}</a>
+                            </li>
+                        `;
+
+                        // Add Next button
+                        html += `
+                            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                                <a class="page-link" href="#" onclick="loadCategories(${currentPage + 1}, ${pageSize})">&raquo;</a>
+                            </li>
+                        `;
+                    }
+
+                    $('#pagination').html(html);
                 }
-            } else {
-                // Add Previous button
-                html += `
-                    <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-                        <a class="page-link" href="#" onclick="loadCategories(${currentPage - 1})">&laquo;</a>
-                    </li>
-                `;
-
-                // Show first page
-                html += `
-                    <li class="page-item ${currentPage === 1 ? 'active' : ''}">
-                        <a class="page-link" href="#" onclick="loadCategories(1)">1</a>
-                    </li>
-                `;
-
-                // Add ellipsis if needed
-                if (currentPage > 3) {
-                    html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
-                }
-
-                // Show pages around current page
-                for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
-                    html += `
-                        <li class="page-item ${i === currentPage ? 'active' : ''}">
-                            <a class="page-link" href="#" onclick="loadCategories(${i})">${i}</a>
-                        </li>
-                    `;
-                }
-
-                // Add ellipsis if needed
-                if (currentPage < totalPages - 2) {
-                    html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
-                }
-
-                // Show last page
-                html += `
-                    <li class="page-item ${currentPage === totalPages ? 'active' : ''}">
-                        <a class="page-link" href="#" onclick="loadCategories(${totalPages})">${totalPages}</a>
-                    </li>
-                `;
-
-                // Add Next button
-                html += `
-                    <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-                        <a class="page-link" href="#" onclick="loadCategories(${currentPage + 1})">&raquo;</a>
-                    </li>
-                `;
-            }
-            
-            $('#pagination').html(html);
-        }
         function showAddModal() {
             $('#modalTitle').text('Thêm chuyên khoa');
             $('#categoryForm')[0].reset();
             $('#id_Categorynews').val('');
             $('#categoryModal').modal('show');
+
+                       $('#imagePreview').attr('src', '' );
+                       $('#imagePreviewContainer').hide();
         }
         function editCategory(id) {
             $('#modalTitle').text('Sửa danh mục');
@@ -320,13 +320,14 @@
                         $('#alias_url').val(response.data.alias_url);
                         $('#introduction').summernote('code', response.data.introduction);
                         $('#machine').summernote('code', response.data.machine);
-                        $('#method').summernote('code', response.data.method);
                         $('#service').summernote('code', response.data.service);
-                        $('#achievement').summernote('code', response.data.achievement);
-                                  
+
+                        $('#imagePreview').attr('src', '/Resources/' + response.data.thumnail);
+                    
                         $('#categoryModal').modal('show');
                         $('#modalTitle').text('Sửa chuyên khoa');
                         $('#categoryModal').modal('show');
+                            $('#imagePreviewContainer').show();
      
 
 
@@ -460,6 +461,29 @@
             str = str.replace(/^-+|-+$/g, '');
             $('#categoryForm').find('#alias_url').val('/danh-muc-khoa/' + str);
             return 'danh-muc-khoa/' + str;
+        }
+        function previewImage(input) {
+            const container = $('#imagePreviewContainer');
+            const preview = $('#imagePreview');
+            
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                var file = input.files[0];
+                filename = file.name; // Lấy tên file
+                        
+                
+                reader.onload = function(e) {
+                    preview.attr('src', e.target.result);
+                    container.show();
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        function removeImage() {
+            $('#formFile').val('');
+            $('#imagePreviewContainer').hide();
+            $('#imagePreview').attr('src', '');
         }
     </script>
 }

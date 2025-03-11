@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using websitebenhvien.Service.Interface;
 using websitebenhvien.Models.EnitityVM;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace websitebenhvien.Controllers
 {
@@ -14,10 +15,14 @@ namespace websitebenhvien.Controllers
     {
         private readonly IAllinone _allinone;
         private readonly IPost _post;
-        public PostController(IAllinone allinone,IPost post)
+
+        private readonly IMemoryCache _cache;
+
+        public PostController(IAllinone allinone,IPost post,IMemoryCache cache)
         {
             _allinone = allinone;
             _post = post;
+            _cache = cache;
         }
 
         [HttpGet]
@@ -256,11 +261,26 @@ namespace websitebenhvien.Controllers
         {
             try
             {
-                var data = await _post.GetSpecialtyById(alias_url);
-                return Json(new { status = true,data = data.Item1,Doctor = data.Item2 });
-            }catch(Exception ex)
+            if (!_cache.TryGetValue(alias_url, out var cachedData))
             {
-                return Json(new { status = false,message = ex.Message });
+                var data = await _post.GetSpecialtyById(alias_url);
+                if (data.Item1 != null || data.Item2 != null)
+                {
+                cachedData = new { status = true, data = data.Item1, Doctor = data.Item2 };
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(30));
+                _cache.Set(alias_url, cachedData, cacheEntryOptions);
+                }
+                else
+                {
+                return Json(new { status = false, message = "Không tìm thấy chuyên khoa" });
+                }
+            }
+            return Json(cachedData);
+            }
+            catch (Exception ex)
+            {
+            return Json(new { status = false, message = ex.Message });
             }
         }
         // lấy danh sách bác sĩ theo chuyên khoa

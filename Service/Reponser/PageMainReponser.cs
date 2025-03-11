@@ -661,7 +661,7 @@ namespace websitebenhvien.Service.Reponser
                         Id_menu = menu.Id_menu,
                         Title_menu = menu.Title_menu,
                         Link_menu = menu.Link_menu,
-                        Content = menu.Content,
+                   
                         Status = menu.Status,
                         Order_menu = menu.Order_menu,
                         Menu = _context.Menuchilds

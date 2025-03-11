@@ -28,7 +28,7 @@
                         <div class="accordion-item shadow-sm mb-4 border-0 rounded-4 overflow-hidden">
                             <h2 class="accordion-header">
                                 <button class="accordion-button fw-bold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#overviewContent">
-                                    <i class="fas fa-info-circle me-2 text-primary"></i>Tổng quan
+                                    <i class="fas fa-info-circle me-2 text-primary"></i>Giới thiệu chung
                                 </button>
                             </h2>
                             <div id="overviewContent" class="accordion-collapse collapse show" data-bs-parent="#specialtyAccordion">
@@ -50,7 +50,7 @@
                         <div class="accordion-item shadow-sm mb-4 border-0 rounded-4 overflow-hidden">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed fw-bold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#medicalServicesContent">
-                                    <i class="fas fa-heartbeat me-2 text-danger"></i>Dịch vụ y tế
+                                    <i class="fas fa-heartbeat me-2 text-danger"></i>Dịch vụ y tế tại khoa
                                 </button>
                             </h2>
                             <div id="medicalServicesContent" class="accordion-collapse collapse" data-bs-parent="#specialtyAccordion">
@@ -61,26 +61,13 @@
                             </div>
                         </div>
 
-                        <!-- Thành tựu y khoa -->
-                        <div class="accordion-item shadow-sm mb-4 border-0 rounded-4 overflow-hidden">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed fw-bold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#medicalAchievementsContent">
-                                    <i class="fas fa-trophy me-2 text-warning"></i>Thành tựu y khoa
-                                </button>
-                            </h2>
-                            <div id="medicalAchievementsContent" class="accordion-collapse collapse" data-bs-parent="#specialtyAccordion">
-                                <div class="accordion-body bg-white">
-                                    <div id="specialtyAchievements" class="lh-lg">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    
 
                         <!-- Cơ sở y tế -->
                         <div class="accordion-item shadow-sm mb-4 border-0 rounded-4 overflow-hidden">
                             <h2 class="accordion-header">
                                 <button class="accordion-button collapsed fw-bold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#medicalFacilitiesContent">
-                                    <i class="fas fa-hospital me-2 text-info"></i>Cơ sở y tế
+                                    <i class="fas fa-hospital me-2 text-info"></i>Cơ sở vật chất và trang thiết bị
                                 </button>
                             </h2>
                             <div id="medicalFacilitiesContent" class="accordion-collapse collapse" data-bs-parent="#specialtyAccordion">
@@ -92,19 +79,7 @@
                         </div>
 
                         <!--Phương pháp-->
-                        <div class="accordion-item shadow-sm mb-4 border-0 rounded-4 overflow-hidden">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed fw-bold bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#treatmentMethodsContent">
-                                    <i class="fas fa-procedures me-2 text-success"></i>Phương pháp điều trị
-                                </button>
-                            </h2>
-                            <div id="treatmentMethodsContent" class="accordion-collapse collapse" data-bs-parent="#specialtyAccordion">
-                                <div class="accordion-body bg-white">
-                                    <div id="specialtyTreatments" class="lh-lg">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -290,13 +265,12 @@
                         // Update services
                         $('#specialtyServices').html(data.service);
                         
-                        // Update achievements
-                        $('#specialtyAchievements').html(data.achievement);
+              
                         
                         // Update machines/facilities
                         $('#specialtyMachines').html(data.machine);
                         
-                        $('#specialtyTreatments').html(data.method);
+    
                         // Update doctor list
                         let doctorHtml = '';
                         doctors.forEach(doctor => {

@@ -21,5 +21,11 @@ namespace websitebenhvien.Models.EnitityVM
         public DateTime ?Createat { get; set; }
 
         public IFormFile ? formFile { get; set; }
+
+        public string? Keyword { get; set; }
+
+        public string? Descriptionshort { get; set; }
+
+        public string? SchemaMakup { get; set; }
     }
 }

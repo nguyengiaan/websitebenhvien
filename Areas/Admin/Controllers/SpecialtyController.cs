@@ -8,6 +8,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
 {
     public class SpecialtyController : Controller
     {
+       
         private readonly ISpecialty _specialty;
 
        
@@ -16,9 +17,9 @@ namespace websitebenhvien.Areas.Admin.Controllers
             _specialty = specialty;
 
         }
-        [Authorize]
+         // quản lý chuyên khoa
+        [Authorize(Roles = "admin,Quanlychuyenkhoa")]
         [HttpPost]
-       
         public async Task<IActionResult> AddSpecialty(SpecialtyVM specialty)
         {
             try
@@ -41,7 +42,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+        [Authorize(Roles = "admin,Quanlychuyenkhoa")]
         [HttpPost("/api/lay-danh-sach-chuyen-khoa")]
         public async Task<IActionResult> GetSpecialty(int page, int pageSize)
         {
@@ -57,7 +58,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+        [Authorize(Roles = "admin,Quanlychuyenkhoa")]
         [HttpPost("/api/lay-chuyen-khoa-theo-id")]
         public async Task<IActionResult> GetSpecialtyById(int id)
         {
@@ -69,7 +70,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }   
         }
-        [Authorize]
+        [Authorize(Roles = "admin,Quanlychuyenkhoa")]
         [HttpPost("/api/xoa-chuyen-khoa")]
         public async Task<IActionResult> DeleteSpecialty(int id)
         {
@@ -96,6 +97,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+        // quản lý bác sĩ 
         [Authorize]
         [HttpPost("/api/them-bac-si")]
         public async Task<IActionResult> AddDoctor(DoctorVM doctor)

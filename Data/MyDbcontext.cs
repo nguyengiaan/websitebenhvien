@@ -79,6 +79,12 @@ namespace websitebenhvien.Data
 
         public DbSet<Email> Emails { get; set; }
 
+
+        public DbSet<Forbusiness> Forbusinesses { get; set; }
+
+
+
+
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -220,7 +226,9 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<Email>().ToTable("Email");
             modelBuilder.Entity<Email>().HasKey(x => x.id);
             modelBuilder.Entity<Email>().Property(x => x.email).HasMaxLength(int.MaxValue);
-
+            // Quản lý doanh nghiệp 
+            modelBuilder.Entity<Forbusiness>().ToTable("Forbusiness");
+            modelBuilder.Entity<Forbusiness>().HasKey(x => x.Id_Forbusiness);
 
 
 

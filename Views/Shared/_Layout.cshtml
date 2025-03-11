@@ -1,16 +1,20 @@
-﻿﻿<!DOCTYPE html>
+﻿﻿@using Microsoft.AspNetCore.Http.Extensions
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
-
     <!-- Open Graph tags for social media sharing -->
-    <meta property="og:title" content="" />
-    <meta property="og:type" content="" />
-    <meta property="og:url" content="" />
-    <meta property="og:image" content="" />
-    <meta property="og:description" content="" />
+    <meta property="og:title" content="@ViewData["Title"]" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="@Context.Request.GetDisplayUrl()" />
+    <meta property="og:image" content="@ViewData["Image"]" />
+    <!-- Meta tags for SEO -->
+    <meta name="description" content="@ViewData["Description"]" />
+    <meta name="keywords" content="@ViewData["Keywords"]" />
+
+    <meta name="robots" content="index, follow" />
 
     <script type="importmap"></script>
     <!-- Lazy load CSS -->
@@ -36,108 +40,17 @@
         }
     </script>
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
+    <script type="application/ld+json">
+        
+        @Html.Raw(ViewData["Schema"])
+        
+    </script>
 </head>
 <body>
-    
-     <header >
-        <div class="row d-flex bg-white h-70" style="height: auto; min-height: 105px; padding: 10px 0;">
-            <div class="col-md-5 col-12 d-flex flex-column flex-md-row justify-content-between align-items-center">
-                <a href="/" class="mb-3 mb-md-0 text-center" style="padding-left: 0; padding-left: 0;">
-                    <!-- Lazy load image -->
-                    <img src="/Images/Logo-rm.png" alt="Emergency" class="img-fluid ps-md-5" style="max-height: 83px; width: auto; margin-left: 0;" loading="lazy">
-                </a>
-                <!-- Language buttons for mobile -->
-                <div class="language-selector d-flex d-md-none flex-wrap justify-content-center gap-3 mt-2 p-2" 
-                     style="background: rgba(248,249,250,0.95); border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <button onclick="changeLanguage('vi')" 
-                            class="language-btn d-flex flex-column align-items-center" 
-                            aria-label="Switch to Vietnamese" 
-                            style="border:none; background:none; padding:8px;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Vietnam.svg/2000px-Flag_of_Vietnam.svg.png" 
-                             alt="Vietnamese Flag" 
-                             class="language-flag mb-1" 
-                             width="35" 
-                             height="24" 
-                             loading="lazy" 
-                             style="cursor:pointer; transition:transform 0.2s ease; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.15);">
-                        <span style="font-size: 12px; color: #666;">VN</span>
-                    </button>
 
-                    <button onclick="changeLanguage('en')" 
-                            class="language-btn d-flex flex-column align-items-center" 
-                            aria-label="Switch to English" 
-                            style="border:none; background:none; padding:8px;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/1280px-Flag_of_the_United_Kingdom_%283-5%29.svg.png" 
-                             alt="English Flag" 
-                             class="language-flag mb-1" 
-                             width="35" 
-                             height="24" 
-                             loading="lazy" 
-                             style="cursor:pointer; transition:transform 0.2s ease; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.15);">
-                        <span style="font-size: 12px; color: #666;">EN</span>
-                    </button>
+    @await Component.InvokeAsync("Headertrangchu")
 
-                    <button onclick="changeLanguage('zh-CN')" 
-                            class="language-btn d-flex flex-column align-items-center" 
-                            aria-label="Switch to Chinese" 
-                            style="border:none; background:none; padding:8px;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_the_People%27s_Republic_of_China.svg/2000px-Flag_of_the_People%27s_Republic_of_China.svg.png" 
-                             alt="Chinese Flag" 
-                             class="language-flag mb-1" 
-                             width="35" 
-                             height="24" 
-                             loading="lazy" 
-                             style="cursor:pointer; transition:transform 0.2s ease; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.15);">
-                        <span style="font-size: 12px; color: #666;">CN</span>
-                    </button>
-
-                    <button onclick="changeLanguage('ko')" 
-                            class="language-btn d-flex flex-column align-items-center" 
-                            aria-label="Switch to Korean" 
-                            style="border:none; background:none; padding:8px;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Flag_of_South_Korea.svg/2000px-Flag_of_South_Korea.svg.png" 
-                             alt="Korean Flag" 
-                             class="language-flag mb-1" 
-                             width="35" 
-                             height="24" 
-                             loading="lazy" 
-                             style="cursor:pointer; transition:transform 0.2s ease; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.15);">
-                        <span style="font-size: 12px; color: #666;">KR</span>
-                    </button>
-
-                    <button onclick="changeLanguage('ja')" 
-                            class="language-btn d-flex flex-column align-items-center" 
-                            aria-label="Switch to Japanese" 
-                            style="border:none; background:none; padding:8px;">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Flag_of_Japan.svg/2000px-Flag_of_Japan.svg.png" 
-                             alt="Japanese Flag" 
-                             class="language-flag mb-1" 
-                             width="35" 
-                             height="24" 
-                             loading="lazy" 
-                             style="cursor:pointer; transition:transform 0.2s ease; border-radius:4px; box-shadow:0 2px 4px rgba(0,0,0,0.15);">
-                        <span style="font-size: 12px; color: #666;">JP</span>
-                    </button>
-                </div>
-            </div>
-            <div class="col-md-7 col-12 d-none d-md-flex flex-column" id="header-contact">    
-            </div>
-        </div>
-        
-        <nav class="navbar navbar-expand-lg" style="background-color:#ffffff; width: 100%; padding-top: 8px;">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav mx-auto" id="menu" style="perspective: 1500px; transform-style: preserve-3d;">
-                    </ul>
-                   
-                </div>
-            </div>
-        </nav>
-    </header>
-<main role="main" style="padding-top: 200px;" >
+<main role="main" style="padding-top: 250px;"  >
     @RenderBody()
 </main>
 
@@ -248,10 +161,48 @@
 
 <!-- CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
- 
+
     <!-- Script xử lý nút cuộn lên đầu trang -->
     <script>
         
+ $(document).ajaxError(function(event, jqXHR, ajaxSettings, thrownError) {
+    if (jqXHR.status === 429) {
+        // Tạo âm thanh cảnh báo
+        const audio = new Audio('/Sound/alert.mp3');
+        // Chỉ phát âm thanh nếu người dùng đã tương tác với trang
+        if (document.documentElement.hasAttribute('data-user-interacted')) {
+            audio.play().catch(function(error) {
+                console.log("Không thể phát âm thanh:", error);
+            });
+        }
+
+        // Ẩn các nút chat, facebook và back-to-top
+        $('#chatButton').hide();
+        $('.chat-box-wrapper').hide();
+        $('a[href*="facebook"]').hide();
+        $('#backToTop').hide();
+
+        // Hiển thị thông báo
+        Swal.fire({
+            title: 'Cảnh báo!', 
+            text: 'Bạn đã bị chặn',
+            icon: 'error',
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            imageUrl: 'https://cdn.shopify.com/s/files/1/0643/1735/8265/files/Meaning_Of_OMAE_WA_MOU_SHINDEIRU_480x480.jpg?v=1715871275',
+            imageWidth: window.innerWidth,
+            imageHeight: window.innerHeight,
+            imageAlt: 'Loading...',
+            grow: 'fullscreen'
+        });
+    }
+});
+
+// Đánh dấu khi người dùng tương tác với trang
+document.addEventListener('click', function() {
+    document.documentElement.setAttribute('data-user-interacted', '');
+});
         // Xử lý hiệu ứng fade-in khi cuộn
         function checkFade() {
             const fadeElements = document.querySelectorAll('.fade-in');

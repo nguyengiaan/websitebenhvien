@@ -10,13 +10,20 @@
         public string Url { get; set; }
         public string Alias_url { get; set; }
 
+        public string? Keyword { get; set; }
+
+        public string ? Descriptionshort { get; set; }
+
         public string Id_Categorynews { get; set; }
 
         public bool Status { get; set; }
 
+        public string ?SchemaMakup { get; set; }
 
+        
         public DateTime Createat { get; set; }
         public Categorynews Categorynews { get; set; }
+
 
 
     }

@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Drawing.Printing;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using websitebenhvien.Data;
 using websitebenhvien.Helper;
 using websitebenhvien.Models.Enitity;
 using websitebenhvien.Models.EnitityVM;
 using websitebenhvien.Service.Interface;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace websitebenhvien.Service.Reponser
 {
@@ -98,36 +100,34 @@ namespace websitebenhvien.Service.Reponser
         {
             try
             {
+                News data;
+
+                // Kiểm tra nếu là cập nhật
                 if (news.Id_News != null)
                 {
-                    var data = _context.News.FindAsync(news.Id_News);
+                    // Tìm dữ liệu cũ
+                    data = await _context.News.FindAsync(news.Id_News);
+
+                    if (data == null)
+                        return false;
+
+                    // Xử lý tệp tin nếu có
                     if (news.formFile != null)
                     {
-
-
                         var result = _uploadfile.SaveMedia(news.formFile);
-                        if (result.Item1 == 1)
+                        if (result.Item1 == 1 && data.Url != null)
                         {
-                            
-
-                            if (data.Result.Url != null)
-                            {
-                                _uploadfile.DeleteMedia(data.Result.Url);
-                            }
-                            data.Result.Url = result.Item2;
+                            _uploadfile.DeleteMedia(data.Url); // Xóa ảnh cũ
+                            data.Url = result.Item2; // Lưu ảnh mới
                         }
                     }
-
-                    data.Result.Title = news.Title;
-                    data.Result.Alias_url = news.Alias_url;
-                    data.Result.Description = news.Description;
-                    data.Result.Id_Categorynews = news.Id_Categorynews;
-                    await _context.SaveChangesAsync();
-                    return true;
                 }
                 else
                 {
-                    var data = new News();
+                    // Tạo mới dữ liệu
+                    data = new News();
+
+                    // Xử lý tệp tin nếu có
                     if (news.formFile != null)
                     {
                         var result = _uploadfile.SaveMedia(news.formFile);
@@ -135,35 +135,62 @@ namespace websitebenhvien.Service.Reponser
                         {
                             data.Url = result.Item2;
                         }
-                        
                     }
-                   
-                    data.Title = news.Title;
-                    data.Alias_url = news.Alias_url;
-                    data.Description = news.Description;
-                    data.Id_Categorynews = news.Id_Categorynews;
+
                     data.Createat = DateTime.Now;
                     data.Status = true;
-
-                    _context.News.Add(data);
-                    await _context.SaveChangesAsync();
-                    return true;
                 }
-                return false;
+
+                // Cập nhật thông tin khác
+                data.Title = news.Title;
+                data.Alias_url = news.Alias_url;
+                data.Description = news.Description;
+                data.Id_Categorynews = news.Id_Categorynews;
+                data.Descriptionshort = news.Descriptionshort;
+                data.Keyword = news.Keyword;
+                data.SchemaMakup = news.SchemaMakup;
+
+                // Thêm hoặc cập nhật
+                if (news.Id_News == null)
+                {
+                    _context.News.Add(data); // Nếu là thêm mới
+                }
+
+                await _context.SaveChangesAsync();
+                return true;
             }
             catch (Exception ex)
             {
+                // Lỗi sẽ được ghi log hoặc xử lý phù hợp
+                Console.WriteLine(ex.Message);
                 return false;
             }
         }
-     
-        public async Task<List<NewsVM>> Listnews()
+
+
+        public async Task<(int Totalpages, List<NewsVM> ds)> Listnews(string search, int page, int pagesize)
         {
             try
             {
-                // Sử dụng AsNoTracking() để không track entities và tăng hiệu suất
-                var data = await _context.News
-                    .AsNoTracking()
+                IQueryable<News> query = _context.News.AsNoTracking();
+
+                // Nếu có từ khóa tìm kiếm, thêm điều kiện vào query
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = query.Where(x => x.Title.Contains(search));
+                }
+
+                // Tính tổng số bản ghi
+                var totalItems = await query.CountAsync();
+
+                // Tính số trang
+                var totalPages = (int)Math.Ceiling(totalItems / (double)pagesize);
+
+                // Lấy dữ liệu cần thiết
+                var data = await query
+                    .OrderByDescending(x => x.Createat)
+                .Skip((page - 1) * pagesize)
+                    .Take(pagesize)
                     .Select(x => new NewsVM
                     {
                         Id_News = x.Id_News,
@@ -174,24 +201,24 @@ namespace websitebenhvien.Service.Reponser
                         Createat = x.Createat,
                         Status = x.Status
                     })
-                    .OrderByDescending(x => x.Createat)
                     .ToListAsync();
 
-                return data;
+                return (totalPages, data);
             }
             catch (Exception)
             {
-                return null;
+                // Log lỗi nếu cần thiết
+                return (0, null);
             }
         }
 
-        
         public async Task<bool> DeleteNews(int id)
         {
             try
             {
                 var data = await _context.News.FindAsync(id);
                 _context.News.Remove(data);
+                _uploadfile.DeleteMedia(data.Url);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -217,7 +244,11 @@ namespace websitebenhvien.Service.Reponser
                 Url = x.Url,
                 Alias_url = x.Alias_url,
                 Id_Categorynews = x.Id_Categorynews,
-                Createat = x.Createat
+                Createat = x.Createat,
+                Descriptionshort=x.Descriptionshort,
+                Keyword=x.Keyword,
+                SchemaMakup=x.SchemaMakup,
+
             })
             .FirstOrDefaultAsync();
 
@@ -697,6 +728,8 @@ namespace websitebenhvien.Service.Reponser
                 return (null,0);
             }
         }
+
+      
         // danh mục catogery post
 
     }

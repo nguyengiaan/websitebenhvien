@@ -16,16 +16,9 @@ namespace websitebenhvien.Models.Enitity
         
         public int Id_Specialty { get; set; }
         public string Title { get; set; }
-
         public string Introduction { get; set; }
-
         public string Machine { get; set; }
-
-        public string Method { get; set; }
-
         public string Service { get; set; }
-
-        public string Achievement { get; set; }
 
         public string Thumnail { get; set; }
 

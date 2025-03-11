@@ -92,9 +92,8 @@ namespace websitebenhvien.Service.Reponser
             target.Title = source.Title;
             target.Introduction = source.Introduction;
             target.Machine = source.Machine;
-            target.Method = source.Method;
             target.Service = source.Service;
-            target.Achievement = source.Achievement;
+   
             target.Alias_url = source.Alias_url;
         }
 
@@ -159,9 +158,9 @@ namespace websitebenhvien.Service.Reponser
                     Alias_url = x.Alias_url,
                     Introduction = x.Introduction,
                     Machine = x.Machine,
-                    Method = x.Method,
+            
                     Service = x.Service,
-                    Achievement = x.Achievement,
+               
                   
                 }).FirstOrDefaultAsync();
                 return data;

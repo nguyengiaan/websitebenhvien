@@ -520,6 +520,33 @@ namespace websitebenhvien.Migrations
                     b.ToTable("Footer", (string)null);
                 });
 
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Forbusiness", b =>
+                {
+                    b.Property<int>("Id_Forbusiness")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_Forbusiness"));
+
+                    b.Property<string>("Content_Forbusiness")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Create_at")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name_Forbusiness")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status_Forbusiness")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id_Forbusiness");
+
+                    b.ToTable("Forbusiness", (string)null);
+                });
+
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Header", b =>
                 {
                     b.Property<string>("Id_header")
@@ -736,9 +763,18 @@ namespace websitebenhvien.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Descriptionshort")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Id_Categorynews")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Keyword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SchemaMakup")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -1146,10 +1182,6 @@ namespace websitebenhvien.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_Specialty"));
 
-                    b.Property<string>("Achievement")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Alias_url")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -1159,10 +1191,6 @@ namespace websitebenhvien.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Machine")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Method")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

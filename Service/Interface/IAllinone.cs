@@ -13,7 +13,7 @@ namespace websitebenhvien.Service.Interface
         //Thêm tin tức
         public Task<bool> AddNews(NewsVM news);
 
-        public Task<List<NewsVM>>Listnews();
+        public Task<(int Totalpages, List<NewsVM> ds)>Listnews(string search,int page,int pagesize);
 
         public Task<bool> DeleteNews(int id);
 
