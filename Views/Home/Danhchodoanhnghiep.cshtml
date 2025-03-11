@@ -10,10 +10,17 @@
         <i class="fas fa-building me-3 icon-pulse"></i>Thông Tin Dành Cho Doanh Nghiệp
     </h1>
 
-    <div class="row g-4 justify-content-center">
-        @foreach (var item in Model)
+    <div class="search-box mb-4">
+        <div class="input-group">
+            <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm dịch vụ...">
+            <button class="btn btn-primary" onclick="searchBusinesses()"><i class="fas fa-search"></i></button>
+        </div>
+    </div>
+ 
+    <div class="row g-4 justify-content-center" id="businessCards">
+       @foreach (var item in Model)
         {
-            <div class="col-lg-4 col-md-6 d-flex">
+            <div class="col-lg-4 col-md-6 d-flex business-item" data-name="@item.Name_Forbusiness.ToLower()" data-content="@item.Content_Forbusiness.ToLower()">
                 <div class="business-card w-100">
                     <div class="card-header-custom">
                         <div class="header-background"></div>
@@ -25,17 +32,32 @@
                             <i class="fas fa-chevron-down"></i>
                         </button>
                     </div>
-
-                    <div id="content_@item.Id_Forbusiness" class="collapse h-100">
-                        <div class="card-body h-100">
-                            <div class="content-wrapper h-100">
+                    <div id="content_@item.Id_Forbusiness" class="content-collapse">
+                        <div class="card-body">
+                            <div class="content-wrapper">
                                 @Html.Raw(item.Content_Forbusiness)
+                                <div class="cta-buttons mt-4 text-center">
+                                    <a href="/Contact" class="btn btn-gradient-primary me-3">
+                                        <i class="fas fa-phone-alt me-2"></i>Liên hệ ngay
+                                    </a>
+                                    <a href="/Services" class="btn btn-gradient-secondary">
+                                        <i class="fas fa-info-circle me-2"></i>Tìm hiểu thêm
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         }
+    </div>
+
+    <!-- Thông báo không tìm thấy kết quả -->
+    <div id="noResults" class="text-center mt-4" style="display: none;">
+        <div class="alert alert-info">
+            Không tìm thấy kết quả phù hợp với từ khóa tìm kiếm
+        </div>
     </div>
 </div>
 
@@ -46,6 +68,7 @@
         padding: 4rem 0;
         position: relative;
         overflow: hidden;
+        font-family: 'Montserrat', sans-serif;
     }
 
     .business-section::before {
@@ -59,12 +82,38 @@
         opacity: 0.4;
     }
 
+    .search-box {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .search-box .form-control {
+        border-radius: 20px 0 0 20px;
+        padding: 12px 20px;
+        font-size: 1.1rem;
+        border: 2px solid #0095d9 ;
+    }
+
+    .search-box .btn {
+        border-radius: 0 20px 20px 0;
+        padding: 12px 25px;
+        background: #0095d9 ;
+        border-color: #0095d9 ;
+        transition: all 0.3s ease;
+    }
+
+    .search-box .btn:hover {
+        background: #219A52;
+        border-color: #219A52;
+        box-shadow: 0 0 15px rgba(39, 174, 96, 0.4);
+    }
+
     .title-animated {
-        color: #2d3748;
+        color: #1E2A38;
         font-weight: 900;
-        font-size: 3.5rem;
+        font-size: 3.8rem;
         text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
-        background: linear-gradient(45deg, #2d3748, #4299e1, #667eea);
+        background: linear-gradient(45deg, #1E2A38, #357ABD, #27AE60);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         animation: gradientBG 10s ease infinite;
@@ -73,8 +122,8 @@
 
     .icon-pulse {
         animation: pulse 2s infinite;
-        color: #4299e1;
-        filter: drop-shadow(0 0 8px rgba(66, 153, 225, 0.5));
+        color: #27AE60;
+        filter: drop-shadow(0 0 8px rgba(39, 174, 96, 0.5));
     }
 
     .business-card {
@@ -92,75 +141,157 @@
 
     .business-card:hover {
         transform: translateY(-15px) scale(1.02);
-        box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+        box-shadow: 0 30px 60px rgba(0,0,0,0.15), 0 0 30px rgba(53, 122, 189, 0.3);
+        background: linear-gradient(135deg, rgba(255,255,255,1), rgba(237,242,247,0.95));
+        border: 2px solid #357ABD;
+        animation: glowingBorder 2s infinite alternate;
+    }
+
+    @@keyframes glowingBorder {
+        0% {
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15), 0 0 20px rgba(53, 122, 189, 0.3);
+            border-color: #357ABD;
+        }
+        50% {
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15), 0 0 30px rgba(46, 204, 113, 0.5);
+            border-color: #2ECC71;
+        }
+        100% {
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15), 0 0 20px rgba(53, 122, 189, 0.3);
+            border-color: #357ABD;
+        }
     }
 
     .card-header-custom {
         position: relative;
         padding: 35px 25px;
         text-align: center;
-        background: linear-gradient(135deg, #4299e1 0%, #667eea 100%);
-        color: white;
+        background: #0095d9;
+        color: #1E2A38;
         clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+        transition: all 0.5s ease;
+    }
+
+    .business-card:hover .card-header-custom {
+        background: linear-gradient(135deg, #2563EB 0%, #16A34A 100%);
     }
 
     .card-icon {
-        width: 70px;
-        height: 70px;
+        width: 80px;
+        height: 80px;
         margin: 0 auto 20px;
-        background: rgba(255,255,255,0.25);
+        background: rgba(255,255,255,0.3);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         backdrop-filter: blur(5px);
+        transition: all 0.3s ease;
+    }
+
+    .business-card:hover .card-icon {
+        transform: scale(1.1);
+        background: rgba(255,255,255,0.4);
+        box-shadow: 0 0 25px rgba(39, 174, 96, 0.4);
     }
 
     .icon-3d {
-        font-size: 28px;
+        font-size: 32px;
         animation: float 3s ease-in-out infinite;
-        filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+        filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+        color: #1E2A38;
     }
 
     .card-title {
-        font-size: 1.5rem;
+        font-size: 1.7rem;
         font-weight: 800;
         margin-bottom: 20px;
-        color: white;
+        color: #ffffff;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        letter-spacing: 0.5px;
+        font-family: 'Roboto';
     }
 
     .expand-btn {
-        background: rgba(255,255,255,0.25);
+        background: rgba(255, 255, 255, 0.9);
         border: none;
-        color: white;
-        width: 45px;
-        height: 45px;
+        color: #0095d9;
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         margin: 0 auto;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        backdrop-filter: blur(5px);
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .expand-btn i {
+        font-size: 1.2rem;
+        font-weight: bold;
     }
 
     .expand-btn:hover {
-        background: rgba(255,255,255,0.4);
+        background: #ffffff;
         transform: scale(1.15) rotate(180deg);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        color: #27AE60;
+    }
+
+    .content-collapse {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-in-out;
+    }
+
+    .content-collapse.show {
+        max-height: 2000px;
     }
 
     .content-wrapper {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.97), rgba(255, 255, 255, 0.92));
         border-radius: 20px;
-        padding: 30px;
+        padding: 35px;
         margin: 25px;
         line-height: 1.9;
-        font-size: 1.15rem;
-        color: #2d3748;
+        font-size: 1.2rem;
+        color: #1E2A38;
         box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(39, 174, 96, 0.2);
+    }
+
+    .cta-buttons .btn {
+        border-radius: 12px;
+        font-weight: 600;
+        padding: 12px 24px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-gradient-primary {
+        background: linear-gradient(45deg, #FF416C, #FF4B2B);
+        border: none;
+        color: white;
+    }
+
+    .btn-gradient-primary:hover {
+        background: linear-gradient(45deg, #FF4B2B, #FF416C);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 65, 108, 0.4);
+    }
+
+    .btn-gradient-secondary {
+        background: linear-gradient(45deg, #2193b0, #6dd5ed);
+        border: none;
+        color: white;
+    }
+
+    .btn-gradient-secondary:hover {
+        background: linear-gradient(45deg, #6dd5ed, #2193b0);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(33, 147, 176, 0.4);
     }
 
     @@keyframes float {
@@ -183,45 +314,114 @@
 
     @@media (max-width: 768px) {
         .title-animated {
-            font-size: 2.2rem;
+            font-size: 2.4rem;
         }
         
         .card-title {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
         }
 
         .content-wrapper {
-            font-size: 1.05rem;
-            padding: 20px;
+            font-size: 1.1rem;
+            padding: 25px;
             margin: 15px;
         }
 
         .card-icon {
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
         }
 
         .icon-3d {
-            font-size: 24px;
+            font-size: 26px;
         }
 
         .business-section {
             padding: 2rem 0;
         }
+
+        .search-box .form-control {
+            font-size: 1rem;
+            padding: 10px 15px;
+        }
     }
 </style>
 
 <script>
+// Lưu trạng thái của content đang mở
+let currentOpenContent = null;
+
 function toggleContent(id) {
-    // Hide all content divs first
-    document.querySelectorAll('.collapse').forEach(div => {
-        if (div.id !== 'content_' + id) {
-            div.classList.remove('show');
+    const selectedContent = document.getElementById('content_' + id);
+    const button = selectedContent.parentElement.querySelector('.expand-btn i');
+    
+    // Nếu đang mở một content khác, đóng nó lại
+    if (currentOpenContent && currentOpenContent !== selectedContent) {
+        currentOpenContent.classList.remove('show');
+        const prevButton = currentOpenContent.parentElement.querySelector('.expand-btn i');
+        prevButton.style.transform = 'rotate(0deg)';
+    }
+    
+    // Toggle content hiện tại
+    if (selectedContent.classList.contains('show')) {
+        selectedContent.classList.remove('show');
+        button.style.transform = 'rotate(0deg)';
+        currentOpenContent = null;
+    } else {
+        selectedContent.classList.add('show');
+        button.style.transform = 'rotate(180deg)';
+        currentOpenContent = selectedContent;
+    }
+}
+
+// Hàm tìm kiếm nâng cao
+function searchBusinesses() {
+    const searchText = document.getElementById('searchInput').value.toLowerCase().trim();
+    const items = document.querySelectorAll('.business-item');
+    let hasResults = false;
+
+    items.forEach(item => {
+        const name = item.dataset.name;
+        const content = item.dataset.content;
+        const searchTerms = searchText.split(' ').filter(term => term.length > 0);
+        
+        // Kiểm tra từng từ khóa trong cả tên và nội dung
+        const matchesAllTerms = searchTerms.every(term => 
+            name.includes(term) || content.includes(term)
+        );
+
+        if (matchesAllTerms || searchText === '') {
+            item.style.display = 'flex';
+            item.style.opacity = '1';
+            hasResults = true;
+        } else {
+            item.style.display = 'none';
+            item.style.opacity = '0';
         }
     });
-    
-    // Toggle the selected content
-    const selectedContent = document.getElementById('content_' + id);
-    selectedContent.classList.toggle('show');
+
+    // Hiển thị thông báo khi không có kết quả
+    const noResultsElement = document.getElementById('noResults');
+    noResultsElement.style.display = hasResults || searchText === '' ? 'none' : 'block';
 }
+
+// Thêm sự kiện tìm kiếm khi nhập
+document.getElementById('searchInput').addEventListener('input', searchBusinesses);
+
+// Thêm sự kiện tìm kiếm khi nhấn Enter
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        searchBusinesses();
+    }
+});
+
+// Thêm sự kiện click bên ngoài để đóng content
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.business-card') && currentOpenContent) {
+        currentOpenContent.classList.remove('show');
+        const button = currentOpenContent.parentElement.querySelector('.expand-btn i');
+        button.style.transform = 'rotate(0deg)';
+        currentOpenContent = null;
+    }
+});
 </script>
