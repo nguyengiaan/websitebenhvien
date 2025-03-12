@@ -116,15 +116,21 @@ public class HomeController : Controller
     {
         try
         {
-            var data = await _forbusiness.Getbusinesstrue();
+            var cacheKey = "Danhchodoanhnghiep";
+            if (!_cache.TryGetValue(cacheKey, out var data))
+            {
+                data = await _forbusiness.Getbusinesstrue();
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(30));
+
+                _cache.Set(cacheKey, data, cacheEntryOptions);
+            }
+
             return View(data);
         }
         catch (Exception e)
         {
             return Json(new { status = false, message = e.Message });
-
-
-
         }
     }
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
