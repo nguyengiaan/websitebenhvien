@@ -17,5 +17,12 @@ namespace websitebenhvien.Models.Enitity
 
         public DateTime Create_at { get; set; } 
 
+        public string ? Icon_Forbusiness { get; set; }
+
+        public string ? link_Forbusiness { get; set; }
+    
+        public string? link_Forbusiness_1 { get; set; }
+
+
     }
 }

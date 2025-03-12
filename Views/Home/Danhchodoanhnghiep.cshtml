@@ -25,7 +25,7 @@
                     <div class="card-header-custom">
                         <div class="header-background"></div>
                         <div class="card-icon">
-                            <i class="fas fa-gem icon-3d"></i>
+                            <img src="~/Resources/@item.Icon_Forbusiness" class="icon-3d" style="width:50px;height:50px">
                         </div>
                         <h5 class="card-title">@item.Name_Forbusiness</h5>
                         <button class="expand-btn" onclick="toggleContent('@item.Id_Forbusiness')">
@@ -37,10 +37,10 @@
                             <div class="content-wrapper">
                                 @Html.Raw(item.Content_Forbusiness)
                                 <div class="cta-buttons mt-4 text-center">
-                                    <a href="/Contact" class="btn btn-gradient-primary me-3">
+                                    <a href="@item.link_Forbusiness" class="btn btn-gradient-primary me-3">
                                         <i class="fas fa-phone-alt me-2"></i>Liên hệ ngay
                                     </a>
-                                    <a href="/Services" class="btn btn-gradient-secondary">
+                                    <a href="@item.link_Forbusiness_1" class="btn btn-gradient-secondary">
                                         <i class="fas fa-info-circle me-2"></i>Tìm hiểu thêm
                                     </a>
                                 </div>
