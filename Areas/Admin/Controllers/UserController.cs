@@ -18,6 +18,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             _user = user;
         }
+        [Authorize(Roles = "admin,Quanlytaikhoan")]
         [HttpPost]
         public async Task<IActionResult> RegisterUser(RegisteruserVM registeruser)
         {
@@ -43,6 +44,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
 
             }
         }
+          [Authorize(Roles = "admin,Quanlytaikhoan")]
         [HttpGet]
         public async Task<IActionResult> GetRegisterUsers()
         {
@@ -56,6 +58,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+        [Authorize(Roles = "admin,Quanlytaikhoan")]
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string id)
         {
@@ -91,7 +94,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
+     
         [HttpGet("/api/ds-phan-quyen")]
         public async Task<IActionResult> GetRoles()
         {

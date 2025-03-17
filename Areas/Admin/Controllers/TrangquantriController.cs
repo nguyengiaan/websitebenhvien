@@ -80,7 +80,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             return View();
         }
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,Quanlytaikhoan")]
         [Route("/trang-quan-tri/quan-ly-tai-khoan")]
         public IActionResult Taikhoan()
         {

@@ -21,7 +21,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             _page = page;
             _cache= cache;
         }
-
+              [Authorize(Roles = "admin,Dautrang")]
         [HttpPost]
         public async Task<IActionResult> Editheader(HeaderVM header)
         {
@@ -56,7 +56,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = 0, message = "Có lỗi xảy ra" });
             }
         }
-
+         [Authorize(Roles = "admin,Dautrang")]
         [HttpGet]
         public async Task<IActionResult> GetTitleheader()
         {
@@ -195,6 +195,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         //footer 
+          [Authorize(Roles = "admin,Chantrang")]
         [HttpGet]
         public async Task<IActionResult> GetFooter()
         {
@@ -208,6 +209,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
+         [Authorize(Roles = "admin,Chantrang")]
         [HttpPost]
         public async Task<IActionResult> EditFooter(FooterVM footer)
         {
@@ -337,6 +339,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // chia sẻ khách hàng 
+                [Authorize(Roles = "admin,Chiasekhachhang")]
         [HttpPost]
         public async Task<IActionResult> AddShareCustomer(SharecustomerVM share)
         {
@@ -364,6 +367,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // danh sách khách hàng chia sẻ
+            [Authorize(Roles = "admin,Chiasekhachhang")]
         [HttpPost]
         public async Task<IActionResult> ListShare(int page, int pagesize)
         {
@@ -384,6 +388,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
+            [Authorize(Roles = "admin,Chiasekhachhang")]
         [HttpPost]
         public async Task<IActionResult> UpdateStatusShare(string id_share)
         {
@@ -405,6 +410,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // xoá khách hàng chia sẻ
+             [Authorize(Roles = "admin,Chiasekhachhang")]
         [HttpPost]
         public async Task<IActionResult> DeleteShareCustomer(string id_share)
         {
@@ -426,6 +432,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // update khách hàng chia sẻ
+           [Authorize(Roles = "admin,Chiasekhachhang")]
         [HttpPost]
         public async Task<IActionResult> UpdateShareCustomer(SharecustomerVM share)
         {
