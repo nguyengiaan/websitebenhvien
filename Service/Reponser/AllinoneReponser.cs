@@ -641,33 +641,30 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
-        public async Task<List<NewsVM>> ListNews()
+     public async Task<List<NewsVM>> ListNews()
+    {
+        try
         {
-            try
+        return await _context.News
+            .Where(n => n.Categorynews.Title == "Tin tức và sự kiện")
+            .Select(n => new NewsVM
             {
-                var data = await _context.News
-                    .Join(_context.Categorynews,
-                        n => n.Id_Categorynews,
-                        c => c.Id_Categorynews,
-                        (n, c) => new { n, c })
-                    .Where(x => x.c.Title == "Tin tức và sự kiện")
-                    .Select(x => new NewsVM
-                    {
-                        Id_News = x.n.Id_News,
-                        Title = x.n.Title,
-                        Url = x.n.Url,
-                        Alias_url = x.n.Alias_url,
-                        Createat = x.n.Createat,
-                        Status = x.n.Status,
-                    })
-                    .ToListAsync();
-                return data;
-            }
-            catch(Exception ex)
-            {
-                return null;
-            }
+                Id_News = n.Id_News,
+                Title = n.Title,
+                Url = n.Url,
+                Alias_url = n.Alias_url,
+                Createat = n.Createat,
+                Status = n.Status,
+            })
+            .ToListAsync();
+         }
+        catch (Exception ex)
+         {
+        // Log lỗi nếu cần
+            Console.WriteLine($"Error in ListNews: {ex.Message}");
+            return new List<NewsVM>();
         }
+    }
 
         public async Task<List<LogocustomerVM>> ListShareCustomer()
         {

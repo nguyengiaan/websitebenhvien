@@ -181,14 +181,12 @@
                                 item.alias_url.toLowerCase().includes(searchTerm)
                             );
                         }
-
                         // Phân trang
                         const totalItems = filteredData.length;
                         const totalPages = Math.ceil(totalItems / pageSize);
                         const startIndex = (page - 1) * pageSize;
                         const endIndex = Math.min(startIndex + pageSize, totalItems);
                         const paginatedData = filteredData.slice(startIndex, endIndex);
-
                         renderCategories(paginatedData);
                         renderPagination(totalPages, page);
                     }

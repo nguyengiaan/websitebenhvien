@@ -40,32 +40,34 @@
                 </table>
             </div>
 
-            <div class="row mt-3">
-                <div class="col-md-6">
-                    <div id="pagination" class="d-flex justify-content-start"></div>
-                </div>
-            </div>
+          <div class="card-footer bg-white py-3">
+            <nav>
+                <ul class="pagination justify-content-center mb-0" id="pagination">
+                </ul>
+            </nav>
+        </div>
         </div>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        const page = 1;
-        const pagesize = 20; // Tăng số lượng item trên mỗi trang
+        let currentPage = 1;
+        let pagesize =30;
+        let totalItems = 0;
 
         $(document).ready(function() {
             loadSpecialties();
-            loadAppointmentsData(page,pagesize);
+            loadAppointmentsData(currentPage, pagesize);
 
             $('#searchInput').on('keyup', function() {
-          
-                loadAppointmentsData(page,pagesize);
+                currentPage = 1; // Reset về trang 1 khi tìm kiếm
+                loadAppointmentsData(currentPage, pagesize);
             });
 
             $('#specialtyFilter').on('change', function() {
-      
-                loadAppointmentsData(page,pagesize);
+                currentPage = 1; // Reset về trang 1 khi lọc
+                loadAppointmentsData(currentPage, pagesize);
             });
         });
 
@@ -83,7 +85,7 @@
             });
         }
 
-        function loadAppointmentsData(page,pagesize) {
+        function loadAppointmentsData(page, pagesize) {
             const searchTerm = $('#searchInput').val();
             const specialtyId = $('#specialtyFilter').val();
 
@@ -98,9 +100,10 @@
                 },
                 success: function(response) {
                     if(response.status){
-                 
+                        totalItems = response.total;
+                        currentPage = page;
                         renderAppointments(response.data);
-                        renderPagination(response.total,response.page);
+                        renderPagination(Math.ceil(totalItems / pagesize), currentPage);
                     }
                 },
                 error: function(xhr, status, error) {
@@ -115,7 +118,7 @@
             appointments.forEach((item, index) => {
                 html += `
                     <tr>
-                        <td>${(page - 1) * pagesize + index + 1}</td>
+                        <td>${(currentPage - 1) * pagesize + index + 1}</td>
                         <td>${item.name}</td>
                         <td>${item.phone}</td>
                         <td>${item.name_doctor}</td>
@@ -142,69 +145,69 @@
             $('#appointmentTable tbody').html(html);
         }
 
-          function renderPagination( totalPages, currentPage) {
-                    let html = '';
+        function renderPagination(totalPages, currentPage) {
+            if (totalPages <= 0) return;
 
-                    if (totalPages <= 5) {
-                        // Show all pages if total pages <= 5
-                        for (let i = 1; i <= totalPages; i++) {
-                            html += `
-                                <li class="page-item ${i === currentPage ? 'active' : ''}">
-                                    <a class="page-link" href="#" onclick="loadAppointmentsData( ${i}, ${pagesize})">${i}</a>
-                                </li>
-                            `;
-                        }
-                    } else {
-                        // Add Previous button
-                        html += `
-                            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-                                <a class="page-link" href="#" onclick="loadAppointmentsData( ${currentPage - 1}, ${pagesize})">&laquo;</a>
-                            </li>
-                        `;
+            let html = '';
+            
+            // Previous button
+            html += `
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="javascript:void(0)" onclick="loadAppointmentsData(${currentPage - 1}, ${pagesize})">&laquo;</a>
+                </li>
+            `;
 
-                        // Show first page
-                        html += `
-                            <li class="page-item ${currentPage === 1 ? 'active' : ''}">
-                                <a class="page-link" href="#" onclick="loadAppointmentsData( 1, ${pagesize})">1</a>
-                            </li>
-                        `;
+            // Calculate range of pages to show
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            
+            // Adjust start if we're near the end
+            if (endPage - startPage < 4) {
+                startPage = Math.max(1, endPage - 4);
+            }
 
-                        // Add ellipsis if needed
-                        if (currentPage > 3) {
-                            html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
-                        }
-
-                        // Show pages around current page
-                        for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
-                            html += `
-                                <li class="page-item ${i === currentPage ? 'active' : ''}">
-                                    <a class="page-link" href="#" onclick="loadAppointmentsData( ${i}, ${pagesize})">${i}</a>
-                                </li>
-                            `;
-                        }
-
-                        // Add ellipsis if needed
-                        if (currentPage < totalPages - 2) {
-                            html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
-                        }
-
-                        // Show last page
-                        html += `
-                            <li class="page-item ${currentPage === totalPages ? 'active' : ''}">
-                                <a class="page-link" href="#" onclick="loadAppointmentsData(${totalPages}, ${pagesize})">${totalPages}</a>
-                            </li>
-                        `;
-
-                        // Add Next button
-                        html += `
-                            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-                                <a class="page-link" href="#" onclick="loadAppointmentsData(${currentPage + 1}, ${pagesize})">&raquo;</a>
-                            </li>
-                        `;
-                    }
-
-                    $('#pagination').html(html);
+            // First page
+            if (startPage > 1) {
+                html += `
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="loadAppointmentsData(1, ${pagesize})">1</a>
+                    </li>
+                `;
+                if (startPage > 2) {
+                    html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
                 }
+            }
+
+            // Page numbers
+            for (let i = startPage; i <= endPage; i++) {
+                html += `
+                    <li class="page-item ${i === currentPage ? 'active' : ''}">
+                        <a class="page-link" href="javascript:void(0)" onclick="loadAppointmentsData(${i}, ${pagesize})">${i}</a>
+                    </li>
+                `;
+            }
+
+            // Last page
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                }
+                html += `
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="loadAppointmentsData(${totalPages}, ${pagesize})">${totalPages}</a>
+                    </li>
+                `;
+            }
+
+            // Next button
+            html += `
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="javascript:void(0)" onclick="loadAppointmentsData(${currentPage + 1}, ${pagesize})">&raquo;</a>
+                </li>
+            `;
+
+            $('#pagination').html(html);
+        }
 
         function deleteAppointment(id) {
             Swal.fire({
@@ -225,7 +228,7 @@
                         success: function(response) {
                             if (response.status) {
                                 Swal.fire('Thành công', 'Đã xóa lịch khám', 'success');
-                                loadAppointmentsData(page,pagesize);
+                                loadAppointmentsData(currentPage, pagesize);
                             } else {
                                 Swal.fire('Lỗi', response.message, 'error');
                             }
@@ -248,7 +251,7 @@
                 success: function(response) {
                     if(response.status){
                         Swal.fire('Thành công', 'Đã cập nhật trạng thái', 'success');
-                        loadAppointmentsData(page,pagesize);
+                        loadAppointmentsData(currentPage, pagesize);
                     }else{
                         Swal.fire('Lỗi', response.message, 'error');
                     }

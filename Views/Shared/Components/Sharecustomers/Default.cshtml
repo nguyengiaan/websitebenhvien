@@ -1,0 +1,109 @@
+@model IEnumerable<websitebenhvien.Models.EnitityVM.LogocustomerVM>
+
+<div id="shareCustomerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+    <div class="carousel-inner">
+        @{
+            int itemsPerSlide = ViewContext.HttpContext.Request.Headers["User-Agent"].ToString().Contains("Mobile") ? 2 : 4;
+
+            var slides = Model.Select((item, index) => new { item, index })
+                              .GroupBy(x => x.index / itemsPerSlide)
+                              .Select(g => g.Select(x => x.item).ToList())
+                              .ToList();
+
+            for (int slideIndex = 0; slideIndex < slides.Count; slideIndex++)
+            {
+                var slideItems = slides[slideIndex];
+                <div class="carousel-item @(slideIndex == 0 ? "active" : "")">
+                    <div class="row gx-5 gy-4 justify-content-center align-items-center">
+                        @foreach (var item in slideItems)
+                        {
+                            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                                <div class="partner-logo-wrapper">
+                                    <div class="partner-logo-container">
+                                        <img src="/Resources/@item.CustomerName" 
+                                             alt="@item.CustomerName" 
+                                             class="partner-logo"
+                                             loading="lazy" />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#shareCustomerCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon custom-carousel-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#shareCustomerCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon custom-carousel-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<style>
+    .partner-logo-wrapper {
+        padding: 10px;
+        perspective: 1000px;
+    }
+
+    .partner-logo-container {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        position: relative;
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .partner-logo {
+        border-color: #ffffff;
+        background-color: #ffffff;
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+        transition: all 0.4s ease;
+
+        transform: scale(0.95);
+    }
+
+    .partner-logo-container:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .partner-logo-container:hover .partner-logo {
+        filter: grayscale(0%) opacity(1);
+        transform: scale(1);
+    }
+
+
+
+
+    #shareCustomerCarousel {
+        padding: 20px 0;
+    }
+
+    @@media (max-width: 768px) {
+        .partner-logo-container {
+            height: 120px;
+            padding: 15px;
+        }
+        
+        .custom-carousel-icon {
+            width: 30px;
+            height: 30px;
+        }
+    }
+</style>

@@ -67,10 +67,6 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("DeletePolicy", policy => policy.RequireClaim("Permission", "Delete"));
     options.AddPolicy("ReadPolicy", policy => policy.RequireClaim("Permission", "Read"));
 });
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.Listen(System.Net.IPAddress.Any, 5026); // Lắng nghe trên cổng 5000
-});
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

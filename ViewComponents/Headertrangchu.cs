@@ -16,9 +16,6 @@ namespace websitebenhvien.Views.Shared.Components
             _pagemain = pageMain;
             _memoryCache = memoryCache;
         }
-
-
-
         public async Task<IViewComponentResult> InvokeAsync()
         {
             Header_trangchu header;
@@ -39,9 +36,9 @@ namespace websitebenhvien.Views.Shared.Components
                         menus = menuData
                     };
 
-                    var cacheEntryOptions = new MemoryCacheEntryOptions()
-                        .SetAbsoluteExpiration(TimeSpan.FromHours(1))
-                        .SetSlidingExpiration(TimeSpan.FromMinutes(30));
+                  var cacheEntryOptions = new MemoryCacheEntryOptions()
+    .SetAbsoluteExpiration(TimeSpan.FromMinutes(15));
+
 
                     _memoryCache.Set(HeaderCacheKey, header, cacheEntryOptions);
                 }

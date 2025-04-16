@@ -1,0 +1,105 @@
+@model websitebenhvien.Models.Enitity.Footer
+<div class="container-fluid px-4">
+    <div class="row mx-0">
+        <!-- Logo và thông tin liên hệ -->
+        <div class="col-lg-4 mb-4">
+            <img src="/Images/Logo-rm.png" alt="Logo bệnh viện" class="mb-3" style="height: 70px;">
+            <ul class="list-unstyled text-muted">
+                <li class="mb-2">
+                    <i class="fas fa-map-marker-alt me-2 text-primary"></i>
+                    @Model.address
+                <li class="mb-2">
+                    <i class="fas fa-phone me-2 text-primary"></i>
+                    @Model.telephone
+                </li>
+                <li>
+                    <i class="fas fa-envelope me-2 text-primary"></i>
+                   @Model.Email
+                </li>
+            </ul>
+        </div>
+
+        <!-- Về chúng tôi -->
+        <div class="col-lg-2 mb-4">
+            <h5 class="fw-bold text-uppercase mb-3">Thông tin chung</h5>
+            <ul class="list-unstyled">
+                <li class="mb-2">
+                    <a href="@Model.linkgt" class="text-muted text-decoration-none hover-primary">
+                        <i class="fas fa-angle-right me-2"></i>Giới thiệu
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="@Model.linktn" class="text-muted text-decoration-none hover-primary">
+                        <i class="fas fa-angle-right me-2"></i>Tầm nhìn & Sứ mệnh
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="@Model.linkdnbs" class="text-muted text-decoration-none hover-primary">
+                        <i class="fas fa-angle-right me-2"></i>Đội ngũ bác sĩ
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="@Model.linktd" class="text-muted text-decoration-none hover-primary">
+                        <i class="fas fa-angle-right me-2"></i>Tuyển dụng
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Dịch vụ -->
+        <div class="col-lg-2 mb-4">
+            <h5 class="fw-bold text-uppercase mb-3">Dịch vụ</h5>
+            <ul class="list-unstyled">
+                <li class="mb-2">
+                    <a href="@Model.linkkb" class="text-muted text-decoration-none hover-primary">
+                        <i class="fas fa-angle-right me-2"></i>Khám bệnh
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="@Model.linkxn" class="text-muted text-decoration-none hover-primary">
+                        <i class="fas fa-angle-right me-2"></i>Xét nghiệm
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="@Model.linkcdha" class="text-muted text-decoration-none hover-primary">
+                        <i class="fas fa-angle-right me-2"></i>Chẩn đoán hình ảnh
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="@Model.linknt" class="text-muted text-decoration-none hover-primary">
+                        <i class="fas fa-angle-right me-2"></i>Nội trú
+                    </a>
+                </li>
+                <li class="mb-2">
+                    <a href="@Model.linkdn" class="text-muted text-decoration-none hover-primary">
+                        <i class="fas fa-angle-right me-2"></i>Khám doanh nghiệp
+                    </a>
+                </li>
+                <li class="mt-3">
+                    <a class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-calendar-alt me-2"></i>Lịch khám bệnh
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Đăng ký nhận tin -->
+        <div class="col-lg-4 mb-4">
+            <h5 class="fw-bold text-uppercase mb-3">Đăng ký nhận tin</h5>
+            <p class="text-muted">Nhận thông tin mới nhất về sức khỏe và các chương trình ưu đãi.</p>
+            <div class="input-group mb-3">
+                <input type="email" class="form-control" placeholder="Nhập email của bạn">
+                <button class="btn btn-primary" type="button">Đăng ký</button>
+            </div>
+            <div class="social-links mt-3">
+                <a href="@Model.linkface" class="text-primary me-3"><i class="fab fa-facebook-f fa-lg"></i></a>
+                <a href="@Model.linktwiter" class="text-info me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                <a href="@Model.linkyoutube" class="text-danger"><i class="fab fa-youtube fa-lg"></i></a>
+            </div>
+        </div>
+    </div>
+    <!-- Bản quyền -->
+    <div class="text-center text-muted mt-4">
+        <small>&copy; 2024 Bệnh viện Đa khoa Mỹ Phước. All rights reserved.</small>
+    </div>
+</div>

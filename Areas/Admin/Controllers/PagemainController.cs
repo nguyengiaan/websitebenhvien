@@ -195,7 +195,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         //footer 
-          [Authorize(Roles = "admin,Chantrang")]
+      
         [HttpGet]
         public async Task<IActionResult> GetFooter()
         {

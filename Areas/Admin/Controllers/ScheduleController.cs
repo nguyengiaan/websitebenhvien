@@ -156,7 +156,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
      
         }
         // danh sách lịch khám sức khoẻ
-        [Authorize]
+            [Authorize(Roles ="Dangkykhamsuckhoe,admin")]
         [HttpPost("/api/lay-danh-sach-dang-ky-kham-sk")]
         public async Task<IActionResult> GetAppointmentSK(int page, int pageSize, string search)
         {
@@ -168,7 +168,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+       [Authorize(Roles ="Dangkykhamsuckhoe,admin")]
         [HttpPost("/api/xoa-lich-kham-sk")]
         public async Task<IActionResult> DeleteAppointmentSK(int id)
         {
@@ -183,7 +183,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+     [Authorize(Roles ="Dangkykhamsuckhoe,admin")]
         [HttpPost("/api/cap-nhat-lich-kham-sk")]
         public async Task<IActionResult> UpdateAppointmentSK(int id)
         {
@@ -198,7 +198,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+                [Authorize(Roles = "admin,Trangquantri")]
         [HttpGet("/api/tao-bieu-do-dang-ky")]
         public async Task<IActionResult> GetRegisterChart()
         {
@@ -210,7 +210,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+           [Authorize(Roles = "admin,Trangquantri")]
         [HttpGet("/api/lay-danh-sach-dang-ky-theo-ngay")]
         public async Task<IActionResult> GetCharthealthdate()
         {

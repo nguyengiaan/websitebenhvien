@@ -15,6 +15,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             _allinone = allinone;
         }
         // controller danh mục sản phẩm
+     
         [HttpPost]
         public async Task<IActionResult> AddCatogery(CategorynewsVM categorynews)
         {
@@ -38,7 +39,8 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        // danh sách danh mục
+        // danh sách danh mục tin tức
+            [Authorize(Roles = "admin,Danhmucbaiviet")]
         [HttpGet]
         public async Task<IActionResult> ListCatogeryNews()
         {
@@ -133,6 +135,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         //Danh mục sản phẩm
+          [Authorize(Roles = "admin,Danhmucsanpham")]
         [HttpPost]
         public async Task<IActionResult> AddCatogeryProduct(CategoryproductVM categoryproduct)
         {
@@ -155,6 +158,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+          [Authorize(Roles = "admin,Danhmucsanpham")]
         [HttpGet]
         public async Task<IActionResult> ListCatogeryProduct()
         {
@@ -168,6 +172,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+                  [Authorize(Roles = "admin,Danhmucsanpham")]
         [HttpPost]
         public async Task<IActionResult> DeleteCatogeryProduct(string id)
         {
@@ -181,6 +186,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+        [Authorize(Roles = "admin,Danhmucsanpham")]
         [HttpPost]
         public async Task<IActionResult> GetCatogeryProductById(string id)
         {
