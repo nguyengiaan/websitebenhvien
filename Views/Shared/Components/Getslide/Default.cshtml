@@ -1,0 +1,54 @@
+@model IEnumerable<websitebenhvien.Models.Enitity.Slidepage>
+
+<div id="carouselContainer" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        @if (Model != null && Model.Any())
+        {
+            var sortedSlides = Model.Where(s => s.status).OrderBy(s => s.sort).ToList();
+            for (int i = 0; i < sortedSlides.Count; i++)
+            {
+                var slide = sortedSlides[i];
+                var isActive = i == 0 ? "active" : "";
+                <div class="carousel-item @isActive">
+                    <a href="@(!string.IsNullOrEmpty(slide.link) ? slide.link : "#")" class="text-decoration-none">
+                        <div class="slide-container rounded-4 overflow-hidden position-relative d-flex align-items-center justify-content-center" 
+                             style="height: auto; width: 100%; background-color: white;">
+                            <div class="slide-item position-relative" 
+                                 style="width: 100%; height: 100%; transition: all 0.3s ease; cursor: pointer;">
+                                <img src="/Resources/@slide.slide" 
+                                     class="w-100 h-100" 
+                                     alt="@slide.title"
+                                     loading="eager"
+                                     decoding="sync" 
+                                     style="object-fit: contain; cursor: pointer; border-radius: 6px; 
+                                            image-rendering: -webkit-optimize-contrast;
+                                            image-rendering: crisp-edges;
+                                            -webkit-backface-visibility: hidden;
+                                            backface-visibility: hidden;
+                                            transform: translateZ(0);
+                                            -webkit-font-smoothing: subpixel-antialiased;">
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="carousel-item active">
+                <p class="text-center">Không có dữ liệu slide hợp lệ.</p>
+            </div>
+        }
+    </div>
+
+</div>
+@* 
+<script>
+    // Initialize carousel with higher quality transitions
+    new bootstrap.Carousel(document.querySelector('#carouselContainer'), {
+        interval: 1500,
+        ride: 'carousel',
+        wrap: true,
+        touch: true
+    });
+</script> *@

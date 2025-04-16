@@ -21,8 +21,7 @@ $(document).ready(function() {
     // Ẩn select language nếu tồn tại
   
     
-    GetSlide();
-    //loadNews();
+
     Getallvideo();
     GetSchema();
     GetAllEquipment();
@@ -56,94 +55,7 @@ if (select) {
 }
 
 
-function GetSlide() {
-    $.ajax({
-        url: "/Pagemain/GetSlides",
-        type: "GET", 
-        success: function (res) {
-            if (res.success) {
-                let slidesHtml = '';
-                
-                res.data.sort((a, b) => a.sort - b.sort);
 
-                // Generate one slide per image
-                res.data.forEach((slide, index) => {
-                    if (slide.status) {
-                        const isActive = index === 0 ? 'active' : '';
-                        let slideHeight, slideWidth;
-                        
-                        // Responsive dimensions based on screen width
-                        if (window.innerWidth < 576) { // Mobile phones
-                            slideHeight = '200px';
-                            slideWidth = '100%';
-                        } else if (window.innerWidth < 768) { // Large phones
-                            slideHeight = '250px';
-                            slideWidth = '100%';
-                        } else if (window.innerWidth < 992) { // Tablets/iPads
-                            slideHeight = '300px';
-                            slideWidth = '100%';
-                        } else if (window.innerWidth < 1200) { // Small desktops
-                            slideHeight = '350px';
-                            slideWidth = '100%';
-                        } else { // Large desktops
-                            slideHeight = '428px';
-                            slideWidth = '100%';
-                        }
-                        
-                        slidesHtml += `
-                            <div class="carousel-item ${isActive}">
-                                <a href="${slide.link || '#'}" class="text-decoration-none">
-                                    <div class="slide-container rounded-4 overflow-hidden position-relative d-flex align-items-center justify-content-center" 
-                                         style="height: ${slideHeight}; width: ${slideWidth}; background-color: white;">
-                                        <div class="slide-item position-relative" 
-                                             style="width: 100%; height: 100%; transition: all 0.3s ease; cursor: pointer;">
-                                            <img src="/Resources/${slide.slide}" 
-                                                 class="w-100 h-100" 
-                                                 alt="${slide.title}"
-                                                 loading="eager"
-                                                 decoding="sync" 
-                                                 style="object-fit: cover; cursor: pointer; border-radius: 6px; 
-                                                        image-rendering: -webkit-optimize-contrast;
-                                                        image-rendering: crisp-edges;
-                                                        -webkit-backface-visibility: hidden;
-                                                        backface-visibility: hidden;
-                                                        transform: translateZ(0);
-                                                        -webkit-font-smoothing: subpixel-antialiased;">
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>`;
-                    }
-                });
-
-                $('#carouselContainer').html(slidesHtml);
-
-                // Initialize carousel with higher quality transitions
-                new bootstrap.Carousel(document.querySelector('#mainCarousel'), {
-                    interval: 1500,
-                    ride: 'carousel',
-                    wrap: true,
-                    touch: true
-                });
-
-                // Handle resize events with debouncing
-                let resizeTimeout;
-                window.addEventListener('resize', function() {
-                    clearTimeout(resizeTimeout);
-                    resizeTimeout = setTimeout(() => {
-                        GetSlide();
-                    }, 250);
-                });
-
-            } else {
-                console.error("Không có dữ liệu slide hợp lệ.");
-            }
-        },
-        error: function (err) {
-            console.error("Lỗi khi lấy dữ liệu slide:", err);
-        }
-    });
-}
 function GetSchema() {
     $.ajax({
         url: "/Pagemain/TimeWork",
@@ -1081,63 +993,7 @@ function laydscauhoi()
         }
     });
 }
-function loadNews() 
-{
-    $.ajax({
-        url: "/Allinone/NewsList",
-        type: "GET",
-        success: function(response) {
-            if (response.status) {
-                
-               var html = '';
-               response.data.forEach(function(news) {
-                if (news.status) {
-                    // Check if news is within last week
-                    const oneWeekAgo = new Date();
-                    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-                    const newsDate = new Date(news.created_at);
-                    const isNew = newsDate > oneWeekAgo;
 
-                    html += `<a href="${news.alias_url}" class="list-group-item list-group-item-action p-3 border-bottom hover-effect rounded-4 position-relative" style="transition: all 0.3s ease; border-left: 4px solid #0095d9;">
-                        <div class="news-item d-flex">
-                            <div class="news-image me-3" style="width: 100px; min-width: 100px;">
-                                <img src="/Resources/${news.url}" alt="${news.title}" class="img-fluid rounded" style="width: 100px; height: 80px; object-fit: cover;">
-                            </div>
-                            <div class="news-content">
-                                <h6 class="mb-2 fw-bold" style="color: #0095d9">${news.title}</h6>
-                                ${isNew ? '<span class="badge position-absolute top-0 end-0 m-2 fw-bold" style="background-color: #0095d9">MỚI</span>' : ''}
-                                <div class="d-flex align-items-center mb-2" style="color: #000000">
-                                    <i class="far fa-clock me-2"></i>
-                                    <small>${news.createat.split('T')[0]}</small>
-                                </div>
-                                <p class="mb-0" style="color: #000000; font-size: 0.95rem; line-height: 1.5;">
-                                    ${news.title}...
-                                </p>
-                            </div>
-                        </div>
-                    </a>`;
-                }
-               });
-               $('.list-group').html(html);
-
-               // Add hover effect styles
-               $('<style>')
-                    .text(`
-                        .list-group-item:hover {
-                            transform: translateY(-3px);
-                            box-shadow: 0 5px 15px rgba(0, 149, 217, 0.3);
-                            border-color: #0095d9 !important;
-                        }
-                    `)
-                    .appendTo('head');
-            }
-        },
-        error: function(error) {
-            console.log("Error:", error);
-        }
-    });
-    
-}
 function loadSpecialties1() {
     $.ajax({
         url: '/api/chuyen-khoa-catogery',

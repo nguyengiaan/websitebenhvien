@@ -8,17 +8,16 @@
             <div class="card shadow rounded-4 border-0">
                 <div id="mainCarousel" class="carousel slide rounded-4 overflow-hidden" data-bs-ride="carousel">
                     <div class="carousel-inner" id="carouselContainer">
-                      
+                             @await Component.InvokeAsync("Getslide")
                     </div>
-                    
-                    <button class="carousel-control-prev custom-carousel-btn" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-                        <i class="fas fa-chevron-left"></i>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next custom-carousel-btn" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-                        <i class="fas fa-chevron-right"></i>
-                        <span class="visually-hidden">Next</span>
-                    </button>
+             <button class="carousel-control-prev custom-carousel-btn" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+</button>
+<button class="carousel-control-next custom-carousel-btn" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+</button>
                 </div>
 
 

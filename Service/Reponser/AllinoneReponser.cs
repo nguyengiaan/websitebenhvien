@@ -655,6 +655,8 @@ namespace websitebenhvien.Service.Reponser
                 Alias_url = n.Alias_url,
                 Createat = n.Createat,
                 Status = n.Status,
+                Descriptionshort = n.Descriptionshort,
+             
             })
             .ToListAsync();
          }
