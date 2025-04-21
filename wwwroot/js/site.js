@@ -559,15 +559,9 @@ document.getElementById('chatButton').addEventListener('click', renderSampleQues
 
 document.addEventListener('DOMContentLoaded', function() {
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-            
-               
-            },
-            (error) => {
-                console.error("Error obtaining location:", error);
-            }
-        );
+        button.addEventListener('click', () => {
+            navigator.geolocation.getCurrentPosition();
+        });
     } else {
         console.log("Geolocation is not supported by this browser.");
     }

@@ -82,7 +82,7 @@ namespace websitebenhvien.Service.Reponser
                 data.Note=recruitment.Note;
                 data.Position=recruitment.Position;
                 data.Sex=recruitment.Sex;
-                var md=_uploadfile.SaveMedia(recruitment.CV_Url);
+                var md= await _uploadfile.SaveMedia(recruitment.CV_Url);
                 if(md.Item1==1)
                 {
                     data.CV_Url=md.Item2;

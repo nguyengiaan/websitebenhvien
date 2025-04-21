@@ -187,7 +187,7 @@ namespace websitebenhvien.Service.Reponser
                     {
                         if (video.formFile != null)
                         {
-                            var link = _uploadfile.SaveMedia(video.formFile);
+                            var link =await  _uploadfile.SaveMedia(video.formFile);
                             if (link.Item1 == 1)
                             {
                                 _uploadfile.DeleteMedia(data.Link_video);
@@ -214,7 +214,7 @@ namespace websitebenhvien.Service.Reponser
                     };
                     if (video.formFile != null)
                     {
-                        var link = _uploadfile.SaveMedia(video.formFile);
+                        var link =await _uploadfile.SaveMedia(video.formFile);
                         if (link.Item1 == 1)
                         {
                             data.Link_video = link.Item2;
@@ -325,7 +325,7 @@ namespace websitebenhvien.Service.Reponser
                     {
                         if (machine.formFile != null)
                         {
-                            var link = _uploadfile.SaveMedia(machine.formFile);
+                            var link = await _uploadfile.SaveMedia(machine.formFile);
                             if (link.Item1 == 1)
                             {
                                 _uploadfile.DeleteMedia(data.Image_machine);
@@ -352,7 +352,7 @@ namespace websitebenhvien.Service.Reponser
                     };
                     if (machine.formFile != null)
                     {
-                        var link = _uploadfile.SaveMedia(machine.formFile);
+                        var link = await _uploadfile.SaveMedia(machine.formFile);
                         if (link.Item1 == 1)
                         {
                             data.Image_machine = link.Item2;

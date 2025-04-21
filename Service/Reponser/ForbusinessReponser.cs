@@ -20,17 +20,17 @@ namespace websitebenhvien.Service.Reponser
         }
         public async Task<bool> Addbusiness(ForbusinessVM forbusiness)
         {
-            if(forbusiness.Id_Forbusiness !=0)
+            if (forbusiness.Id_Forbusiness != 0)
             {
                 var data = await _context.Forbusinesses.FindAsync(forbusiness.Id_Forbusiness);
                 data.Name_Forbusiness = forbusiness.Name_Forbusiness;
                 data.Content_Forbusiness = forbusiness.Content_Forbusiness;
                 data.link_Forbusiness = forbusiness.link_Forbusiness;
                 data.link_Forbusiness_1 = forbusiness.link_Forbusiness_1;
-                if(forbusiness.formFile != null)
+                if (forbusiness.formFile != null)
                 {
-                  var file= _uploadfile.SaveMedia(forbusiness.formFile);
-                    if(file.Item1== 1)
+                    var file = await _uploadfile.SaveMedia(forbusiness.formFile);
+                    if (file.Item1 == 1)
                     {
                         _uploadfile.DeleteMedia(data.Icon_Forbusiness);
                         data.Icon_Forbusiness = file.Item2;
@@ -38,9 +38,6 @@ namespace websitebenhvien.Service.Reponser
                 }
                 await _context.SaveChangesAsync();
                 return true;
-
-
-
             }
             else
             {
@@ -51,14 +48,12 @@ namespace websitebenhvien.Service.Reponser
                 forbusiness1.link_Forbusiness_1 = forbusiness.link_Forbusiness_1;
                 if (forbusiness.formFile != null)
                 {
-                    var file = _uploadfile.SaveMedia(forbusiness.formFile);
+                    var file = await _uploadfile.SaveMedia(forbusiness.formFile);
                     if (file.Item1 == 1)
                     {
                         forbusiness1.Icon_Forbusiness = file.Item2;
                     }
                 }
-
-
                 forbusiness1.Create_at = DateTime.Now;
                 forbusiness1.Status_Forbusiness = true;
                 await _context.Forbusinesses.AddAsync(forbusiness1);
