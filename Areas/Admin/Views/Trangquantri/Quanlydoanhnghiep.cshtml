@@ -38,11 +38,11 @@
                     <thead class="bg-light">
                         <tr>
                             <th class="ps-4" style="width: 10%">Mã nội dung</th>
-                            <th style="width: 30%">Tiêu đề </th>
-                            <th style="width :20%">Ngày tạo</th>
-                            <th style="width: 30%">Trạng thái</th>
-					
-                            <th style="width: 30%" class="text-center">Thao tác</th>
+                            <th style="width: 15%">Ảnh</th>
+                            <th style="width: 25%">Tiêu đề </th>
+                            <th style="width :15%">Ngày tạo</th>
+                            <th style="width: 25%">Trạng thái</th>
+                            <th style="width: 10%" class="text-center">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody id="newsTableBody">
@@ -90,6 +90,26 @@
                                            placeholder="Nhập tiêu đề thông tin doanh nghiệp">
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="form-label fw-bold text-primary fs-5 mb-3 d-flex align-items-center">
+                                        <i class="fas fa-image me-2"></i>
+                                        <span>Hình ảnh</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="file" class="form-control" id="formFile" name="formFile" onchange="previewImage(this)">
+                                        <button class="btn btn-primary" type="button" onclick="openElfinder()">
+                                            <i class="fas fa-folder-open"></i>
+                                        </button>
+                                    </div>
+                                    <div id="imagePreviewContainer" class="mt-3" style="display:none;">
+                                        <img id="imagePreview" src="" class="img-fluid rounded" style="max-height: 200px">
+                                        <button type="button" class="btn btn-danger mt-2" onclick="removeImage()">
+                                            <i class="fas fa-trash me-2"></i>Xóa ảnh
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group mb-4">
@@ -101,6 +121,36 @@
                                 <textarea id="Content_Forbusiness" 
                                           name="Content_Forbusiness" 
                                           class="summernote"></textarea>
+                            </div>
+                        </div>
+                        <div class="row g-4 mb-5">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label fw-bold text-primary fs-5 mb-3 d-flex align-items-center">
+                                        <i class="fas fa-link me-2"></i>
+                                        <span>Link CTA 1 </span>
+                                    </label>
+                                    <input type="text" 
+                                           class="form-control form-control-lg border-2 rounded-3" 
+                                           id="link_Forbusiness" 
+                                           name="link_Forbusiness" 
+                                           value="#"
+                                           placeholder="Nhập link doanh nghiệp 1">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label fw-bold text-primary fs-5 mb-3 d-flex align-items-center">
+                                        <i class="fas fa-link me-2"></i>
+                                        <span>Link CTA 2 </span>
+                                    </label>
+                                    <input type="text" 
+                                           class="form-control form-control-lg border-2 rounded-3" 
+                                           id="link_Forbusiness_1" 
+                                           name="link_Forbusiness_1" 
+                                           value="#"
+                                           placeholder="Nhập link doanh nghiệp 2">
+                                </div>
                             </div>
                         </div>
 
@@ -139,8 +189,8 @@
                     $('#Id_Forbusiness').val('');
                     $('#modalTitle').text('Thêm bài viết');
 					$('Name_Forbusiness').val('');
-              
-                 
+                    $('#imagePreviewContainer').hide();
+                    $('#imagePreview').attr('src', '');
                 });
                 // Load categories first before loading news
                 loadNews(searchtt,page,pagesize)
@@ -155,7 +205,6 @@
                     var file = input.files[0];
                     filename = file.name; // Lấy tên file
 
-
                     reader.onload = function(e) {
                         preview.attr('src', e.target.result);
                         container.show();
@@ -165,7 +214,11 @@
                 }
             }
 
-     
+            function removeImage() {
+                $('#formFile').val('');
+                $('#imagePreview').attr('src', '');
+                $('#imagePreviewContainer').hide();
+            }
 
             function openElfinder() {
                 var fm = $('<div/>').dialogelfinder({
@@ -223,9 +276,7 @@
                 }).dialogelfinder('instance');
             }
 
-
-
-                 function loadNews(searchtt,page,pagesize) {
+            function loadNews(searchtt,page,pagesize) {
                 $.ajax({
                     url: '/api/lay-ds-quan-ly-doanh-nghiep',
                     type: 'POST',
@@ -249,10 +300,14 @@
                     tbody.append(`
                         <tr>
                              <td class="ps-4">DN${item.id_Forbusiness}</td>
+                             <td>
+                                <img src="/Resources/${item.icon_Forbusiness}" 
+                                     alt="Ảnh doanh nghiệp" 
+                                     class="img-fluid rounded"
+                                     style="max-height: 80px; max-width: 120px;">
+                             </td>
                             <td>${item.name_Forbusiness}</td>
-
                             <td>${item.create_at.split('T')[0]   }</td>
-             
                             <td>
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" role="switch"
@@ -580,19 +635,24 @@
                     },
                     success: function(response) {
                         // Hide loading spinner
-
-
-
                         if (response.status) {
-                               Swal.close();
+                            console.log(response)
+                            Swal.close();
                             const news = response.data;
-                            console.log(news)
 
                             $('#Id_Forbusiness').val(news.id_Forbusiness);
                             $('#Name_Forbusiness').val(news.name_Forbusiness);
-
                             $('#Content_Forbusiness').summernote('code', news.content_Forbusiness);
-         
+                            $('#link_Forbusiness').val(news.link_Forbusiness);
+                            $('#link_Forbusiness_1').val(news.link_Forbusiness_1);
+
+                            // Show image preview if icon_Forbusiness exists
+                            if (news.icon_Forbusiness) {
+                                const imagePath = `/Resources/${news.icon_Forbusiness}`;
+                                $('#imagePreview').attr('src', imagePath);
+                                $('#imagePreviewContainer').show();
+                            }
+
                             $('#newsModal').modal('show');
                         } else {
                             Swal.fire({
@@ -606,7 +666,6 @@
                     error: function(xhr, status, error) {
                         // Hide loading spinner
                         Swal.close();
-                        loadingOverlay.remove();
 
                         Swal.fire({
                             title: 'Lỗi!',

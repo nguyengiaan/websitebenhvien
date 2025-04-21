@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using websitebenhvien.Data;
 using websitebenhvien.Migrations;
 using websitebenhvien.Models.Enitity;
+using websitebenhvien.Models.EnitityVM;
 using websitebenhvien.Service.Interface;
 
 namespace websitebenhvien.Areas.Admin.Controllers
@@ -17,7 +18,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         }
         [Authorize(Roles = "admin,Quanlydoanhnghiep")]
         [HttpPost("/api/quan-ly-doanh-nghiep")]
-        public async Task<IActionResult> AddForbusiness(Forbusiness forbusiness)
+        public async Task<IActionResult> AddForbusiness(ForbusinessVM forbusiness)
         {
             try
             {
