@@ -5,117 +5,135 @@ using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
-using FFMpegCore; // Thêm namespace này
+using FFMpegCore;
 using FFMpegCore.Enums;
-using FFMpegCore.Pipes;
+using System.Linq;
+using SixLabors.ImageSharp.Formats.Png;
 
 namespace websitebenhvien.Helper
 {
     public class Uploadfile
     {
-        private readonly IHttpContextAccessor _httpContextAccessor; 
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private static readonly string[] AllowedImageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
+        private static readonly string[] AllowedVideoExtensions = { ".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv" };
+        private static readonly string[] AllowedDocumentExtensions = { ".pdf", ".docx" };
+        private static readonly string[] AllowedExtensions;
 
-        public Uploadfile(IHttpContextAccessor httpContextAccessor, IWebHostEnvironment hostingEnvironment)
+        static Uploadfile()
         {
-            _httpContextAccessor = httpContextAccessor;
-            _hostingEnvironment = hostingEnvironment;
-            
-            // Cấu hình đường dẫn đến FFmpeg nếu cần
-            GlobalFFOptions.Configure(options => options.BinaryFolder = "path/to/ffmpeg");
+            AllowedExtensions = AllowedImageExtensions
+                .Concat(AllowedVideoExtensions)
+                .Concat(AllowedDocumentExtensions)
+                .ToArray();
         }
 
-        public async Task<Tuple<int, string>> SaveMedia(IFormFile file, 
-                                                           bool compressImages = true,
-                                                           bool compressVideos = true)
+        public Uploadfile(IWebHostEnvironment hostingEnvironment)
+        {
+            _hostingEnvironment = hostingEnvironment;
+
+            // Cấu hình FFmpeg (đảm bảo FFmpeg đã được cài đặt trên hệ thống)
+            GlobalFFOptions.Configure(options =>
+                options.BinaryFolder = "/usr/bin"); // Thay đổi tùy theo hệ thống
+        }
+
+        public async Task<Tuple<int, string>> SaveMedia(IFormFile file,
+                                                       bool compressImages = true,
+                                                       bool compressVideos = true,
+                                                       int imageQuality = 75,
+                                                       int videoCrf = 28)
         {
             try
             {
-                var contentPath = _hostingEnvironment.ContentRootPath;
-                var path = Path.Combine(contentPath, "Uploads");
-                
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-
                 var ext = Path.GetExtension(file.FileName).ToLower();
-                var allowedExtensions = new string[]
-                {
-                    ".jpg", ".jpeg", ".png", ".gif", ".bmp",
-                    ".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv",
-                    ".pdf", ".docx"
-                };
 
-                if (!allowedExtensions.Contains(ext))
+                if (!AllowedExtensions.Contains(ext))
                 {
-                    string msg = $"Chỉ chấp nhận các định dạng: {string.Join(", ", allowedExtensions)}";
-                    return new Tuple<int, string>(0, msg);
+                    string msg = $"Only the following formats are allowed: {string.Join(", ", AllowedExtensions)}";
+                    return Tuple.Create(0, msg);
                 }
 
-                string uniqueString = Guid.NewGuid().ToString();
-                var fileName = Path.GetFileName(file.FileName);
-                var newFileName = $"{Guid.NewGuid():N}_{fileName}";
-                var fileWithPath = Path.Combine(path, newFileName);
+                var uploadsPath = Path.Combine(_hostingEnvironment.ContentRootPath, "Uploads");
+                Directory.CreateDirectory(uploadsPath); // An toàn, không ném exception nếu thư mục tồn tại
+
+                var newFileName = $"{Guid.NewGuid():N}{ext}";
+                var filePath = Path.Combine(uploadsPath, newFileName);
 
                 // Xử lý nén ảnh
-                var imageExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
-                if (compressImages && imageExtensions.Contains(ext))
+                if (compressImages && AllowedImageExtensions.Contains(ext))
                 {
-                    using var compressedStream = new MemoryStream(await ImageCompressor.CompressImageAsync(file.OpenReadStream()));
-                    using var fileStream = new FileStream(fileWithPath, FileMode.Create);
-                    await compressedStream.CopyToAsync(fileStream);
+                    await using var outputStream = new FileStream(filePath, FileMode.Create);
+                    await CompressImageAsync(file.OpenReadStream(), outputStream, imageQuality);
                 }
                 // Xử lý nén video
-                else if (compressVideos && IsVideoExtension(ext))
+                else if (compressVideos && AllowedVideoExtensions.Contains(ext))
                 {
-                    await CompressVideoAsync(file, fileWithPath);
+                    await CompressVideoAsync(file, filePath, videoCrf);
                 }
+                // Xử lý file bình thường
                 else
                 {
-                    using var stream = new FileStream(fileWithPath, FileMode.Create);
+                    await using var stream = new FileStream(filePath, FileMode.Create);
                     await file.CopyToAsync(stream);
                 }
 
-                return new Tuple<int, string>(1, newFileName);
+                return Tuple.Create(1, newFileName);
             }
             catch (Exception ex)
             {
-                return new Tuple<int, string>(0, $"Lỗi: {ex.Message}");
+                return Tuple.Create(0, $"Error: {ex.Message}");
             }
         }
 
-        private bool IsVideoExtension(string extension)
+        private static async Task CompressImageAsync(Stream inputStream, Stream outputStream, int quality)
         {
-            var videoExtensions = new[] { ".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv" };
-            return videoExtensions.Contains(extension.ToLower());
+            using var image = await Image.LoadAsync(inputStream);
+
+            // Tính toán kích thước mới giữ nguyên tỷ lệ
+            var resizeOptions = new ResizeOptions
+            {
+                Mode = ResizeMode.Max,
+                Size = new Size(1024) // Giới hạn chiều dài nhất là 1920px
+            };
+
+            image.Mutate(x => x.Resize(resizeOptions));
+
+            var encoder = new JpegEncoder
+            {
+                Quality = quality,
+  
+            };
+
+            await image.SaveAsync(outputStream, encoder);
         }
 
-        private async Task CompressVideoAsync(IFormFile videoFile, string outputPath)
+        private static async Task CompressVideoAsync(IFormFile videoFile, string outputPath, int crf)
         {
-            // Tạo file tạm để FFmpeg xử lý
             var tempInputPath = Path.GetTempFileName();
+
             try
             {
                 // Lưu file tạm
-                using (var stream = new FileStream(tempInputPath, FileMode.Create))
+                await using (var tempStream = File.Create(tempInputPath))
                 {
-                    await videoFile.CopyToAsync(stream);
+                    await videoFile.CopyToAsync(tempStream);
                 }
 
-                // Cấu hình nén video
+                // Cấu hình nén video tối ưu
                 await FFMpegArguments
                     .FromFileInput(tempInputPath)
                     .OutputToFile(outputPath, true, options => options
                         .WithVideoCodec(VideoCodec.LibX264)
-                        .WithConstantRateFactor(28) // CRF: 18-28 (thấp hơn = chất lượng cao hơn)
+                        .WithConstantRateFactor(crf) // CRF: 18-28 (23 là mặc định)
+                
                         .WithAudioCodec(AudioCodec.Aac)
-                        .WithFastStart())
+                        .WithAudioBitrate(128) // 128kbps cho âm thanh
+                        .WithFastStart() // Tối ưu cho phát trực tuyến
+                        .WithCustomArgument("-movflags +faststart")) // Tương thích web
                     .ProcessAsynchronously();
             }
             finally
             {
-                // Xóa file tạm
                 if (File.Exists(tempInputPath))
                 {
                     File.Delete(tempInputPath);
@@ -127,44 +145,18 @@ namespace websitebenhvien.Helper
         {
             try
             {
-                var contentPath = _hostingEnvironment.ContentRootPath;
-                var path = Path.Combine(contentPath, "Uploads");
-                var filePath = Path.Combine(path, fileName);
+                var filePath = Path.Combine(_hostingEnvironment.ContentRootPath, "Uploads", fileName);
 
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                    return true;
-                }
-                return false;
+                if (!File.Exists(filePath)) return false;
+
+                File.Delete(filePath);
+                return true;
             }
-            catch (Exception)
+            catch
             {
                 return false;
             }
         }
-    }
-
-    public static class ImageCompressor
-    {
-        public static async Task<byte[]> CompressImageAsync(Stream inputStream, 
-                                                          int quality = 75, 
-                                                          int maxWidth = 1024, 
-                                                          int maxHeight = 1024)
-        {
-            using var image = await Image.LoadAsync(inputStream);
-
-            image.Mutate(x => x.Resize(new ResizeOptions
-            {
-                Mode = ResizeMode.Max,
-                Size = new Size(maxWidth, maxHeight)
-            }));
-
-            var encoder = new JpegEncoder { Quality = quality };
-
-            using var outputStream = new MemoryStream();
-            await image.SaveAsync(outputStream, encoder);
-            return outputStream.ToArray();
-        }
+        
     }
 }

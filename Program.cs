@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using websitebenhvien.Helper;
 using AspNetCoreRateLimit;
 using websitebenhvien.Middleware;
-using Microsoft.AspNetCore.ResponseCompression;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,22 +83,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
             options.ExpireTimeSpan = TimeSpan.FromDays(1);
             options.SlidingExpiration = true;
         });
-builder.Services.AddResponseCompression(options =>
-{
-    options.EnableForHttps = true; // Bật nén cho HTTPS
-    options.Providers.Add<BrotliCompressionProvider>(); // Hỗ trợ Brotli (hiệu quả cao)
-    options.Providers.Add<GzipCompressionProvider>(); // Hỗ trợ Gzip (tương thích rộng)
-    
-    // (Tùy chọn) Chỉ định các MIME types cần nén
-    options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
-    {
-        "application/json",
-        "text/html",
-        "text/plain",
-        "application/javascript",
-        "text/css"
-    });
-});
+
 
 var app = builder.Build();
 app.UseStatusCodePages(context =>
@@ -131,20 +116,11 @@ app.UseStaticFiles(
         RequestPath = "/Resources"
     }
 );
-app.UseResponseCompression();
+
 app.UseHttpsRedirection();
 
 
-app.UseHsts(); // Thêm HSTS (bắt buộc HTTPS)
-app.Use(async (ctx, next) =>
-{
-    // Thêm các header bảo mật
-    ctx.Response.Headers.Append("Content-Security-Policy", 
-        "default-src 'self'; script-src 'self' https://translate.google.com; style-src 'self' 'unsafe-inline'");
-    ctx.Response.Headers.Append("X-Frame-Options", "DENY");
-    ctx.Response.Headers.Append("Cross-Origin-Opener-Policy", "same-origin");
-    await next();
-});
+app.UseHsts(); 
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
@@ -174,4 +150,3 @@ app.MapControllerRoute(
 
 
 app.Run();
-
