@@ -14,8 +14,9 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             _samplemessager = samplemessager;
         }
+
         [HttpPost("/api/Them-tin-nhan-mau")]
-        [Authorize]
+        [Authorize(Roles = "admin,Tinnhanmau")]
         public async Task<IActionResult> AddSpmess(SampleVM sample)
         {
             try
@@ -48,6 +49,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+        [Authorize(Roles = "admin,Tinnhanmau")]
         [HttpPost("/api/lay-tin-nhan-mau")]
         [Authorize]
         public async Task<IActionResult> GetSpmess(int page,int pageSize)
@@ -69,8 +71,9 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+    
         [HttpPost("/api/lay-tin-nhan-mau-theo-id")]
-        [Authorize]
+              [Authorize(Roles = "admin,Tinnhanmau")]
         public async Task<IActionResult> GetSpmessById(int id)
         {
             try
@@ -91,7 +94,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         [HttpPost("/api/xoa-tin-nhan-mau")]
-        [Authorize]
+              [Authorize(Roles = "admin,Tinnhanmau")]
         public async Task<IActionResult> DeleteSpmess(int id)
         {
             try
@@ -112,7 +115,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         [HttpPost("/api/cap-nhat-trang-thai")]
-        [Authorize]
+               [Authorize(Roles = "admin,Tinnhanmau")]
         public async Task<IActionResult> UpdateStatus(int id)
         {
             try

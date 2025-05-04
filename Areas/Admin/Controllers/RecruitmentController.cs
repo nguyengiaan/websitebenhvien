@@ -123,7 +123,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // video 
-        [Authorize]
+        [Authorize(Roles = "admin,Quanlyvideo")]
         [HttpPost("/api-video-benh-vien")]
         public async Task<IActionResult> dangtinvideo(VideosVM video)
         {
@@ -145,7 +145,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
+     [Authorize(Roles = "admin,Quanlyvideo")]
         [HttpGet("/api-get-all-video")]
         public async Task<IActionResult> getallvideo(string search, int page, int pageSize)
         {
@@ -159,7 +159,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+       [Authorize(Roles = "admin,Quanlyvideo")]
         [HttpPost("/api-delete-video")]
         public async Task<IActionResult> deletevideo(int id)
         {
@@ -194,7 +194,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // machine
-        [Authorize]
+        [Authorize(Roles = "admin,Quanlythietbi")]
         [HttpPost("/api-machine-benh-vien")]
         public async Task<IActionResult> Addmachine(MachineVM machine)
         {
@@ -216,7 +216,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+           [Authorize(Roles = "admin,Quanlythietbi")]
         [HttpPost("/api-get-all-machine")]
         public async Task<IActionResult> getallmachine(string search, int page, int pageSize)
         {
@@ -231,7 +231,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+       [Authorize(Roles = "admin,Quanlythietbi")]
         [HttpPost("/api-delete-machine")]
         public async Task<IActionResult> Deletemachine(int id)
         {
