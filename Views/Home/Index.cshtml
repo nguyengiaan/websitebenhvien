@@ -8,17 +8,16 @@
             <div class="card shadow rounded-4 border-0">
                 <div id="mainCarousel" class="carousel slide rounded-4 overflow-hidden" data-bs-ride="carousel">
                     <div class="carousel-inner" id="carouselContainer">
-                      
+                             @await Component.InvokeAsync("Getslide")
                     </div>
-                    
-                    <button class="carousel-control-prev custom-carousel-btn" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-                        <i class="fas fa-chevron-left"></i>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next custom-carousel-btn" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-                        <i class="fas fa-chevron-right"></i>
-                        <span class="visually-hidden">Next</span>
-                    </button>
+             <button class="carousel-control-prev custom-carousel-btn" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+</button>
+<button class="carousel-control-next custom-carousel-btn" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+</button>
                 </div>
 
 
@@ -35,7 +34,7 @@
                 </div>
                 <div class="card-body p-0" style="background-color: #ffffff!important; border-radius: 10px; height: 300px; overflow-y: auto;">
                     <div class="list-group list-group-flush" style="max-height: 300px;">
-                        <!-- Tin tức sẽ được thêm vào đây, giới hạn 3 tin -->
+                       @await Component.InvokeAsync("LoadNews")
                     </div>
                 </div>
           
@@ -358,6 +357,7 @@
             <div class="divider" style="background-color: #0984e3;"></div>
         </div>
         <div id="newsCarousel" class="carousel slide" data-bs-ride="carousel">
+                 @await Component.InvokeAsync("ListNews")
         </div>
 
     </div>
@@ -371,6 +371,7 @@
             <div class="divider mx-auto"></div>
         </div>
         <div id="shareCustomerCarousel" class="carousel slide" data-bs-ride="carousel">
+            @await Component.InvokeAsync("Sharecustomers")
         </div>
 
     </div>

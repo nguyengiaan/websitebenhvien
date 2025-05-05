@@ -1,7 +1,7 @@
 
         
 let currentPage = 1;
-const pageSize = 20;
+const pageSize = 5;
 
 
 $(document).ready(function() {
@@ -60,7 +60,7 @@ function loadDoctors() {
         success: function(response) {
             if(response.success) {
                 renderDoctors(response.data);
-                updatePagination(response.totalPages, currentPage,pageSize);
+                renderPagination(response.totalPages, currentPage);
             }
         }
     });
@@ -119,77 +119,68 @@ function renderDoctors(doctors) {
     $('[data-bs-toggle="tooltip"]').tooltip();
 }
 
-function updatePagination(totalPages, currentPage, pageSize) {
-    if (totalPages > 0) {
-        let str = `<nav aria-label="Page navigation example">
-                        <ul class="pagination">`;
+function renderPagination( totalPages, currentPage) {
+    let html = '';
 
-        // Nút Previous
-        if (currentPage > 1) {
-            str += `<li class="page-item">
-                        <a class="page-link" href="javascript:void(0)" onclick="Laydstn(${currentPage - 1}, ${pageSize})">Previous</a>
-                    </li>`;
+    if (totalPages <= 5) {
+        // Show all pages if total pages <= 5
+        for (let i = 1; i <= totalPages; i++) {
+            html += `
+                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="loadDoctors(${i}, ${pagesize})">${i}</a>
+                </li>
+            `;
+        }
+    } else {
+        // Add Previous button
+        html += `
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="loadDoctors(${currentPage - 1}, ${pagesize})">&laquo;</a>
+            </li>
+        `;
+
+        // Show first page
+        html += `
+            <li class="page-item ${currentPage === 1 ? 'active' : ''}">
+                <a class="page-link" href="#" onclick="loadDoctors( 1, ${pagesize})">1</a>
+            </li>
+        `;
+
+        // Add ellipsis if needed
+        if (currentPage > 3) {
+            html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
         }
 
-        const maxVisiblePages = 5; // Số trang hiển thị xung quanh trang hiện tại
-        let startPage = Math.max(1, currentPage - 2);
-        let endPage = Math.min(totalPages, currentPage + 2);
-
-        // Điều chỉnh dải trang nếu cần
-        if (currentPage <= 2) {
-            endPage = Math.min(totalPages, maxVisiblePages);
-        }
-        if (currentPage >= totalPages - 1) {
-            startPage = Math.max(1, totalPages - maxVisiblePages + 1);
+        // Show pages around current page
+        for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+            html += `
+                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="loadDoctors(${i}, ${pagesize})">${i}</a>
+                </li>
+            `;
         }
 
-        // Trang đầu + Ellipsis
-        if (startPage > 1) {
-            str += `<li class="page-item">
-                        <a class="page-link" href="javascript:void(0)" onclick="Laydstn(1, ${pageSize})">1</a>
-                    </li>`;
-            if (startPage > 2) {
-                str += `<li class="page-item disabled">
-                            <span class="page-link">...</span>
-                        </li>`;
-            }
+        // Add ellipsis if needed
+        if (currentPage < totalPages - 2) {
+            html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
         }
 
-        // Các trang trong phạm vi
-        for (let i = startPage; i <= endPage; i++) {
-            if (currentPage === i) {
-                str += `<li class="page-item active">
-                            <a class="page-link" href="javascript:void(0)">${i}</a>
-                        </li>`;
-            } else {
-                str += `<li class="page-item">
-                            <a class="page-link" href="javascript:void(0)" onclick="Laydstn(${i}, ${pageSize})">${i}</a>
-                        </li>`;
-            }
-        }
+        // Show last page
+        html += `
+            <li class="page-item ${currentPage === totalPages ? 'active' : ''}">
+                <a class="page-link" href="#" onclick="loadDoctors( ${totalPages}, ${pagesize})">${totalPages}</a>
+            </li>
+        `;
 
-        // Trang cuối + Ellipsis
-        if (endPage < totalPages) {
-            if (endPage < totalPages - 1) {
-                str += `<li class="page-item disabled">
-                            <span class="page-link">...</span>
-                        </li>`;
-            }
-            str += `<li class="page-item">
-                        <a class="page-link" href="javascript:void(0)" onclick="Laydstn(${totalPages}, ${pageSize})">${totalPages}</a>
-                    </li>`;
-        }
-
-        // Nút Next
-        if (currentPage < totalPages) {
-            str += `<li class="page-item">
-                        <a class="page-link" href="javascript:void(0)" onclick="Laydstn(${currentPage + 1}, ${pageSize})">Next</a>
-                    </li>`;
-        }
-
-        str += `</ul></nav>`;
-        $('#pagination').html(str);
+        // Add Next button
+        html += `
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" onclick="loadDoctors(${currentPage + 1}, ${pagesize})">&raquo;</a>
+            </li>
+        `;
     }
+
+    $('#pagination').html(html);
 }
 
 function changePage(page) {

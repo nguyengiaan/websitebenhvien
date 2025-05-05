@@ -14,7 +14,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             _workSchedule = workSchedule;
         }
         // thêm lịch làm việc
-        [Authorize]
+         [Authorize(Roles ="Quanlybacsi,admin")]
         [HttpPost("/api/them-lich-lam-viec")]
         public async Task<IActionResult> AddSchedule(WorkdoctorVM workdoctor)
         {
@@ -36,7 +36,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { message = "Có lỗi xảy ra" });
             }
         }
-      
+     [Authorize(Roles ="Quanlybacsi,admin")]
         [HttpPost("/api/lich-lam-viec")]
         public async Task<IActionResult> GetSchedule(int id_doctor)
         {
@@ -54,7 +54,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { message = "Có lỗi xảy ra" });
             }
         }
-        [Authorize]
+        [Authorize(Roles ="Quanlybacsi,admin")]
         [HttpPost("/api/xoa-lich-lam-viec")]
         public async Task<IActionResult> DeleteSchedule(int id)
         {
@@ -87,6 +87,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // đăng ký khám bệnh 
+              [Authorize(Roles ="Dangkykhambenh,admin")]
         [HttpPost("/api/dang-ky-kb")]
         public async Task<IActionResult> Makeanappointment(MakeanappointmentVM makeanappointment)
         {
@@ -107,7 +108,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false,message = ex.Message });
             }
         }
-        [Authorize]
+              [Authorize(Roles ="Dangkykhambenh,admin")]
         [HttpPost("/api/lay-danh-sach-dang-ky-kb")]
         public async Task<IActionResult> GetAppointment(int page, int pageSize, string search, int specialtyId)
         {
@@ -119,7 +120,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }   
-        [Authorize]
+              [Authorize(Roles ="Dangkykhambenh,admin")]
         [HttpPost("/api/xoa-lich-khambenh")]
         public async Task<IActionResult> DeleteAppointment(int id)
         {
@@ -136,7 +137,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+              [Authorize(Roles ="Dangkykhambenh,admin")]
         [HttpPost("/api/cap-nhat-lich-kham-benh")]
         public async Task<IActionResult> UpdateAppointment(int id)
         {
@@ -155,7 +156,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
      
         }
         // danh sách lịch khám sức khoẻ
-        [Authorize]
+            [Authorize(Roles ="Dangkykhamsuckhoe,admin")]
         [HttpPost("/api/lay-danh-sach-dang-ky-kham-sk")]
         public async Task<IActionResult> GetAppointmentSK(int page, int pageSize, string search)
         {
@@ -167,7 +168,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+       [Authorize(Roles ="Dangkykhamsuckhoe,admin")]
         [HttpPost("/api/xoa-lich-kham-sk")]
         public async Task<IActionResult> DeleteAppointmentSK(int id)
         {
@@ -182,7 +183,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+     [Authorize(Roles ="Dangkykhamsuckhoe,admin")]
         [HttpPost("/api/cap-nhat-lich-kham-sk")]
         public async Task<IActionResult> UpdateAppointmentSK(int id)
         {
@@ -197,7 +198,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+                [Authorize(Roles = "admin,Trangquantri")]
         [HttpGet("/api/tao-bieu-do-dang-ky")]
         public async Task<IActionResult> GetRegisterChart()
         {
@@ -209,7 +210,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+           [Authorize(Roles = "admin,Trangquantri")]
         [HttpGet("/api/lay-danh-sach-dang-ky-theo-ngay")]
         public async Task<IActionResult> GetCharthealthdate()
         {

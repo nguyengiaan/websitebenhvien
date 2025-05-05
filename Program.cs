@@ -19,6 +19,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Listen(System.Net.IPAddress.Any,5026); // Lắng nghe trên cổng 5000
+});
 builder.Services.AddDbContext<MyDbcontext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -57,19 +61,15 @@ builder.Services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrateg
 builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddMemoryCache();
 builder.Services.AddServerSideBlazor();
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("user", policy => policy.RequireRole("user"));
     options.AddPolicy("admin", policy => policy.RequireRole("admin"));
-    
     options.AddPolicy("CreatePolicy", policy => policy.RequireClaim("Permission", "Create"));
     options.AddPolicy("EditPolicy", policy => policy.RequireClaim("Permission", "Edit"));
     options.AddPolicy("DeletePolicy", policy => policy.RequireClaim("Permission", "Delete"));
     options.AddPolicy("ReadPolicy", policy => policy.RequireClaim("Permission", "Read"));
-});
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.Listen(System.Net.IPAddress.Any, 5026); // Lắng nghe trên cổng 5000
 });
 
 builder.Services.ConfigureApplicationCookie(options =>

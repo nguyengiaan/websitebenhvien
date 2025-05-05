@@ -1,0 +1,77 @@
+@model IEnumerable<websitebenhvien.Models.EnitityVM.NewsVM>
+
+<div id="newsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+    <div class="carousel-inner">
+        @{
+            // Số lượng items trên mỗi slide
+            int itemsPerSlide = 4;
+
+            // Chia dữ liệu thành các slides
+            var slides = Model.Select((item, index) => new { item, index })
+                              .GroupBy(x => x.index / itemsPerSlide)
+                              .Select(g => g.Select(x => x.item).ToList())
+                              .ToList();
+
+            for (int slideIndex = 0; slideIndex < slides.Count; slideIndex++)
+            {
+                var slideItems = slides[slideIndex];
+                <div class="carousel-item @(slideIndex == 0 ? "active" : "")">
+                    <div class="row g-4 justify-content-center">
+                        @foreach (var item in slideItems)
+                        {
+                            if (item.Status == true) 
+                            {
+                                <div class="col-lg-3 col-md-6 col-12">
+                                    <div class="card h-100 border-0 shadow-sm rounded-lg overflow-hidden">
+                                        <!-- Image container -->
+                                        <div class="position-relative overflow-hidden" style="height: 220px;">
+                                            <img src="/Resources/@item.Url" 
+                                                 alt="@item.Title" 
+                                                 class="w-100 h-100" 
+                                                 style="object-fit: cover;" />
+                                            <div class="position-absolute badge bg-primary" style="top: 15px; right: 15px; padding: 8px 12px; font-size: 0.85rem; font-weight: 500; border-radius: 20px;">
+                                                Tin tức & Sự kiện
+                                            </div>
+                                            @if (item.Createat.HasValue && item.Createat.Value.Date == DateTime.Now.Date) 
+                                            {
+                                                <div class="position-absolute badge bg-danger" style="top: 15px; left: 15px; padding: 8px 12px; font-size: 0.85rem; font-weight: 500; border-radius: 20px;">
+                                                    NEW
+                                                </div>
+                                            }
+                                        </div>
+
+                                        <!-- Card body -->
+                                        <div class="card-body p-4">
+                                            <p class="text-primary mb-2" style="font-size: 0.9rem;">
+                                                <i class="far fa-calendar-alt me-2"></i>@(item.Createat?.ToString("dd/MM/yyyy") ?? "N/A") <!-- Sửa lỗi: Định dạng ngày -->
+                                            </p>
+                                            <h5 class="card-title fw-bold mb-3" style="font-size: 1.1rem; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                                @item.Title <!-- Sửa lỗi: Trường Title -->
+                                            </h5>
+                                            <p class="card-text text-muted mb-4" style="font-size: 0.95rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                                                @item.Description <!-- Sửa lỗi: Trường Description -->
+                                            </p>
+                                            <a href="@item.Alias_url" class="btn btn-outline-primary rounded-pill px-4"> <!-- Sửa lỗi: Trường Alias_url -->
+                                                <i class="fas fa-arrow-right me-2"></i>Xem thêm
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <!-- Carousel controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#newsCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#newsCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>

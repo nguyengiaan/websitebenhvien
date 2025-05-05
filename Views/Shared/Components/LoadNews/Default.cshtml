@@ -1,0 +1,44 @@
+@model IEnumerable<websitebenhvien.Models.EnitityVM.NewsVM>
+
+<div class="list-group">
+  @foreach (var news in Model)
+{
+    if (news.Status.GetValueOrDefault())
+    {
+        var oneWeekAgo = DateTime.Now.AddDays(-7);
+        var isNew = news.Createat > oneWeekAgo;
+    <a href="@news.Alias_url" class="list-group-item list-group-item-action p-3 border-bottom hover-effect rounded-4 position-relative" style="transition: all 0.3s ease; border-left: 4px solid #0095d9;">
+        <div class="news-item d-flex">
+            <div class="news-image me-3" style="width: 100px; min-width: 100px;">
+                <img src="/Resources/@news.Url" alt="@news.Title" class="img-fluid rounded" style="width: 100px; height: 80px; object-fit: cover;">
+            </div>
+            <div class="news-content">
+                <h6 class="mb-2 fw-bold" style="color: #0095d9">@news.Title</h6>
+                @if (isNew)
+                {
+                    <span class="badge position-absolute top-0 end-0 m-2 fw-bold" style="background-color: #0095d9;">MỚI</span>
+                }
+                <div class="d-flex align-items-center mb-2" style="color: #000000;">
+                    <i class="far fa-clock me-2"></i>
+                    <small>@news.Createat?.ToString("yyyy-MM-dd") </small>
+                </div>
+                <p class="mb-0" style="color: #000000; font-size: 0.95rem; line-height: 1.5;">
+                  @news.Descriptionshort
+               
+                </p>
+            </div>
+        </div>
+    </a>
+    }
+}
+
+   
+</div>
+
+<style>
+    .list-group-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 149, 217, 0.3);
+        border-color: #0095d9 !important;
+    }
+</style>

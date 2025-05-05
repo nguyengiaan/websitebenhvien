@@ -172,3 +172,46 @@
         </div>
     </nav>
 </header>
+<style>
+    /* Điều chỉnh chiều cao header theo màn hình */
+.header-main {
+    min-height: 105px;
+    padding: 10px 0;
+}
+
+/* Logo: đảm bảo rằng logo co giãn theo kích thước */
+#logo-img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Điều chỉnh menu khi màn hình nhỏ */
+@@media (max-width: 767.98px) {
+    .header-main {
+        padding: 5px 0;
+    }
+    .nav-links a {
+        font-size: 0.9rem;
+    }
+}
+
+/* Điều chỉnh menu khi màn hình lớn hơn */
+@@media (min-width: 768px) {
+    .nav-links a {
+        font-size: 1rem;
+    }
+}
+
+/* Tùy chỉnh cho dropdown menu */
+.dropdown-menu {
+    border-radius: 6px;
+    border: none;
+}
+
+/* Ví dụ các kiểu cho menu */
+.navbar-nav .nav-item {
+    padding: 0 0.5rem;
+    transition: all 0.3s ease;
+}
+
+</style>

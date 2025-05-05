@@ -230,50 +230,59 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
-        public async Task<(List<MakeanappointmentVM> ds, int total)> GetAppointment(int page, int pageSize, string search, int specialtyId)
+   public async Task<(List<MakeanappointmentVM> ds, int total)> GetAppointment(int page, int pageSize, string search, int specialtyId)
+{
+    try
+    {
+        var query = _context.Makeanappointments
+            .AsNoTracking()
+            .AsQueryable();
+
+        // Tối ưu tìm kiếm với ILike
+        if (!string.IsNullOrEmpty(search))
         {
-          try
-          {
-            var query = _context.Makeanappointments.AsQueryable();
-            
-            if (!string.IsNullOrEmpty(search))
+            query = query.Where(x => x.name.Contains(search) 
+                        || x.Name_doctor.Contains(search));
+        }
+
+        if (specialtyId > 0)
+        {
+            query = query.Where(x => x.Id_Specialty == specialtyId);
+        }
+
+        // Xử lý phân trang hợp lệ
+        page = page < 1 ? 1 : page;
+        pageSize = pageSize < 1 ? 10 : pageSize;
+
+        var totalItems = await query.CountAsync();
+
+        var result = await query
+            .Select(x => new MakeanappointmentVM 
             {
-                query = query.Where(x => x.name.Contains(search) || x.Name_doctor.Contains(search));
-            }
-
-            if (specialtyId > 0)
-            {
-                query = query.Where(x => x.Id_Specialty == specialtyId);
-            }
-
-            var totalItems = await query.CountAsync();
-            var totalpages = (int)Math.Ceiling(totalItems / (double)pageSize);
-
-                var result = await query.Select(x => new MakeanappointmentVM {
-                    Id_makeanappointment = x.Id_Make,
-                    Id_Specialty = x.Id_Specialty,
-                    Name_doctor = x.Name_doctor,
-                    Examinationtime = x.Examinationtime,
-                    name = x.name,
-                    phone = x.phone,
-                    note = x.note,
-                    Title_Specialty=x.Specialty.Title,
-                    Status=x.Status,
-
-
-                })
+                Id_makeanappointment = x.Id_Make,
+                Id_Specialty = x.Id_Specialty,
+                Name_doctor = x.Name_doctor,
+                Examinationtime = x.Examinationtime,
+                name = x.name,
+                phone = x.phone,
+                note = x.note,
+                Title_Specialty = x.Specialty.Title,
+                Status = x.Status,
+            })
             .OrderByDescending(x => x.Id_makeanappointment)
-            .Skip((page-1) * pageSize)
+            .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
 
-            return (result, totalpages);
-          }
-          catch(Exception ex)
-          {
-            return (null, 0);
-          }
-        }
+        return (result, totalItems);
+    }
+    catch (Exception ex)
+    {
+        // Log lỗi và trả về kết quả an toàn
+   
+        return (new List<MakeanappointmentVM>(), 0);
+    }
+}
 
         public async Task<bool> DeleteAppointment(int id)
         {

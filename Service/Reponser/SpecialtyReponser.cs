@@ -169,54 +169,45 @@ namespace websitebenhvien.Service.Reponser
                 return null;
             }
         }
-
-        public async Task<bool> AddDoctor(DoctorVM doctor)
+    public async Task<bool> AddDoctor(DoctorVM doctor)
+{
+    try
+    {
+        var existingDoctor = await _context.Doctors.FindAsync(doctor.Id_doctor);
+        var targetDoctor = existingDoctor ?? new Doctor();
+        
+        UpdateDoctorData(targetDoctor, doctor);
+        
+        if (doctor.ImageFile != null)
         {
-            try
+            var (success, fileName) = _upload.SaveMedia(doctor.ImageFile);
+            if (success == 1)
             {
-                var data = await _context.Doctors.FindAsync(doctor.Id_doctor);
-                if(data != null)
+                if (existingDoctor != null && existingDoctor.Thumnail != "avt.jpg")
                 {
-                    UpdateDoctorData(data,doctor);
-                    if(doctor.ImageFile != null)
-                    {
-                        var result = _upload.SaveMedia(doctor.ImageFile);
-                        if(result.Item1 == 1)
-                        {
-                            _upload.DeleteMedia(data.Thumnail);
-                            data.Thumnail = result.Item2;
-                        }
-                    }
-                    await _context.SaveChangesAsync();
-                    return true;
+                    _upload.DeleteMedia(existingDoctor.Thumnail);
                 }
-                else
-                {
-                    var newDoctor = new Doctor();
-                    UpdateDoctorData(newDoctor,doctor);
-                    if(doctor.ImageFile != null)
-                    {
-                        var result = _upload.SaveMedia(doctor.ImageFile);
-                        if(result.Item1 == 1)
-                        {
-                            newDoctor.Thumnail = result.Item2;
-                        }
-                    }
-                    else
-                    {
-                        newDoctor.Thumnail = "avt.jpg";
-                    }
-                    await _context.Doctors.AddAsync(newDoctor);
-                    await _context.SaveChangesAsync();
-                    return true;
-                 
-                }
-            }
-            catch(Exception e)
-            {
-                return false;
+                targetDoctor.Thumnail = fileName;
             }
         }
+        else if (existingDoctor == null)
+        {
+            targetDoctor.Thumnail = "avt.jpg";
+        }
+
+        if (existingDoctor == null)
+        {
+            await _context.Doctors.AddAsync(targetDoctor);
+        }
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+    catch (Exception)
+    {
+        return false;
+    }
+}
         private void UpdateDoctorData(Doctor target, DoctorVM source)
         {
             target.Name = source.Name;
@@ -269,7 +260,7 @@ namespace websitebenhvien.Service.Reponser
                     Id_specialty = x.Id_specialty,
                 
                   
-                }).ToListAsync();
+                }).AsNoTracking().ToListAsync();
                 return data;
             }catch(Exception e)
             {
@@ -285,7 +276,7 @@ namespace websitebenhvien.Service.Reponser
                     Title = x.Title,
                     Alias_url = x.Alias_url,
                     Thumnail = x.Thumnail,
-                }).ToListAsync();
+                }).AsNoTracking().ToListAsync();
                 return data;
             }catch(Exception e)
             {
@@ -313,7 +304,7 @@ namespace websitebenhvien.Service.Reponser
                     Thumnail = x.Thumnail,
                     Alias_url = x.Alias_url,
                     nameCategory = x.Specialty.Title,
-                }).OrderByDescending(x=>x.Id_doctor).Skip((page-1)*pageSize).Take(pageSize).ToListAsync();
+                }).OrderByDescending(x=>x.Id_doctor).Skip((page-1)*pageSize).Take(pageSize).AsNoTracking().ToListAsync();
                 return (data,totalPages);
             }catch(Exception e)
             {

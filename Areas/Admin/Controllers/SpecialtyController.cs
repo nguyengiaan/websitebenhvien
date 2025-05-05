@@ -98,7 +98,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // quản lý bác sĩ 
-        [Authorize]
+        [Authorize(Roles ="Quanlybacsi,admin")]
         [HttpPost("/api/them-bac-si")]
         public async Task<IActionResult> AddDoctor(DoctorVM doctor)
         {
@@ -123,7 +123,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-        [Authorize]
+          [Authorize(Roles ="Quanlybacsi,admin")]
         [HttpPost("/api/lay-danh-sach-bac-si")]
         public async Task<IActionResult> GetDoctorByAlias(int page, int pageSize,string search,int specialtyId)
         {
@@ -136,7 +136,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+           [Authorize(Roles ="Quanlybacsi,admin")]
         [HttpPost("/api/lay-bac-si-theo-chuyen-khoa")]
         public async Task<IActionResult> GetDoctorBySpecialty(int id)
         {
@@ -155,7 +155,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-        [Authorize]
+     [Authorize(Roles ="Quanlybacsi,admin")]
         [HttpPost("/api/xoa-bac-si")]
         public async Task<IActionResult> DeleteDoctor(int id)
         {

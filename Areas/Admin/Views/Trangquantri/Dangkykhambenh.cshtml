@@ -40,12 +40,12 @@
                 </table>
             </div>
 
-            <div class="row mt-3">
-                <div class="col-md-6">
-                    <div id="pagination" class="float-start"></div>
-                </div>
-             
-            </div>
+          <div class="card-footer bg-white py-3">
+            <nav>
+                <ul class="pagination justify-content-center mb-0" id="pagination">
+                </ul>
+            </nav>
+        </div>
         </div>
     </div>
 </div>
@@ -53,22 +53,21 @@
 @section Scripts {
     <script>
         let currentPage = 1;
-        const pageSize = 20;
+        let pagesize =30;
+        let totalItems = 0;
 
         $(document).ready(function() {
             loadSpecialties();
-            loadAppointments();
+            loadAppointmentsData(currentPage, pagesize);
 
             $('#searchInput').on('keyup', function() {
-                loadAppointments();
+                currentPage = 1; // Reset về trang 1 khi tìm kiếm
+                loadAppointmentsData(currentPage, pagesize);
             });
 
             $('#specialtyFilter').on('change', function() {
-                loadAppointments();
-            });
-
-            $('#pageSize').on('change', function() {
-                loadAppointments();
+                currentPage = 1; // Reset về trang 1 khi lọc
+                loadAppointmentsData(currentPage, pagesize);
             });
         });
 
@@ -86,7 +85,7 @@
             });
         }
 
-        function loadAppointments() {
+        function loadAppointmentsData(page, pagesize) {
             const searchTerm = $('#searchInput').val();
             const specialtyId = $('#specialtyFilter').val();
 
@@ -94,17 +93,22 @@
                 url: '/api/lay-danh-sach-dang-ky-kb',
                 type: 'POST',
                 data: {
-                    page: currentPage,
-                    pageSize: pageSize,
+                    page: page,
+                    pageSize: pagesize,
                     search: searchTerm,
                     specialtyId: specialtyId
                 },
                 success: function(response) {
                     if(response.status){
-                        console.log(response);
+                        totalItems = response.total;
+                        currentPage = page;
                         renderAppointments(response.data);
-                        renderPagination(response.total, currentPage);
+                        renderPagination(Math.ceil(totalItems / pagesize), currentPage);
                     }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error loading appointments:', error);
+                    Swal.fire('Lỗi', 'Không thể tải dữ liệu. Vui lòng thử lại sau.', 'error');
                 }
             });
         }
@@ -114,7 +118,7 @@
             appointments.forEach((item, index) => {
                 html += `
                     <tr>
-                        <td>${index + 1}</td>
+                        <td>${(currentPage - 1) * pagesize + index + 1}</td>
                         <td>${item.name}</td>
                         <td>${item.phone}</td>
                         <td>${item.name_doctor}</td>
@@ -140,70 +144,69 @@
             });
             $('#appointmentTable tbody').html(html);
         }
+
         function renderPagination(totalPages, currentPage) {
+            if (totalPages <= 0) return;
+
             let html = '';
             
             // Previous button
             html += `
-                <button class="btn btn-outline-primary btn-sm me-1" 
-                        onclick="changePage(${currentPage - 1})"
-                        ${currentPage === 1 ? 'disabled' : ''}>
-                    &laquo;
-                </button>
+                <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="javascript:void(0)" onclick="loadAppointmentsData(${currentPage - 1}, ${pagesize})">&laquo;</a>
+                </li>
             `;
 
             // Calculate range of pages to show
             let startPage = Math.max(1, currentPage - 2);
             let endPage = Math.min(totalPages, startPage + 4);
             
-            // Adjust start if end is maxed out
+            // Adjust start if we're near the end
             if (endPage - startPage < 4) {
                 startPage = Math.max(1, endPage - 4);
             }
 
-            // First page + ellipsis
+            // First page
             if (startPage > 1) {
                 html += `
-                    <button class="btn btn-outline-primary btn-sm me-1" onclick="changePage(1)">1</button>
-                    ${startPage > 2 ? '<span class="me-1">...</span>' : ''}
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="loadAppointmentsData(1, ${pagesize})">1</a>
+                    </li>
                 `;
+                if (startPage > 2) {
+                    html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                }
             }
 
             // Page numbers
             for (let i = startPage; i <= endPage; i++) {
                 html += `
-                    <button class="btn btn-${currentPage === i ? 'primary' : 'outline-primary'} btn-sm me-1" 
-                            onclick="changePage(${i})">
-                        ${i}
-                    </button>
+                    <li class="page-item ${i === currentPage ? 'active' : ''}">
+                        <a class="page-link" href="javascript:void(0)" onclick="loadAppointmentsData(${i}, ${pagesize})">${i}</a>
+                    </li>
                 `;
             }
 
-            // Last page + ellipsis
+            // Last page
             if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    html += '<li class="page-item disabled"><span class="page-link">...</span></li>';
+                }
                 html += `
-                    ${endPage < totalPages - 1 ? '<span class="me-1">...</span>' : ''}
-                    <button class="btn btn-outline-primary btn-sm me-1" onclick="changePage(${totalPages})">${totalPages}</button>
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" onclick="loadAppointmentsData(${totalPages}, ${pagesize})">${totalPages}</a>
+                    </li>
                 `;
             }
 
             // Next button
             html += `
-                <button class="btn btn-outline-primary btn-sm me-1"
-                        onclick="changePage(${currentPage + 1})"
-                        ${currentPage === totalPages ? 'disabled' : ''}>
-                    &raquo;
-                </button>
+                <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="javascript:void(0)" onclick="loadAppointmentsData(${currentPage + 1}, ${pagesize})">&raquo;</a>
+                </li>
             `;
 
             $('#pagination').html(html);
-        }
-
-        function changePage(page) {
-            if (page >= 1 && page <= totalPages) {
-                currentPage = page;
-                loadAppointments();
-            }
         }
 
         function deleteAppointment(id) {
@@ -225,7 +228,7 @@
                         success: function(response) {
                             if (response.status) {
                                 Swal.fire('Thành công', 'Đã xóa lịch khám', 'success');
-                                loadAppointments();
+                                loadAppointmentsData(currentPage, pagesize);
                             } else {
                                 Swal.fire('Lỗi', response.message, 'error');
                             }
@@ -248,7 +251,7 @@
                 success: function(response) {
                     if(response.status){
                         Swal.fire('Thành công', 'Đã cập nhật trạng thái', 'success');
-                        loadAppointments();
+                        loadAppointmentsData(currentPage, pagesize);
                     }else{
                         Swal.fire('Lỗi', response.message, 'error');
                     }
@@ -257,4 +260,3 @@
         }
     </script>
 }
-

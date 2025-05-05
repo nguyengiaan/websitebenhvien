@@ -47,20 +47,24 @@
 @section Scripts {
     <script>
         let currentPage = 1;
-        const pageSize = 20;
+        const pageSize =30;
+        let totalPages = 0;
 
         $(document).ready(function() {
             loadAppointments();
 
             $('#searchInput').on('keyup', function() {
+                currentPage = 1;
                 loadAppointments();
             });
 
             $('#specialtyFilter').on('change', function() {
+                currentPage = 1;
                 loadAppointments();
             });
 
             $('#pageSize').on('change', function() {
+                currentPage = 1;
                 loadAppointments();
             });
         });
@@ -80,9 +84,9 @@
                 },
                 success: function(response) {
                     if(response.status){
-                        console.log(response);
+                        totalPages = Math.ceil(response.total / pageSize);
                         renderAppointments(response.data);
-                        renderPagination(response.total, currentPage);
+                        renderPagination(totalPages, currentPage);
                     }
                 }
             });
@@ -93,7 +97,7 @@
             appointments.forEach((item, index) => {
                 html += `
                     <tr>
-                        <td>${index + 1}</td>
+                        <td>${(currentPage - 1) * pageSize + index + 1}</td>
                         <td>${item.name}</td>
                         <td>${item.phone}</td>
                         <td>${formatDateTime(item.examinationtime)}</td>
@@ -117,7 +121,10 @@
             });
             $('#appointmentTable tbody').html(html);
         }
+
         function renderPagination(totalPages, currentPage) {
+            if (totalPages <= 0) return;
+
             let html = '';
             
             // Previous button
@@ -234,4 +241,3 @@
         }
     </script>
 }
-
