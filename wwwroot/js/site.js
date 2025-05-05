@@ -558,13 +558,7 @@ document.getElementById('chatButton').addEventListener('click', renderSampleQues
 // Sample messages
 
 document.addEventListener('DOMContentLoaded', function() {
-    if (navigator.geolocation) {
-        button.addEventListener('click', () => {
-            navigator.geolocation.getCurrentPosition();
-        });
-    } else {
-        console.log("Geolocation is not supported by this browser.");
-    }
+  
   
     const chatButton = document.getElementById('chatButton');
     const chatWindow = document.getElementById('chatWindow');

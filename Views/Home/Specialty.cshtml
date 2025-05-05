@@ -1,5 +1,8 @@
 @{
     ViewData["Title"] = "Chuyên khoa";
+    ViewData["Image"] = "/Images/Logo-rm.png";
+    ViewData["Description"]="Chuyên khoa bệnh viện đa khoa Mỹ Phước";
+    ViewData["Keywords"]="Bệnh viện đa khoa Mỹ Phước,chuyên khoa";
 
 }
 <div class="container py-5">
@@ -41,70 +44,12 @@
     </div>
 
     <div class="row g-4" id="specialtyList">
-        <!-- Danh sách chuyên khoa sẽ được render ở đây -->
+           @await Component.InvokeAsync("Chuyenkhoa")
     </div>
 </div>
 
-@section Scripts {
-    <script>
-        $(document).ready(function() {
-            loadSpecialties();
-            AOS.init();
-        });
-
-        function loadSpecialties() {
-            $.ajax({
-                url: '/api/chuyen-khoa-catogery',
-                type: 'GET',
-                success: function(response) {
-                    if(response.data) {
-                        console.log(response.data);
-                        renderSpecialties(response.data);
-                    }
-                }
-            });
-        }
-
-        function renderSpecialties(specialties) {
-            let html = '';
-            specialties.forEach(function(specialty, index) {
-                html += `
-                    <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="${index * 100}">
-                        <div class="card specialty-card h-100 border-0 rounded-4">
-                            <div class="card-body p-4 d-flex flex-column">
-                                <div class="specialty-icon mb-4">
-                                    <div class="icon-circle position-relative overflow-hidden" style="width: 150px; height: 150px; margin: 0 auto; transform-style: preserve-3d; perspective: 1000px; transition: transform 0.5s;">
-                                        <div class="icon-3d-container position-relative w-100 h-100" style="transform-style: preserve-3d; animation: float 6s ease-in-out infinite;">
-                                            <div class="icon-front position-absolute w-100 h-100" style="transform: translateZ(30px); border-radius: 50%; background: linear-gradient(145deg, #2196f3, #1976d2); box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
-                                                <img src="/Resources/${specialty.thumnail}" alt="${specialty.title}" class="position-absolute top-50 start-50 translate-middle rounded-circle" style="width: 80%; height: 80%; object-fit: cover; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));">
-                                            </div>
-                                            <div class="icon-glow position-absolute w-100 h-100" style="border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%); transform: translateZ(10px);">
-                                            </div>
-                                            <div class="icon-shadow position-absolute w-100 h-100" style="border-radius: 50%; background: rgba(0,0,0,0.1); transform: translateZ(-30px) scale(0.9); filter: blur(20px);">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h4 class="card-title mb-3 fw-bold text-primary text-center">${specialty.title}</h4>
-                                <p class="card-text mb-4 flex-grow-1">
-                                    ${specialty.description || 'Chuyên khoa điều trị các bệnh lý liên quan với đội ngũ bác sĩ giàu kinh nghiệm.'}
-                                </p>
-                                <div class="mt-auto">
-                                    <a href="${specialty.alias_url}" class="btn btn-primary btn-lg rounded-pill px-4 w-100">
-                                        <i class="fas fa-info-circle me-2"></i>Xem chi tiết
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            $('#specialtyList').html(html);
-        }
-    </script>
-}
-
-<style>
+@section Styles {
+    <style>
     .divider-custom {
         margin: 1.25rem 0;
         width: 100%;
@@ -168,4 +113,8 @@
         box-shadow: 0 5px 15px rgba(13, 110, 253, 0.4);
     }
 </style>
+
+
+}
+
 
