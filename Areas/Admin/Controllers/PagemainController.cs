@@ -71,6 +71,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // trang slide
+         [Authorize(Roles = "admin,Slidetrangchu")]
         [HttpPost]
         public async Task<IActionResult> Addslide(SlideVM slidepage)
         {
@@ -103,22 +104,17 @@ namespace websitebenhvien.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> GetSlides()
         {
-            try
+           try
             {
-            if (!_cache.TryGetValue("slides", out List<Slidepage> slides))
-            {
-                slides = await _page.GetSlide();
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                .SetSlidingExpiration(TimeSpan.FromMinutes(30));
-                _cache.Set("slides", slides, cacheEntryOptions);
-            }
-            return Json(new { success = true, data = slides });
+                var data = await _page.GetSlide();
+                return Json(new { success = true, data = data });
             }
             catch (Exception ex)
             {
-            return Json(new { success = false, message = "Có lỗi xảy ra" });
+                return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
+        [Authorize(Roles = "admin,Slidetrangchu")]
         [HttpPost]
         public async Task<IActionResult> DeleteSlide(string id_slidepage)
         {
@@ -139,6 +135,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
+             [Authorize(Roles = "admin,Slidetrangchu")]
         [HttpPost]
         public async Task<IActionResult> UpdateStatus(string id_slidepage)
         {
@@ -160,6 +157,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // hiển thị slide chi tiết
+             [Authorize(Roles = "admin,Slidetrangchu")]
         [HttpPost]
         public async Task<IActionResult> GetSlideByTitle(string id_slidepage)
         {
@@ -174,6 +172,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // sửa slide
+             [Authorize(Roles = "admin,Slidetrangchu")]
         [HttpPost]
         public async Task<IActionResult> EditSlide(SlideVM slide)
         {
@@ -231,6 +230,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // logo khách hàng
+        [Authorize(Roles = "admin,Logokhachhang")]
         [HttpPost]
         public async Task<IActionResult> AddLogoCustomer(LogocustomerVM logo)
         {
@@ -278,6 +278,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
+        [Authorize(Roles = "admin,Logokhachhang")]
         [HttpPost]
         public async Task<IActionResult> DeleteLogoCustomer(string id_logocustomer)
         {
@@ -298,6 +299,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
+        [Authorize(Roles = "admin,Logokhachhang")]
         [HttpPost]
         public async Task<IActionResult> UpdateStatuslogo(string id_logocustomer)
         {
@@ -318,6 +320,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
+        [Authorize(Roles = "admin,Logokhachhang")]
         [HttpPost]
         public async Task<IActionResult> UpdateLogoCustomer(LogocustomerVM logo)
         {
@@ -432,7 +435,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // update khách hàng chia sẻ
-           [Authorize(Roles = "admin,Chiasekhachhang")]
+        [Authorize(Roles = "admin,Chiasekhachhang")]
         [HttpPost]
         public async Task<IActionResult> UpdateShareCustomer(SharecustomerVM share)
         {
@@ -454,6 +457,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // thời gian làm việc
+        [Authorize(Roles = "admin,ThoiGianLamViec")]
         [HttpPost]
         public async Task<IActionResult> AddTimeWork(string content)
         {
@@ -474,6 +478,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
+
         [HttpGet]
         public async Task<IActionResult> TimeWork()
         {
@@ -488,6 +493,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         //menu trang web
+        [Authorize(Roles = "admin,Danhsachmenu")]
         [HttpPost]
         public async Task<IActionResult> AddMenu(MenuVM menu)
         {
@@ -522,6 +528,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // menu con
+        [Authorize(Roles = "admin,Danhsachmenu")]
         [HttpPost]
         public async Task<IActionResult> AddSubMenu(SubMenuVM submenu)
         {
@@ -562,6 +569,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
+        [Authorize(Roles = "admin,Danhsachmenu")]
         [HttpPost]
         public async Task<IActionResult> DeleteMenu(string id_menu)
         {
@@ -582,6 +590,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
+        [Authorize(Roles = "admin,Danhsachmenu")]
         [HttpPost]
         public async Task<IActionResult> DeleteMenuSub(string id_menu)
         {
@@ -603,6 +612,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         //lấy menu id
+        [Authorize(Roles = "admin,Danhsachmenu")]
         [HttpPost]
         public async Task<IActionResult> GetMenuvm(string id_menu)
         {
@@ -616,6 +626,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
+        [Authorize(Roles = "admin,Danhsachmenu")]
         [HttpPost]
         public async Task<IActionResult> Updatemenu(MenuVM menu)
         {
@@ -636,6 +647,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
+        [Authorize(Roles = "admin,Danhsachmenu")]
         [HttpPost]
         public async Task<IActionResult> UpdateStatusMenu(string id)
         {

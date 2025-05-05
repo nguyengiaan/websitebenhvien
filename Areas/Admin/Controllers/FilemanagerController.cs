@@ -14,6 +14,8 @@ namespace websitebenhvien.Areas.Admin.Controllers
     [Area("Admin")]
     public class FilemanagerController : Controller
     {
+        // Chỉ cho phép người dùng có quyền admin mới được vào
+        [Authorize(Roles = "admin,Quanlyfile")]
         [Route("/File")]
         public IActionResult Index()
         {
@@ -24,6 +26,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
 
         // Url để client-side kết nối đến backend
         // /el-finder-file-system/connector
+          [Authorize(Roles = "admin,Quanlyfile")]
         [Route("/file-manager-connector")]
         public async Task<IActionResult> Connector()
         {
@@ -33,6 +36,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
 
         // Địa chỉ để truy vấn thumbnail
         // /el-finder-file-system/thumb
+         [Authorize(Roles = "admin,Quanlyfile")]
         [Route("/file-manager-thumb/{hash}")]
         public async Task<IActionResult> Thumbs(string hash)
         {

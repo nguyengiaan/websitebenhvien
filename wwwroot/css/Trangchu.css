@@ -1196,6 +1196,7 @@ body {
         margin: 0 8px;
         vertical-align: middle;
     }
+ 
 }
 
 
@@ -1213,8 +1214,26 @@ body {
   }
 }
 
-@media (max-width: 576px) {
-  .navbar-toggler {
-    padding: 4px 8px;
-  }
+
+
+@media (min-width: 750px) and (max-width: 910px) {
+    #logo-container {
+        display: flex;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100%;
+    }
+    #logo-img{
+      padding-left: 200px;
+    }
+    #contact-link{
+      width: 100% !important;
+      flex-grow: 1!important;
+    
+
+    }
+    .link-contact{
+      font-size: 12px !important;
+    }
+   
 }

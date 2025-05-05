@@ -15,7 +15,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             _allinone = allinone;
         }
         // controller danh mục sản phẩm
-     
+        [Authorize(Roles = "admin,Danhmucsanpham")]
         [HttpPost]
         public async Task<IActionResult> AddCatogery(CategorynewsVM categorynews)
         {
@@ -40,7 +40,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // danh sách danh mục tin tức
-            [Authorize(Roles = "admin,Danhmucbaiviet")]
+        [Authorize(Roles = "admin,Danhmucbaiviet")]
         [HttpGet]
         public async Task<IActionResult> ListCatogeryNews()
         {
@@ -55,6 +55,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // xóa danh mục
+        [Authorize(Roles = "admin,Danhmucbaiviet")]
         [HttpPost]
         public async Task<IActionResult> DeleteCatogery(string id)
         {
@@ -201,6 +202,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // sản phẩm 
+        [Authorize(Roles = "admin,Sanpham")]
         [HttpPost]
         public async Task<IActionResult> AddProduct(ProductVM product)
         {
@@ -223,6 +225,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+
         [HttpGet]
         public async Task<IActionResult> ListProduct()
         {
@@ -236,7 +239,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
-
+        [Authorize(Roles = "admin,Sanpham")]
         [HttpPost]
         public async Task<IActionResult> DeleteProduct(string id)
         {
@@ -249,7 +252,9 @@ namespace websitebenhvien.Areas.Admin.Controllers
             {
                 return Json(new { status = false, message = ex.Message });
             }
+
         }
+        [Authorize(Roles = "admin,Sanpham")]
         [HttpPost]
         public async Task<IActionResult> GetProductById(string id)
         {
@@ -263,6 +268,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+        [Authorize(Roles = "admin,Sanpham")]
         [HttpPost]
         public async Task<IActionResult> UpdatestatusPro(string id)
         {
@@ -276,12 +282,14 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Countdashboard()
         {
             var data = await _allinone.Countdashboard();
             return Json(new { status = true, data=data   });
         }
+        [Authorize(Roles = "admin,Baiviet")]
         [HttpPost]
         public async Task<IActionResult> UpdateStatusNews(int id)
         {
@@ -295,6 +303,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+ 
         [HttpGet]
         public async Task<IActionResult> ListService()
         {
@@ -321,6 +330,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+        
         [HttpGet]
         public async Task<IActionResult> ListShareCustomer()
         {

@@ -8,128 +8,86 @@
 {
     <link rel="stylesheet" href="~/lib/jqueryui/themes/base/theme.css" />
     <link rel="stylesheet" href="~/lib/jqueryui/themes/base/jquery-ui.css" />
-    <link rel="stylesheet" href="~/lib/elfinder/css/elfinder.full.css" />
-    <link rel="stylesheet" href="~/lib/elfinder/css/theme.min.css" />
+    <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.min.css" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
-    <script src="~/lib/elfinder/js/elfinder.min.js"></script>
-    <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.min.css" />
     <script src="~/lib/summernote/summernote-bs4.min.js"></script>
 }
 
 <script>
 (function (factory) {
-        if (typeof define === 'function' && define.amd) {
-            define(['jquery'], factory);
-        } 
-        else if (typeof module === 'object' && module.exports) {
-            module.exports = factory(require('jquery'));
-        } else {
-            factory(window.jQuery);
-        }
-    }(function ($) {
-      $.extend($.summernote.plugins, {
-            'elfinder': function (context) {
-                var self = this;
-                var ui = $.summernote.ui;
-                context.memo('button.elfinder', function () {
-                    var button = ui.button({
-                        contents: '<i class="note-icon-picture"/>',
-                        tooltip: 'Quản lý file',
-                        click: function () {
-                            elfinderDialog(context); 
-                        }
-                    });
-                    return button.render();
-                });
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery'], factory);
+    } 
+    else if (typeof module === 'object' && module.exports) {
+        module.exports = factory(require('jquery'));
+    } else {
+        factory(window.jQuery);
+    }
+}(function ($) {
+    $.extend($.summernote.plugins, {
+        'imageManager': function (context) {
+            var ui = $.summernote.ui;
 
-                this.destroy = function () {
-                    if(this.$panel) {
-                        this.$panel.remove();
-                        this.$panel = null;
+            context.memo('button.imageManager', function () {
+                var button = ui.button({
+                    contents: '<i class="note-icon-picture"/>',
+                    tooltip: 'Chèn ảnh',
+                    click: function () {
+                        // Tạo input file ẩn
+                        var fileInput = document.createElement('input');
+                        fileInput.type = 'file';
+                        fileInput.accept = 'image/*';
+                        fileInput.multiple = false;
+
+                        fileInput.onchange = function (e) {
+                            var file = e.target.files[0];
+                            if (file) {
+                                var reader = new FileReader();
+                                reader.onload = function (event) {
+                                    // Chèn ảnh vào editor
+                                    context.invoke('editor.insertImage', event.target.result, function ($image) {
+                                        $image.css('max-width', '100%');
+                                    });
+                                };
+                                reader.readAsDataURL(file);
+                            }
+                        };
+
+                        // Kích hoạt click
+                        fileInput.click();
                     }
-                };
-            }
-      
-        });
-    }));
+                });
+                return button.render();
+            });
 
-function elfinderDialog(editor) {
-    var fm = $('<div/>').dialogelfinder({
-        url: "@Url.Action("Connector", "Filemanager")",
-        lang: 'vi',
-        width: 850,
-        height: 450,
-        destroyOnClose: true,
-        getFileCallback: function(file, fm) {
-            var url = file.url;
-            var ext = file.name.split('.').pop().toLowerCase();
-            
-            try {
-                if(['mp4', 'webm', 'ogg'].indexOf(ext) > -1) {
-                    var videoHtml = '<p><iframe frameborder="0" src="' + url + '" width="640" height="360" class="note-video-clip"></iframe><br></p>';
-                    editor.invoke('editor.pasteHTML', videoHtml);
-                } else {
-                    editor.invoke('editor.insertImage', url, function($image) {
-                        $image.css('max-width', '100%');
-                    });
-                }
-            } catch(e) {
-                console.error('Error inserting content:', e);
-            }
-            
-            // Close dialog properly
-            try {
-                fm.dialog('close');
-                fm.destroy();
-            } catch(e) {
-                console.error('Error closing dialog:', e);
-            }
-        },
-        commandsOptions: {
-            getfile: {
-                oncomplete: 'close',
-                folders: false
-            }
+            this.destroy = function () {
+                // Clean up nếu cần
+            };
         }
-    }).dialogelfinder('instance');
-}
+    });
+}));
 
-$(document).ready(function() {
+$(document).ready(function () {
     try {
         $("@Model.IDEditor").summernote({
             height: @Model.Height,
             toolbar: @Html.Raw(Model.Toolbar),
             focus: true,
             callbacks: {
-                onImageUpload: function(files) {
-                    for(let i=0; i < files.length; i++) {
+                onImageUpload: function (files) {
+                    for (let i = 0; i < files.length; i++) {
                         let reader = new FileReader();
-                        reader.onloadend = function() {
+                        reader.onloadend = function () {
                             $("@Model.IDEditor").summernote('insertImage', reader.result);
-                        }
+                        };
                         reader.readAsDataURL(files[i]);
                     }
-                },
-                onDestroy: function() {
-                    // Clean up any remaining elfinder instances
-                    $('.elfinder').each(function() {
-                        try {
-                            $(this).elfinder('destroy');
-                        } catch(e) {
-                            console.error('Error destroying elfinder:', e);
-                        }
-                    });
                 }
             }
         });
-    } catch(e) {
+    } catch (e) {
         console.error('Error initializing Summernote:', e);
     }
 });
 </script>
-<style>
-    .elfinder.dialogelfinder {
-        z-index: 999999 !important;
-    }
-</style>

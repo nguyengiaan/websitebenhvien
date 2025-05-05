@@ -114,7 +114,7 @@ namespace websitebenhvien.Service.Reponser
                     // Xử lý tệp tin nếu có
                     if (news.formFile != null)
                     {
-                        var result = _uploadfile.SaveMedia(news.formFile);
+                        var result = await _uploadfile.SaveMedia(news.formFile);
                         if (result.Item1 == 1 && data.Url != null)
                         {
                             _uploadfile.DeleteMedia(data.Url); // Xóa ảnh cũ
@@ -130,7 +130,7 @@ namespace websitebenhvien.Service.Reponser
                     // Xử lý tệp tin nếu có
                     if (news.formFile != null)
                     {
-                        var result = _uploadfile.SaveMedia(news.formFile);
+                        var result = await _uploadfile.SaveMedia(news.formFile);
                         if (result.Item1 == 1)
                         {
                             data.Url = result.Item2;
@@ -272,7 +272,7 @@ namespace websitebenhvien.Service.Reponser
                     var data = await _context.Categoryproducts.FindAsync(category.Id_Categoryproduct);
                     if (category.formFile != null)
                     {
-                        var result = _uploadfile.SaveMedia(category.formFile);
+                        var result =await _uploadfile.SaveMedia(category.formFile);
                         if (result.Item1 == 1)
                         {
                             if (data.url != null)
@@ -304,7 +304,7 @@ namespace websitebenhvien.Service.Reponser
                     };
                     if (category.formFile != null)
                     {
-                        var result = _uploadfile.SaveMedia(category.formFile);
+                        var result =await _uploadfile.SaveMedia(category.formFile);
                         if (result.Item1 == 1)
                         {
                             data.url = result.Item2;
@@ -381,111 +381,111 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
-        public async Task<bool> AddProduct(ProductVM product)
-        {
-            try
-            {
-                 if(product.Id_product != null)
-                {
-                    var data =await _context.Products.FindAsync(product.Id_product);
-                    if (product.ImageThumnail != null)
-                    {
-                        var result = _uploadfile.SaveMedia(product.ImageThumnail);
-                        if (result.Item1 == 1)
-                        {
-                            if (data.url != null)
-                            {
-                                _uploadfile.DeleteMedia(data.url);
-                            }
-                            data.url = result.Item2;
-                        }
-                    }
-                    if (product.Images != null)
-                    {
-                        // Xóa ảnh cũ
-                        var existingImages = await _context.Proimages
-                            .Where(x => x.Id_product == product.Id_product)
-                            .ToListAsync();
+        // public async Task<bool> AddProduct(ProductVM product)
+        // {
+        //     try
+        //     {
+        //          if(product.Id_product != null)
+        //         {
+        //             var data =await _context.Products.FindAsync(product.Id_product);
+        //             if (product.ImageThumnail != null)
+        //             {
+        //                 var result =await _uploadfile.SaveMedia(product.ImageThumnail);
+        //                 if (result.Item1 == 1)
+        //                 {
+        //                     if (data.url != null)
+        //                     {
+        //                         _uploadfile.DeleteMedia(data.url);
+        //                     }
+        //                     data.url = result.Item2;
+        //                 }
+        //             }
+        //             if (product.Images != null)
+        //             {
+        //                 // Xóa ảnh cũ
+        //                 var existingImages = await _context.Proimages
+        //                     .Where(x => x.Id_product == product.Id_product)
+        //                     .ToListAsync();
                             
-                        foreach (var img in existingImages)
-                        {
-                            _uploadfile.DeleteMedia(img.url);
-                        }
-                        _context.Proimages.RemoveRange(existingImages);
+        //                 foreach (var img in existingImages)
+        //                 {
+        //                     _uploadfile.DeleteMedia(img.url);
+        //                 }
+        //                 _context.Proimages.RemoveRange(existingImages);
 
-                        // Thêm ảnh mới
-                        var newImages = product.Images
-                            .Select(img => _uploadfile.SaveMedia(img))
-                            .Where(result => result.Item1 == 1)
-                            .Select(result => new Proimages
-                            {
-                                Id_proimages = Guid.NewGuid().ToString(),
-                                Id_product = product.Id_product,
-                                url = result.Item2
-                            });
+        //                 // Thêm ảnh mới
+        //                 var newImages = product.Images
+        //                     .Select(img => _uploadfile.SaveMedia(img))
+        //                     .Where(result => result.Result.Item1 == 1)
+        //                     .Select(result => new Proimages
+        //                     {
+        //                         Id_proimages = Guid.NewGuid().ToString(),
+        //                         Id_product = product.Id_product,
+        //                         url = result.Item2
+        //                     });
 
-                        await _context.Proimages.AddRangeAsync(newImages);
-                        await _context.SaveChangesAsync();
-                    }
+        //                 await _context.Proimages.AddRangeAsync(newImages);
+        //                 await _context.SaveChangesAsync();
+        //             }
 
-                    data.Product_Id = product.Product_Id;
-                    data.Title = product.Title;
-                    data.Alias_url = product.Alias_url;
-                    data.Description = product.Description;
-                    data.Id_Categoryproduct = product.Id_Categoryproduct;
-                    await _context.SaveChangesAsync();
-                    return true;
+        //             data.Product_Id = product.Product_Id;
+        //             data.Title = product.Title;
+        //             data.Alias_url = product.Alias_url;
+        //             data.Description = product.Description;
+        //             data.Id_Categoryproduct = product.Id_Categoryproduct;
+        //             await _context.SaveChangesAsync();
+        //             return true;
 
-                }
+        //         }
 
-                else
-                {
-                    var data = new Product()
-                    {
-                        Id_product = Guid.NewGuid().ToString(),
-                        Product_Id = product.Product_Id,
-                        Title = product.Title,
-                        Alias_url = product.Alias_url,
-                        Description = product.Description,
-                        Createat = DateTime.Now,
-                        Id_Categoryproduct = product.Id_Categoryproduct
-                    };
-                    if (product.ImageThumnail != null)
-                    {
-                        var result = _uploadfile.SaveMedia(product.ImageThumnail);
-                        if (result.Item1 == 1)
-                        {
-                            data.url = result.Item2;
-                        }
-                    }
-                    if (product.Images != null)
-                    {
-                        foreach (var item in product.Images)
-                        {
-                            var result = _uploadfile.SaveMedia(item);
-                            if (result.Item1 == 1)
-                            {
-                                var data1 = new Proimages()
-                                {
-                                    Id_proimages = Guid.NewGuid().ToString(),
-                                    Id_product = data.Id_product,
-                                    url = result.Item2
-                                };
-                                _context.Proimages.Add(data1);
-                            }
-                        }
-                    }
-                    _context.Products.Add(data);
-                    await _context.SaveChangesAsync();
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
+        //         else
+        //         {
+        //             var data = new Product()
+        //             {
+        //                 Id_product = Guid.NewGuid().ToString(),
+        //                 Product_Id = product.Product_Id,
+        //                 Title = product.Title,
+        //                 Alias_url = product.Alias_url,
+        //                 Description = product.Description,
+        //                 Createat = DateTime.Now,
+        //                 Id_Categoryproduct = product.Id_Categoryproduct
+        //             };
+        //             if (product.ImageThumnail != null)
+        //             {
+        //                 var result =await _uploadfile.SaveMedia(product.ImageThumnail);
+        //                 if (result.Item1 == 1)
+        //                 {
+        //                     data.url = result.Item2;
+        //                 }
+        //             }
+        //             if (product.Images != null)
+        //             {
+        //                 foreach (var item in product.Images)
+        //                 {
+        //                     var result = _uploadfile.SaveMedia(item);
+        //                     if (result.Item1 == 1)
+        //                     {
+        //                         var data1 = new Proimages()
+        //                         {
+        //                             Id_proimages = Guid.NewGuid().ToString(),
+        //                             Id_product = data.Id_product,
+        //                             url = result.Item2
+        //                         };
+        //                         _context.Proimages.Add(data1);
+        //                     }
+        //                 }
+        //             }
+        //             _context.Products.Add(data);
+        //             await _context.SaveChangesAsync();
+        //             return true;
+        //         }
+        //         return false;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return false;
+        //     }
+        // }
 
         public async Task<List<ProductVM>> ListProduct()
         {
@@ -728,7 +728,12 @@ namespace websitebenhvien.Service.Reponser
             }
         }
 
-      
+        public Task<bool> AddProduct(ProductVM product)
+        {
+            throw new NotImplementedException();
+        }
+
+
         // danh mục catogery post
 
     }

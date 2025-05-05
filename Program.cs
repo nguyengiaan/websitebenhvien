@@ -13,7 +13,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using websitebenhvien.Helper;
 using AspNetCoreRateLimit;
+using elFinder.NetCore;
 using websitebenhvien.Middleware;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,6 +89,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
             options.SlidingExpiration = true;
         });
 
+
 var app = builder.Build();
 app.UseStatusCodePages(context =>
 {
@@ -120,6 +123,9 @@ app.UseStaticFiles(
 );
 
 app.UseHttpsRedirection();
+
+
+app.UseHsts(); 
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
@@ -149,4 +155,3 @@ app.MapControllerRoute(
 
 
 app.Run();
-

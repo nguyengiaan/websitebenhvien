@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using websitebenhvien.Data;
+using websitebenhvien.Helper;
 using websitebenhvien.Models.Enitity;
 using websitebenhvien.Models.EnitityVM;
 using websitebenhvien.Service.Interface;
@@ -13,15 +14,14 @@ namespace websitebenhvien.Service.Reponser
     {
         private readonly MyDbcontext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly Uploadfile _uploadfile;
 
-        public PageMainReponser(MyDbcontext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment hostingEnvironment)
+        public PageMainReponser(Uploadfile uploadfile,MyDbcontext context, UserManager<ApplicationUser> userManager, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
             _userManager = userManager;
-            _httpContextAccessor = httpContextAccessor;
-            _hostingEnvironment = hostingEnvironment;
+            _uploadfile = uploadfile;   
+        
 
         }
         public async Task<Boolean> Editheader(HeaderVM header)
@@ -31,8 +31,8 @@ namespace websitebenhvien.Service.Reponser
                 var headerEntity = await _context.Header.FirstOrDefaultAsync();
                 if (header.formFile != null)
                 {
-                    var a = DeleteMedia(headerEntity.logo);
-                    var md = SaveMedia(header.formFile);
+                    var a =_uploadfile. DeleteMedia(headerEntity.logo);
+                    var md = await _uploadfile.SaveMedia(header.formFile);
                     if (md.Item1 == 1)
                     {
                         headerEntity.logo = md.Item2;
@@ -88,66 +88,13 @@ namespace websitebenhvien.Service.Reponser
                 return null;
             }
         }
-        public Tuple<int, string> SaveMedia(IFormFile imageFile)
-        {
-            try
-            {
-                var contentPath = this._hostingEnvironment.ContentRootPath;
-                // path = "c://projects/productminiapi/uploads" ,not exactly something like that
-                var path = Path.Combine(contentPath, "Uploads");
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                // Check the allowed extenstions
-                var ext = Path.GetExtension(imageFile.FileName);
-                var allowedExtensions = new string[] { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv" };
-                if (!allowedExtensions.Contains(ext))
-                {
-                    string msg = string.Format("Only {0} extensions are allowed", string.Join(",", allowedExtensions));
-                    return new Tuple<int, string>(0, msg);
-                }
-                string uniqueString = Guid.NewGuid().ToString();
-                var fileName = Path.GetFileName(imageFile.FileName);
-                // we are trying to create a unique filename here
-                var newFileName = Guid.NewGuid().ToString().Substring(0, 4) + "__" + fileName;
-                var fileWithPath = Path.Combine(path, newFileName);
-                var stream = new FileStream(fileWithPath, FileMode.Create);
-                imageFile.CopyTo(stream);
-                stream.Close();
-                return new Tuple<int, string>(1, newFileName);
-            }
-            catch (Exception ex)
-            {
-                return new Tuple<int, string>(0, "Error has occured");
-            }
-        }
-        public bool DeleteMedia(string fileName)
-        {
-            try
-            {
-                var contentPath = this._hostingEnvironment.ContentRootPath;
-                var path = Path.Combine(contentPath, "Uploads");
-                var filePath = Path.Combine(path, fileName);
-
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
+    
 
         public async Task<bool> AddSlide(SlideVM slide)
         {
             try
             {
-                var md = SaveMedia(slide.formFile);
+                var md = await _uploadfile.SaveMedia(slide.formFile);
 
                 var slide1 = new Slidepage();
                 slide1.Id_slidepage = Guid.NewGuid().ToString();
@@ -190,7 +137,7 @@ namespace websitebenhvien.Service.Reponser
                 var slide = await _context.Slidepage.FindAsync(id_slidepage);
                 if (slide != null)
                 {
-                    var a = DeleteMedia(slide.slide);
+                    var a =_uploadfile.DeleteMedia(slide.slide);
                     _context.Slidepage.Remove(slide);
                     await _context.SaveChangesAsync();
                     return true;
@@ -242,8 +189,8 @@ namespace websitebenhvien.Service.Reponser
                 var data = await _context.Slidepage.FindAsync(slide.id_slidepage);
                 if (slide.formFile != null)
                 {
-                    var a = DeleteMedia(data.slide);
-                    var md = SaveMedia(slide.formFile);
+                    var a =_uploadfile.DeleteMedia(data.slide);
+                    var md = await _uploadfile.SaveMedia(slide.formFile);
                     if (md.Item1 == 1)
                     {
                         data.slide = md.Item2;
@@ -317,7 +264,7 @@ namespace websitebenhvien.Service.Reponser
                 data.Status = true;
                 if (logo.formFile != null)
                 {
-                    var md = SaveMedia(logo.formFile);
+                    var md =await _uploadfile.SaveMedia(logo.formFile);
                     if (md.Item1 == 1)
                     {
                         data.Logo = md.Item2;
@@ -356,7 +303,7 @@ namespace websitebenhvien.Service.Reponser
                 var data = await _context.Logocustomer.FindAsync(id_logocustomer);
                 if (data != null)
                 {
-                    var a = DeleteMedia(data.Logo);
+                    var a = _uploadfile.DeleteMedia(data.Logo);
                     _context.Logocustomer.Remove(data);
                     await _context.SaveChangesAsync();
                     return true;
@@ -395,8 +342,8 @@ namespace websitebenhvien.Service.Reponser
                 var data = await _context.Logocustomer.FindAsync(logo.Id_logo);
                 if (logo.formFile != null)
                 {
-                    var a = DeleteMedia(data.Logo);
-                    var md = SaveMedia(logo.formFile);
+                    var a = _uploadfile. DeleteMedia(data.Logo);
+                    var md = await _uploadfile.SaveMedia(logo.formFile);
                     if (md.Item1 == 1)
                     {
                         data.Logo = md.Item2;
@@ -428,7 +375,7 @@ namespace websitebenhvien.Service.Reponser
                 data.aliasurl = share.aliasurl;
                 if (share.File != null)
                 {
-                    var md = SaveMedia(share.File);
+                    var md =await _uploadfile. SaveMedia(share.File);
                     if (md.Item1 == 1)
                     {
                         data.image = md.Item2;
@@ -488,7 +435,7 @@ namespace websitebenhvien.Service.Reponser
                 var data = await _context.Sharecustomers.FindAsync(id_share);
                 if (data != null)
                 {
-                    var a = DeleteMedia(data.image);
+                    var a =_uploadfile. DeleteMedia(data.image);
                     _context.Sharecustomers.Remove(data);
                     await _context.SaveChangesAsync();
                     return true;
@@ -508,8 +455,8 @@ namespace websitebenhvien.Service.Reponser
                 var data = await _context.Sharecustomers.FindAsync(share.Id_share);
                 if (share.File != null)
                 {
-                    var a = DeleteMedia(data.image);
-                    var md = SaveMedia(share.File);
+                    var a =_uploadfile. DeleteMedia(data.image);
+                    var md =await _uploadfile. SaveMedia(share.File);
                     if (md.Item1 == 1)
                     {
                         data.image = md.Item2;

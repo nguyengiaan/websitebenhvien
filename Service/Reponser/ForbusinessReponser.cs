@@ -29,7 +29,7 @@ namespace websitebenhvien.Service.Reponser
                 data.link_Forbusiness_1 = forbusiness.link_Forbusiness_1;
                 if(forbusiness.formFile != null)
                 {
-                  var file= _uploadfile.SaveMedia(forbusiness.formFile);
+                  var file= await _uploadfile.SaveMedia(forbusiness.formFile);
                     if(file.Item1== 1)
                     {
                         _uploadfile.DeleteMedia(data.Icon_Forbusiness);
@@ -51,7 +51,7 @@ namespace websitebenhvien.Service.Reponser
                 forbusiness1.link_Forbusiness_1 = forbusiness.link_Forbusiness_1;
                 if (forbusiness.formFile != null)
                 {
-                    var file = _uploadfile.SaveMedia(forbusiness.formFile);
+                    var file = await _uploadfile.SaveMedia(forbusiness.formFile);
                     if (file.Item1 == 1)
                     {
                         forbusiness1.Icon_Forbusiness = file.Item2;

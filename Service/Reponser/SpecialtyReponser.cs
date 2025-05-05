@@ -44,7 +44,7 @@ namespace websitebenhvien.Service.Reponser
                     // Xử lý hình ảnh nếu có
                     if (specialty.formFile != null)
                     {
-                        var result =_upload.SaveMedia(specialty.formFile);
+                        var result = await _upload.SaveMedia(specialty.formFile);
                         if (result.Item1 == 1)
                         {
                             _upload.DeleteMedia(data.Thumnail);
@@ -63,7 +63,7 @@ namespace websitebenhvien.Service.Reponser
                     // Xử lý hình ảnh nếu có
                     if (specialty.formFile != null)
                     {
-                        var result = _upload.SaveMedia(specialty.formFile);
+                        var result = await _upload.SaveMedia(specialty.formFile);
                         if (result.Item1 == 1)
                         {
                             newSpecialty.Thumnail = result.Item2;
@@ -180,7 +180,7 @@ namespace websitebenhvien.Service.Reponser
         
         if (doctor.ImageFile != null)
         {
-            var (success, fileName) = _upload.SaveMedia(doctor.ImageFile);
+            var (success, fileName) = await _upload.SaveMedia(doctor.ImageFile);
             if (success == 1)
             {
                 if (existingDoctor != null && existingDoctor.Thumnail != "avt.jpg")
