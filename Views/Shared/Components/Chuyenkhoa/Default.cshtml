@@ -1,0 +1,31 @@
+@model IEnumerable<websitebenhvien.Models.EnitityVM.SpecialtyVM>
+
+@foreach (var specialty in Model)
+{
+    <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="@(@Model.ToList().IndexOf(specialty) * 100)">
+        <div class="card specialty-card h-100 border-0 rounded-4">
+            <div class="card-body p-4 d-flex flex-column">
+                <div class="specialty-icon mb-4">
+                    <div class="icon-circle position-relative overflow-hidden" style="width: 100px; height: 100px; margin: 0 auto; transform-style: preserve-3d; perspective: 1000px; transition: transform 0.5s;">
+                        <div class="icon-3d-container position-relative w-100 h-100" style="transform-style: preserve-3d; animation: float 6s ease-in-out infinite;">
+                            <div class="icon-front position-absolute w-100 h-100" style="transform: translateZ(30px); border-radius: 50%; background: linear-gradient(145deg, #2196f3, #1976d2); box-shadow: 0 15px 35px rgba(0,0,0,0.2);">
+                                <img src="/Resources/@specialty.Thumnail" alt="@specialty.Title" class="position-absolute top-50 start-50 translate-middle rounded-circle" style="width: 80%; height: 80%; object-fit: cover; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));">
+                            </div>
+                            <div class="icon-glow position-absolute w-100 h-100" style="border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%); transform: translateZ(10px);">
+                            </div>
+                            <div class="icon-shadow position-absolute w-100 h-100" style="border-radius: 50%; background: rgba(0,0,0,0.1); transform: translateZ(-30px) scale(0.9); filter: blur(20px);">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h4 class="card-title mb-3 fw-bold text-primary text-center">@specialty.Title</h4>
+              
+                <div class="mt-auto">
+                    <a href="@specialty.Alias_url" class="btn btn-primary btn-lg rounded-pill px-4 w-100">
+                        <i class="fas fa-info-circle me-2"></i>Xem chi tiết
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}

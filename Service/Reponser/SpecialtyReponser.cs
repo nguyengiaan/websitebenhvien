@@ -276,6 +276,7 @@ namespace websitebenhvien.Service.Reponser
                     Title = x.Title,
                     Alias_url = x.Alias_url,
                     Thumnail = x.Thumnail,
+                 
                 }).AsNoTracking().ToListAsync();
                 return data;
             }catch(Exception e)
