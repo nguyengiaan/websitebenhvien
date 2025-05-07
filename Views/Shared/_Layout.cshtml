@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <!-- Open Graph tags for social media sharing -->
+    <link rel="icon" type="image/png" href="/Images/Logo-rm.png" />
     <meta property="og:title" content="@ViewData["Title"]" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="@Context.Request.GetDisplayUrl()" />
@@ -13,10 +14,7 @@
     <!-- Meta tags for SEO -->
     <meta name="description" content="@ViewData["Description"]" />
     <meta name="keywords" content="@ViewData["Keywords"]" />
-
-
     <meta name="robots" content="index, follow" />
-
     <!-- Lazy load CSS -->
     <link rel="preload" href="~/lib/bootstrap/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"></noscript>

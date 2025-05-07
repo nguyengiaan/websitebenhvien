@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using websitebenhvien.Models.EnitityVM;
 using websitebenhvien.Service.Interface;
 
 namespace websitebenhvien.ViewComponents
@@ -16,38 +17,40 @@ namespace websitebenhvien.ViewComponents
             _memoryCache = memoryCache ?? throw new ArgumentNullException(nameof(memoryCache));
         }
 
-          public async Task<IViewComponentResult> InvokeAsync()
+      public async Task<IViewComponentResult> InvokeAsync()
+{
+    try
+    {
+        // Kiểm tra dữ liệu trong cache
+        if (!_memoryCache.TryGetValue(ShareCacheKey, out IEnumerable<LogocustomerVM> shareData))
         {
-            try
+            // Lấy dữ liệu từ service
+            shareData = await _allinone.ListShareCustomer();
+            
+            // Kiểm tra nếu dữ liệu null
+            if (shareData == null)
             {
-                // Kiểm tra dữ liệu trong cache
-                if (!_memoryCache.TryGetValue(ShareCacheKey, out var shareData))
-                {
-                    // Lấy dữ liệu từ service
-                    shareData = await _allinone.ListShareCustomer();
-                    if (shareData == null )
-                    {
-                        return View("Error", "No data available.");
-                    }
-
-                    // Cấu hình cache
-                    var cacheOptions = new MemoryCacheEntryOptions
-                    {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15),
-                    };
-
-                    // Lưu dữ liệu vào cache
-                    _memoryCache.Set(ShareCacheKey, shareData, cacheOptions);
-                }
-
-                // Trả về View với dữ liệu
-                return View(shareData);
+                shareData = Enumerable.Empty<LogocustomerVM>(); // hoặc xử lý phù hợp với logic của bạn
             }
-            catch (Exception ex)
+
+            // Cấu hình cache
+            var cacheOptions = new MemoryCacheEntryOptions
             {
-                // Ghi log lỗi (nếu cần) và trả về View lỗi
-                return View("Error", ex.Message);
-            }
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15),
+            };
+
+            // Lưu dữ liệu vào cache
+            _memoryCache.Set(ShareCacheKey, shareData, cacheOptions);
         }
+
+        // Trả về View với dữ liệu
+        return View(shareData);
+    }
+    catch (Exception ex)
+    {
+        // Log the exception here if needed
+        return View(Enumerable.Empty<LogocustomerVM>()); // Trả về collection rỗng thay vì thông báo lỗi
+    }
+}
     }
 }

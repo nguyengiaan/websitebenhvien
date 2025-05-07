@@ -30,6 +30,7 @@ namespace websitebenhvien.Controllers
         {
             try
             {
+             
                 var data = await _allinone.ListCategorypost(page, pagesize, Catogery);
                 if(data.ds == null)
                 {
@@ -76,6 +77,7 @@ namespace websitebenhvien.Controllers
         {
             try
             {
+
                 var data = await _post.GetNewsByCategory(alias_url);
                 if(data != null)
                 {
