@@ -5,7 +5,9 @@
   {
      font-size: 12px !important  ;
      font-weight: bold !important;
+     
   }
+
 }
 
 /* Small devices (phones in landscape, ≥576px) */
@@ -25,19 +27,35 @@
      font-size: 16px !important  ;
         font-weight: bold !important;
   }
+  
 }
 
 /* Large devices (desktops, ≥992px) */
 @media (min-width: 992px) and (max-width: 1199.98px) {
   /* Styles for large devices */
+  .nav-item:hover .dropdown-menu {
+
+  display: block !important;
+
+}
 }
 
 /* Extra large devices (large desktops, ≥1200px) */
 @media (min-width: 1200px) and (max-width: 1399.98px) {
   /* Styles for extra large devices */
+  .nav-item:hover .dropdown-menu {
+
+  display: block !important;
+
+}
 }
 
 /* Extra extra large devices (very large screens, ≥1400px) */
 @media (min-width: 1400px) {
   /* Styles for extra extra large devices */
+  .nav-item:hover .dropdown-menu {
+
+  display: block !important;
+
+}
 }

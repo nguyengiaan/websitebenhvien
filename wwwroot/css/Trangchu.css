@@ -257,9 +257,7 @@ body {
 
 
 
-body {
-  padding-top: 160px; /* Adjust this value based on combined height of header and nav */
-}
+
 
 .goog-te-banner-frame {
   display: none !important;
@@ -720,11 +718,7 @@ body {
     top: 0 !important;
 }
 
-@media (max-width: 768px) {
-  main {
-    padding-top: 170px !important;
-  }
-}
+
 /* header */
 @keyframes moveAmbulance {
   0% { transform: translateX(0) rotate(0deg); }
@@ -780,11 +774,7 @@ body {
     transition: color 0.5s ease !important;
 }
 /* Hiển thị dropdown khi hover vào .nav-item */
-.nav-item:hover .dropdown-menu {
 
-  display: block !important;
-
-}
 .dropdown-menu a {
     color: black !important;
     font-family: var(--font-main) !important;
