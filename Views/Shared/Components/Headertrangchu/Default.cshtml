@@ -4,7 +4,7 @@
 @{
 }
 @model websitebenhvien.Models.EnitityVM.Header_trangchu
- <header class="container-fluid shadow-sm   "  style="height: 150px; background-color: #fcfeff;">
+ <header class="container-fluid shadow-sm " id="header">
         <div class="w-100 d-flex justify-content-xxl-end justify-content-xl-center justify-content-md-start border-bottom border-2 border-secondary mb-2" >
                 <ul class="menu-custom  d-flex flex-row list-unstyled m-0 p-0 w-50 " >
                    @if (Model.headers != null)
@@ -20,10 +20,10 @@
                       }
                    }
                      <li class="nav-item dropdown"></li>
-                        <a class="nav-link dropdown-toggle " href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle " href="#"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-translate pr-5"></i>Ngôn ngữ
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+                        <ul class="dropdown-menu" aria-labelledby="languageDropdown"  >
                             <li onclick="changeLanguage('vi')" ><a class="dropdown-item" href="#">Tiếng Việt</a></li>
                             <li onclick="changeLanguage('en')"><a class="dropdown-item" href="#">English</a></li>
                             <li onclick="changeLanguage('zh-CN')"><a class="dropdown-item" href="#">China</a></li>
@@ -31,23 +31,23 @@
                              <li onclick="changeLanguage('ja')"><a class="dropdown-item" href="#">Japan</a></li>
                         </ul>
                     </li>
-                
-         
                 </ul> 
         </div>
         <div class="d-flex flex-column container-xl ">
             <div class="row container-fluid d-flex align-items-center justify-content-between">
                 <div class="col-xl-2 col-md-2 col-6">
                 @foreach (var a in @Model.headers)
-                {
-                    <img src="/Resources/@a.logo" alt="Logo" class="img-fluid">
+                { 
+                    <a href="/#">
+                        <img src="/Resources/@a.logo" alt="Logo" class="img-fluid">
+                    </a>
                 }
                 </div>
                 <div class="col-xl-6 col-md-6 d-none d-md-block">
                     <form class="d-flex" role="search">
                         <input class="form-control me-2 " type="search" placeholder="Tìm kiếm..." aria-label="Search">
-                        <button class="btn btn-outline-danger" type="submit">
-                            <i class="bi bi-search"></i>
+                        <button id="search" class="btn btn-outline-bg-dark bg-danger" >
+                            <i class="bi bi-search text-white"></i>
                         </button>
                     </form>
                 </div>
@@ -56,7 +56,7 @@
                       @foreach (var a in Model.headers)
                       {
                           <span id="capcuu" class="badge bg-danger fs-5">
-                              <i class="bi bi-hospital fs-4"></i>
+                              <i class="bi bi-bus-front-fill"></i>
                               CẤP CỨU 24/7: @a.telephone
                           </span>
                       }
@@ -65,45 +65,48 @@
             </div>
 
 </div>
-<nav class="navbar navbar-expand-lg navbar-light " style="background-color: #fcfeff; width: 100% !important;">
-    <div class="container-fluid px-0">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse " id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 w-100 d-flex  justify-content-xl-center justify-content-lg-center  justify-content-md-center ">
-                @if (Model.menus != null)
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #fcfeff !important; ">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse " id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 w-100 d-flex  justify-content-xl-center justify-content-lg-center  justify-content-md-center ">
+            @if (Model.menus != null)
+            {
+                @foreach (var menu in Model.menus.Where(m => m.Status == true).OrderBy(m => m.Order_menu))
                 {
-@foreach (var menu in Model.menus.Where(m => m.Status == true).OrderBy(m => m.Order_menu))
-{
-    var hasSubMenu = menu.Menu?.Any() == true;
-    <li class="nav-item @(hasSubMenu ? "dropdown" : "")">
-        <a class="nav-link @(hasSubMenu ? "dropdown-toggle" : "")"
-           href="@(hasSubMenu ? "#" : menu.Link_menu)"
-           id="menu@(menu.Id_menu)"
-           @(hasSubMenu ? "role=\"button\" data-bs-toggle=\"dropdown\" aria-expanded=\"false\"" : "")>
-            @menu.Title_menu
-        </a>
-        @if (hasSubMenu)
-        {
-            <ul class="dropdown-menu" aria-labelledby="menu@(menu.Id_menu)" >
-                @foreach (var submenu in menu.Menu.OrderBy(sm => sm.Order_menu))
-                {
-                    <li>
-                        <a class="dropdown-item" href="@submenu.Link_MenuChild" title="@submenu.Title_MenuChild">
-                            @submenu.Title_MenuChild
-                        </a>
-                    </li>
+                      var hasSubMenu = menu.Menu?.Any() == true;
+                      @if (!hasSubMenu)
+                      {
+                        <li class="nav-item">
+                          <a class="nav-link" href="@menu.Link_menu">@menu.Title_menu</a>
+                        </li>
+                      }
+                      else
+                      {
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="@menu.Link_menu" id="menu@(menu.Id_menu)" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            @menu.Title_menu
+                          </a>
+                        <ul class="dropdown-menu" aria-labelledby="menu@(menu.Id_menu)" >
+                            @foreach (var submenu in menu.Menu.OrderBy(sm => sm.Order_menu))
+                            {
+                                <li>
+                                    <a class="dropdown-item" href="@submenu.Link_MenuChild" title="@submenu.Title_MenuChild">
+                                        @submenu.Title_MenuChild
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+
+                        </li>
+                      }  
                 }
-            </ul>
-        }
-    </li>
-}
-}
-            </ul>
-        </div>
+            }
+      </ul>
     </div>
+  </div>
 </nav>
 <header>
 
-   

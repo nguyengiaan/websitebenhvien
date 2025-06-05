@@ -4,33 +4,20 @@
 <div class="container-fluid p-0" style="padding-left: 10px!important;">
     <div class="row g-4">
         <!-- Carousel Section -->
-        <div class="col-lg-8">
-            <div class="card shadow rounded-4 border-0">
-                <div id="mainCarousel" class="carousel slide rounded-4 overflow-hidden" data-bs-ride="carousel">
-                    <div class="carousel-inner" id="carouselContainer">
+        <div class="col-lg-8 col-12">
+            <div class="card border-0">
+                <div id="mainCaroushadowsel" class="carousel slide overflow-hidden" data-bs-ride="carousel">
                              @await Component.InvokeAsync("Getslide")
-                    </div>
-             <button class="carousel-control-prev custom-carousel-btn" type="button" data-bs-target="#mainCarousel" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-</button>
-<button class="carousel-control-next custom-carousel-btn" type="button" data-bs-target="#mainCarousel" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-</button>
                 </div>
-
-
-       
             </div>
         </div>
 
         <!-- News Section -->
-        <div class="col-lg-4" style="padding-right: 50px!important;">
-            <div class="card shadow rounded-4 border-0 h-100 news-card" style="height: 371px;">
+        <div class="col-lg-4 col-12">
+            <div class="card shadow rounded-4 border-0 h-100 news-card" >
                 <div class="card-header bg-primary text-white py-3 rounded-top-4 d-flex align-items-center" style="background-color: #ffffff!important;">
-                    <i class="fas fa-newspaper me-2 fa-lg" style="color: #0095d9;"></i>
-                    <h5 class="mb-0 fw-bold" style="font-family: Roboto:  !important; font-size: 15px; color: #0095d9;">TIN TỨC VÀ SỰ KIỆN</h5>
+                    <i class="fas fa-newspaper me-2 fa-lg text-danger" ></i>
+                    <h5 class="mb-0 fw-bold text-danger fs-6" >TIN TỨC VÀ SỰ KIỆN</h5>
                 </div>
                 <div class="card-body p-0" style="background-color: #ffffff!important; border-radius: 10px; height: 300px; overflow-y: auto;">
                     <div class="list-group list-group-flush" style="max-height: 300px;">
@@ -327,7 +314,7 @@
         </div>
     </div>
 </div>
-<section class="features-section py-5 fade-in" style="background-color: #e6f2ff;">
+<!-- <section class="features-section py-5 fade-in" style="background-color: #e6f2ff;">
     <div class="container">
         <div class="text-center mb-4">
             <h2 class="text-primary fw-bold">SẢN PHẨM NỔI BẬT</h2>
@@ -337,7 +324,7 @@
         </div>
 
     </div>
-</section>
+</section> -->
 <section class="features-section py-5 fade-in">
     <div class="container">
         <div class="text-center mb-4">

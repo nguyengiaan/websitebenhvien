@@ -1,60 +1,27 @@
 @model IEnumerable<websitebenhvien.Models.Enitity.Slidepage>
 
-<div id="carouselContainer" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        @if (Model != null && Model.Any())
+<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    @if (Model != null && Model.Any())
+    {
+        var sortedSlides = Model.Where(s => s.status==true).OrderBy(s => s.sort).ToList();
+         for (int i = 0; i < sortedSlides.Count; i++)
         {
-            var sortedSlides = Model.Where(s => s.status).OrderBy(s => s.sort).ToList();
-            for (int i = 0; i < sortedSlides.Count; i++)
-            {
-                var slide = sortedSlides[i];
-                var isActive = i == 0 ? "active" : "";
-                <div class="carousel-item @isActive">
-                    <a href="@(!string.IsNullOrEmpty(slide.link) ? slide.link : "#")" class="text-decoration-none">
-                        <div class="slide-container rounded-4 overflow-hidden position-relative d-flex align-items-center justify-content-center" 
-                             style="height: auto; width: 100%; background-color: white;">
-                            <div class="slide-item position-relative" 
-                                 style="width: 100%; height: 100%; transition: all 0.3s ease; cursor: pointer;">
-                                <img src="/Resources/@slide.slide" 
-                                     class="w-100 h-100 anh-panel" 
-                                     alt="@slide.title"
-                           
-                                     decoding="sync" 
-                                     loading="lazy"
-                                   >
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            }
-        }
-        else
-        {
-            <div class="carousel-item active">
-                <p class="text-center">Không có dữ liệu slide hợp lệ.</p>
+            var slide = sortedSlides[i];
+            <div class="carousel-item @(i == 0 ? "active" : "")">
+            <a href="@slide.link" class="text-decoration-none">
+                <img src="/Resources/@slide.slide" class="d-block w-100" alt="@slide.title" >
+            </a>
             </div>
         }
-    </div>
-
-</div>
-<style>
-    .anh-panel{
-        object-fit: contain; cursor: pointer; border-radius: 6px; 
-        image-rendering: -webkit-optimize-contrast;
-        image-rendering: crisp-edges;
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
-       transform: translateZ(0);
-        -webkit-font-smoothing: subpixel-antialiased;
     }
-</style>
-@* 
-<script>
-    // Initialize carousel with higher quality transitions
-    new bootstrap.Carousel(document.querySelector('#carouselContainer'), {
-        interval: 1500,
-        ride: 'carousel',
-        wrap: true,
-        touch: true
-    });
-</script> *@
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>

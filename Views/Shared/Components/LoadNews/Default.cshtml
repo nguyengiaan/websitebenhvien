@@ -13,19 +13,16 @@
                 <img src="/Resources/@news.Url" alt="@news.Title" class="img-fluid rounded" style="width: 100px; height: 80px; object-fit: cover;">
             </div>
             <div class="news-content">
-                <h6 class="mb-2 fw-bold" style="color: #0095d9">@news.Title</h6>
+                <h6 class="mb-2 fw-bold "  style="color:#222" >@news.Title</h6>
                 @if (isNew)
                 {
                     <span class="badge position-absolute top-0 end-0 m-2 fw-bold" style="background-color: #0095d9;">MỚI</span>
                 }
                 <div class="d-flex align-items-center mb-2" style="color: #000000;">
                     <i class="far fa-clock me-2"></i>
-                    <small>@news.Createat?.ToString("yyyy-MM-dd") </small>
+                    <small >@news.Createat?.ToString("yyyy-MM-dd") </small>
                 </div>
-                <p class="mb-0" style="color: #000000; font-size: 0.95rem; line-height: 1.5;">
-                  @news.Descriptionshort
-               
-                </p>
+        
             </div>
         </div>
     </a>

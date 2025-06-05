@@ -37,6 +37,15 @@
 
   display: block !important;
 
+
+}
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  border-radius: 10px !important;
+}
+#mainCaroushadowsel
+{
+border-radius: 10px !important;
 }
 }
 
@@ -48,6 +57,14 @@
   display: block !important;
 
 }
+.card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  border-radius: 10px !important;
+}
+#mainCaroushadowsel
+{
+border-radius: 10px !important;
+}
 }
 
 /* Extra extra large devices (very large screens, ≥1400px) */
@@ -56,6 +73,15 @@
   .nav-item:hover .dropdown-menu {
 
   display: block !important;
+  
 
 }
+ .card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+    border-radius: 10px !important;
+ }
+ #mainCaroushadowsel
+ {
+  border-radius: 10px !important;
+ }
 }
