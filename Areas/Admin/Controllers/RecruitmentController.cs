@@ -180,6 +180,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+        // video
         [HttpGet("/api-lay-tat-ca-video")]
         public async Task<IActionResult> getallvideo()
         {

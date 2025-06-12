@@ -15,17 +15,11 @@ const sampleAnswers = {};
 connection.on("ReceiveNotification", function () {
     ViewChat();
 });
-
-
 $(document).ready(function() {
     // Ẩn select language nếu tồn tại
   
-    
-
-    Getallvideo();
     GetSchema();
     GetAllEquipment();
-    ListProduct();
     ListService();
     loadSpecialties1();
     loadSpecialties();
@@ -53,9 +47,6 @@ if (select) {
     select.dispatchEvent(new Event('change'));
 }
 }
-
-
-
 function GetSchema() {
     $.ajax({
         url: "/Pagemain/TimeWork",
@@ -83,117 +74,6 @@ function GetSchema() {
                 });
             }
         }
-    });
-}
-function ListProduct() {
-    $.ajax({
-        url: "/Allinone/ListProduct", // API lấy dữ liệu
-        type: "GET",
-        success: function (res) {
-            if (res.status) {
-     
-                // Gọi hàm hiển thị carousel với dữ liệu trả về
-                displayProductCarousel(res.data);
-            } else {
-                console.error("Không có dữ liệu để hiển thị.");
-            }
-        },
-        error: function (err) {
-            console.error("Lỗi khi lấy dữ liệu:", err);
-        }
-    });
-}
-function displayProductCarousel(productData) {
-    const carousel = document.querySelector('#productCarousel');
-    carousel.innerHTML = `
-        <div class="carousel-inner" id="productContainer"></div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev" 
-                style="width: 45px; height: 45px; background: #14a1ff; border: none; border-radius: 50%; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); opacity: 0.9; transition: all 0.3s ease;">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next"
-                style="width: 45px; height: 45px; background: #14a1ff; border: none; border-radius: 50%; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); opacity: 0.9; transition: all 0.3s ease;">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-    `;
-
-    const productContainer = document.querySelector('#productContainer');
-    
-    // Số sản phẩm trên mỗi slide
-    let productsPerSlide = 3; // Mặc định hiển thị 3 sản phẩm một hàng
-    if (window.innerWidth < 768) {
-        productsPerSlide = 1;
-    }
-
-    // Chia sản phẩm thành các nhóm
-    let productChunks = [];
-    for (let i = 0; i < productData.length; i += productsPerSlide) {
-        productChunks.push(productData.slice(i, i + productsPerSlide));
-    }
-
-    // Tạo các slide
-    productChunks.forEach((chunk, index) => {
-        const slide = document.createElement('div');
-        slide.className = `carousel-item ${index === 0 ? 'active' : ''}`;
-
-        const row = document.createElement('div');
-        row.className = 'row g-4 justify-content-center';
-
-        chunk.forEach(product => {
-            if (product.status) {
-                const col = document.createElement('div');
-                col.className = window.innerWidth < 768 ? 'col-12' : 'col-md-4';
-
-                col.innerHTML = `
-                    <div class="card h-100 shadow-sm" style="border: none; transition: transform 0.3s;">
-                        <div class="position-relative overflow-hidden" style="height: 250px;">
-                            <img src="/Resources/${product.url}" 
-                                 class="card-img-top" 
-                                 alt="${product.title}"
-                                 style="height: 100%; width: 100%; object-fit: cover; transition: transform 0.3s;">
-                            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-                                 style="background: rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.3s;">
-                                <h5 class="text-white text-center px-3">${product.title}</h5>
-                            </div>
-                        </div>
-                        <div class="card-body text-center">
-                            <h5 class="card-title text-truncate mb-0">${product.title}</h5>
-                            <a href="${product.alias_url}" class="btn btn-outline-primary mt-3">Xem chi tiết</a>
-                        </div>
-                    </div>
-                `;
-
-                // Thêm hiệu ứng hover
-                const card = col.querySelector('.card');
-                card.addEventListener('mouseenter', () => {
-                    card.style.transform = 'translateY(-5px)';
-                    card.querySelector('.position-absolute').style.opacity = '1';
-                });
-                
-                card.addEventListener('mouseleave', () => {
-                    card.style.transform = 'translateY(0)';
-                    card.querySelector('.position-absolute').style.opacity = '0';
-                });
-
-                row.appendChild(col);
-            }
-        });
-
-        slide.appendChild(row);
-        productContainer.appendChild(slide);
-    });
-
-    // Khởi tạo carousel
-    new bootstrap.Carousel(carousel, {
-        interval: 5000,
-        wrap: true
-    });
-
-    // Xử lý responsive
-    window.addEventListener('resize', () => {
-        displayProductCarousel(productData);
     });
 }
 function ListService() {
@@ -417,8 +297,6 @@ function displayServiceCarousel(productData) {
         displayServiceCarousel(productData);
     });
 }
-
-
 function getSessionId() 
 {
     // Decode cookie string to handle special characters
@@ -492,12 +370,6 @@ function renderChat(data) {
     // Cuộn xuống cuối cùng
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
-
-// Các câu hỏi mẫu
-
-
-
-
 // Hiển thị các câu hỏi mẫu
 function renderSampleQuestions() {
     const chatMessages = document.getElementById('chatMessages');
@@ -509,14 +381,12 @@ function renderSampleQuestions() {
     `).join('');
     chatMessages.innerHTML = questionsHtml; // Fix: Changed from += to = to avoid duplicating
 }
-
 // Gửi câu hỏi mẫu
 function sendSampleQuestion(question) {
     const messageInput = document.getElementById('messageInput');
     messageInput.value = question;
     sendMessage();
 }
-
 // Ghi đè hàm sendMessage để xử lý câu trả lời tĩnh
 function sendMessage() {
     const messageInput = document.getElementById('messageInput');
@@ -545,14 +415,12 @@ function sendMessage() {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 }
-
 // Gửi câu hỏi mẫu
 function sendSampleQuestion(question) {
     const messageInput = document.getElementById('messageInput');
     messageInput.value = question;
     sendMessage();
 }
-
 // Gọi hàm renderSampleQuestions khi cửa sổ chat được mở
 document.getElementById('chatButton').addEventListener('click', renderSampleQuestions);
 // Sample messages
@@ -648,7 +516,6 @@ function loadDoctor(id) {
         }
     });
 }
-
 function loadDoctorSchedule(doctorId) {
     if (!doctorId) {
         console.error('Doctor ID is required');
@@ -844,7 +711,6 @@ function loadDoctorSchedule(doctorId) {
         }
     });
 }
-
 function loadSpecialties() {
     $.ajax({
         url: '/api/chuyen-khoa-catogery',
@@ -944,8 +810,6 @@ function registerAppointment() {
         }
     });
 }
-
-
 function laydscauhoi()
 {
     $.ajax({
@@ -978,99 +842,6 @@ function laydscauhoi()
                 text: 'Không thể tải danh sách câu hỏi',
                 icon: 'error'
             });
-        }
-    });
-}
-
-function loadSpecialties1() {
-    $.ajax({
-        url: '/api/chuyen-khoa-catogery',
-        type: 'GET',
-        success: function(response) {
-            if(response.data) {
-                const gradients = [
-                    'linear-gradient(135deg, #0095d9 0%, #006699 100%)',
-                    'linear-gradient(135deg, #00b3ff 0%, #0095d9 100%)',
-                    'linear-gradient(135deg, #33ccff 0%, #0095d9 100%)',
-                    'linear-gradient(135deg, #66e0ff 0%, #0095d9 100%)', 
-                    'linear-gradient(135deg, #99ebff 0%, #0095d9 100%)',
-                    'linear-gradient(135deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%)',
-                    'linear-gradient(135deg, #0093E9 0%, #80D0C7 100%)',
-                    'linear-gradient(135deg, #8EC5FC 0%, #E0C3FC 100%)',
-                    'linear-gradient(135deg, #D9AFD9 0%, #97D9E1 100%)',
-                    'linear-gradient(135deg, #00B4DB 0%, #0083B0 100%)',
-                    'linear-gradient(135deg, #1CB5E0 0%, #000851 100%)',
-                    'linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%)',
-                    'linear-gradient(135deg, #396afc 0%, #2948ff 100%)',
-                    'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
-                    'linear-gradient(135deg, #FC466B 0%, #3F5EFB 100%)'
-                ];
-
-                let html = `
-                <div id="specialtyCarousel" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-inner">`;
-
-                // Desktop: 4 items per slide, Mobile: 1 item per slide
-                const itemsPerSlide = window.innerWidth < 768 ? 1 : 4;
-                
-                for(let i = 0; i < response.data.length; i += itemsPerSlide) {
-                    const isActive = i === 0 ? 'active' : '';
-                    html += `<div class="carousel-item ${isActive}">
-                            <div class="row row-cols-1 row-cols-md-4">`;
-                    
-                    // Add items for this slide
-                    for(let j = i; j < Math.min(i + itemsPerSlide, response.data.length); j++) {
-                        const specialty = response.data[j];
-                        const gradientIndex = j % gradients.length;
-                        const gradient = gradients[gradientIndex];
-                        const textColorClass = gradientIndex === 1 ? 'text-success' : 
-                                             gradientIndex === 2 ? 'text-warning' :
-                                             gradientIndex === 3 ? 'text-info' :
-                                             gradientIndex === 4 ? 'text-danger' : 'text-primary';
-
-                        html += `
-                            <div class="col ${itemsPerSlide === 1 ? 'col-12' : 'mb-4 mb-md-0'}">
-                                <div class="card border-0 text-center h-100 text-white rounded-4" 
-                                     style="background: ${gradient}; animation: float 3s ease-in-out infinite ${j * 0.5}s;">
-                                    <div class="card-body" style="width: 100%; height: 300px;">
-                                        <div class="specialty-image-container mb-3">
-                                            <img src="/Resources/${specialty.thumnail}" 
-                                                 alt="${specialty.title}" 
-                                                 class="rounded-circle shadow" 
-                                                 style="width: 120px; height: 120px; object-fit: cover;">
-                                        </div>
-                                        <h5 class="card-title fw-bold">${specialty.title}</h5>
-                                     
-                                        <a href="${specialty.alias_url}" class="btn btn-light  fw-bold shadow" 
-                                           style="border-radius: 25px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
-                                            Xem chi tiết
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>`;
-                    }
-                    html += `</div></div>`;
-                }
-
-                html += `
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#specialtyCarousel" data-bs-slide="prev" 
-                            style="width: 30px; height: 30px; background: rgba(0,0,0,0.5); border-radius: 50%; margin: auto 10px;">
-                        <span class="carousel-control-prev-icon" aria-hidden="true" style="width: 15px; height: 15px;"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#specialtyCarousel" data-bs-slide="next"
-                            style="width: 30px; height: 30px; background: rgba(0,0,0,0.5); border-radius: 50%; margin: auto 10px;">
-                        <span class="carousel-control-next-icon" aria-hidden="true" style="width: 15px; height: 15px;"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                </div>`;
-
-                $('#specialtyCarousel').html(html);
-            }
-        },
-        error: function(error) {
-            console.error('Error loading specialties:', error);
         }
     });
 }
@@ -1148,51 +919,6 @@ function toggleSpecialtyFields() {
             appointmentTimeContainer.remove();
         }
     }
-}
-function Getallvideo() {
-    $.ajax({
-        url: '/api-lay-tat-ca-video',
-        type: 'GET',
-        success: function(response) {
-            if (response.status) {
-                let html = '';
-                response.data.forEach((item, index) => {
-                    html += `
-                        <div class="carousel-item ${index === 0 ? 'active' : ''}">
-                            <div class="video-wrapper position-relative">
-                                <div class="ratio ratio-16x9 rounded-bottom-4 overflow-hidden shadow-lg hover-scale"
-                                     style="transition: transform 0.3s ease; height: 334px;">
-                                <video class="w-100 h-100" controls>
-                                    <source src="/Resources/${item.link_video}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                $('#videoCarousel').html(`
-                    <div class="carousel-inner">
-                        ${html}
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#videoCarousel" data-bs-slide="prev" 
-                            style="width: 30px; height: 30px; background: rgba(0,0,0,0.5); border-radius: 50%; top: 50%; transform: translateY(-50%); left: 10px;">
-                        <span class="carousel-control-prev-icon" aria-hidden="true" style="width: 15px; height: 15px;"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#videoCarousel" data-bs-slide="next"
-                            style="width: 30px; height: 30px; background: rgba(0,0,0,0.5); border-radius: 50%; top: 50%; transform: translateY(-50%); right: 10px;">
-                        <span class="carousel-control-next-icon" aria-hidden="true" style="width: 15px; height: 15px;"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
-                `);
-            }
-        },
-        error: function(error) {
-            console.log('Error:', error);
-        }
-    });
 }
 function GetAllEquipment() {
     $.ajax({

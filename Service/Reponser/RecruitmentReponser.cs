@@ -301,9 +301,12 @@ namespace websitebenhvien.Service.Reponser
         {
             try
             {
-                var data=await _context.Videos.Where(x=>x.Status_video==true).Select(x=>new VideosVM {
-                    Link_video=x.Link_video,
-                    Created_at_video=x.Created_at_video,
+                var data=await _context.Videos.Where(x=>x.Status_video==true).Select(x=>new VideosVM
+                {
+                    Link_video = x.Link_video,
+
+                    Status_video = x.Status_video,
+                    Title_video = x.Title_video,
                 }).ToListAsync();
                 return data;
 
