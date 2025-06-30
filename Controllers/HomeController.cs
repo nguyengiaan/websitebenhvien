@@ -6,6 +6,7 @@ using websitebenhvien.Data;
 using websitebenhvien.Migrations;
 using websitebenhvien.Models;
 using websitebenhvien.Models.Enitity;
+using websitebenhvien.Models.EnitityVM;
 using websitebenhvien.Service.Interface;
 
 namespace websitebenhvien.Controllers;
@@ -49,34 +50,42 @@ public class HomeController : Controller
     }
     [HttpGet()]
     [Route("/chi-tiet-tin/{alias_url}")]
-    public async Task<IActionResult> PostDetail(string alias_url)
+   public async Task<IActionResult> PostDetail(string alias_url)
+{
+    // Không nên hard‑code chuỗi “/chi-tiet-tin/” ở nhiều nơi
+    const string DetailPrefix = "/chi-tiet-tin/";
+
+    var cacheKey = $"PostDetail_{alias_url}";
+
+    // GetOrCreateAsync ngắn gọn, tránh 2 lần hit cache
+    var post = await _cache.GetOrCreateAsync(cacheKey, async entry =>
     {
-        try
+        entry.SlidingExpiration = TimeSpan.FromMinutes(30);
+
+        // Truy vấn “1 phát ăn ngay”: Include để lấy luôn thể loại
+        return await _context.News
+            .AsNoTracking()
+            .Include(n => n.Categorynews)
+            .FirstOrDefaultAsync(
+                n => n.Alias_url == DetailPrefix + alias_url);
+    });
+
+    if (post is null) return NotFound();
+
+    // post.Categorynews có sẵn nhờ Include phía trên
+    if (post.Categorynews is not null)
+    {
+        ViewBag.breadcrumbs = new List<Breadcrumb>
         {
-            var cacheKey = $"PostDetail_{alias_url}";
-            if (!_cache.TryGetValue(cacheKey, out News data))
-            {
-                var alias = "/chi-tiet-tin/" + alias_url;
-                data = await _context.News.Where(x => x.Alias_url == alias).AsNoTracking().FirstOrDefaultAsync();
-                if (data == null)
-                {
-                    return NotFound();
-                }
-
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetSlidingExpiration(TimeSpan.FromMinutes(30));
-
-                _cache.Set(cacheKey, data, cacheEntryOptions);
-            }
-
-            return View(data);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error fetching post detail");
-            return NotFound();
-        }
+            new("Trang chủ", "/"),
+            new(post.Categorynews.Title, "/bai-viet/" + post.Categorynews.Alias_url),
+            new(post.Title, post.Alias_url)
+        };
     }
+
+    return View(post);
+}
+
     [HttpGet("/chuyen-khoa")]
     public IActionResult Specialty()
     {
