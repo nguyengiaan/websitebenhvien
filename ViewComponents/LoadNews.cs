@@ -1,18 +1,19 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using websitebenhvien.Models.EnitityVM;
 using websitebenhvien.Service.Interface;
 
 namespace websitebenhvien.ViewComponents
 {
     public class LoadNews : ViewComponent
     {
-    
-       
+
+
         private readonly IAllinone _allinone;
         private readonly IMemoryCache _memoryCache;
 
         // Constructor for the ListNewsViewComponent class
-        public LoadNews(IAllinone allinone,IMemoryCache memoryCache)
+        public LoadNews(IAllinone allinone, IMemoryCache memoryCache)
         {
             _allinone = allinone;
             _memoryCache = memoryCache;
@@ -23,31 +24,34 @@ namespace websitebenhvien.ViewComponents
             try
             {
                 var cacheKey = "ListNewsCacheKey";
-                if (!_memoryCache.TryGetValue(cacheKey, out var listNews))
+                if (!_memoryCache.TryGetValue(cacheKey, out List<NewsVM> listNews))
                 {
-                    // If the cache is empty, fetch data from the service
+                    // Nếu cache rỗng, lấy dữ liệu từ service
                     listNews = await _allinone.ListNews();
                     if (listNews == null)
                     {
                         return View("Error", "No data found.");
                     }
 
-                    // Set cache options
                     var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(15));
-                    // Store data in cache
+                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(15));
                     _memoryCache.Set(cacheKey, listNews, cacheEntryOptions);
                 }
-                return View( listNews);
 
-            }catch
-            (Exception ex)
+                // Sắp xếp theo ngày mới nhất (Createat giảm dần)
+                var sortedList = listNews
+                    .Where(n => n.Createat != null)
+                    .OrderByDescending(n => n.Createat)
+                    .ToList();
+
+                return View(sortedList);
+            }
+            catch (Exception ex)
             {
-                // Handle exception (e.g., log it)
                 return View("Error", ex.Message);
             }
-          
         }
-
     }
 }
+
+    

@@ -5,23 +5,31 @@
     ViewData["description"] = Model.Descriptionshort;
     ViewData["keywords"] = Model.Keyword;
     ViewData["Schema"] = Model.SchemaMakup;
+    var breadcrumbs = ViewBag.breadcrumbs as List<(string Title, string Url)>;
 
 }
 
 <div class="container mt-5 ">
-<nav aria-label="breadcrumb" style="z-index: 0 !important;">
-  <ol class="breadcrumb bg-transparent px-0">
-    <li class="breadcrumb-item">
-      <a href="/" class="text-decoration-none">Trang chủ</a>
-    </li>
-    <li class="breadcrumb-item">
-      <a href="/chuyen-khoa" class="text-decoration-none">Chuyên khoa</a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">
-      Tên chuyên khoa
-    </li>
-  </ol>
-</nav>
+@if (breadcrumbs != null)
+{
+    <nav aria-label="breadcrumb" style="z-index: 0 !important;">
+        <ol class="breadcrumb bg-transparent px-0">
+            @foreach (var crumb in breadcrumbs)
+            {
+                if (!string.IsNullOrEmpty(crumb.Url))
+                {
+                    <li class="breadcrumb-item">
+                            <a href="@crumb.Url" class="text-decoration-none">@crumb.Title</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="breadcrumb-item active" aria-current="page">@crumb.Title</li>
+                }
+            }
+        </ol>
+    </nav>
+}
 </div>
 <div class="container mt-5">
 
@@ -195,9 +203,11 @@
 
 @section Scripts{
     <script>
+    var breadcrumbs = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(breadcrumbs));
+        console.log(breadcrumbs);
         $(document).ready(function(){
-            $('#recruitment-form').hide();
-       
+           
+  
             GetNewsByCategory();
            GetNewsById();
 
@@ -377,36 +387,6 @@
                 }
             });
         }
-        function SubmitRecruitment(){
-            var form=$('#recruitmentForm')[0];
-            var data=new FormData(form);
-            $.ajax({
-                url: "/api/ungtuyencv",
-                type: "POST",
-                data: data,
-                processData: false,
-                contentType: false,
-                beforeSend:function()
-                {
-                    Swal.fire({
-                        title: "Đang xử lý",
-                        html: "Vui lòng chờ trong giây lát...",
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                        willOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-                },
-                success: function(response){
-                    if(response.status){
-                        Swal.fire("Thành công", response.message, "success");
-                        $('#recruitmentForm')[0].reset();
-                    }else{
-                        swal.fire("Thất bại", response.message, "error");
-                    }
-                }
-            });
-        }
+       
     </script>
 }

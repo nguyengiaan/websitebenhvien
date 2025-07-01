@@ -75,13 +75,13 @@ public class HomeController : Controller
     // post.Categorynews có sẵn nhờ Include phía trên
     if (post.Categorynews is not null)
     {
-        ViewBag.breadcrumbs = new List<Breadcrumb>
-        {
-            new("Trang chủ", "/"),
-            new(post.Categorynews.Title, "/bai-viet/" + post.Categorynews.Alias_url),
-            new(post.Title, post.Alias_url)
-        };
-    }
+            ViewBag.breadcrumbs = new List<(string Title, string Url)>
+             {
+                new("Trang chủ", "/"),
+                new(post.Categorynews.Title, post.Categorynews.Alias_url),
+                new(post.Title, post.Alias_url)
+                };
+     }
 
     return View(post);
 }
