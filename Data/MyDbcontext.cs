@@ -83,6 +83,9 @@ namespace websitebenhvien.Data
         public DbSet<Forbusiness> Forbusinesses { get; set; }
 
 
+        public DbSet<MenuAdmin> MenuAdmins { get; set; }
+
+
 
 
         #endregion
@@ -230,6 +233,13 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<Forbusiness>().ToTable("Forbusiness");
             modelBuilder.Entity<Forbusiness>().HasKey(x => x.Id_Forbusiness);
 
+            // Quản lý menu admin
+            modelBuilder.Entity<MenuAdmin>().ToTable("MenuAdmin");
+            modelBuilder.Entity<MenuAdmin>().HasKey(x => x.id);
+            modelBuilder.Entity<MenuAdmin>().Property(x => x.id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<MenuAdmin>().Property(x => x.Title).HasMaxLength(100);
+            modelBuilder.Entity<MenuAdmin>().Property(x => x.Icon).HasMaxLength(50);
+            modelBuilder.Entity<MenuAdmin>().Property(x => x.Url).HasMaxLength(200);
 
 
         }

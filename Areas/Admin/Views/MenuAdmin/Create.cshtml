@@ -1,0 +1,249 @@
+﻿@model websitebenhvien.Models.EnitityVM.MenuAdminVM
+@{
+    ViewData["Title"] = "Tạo Menu Admin";
+}
+
+<div class="container-fluid mt-4">
+    <!-- Page Header -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-plus-circle text-primary me-2"></i>
+                Tạo Menu Admin
+            </h1>
+            <p class="mb-0 text-muted">Thêm mới menu cho trang quản trị</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i>
+            Quay lại danh sách
+        </a>
+    </div>
+
+    <!-- Alert Messages -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Form Card -->
+    <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-10">
+            <div class="card shadow border-0">
+                <div class="card-header py-3 bg-gradient-primary">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-edit me-2"></i>
+                        Thông tin Menu
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post" enctype="multipart/form-data" id="menuForm">
+                        <div class="row">
+                            <!-- Title Field -->
+                            <div class="col-md-12 mb-4">
+                                <label asp-for="Title" class="form-label fw-bold">
+                                    <i class="fas fa-heading text-primary me-2"></i>
+                                    Tiêu đề Menu
+                                </label>
+                                <input asp-for="Title" class="form-control form-control-lg border-left-primary" 
+                                       placeholder="Nhập tiêu đề menu..." />
+                                <span asp-validation-for="Title" class="text-danger small"></span>
+                            </div>
+
+                            <!-- URL Field -->
+                            <div class="col-md-12 mb-4">
+                                <label asp-for="Url" class="form-label fw-bold">
+                                    <i class="fas fa-link text-primary me-2"></i>
+                                    Đường dẫn URL
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-primary text-white">
+                                        <i class="fas fa-globe"></i>
+                                    </span>
+                                    <input asp-for="Url" class="form-control form-control-lg" 
+                                           placeholder="Ví dụ: /admin/dashboard" />
+                                </div>
+                                <div class="form-text text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Đường dẫn phải bắt đầu bằng dấu "/" hoặc "http://"
+                                </div>
+                                <span asp-validation-for="Url" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Icon File Field -->
+                            <div class="col-md-12 mb-4">
+                                <label asp-for="formFile" class="form-label fw-bold">
+                                    <i class="fas fa-image text-primary me-2"></i>
+                                    Icon Menu
+                                </label>
+                                <div class="custom-file-upload">
+                                    <input asp-for="formFile" type="file" class="form-control" id="iconFile"
+                                           accept="image/*" />
+                                    <div class="file-upload-preview mt-3" id="filePreview" style="display: none;">
+                                        <div class="preview-container p-3 border rounded bg-light">
+                                            <h6 class="mb-2">Xem trước:</h6>
+                                            <img id="previewImage" src="" alt="Preview" class="img-thumbnail" 
+                                                 style="max-width: 100px; max-height: 100px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-text text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Chấp nhận các định dạng: PNG, JPG, GIF. Kích thước tối đa: 2MB
+                                </div>
+                                <span asp-validation-for="formFile" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <hr class="my-4">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                                        <i class="fas fa-times me-2"></i>
+                                        Hủy bỏ
+                                    </a>
+                                    <button type="submit" class="btn btn-primary btn-lg px-5" id="submitBtn">
+                                        <i class="fas fa-save me-2"></i>
+                                        Tạo Menu
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    .border-left-primary {
+        border-left: 4px solid #4e73df !important;
+    }
+    
+    .custom-file-upload {
+        position: relative;
+    }
+    
+    .preview-container {
+        background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
+        border: 2px dashed #4e73df !important;
+    }
+    
+    .form-control:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+    
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+    
+    .btn {
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .alert {
+        border-radius: 10px;
+        border: none;
+    }
+</style>
+
+<!-- JavaScript for File Preview -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('iconFile');
+        const filePreview = document.getElementById('filePreview');
+        const previewImage = document.getElementById('previewImage');
+        const submitBtn = document.getElementById('submitBtn');
+        
+        // File preview functionality
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validate file size (2MB max)
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('Kích thước file không được vượt quá 2MB!');
+                    fileInput.value = '';
+                    filePreview.style.display = 'none';
+                    return;
+                }
+                
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Vui lòng chọn file hình ảnh!');
+                    fileInput.value = '';
+                    filePreview.style.display = 'none';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    filePreview.style.display = 'block';
+                    
+                    // Add animation
+                    filePreview.style.opacity = '0';
+                    setTimeout(() => {
+                        filePreview.style.transition = 'opacity 0.3s ease';
+                        filePreview.style.opacity = '1';
+                    }, 100);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                filePreview.style.display = 'none';
+            }
+        });
+        
+        // Form submission with loading state
+        document.getElementById('menuForm').addEventListener('submit', function() {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang tạo...';
+            submitBtn.disabled = true;
+        });
+        
+        // Auto-hide alerts after 5 seconds
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        if (alert.parentNode) {
+                            alert.remove();
+                        }
+                    }, 500);
+                }
+            }, 5000);
+        });
+    });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -21,10 +21,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.Listen(System.Net.IPAddress.Any,5026); // Lắng nghe trên cổng 5000
-});
+
 builder.Services.AddDbContext<MyDbcontext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -54,12 +51,15 @@ builder.Services.AddScoped<IForbusiness, ForbusinessReponser>();
 builder.Services.AddScoped<EmailSender>();
 builder.Services.AddScoped<Hubnot>();
 builder.Services.AddScoped<Uploadfile>();
+builder.Services.AddScoped<IAdminmenu, AdminmenuReponsive>();
 builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));
 builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
 builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddMemoryCache();
 builder.Services.AddServerSideBlazor();
