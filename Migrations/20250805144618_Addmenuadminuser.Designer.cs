@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using websitebenhvien.Data;
 
@@ -11,9 +12,11 @@ using websitebenhvien.Data;
 namespace websitebenhvien.Migrations
 {
     [DbContext(typeof(MyDbcontext))]
-    partial class MyDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20250805144618_Addmenuadminuser")]
+    partial class Addmenuadminuser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -745,33 +748,14 @@ namespace websitebenhvien.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.HasKey("id");
-
-                    b.ToTable("MenuAdmin", (string)null);
-                });
-
-            modelBuilder.Entity("websitebenhvien.Models.Enitity.MenuAdminUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("MenuAdminId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
+                    b.Property<string>("iduser")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
-                    b.HasIndex("MenuAdminId");
+                    b.HasIndex("iduser");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("MenuAdminUsers");
+                    b.ToTable("MenuAdmin", (string)null);
                 });
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Menuchild", b =>
@@ -1504,23 +1488,14 @@ namespace websitebenhvien.Migrations
                     b.Navigation("Specialty");
                 });
 
-            modelBuilder.Entity("websitebenhvien.Models.Enitity.MenuAdminUser", b =>
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.MenuAdmin", b =>
                 {
-                    b.HasOne("websitebenhvien.Models.Enitity.MenuAdmin", "MenuAdmin")
-                        .WithMany("MenuAdminUsers")
-                        .HasForeignKey("MenuAdminId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("websitebenhvien.Models.Enitity.ApplicationUser", "applicationUser")
+                        .WithMany("MenuItems")
+                        .HasForeignKey("iduser")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("websitebenhvien.Models.Enitity.ApplicationUser", "ApplicationUser")
-                        .WithMany("MenuAdminUsers")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("MenuAdmin");
+                    b.Navigation("applicationUser");
                 });
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Menuchild", b =>
@@ -1632,7 +1607,7 @@ namespace websitebenhvien.Migrations
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.ApplicationUser", b =>
                 {
-                    b.Navigation("MenuAdminUsers");
+                    b.Navigation("MenuItems");
 
                     b.Navigation("PermissionUsers");
                 });
@@ -1662,11 +1637,6 @@ namespace websitebenhvien.Migrations
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Menu", b =>
                 {
                     b.Navigation("Menuchilds");
-                });
-
-            modelBuilder.Entity("websitebenhvien.Models.Enitity.MenuAdmin", b =>
-                {
-                    b.Navigation("MenuAdminUsers");
                 });
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Permissions", b =>

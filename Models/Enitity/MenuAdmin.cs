@@ -4,7 +4,11 @@ namespace websitebenhvien.Models.Enitity
 {
     public class MenuAdmin
     {
-        public int id { get ; set; }
+        public MenuAdmin()
+        {
+            MenuAdminUsers = new List<MenuAdminUser>();
+        }
+        public int id { get; set; }
 
         public string Title { get; set; }
 
@@ -13,6 +17,15 @@ namespace websitebenhvien.Models.Enitity
 
 
         public string? Url { get; set; }
+
+
+        public List<MenuAdminUser> MenuAdminUsers { get; set; }
+
+
+
+     
+
+
 
     }
 }

@@ -140,6 +140,9 @@
 
 @section scripts {
     <script>
+        // Tạo URL base cho menu admin
+        var menuAdminBaseUrl = '@Url.Action("Index", "Menuadminuser", new { Area = "Admin" })';
+        
         $(document).ready(function() {
             $(document).on('click', '.permission-user', function() {
                 var userId = $(this).data('id');
@@ -223,6 +226,9 @@
                                  <button class="btn btn-warning btn-sm permission-user" data-id="${item.id}" data-fullname="${item.fullName}" data-username="${item.username}" >
                                     <i class="fas fa-user-shield"></i>
                                 </button>
+                                <a class="btn btn-secondary btn-sm menu-item" href="${menuAdminBaseUrl}?id=${item.id}&username=${encodeURIComponent(item.username)}">
+                                  <i class="fas fa-tools"></i>
+                                </a>
                             </td>
                         </tr>
                     `;
