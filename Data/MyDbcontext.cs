@@ -86,7 +86,10 @@ namespace websitebenhvien.Data
         public DbSet<MenuAdmin> MenuAdmins { get; set; }
         
         public DbSet<MenuAdminUser> MenuAdminUsers { get; set; }
-          
+
+        public DbSet<Activitycategory> Activitycategories { get; set; }
+
+        public DbSet<Postactivity> Postactivity { get; set; }
 
 
 
@@ -243,7 +246,25 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<MenuAdmin>().Property(x => x.Title).HasMaxLength(100);
             modelBuilder.Entity<MenuAdmin>().Property(x => x.Icon).HasMaxLength(50);
             modelBuilder.Entity<MenuAdmin>().Property(x => x.Url).HasMaxLength(200);
-            // Menu và người dùng
+            // danh mục hoạt động
+            modelBuilder.Entity<Activitycategory>().ToTable("Activitycategory");
+            modelBuilder.Entity<Activitycategory>().HasKey(x => x.Id_activitycategory);
+            modelBuilder.Entity<Activitycategory>().Property(x => x.Id_activitycategory).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Activitycategory>().Property(x => x.Title).HasMaxLength(100);
+            modelBuilder.Entity<Activitycategory>().Property(x => x.Description).HasMaxLength(500);
+            // bài viết hoạt động
+            modelBuilder.Entity<Postactivity>().ToTable("Postactivity");
+            modelBuilder.Entity<Postactivity>().HasKey(x => x.Id_Postactivity);
+            modelBuilder.Entity<Postactivity>().Property(x => x.Id_Postactivity).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Postactivity>().Property(x => x.Title).HasMaxLength(200);
+            modelBuilder.Entity<Postactivity>().Property(x => x.Description).HasMaxLength(int.MaxValue);
+            modelBuilder.Entity<Postactivity>().Property(x => x.Url).HasMaxLength(200);
+            modelBuilder.Entity<Postactivity>().Property(x => x.Alias_url).HasMaxLength(200);
+            modelBuilder.Entity<Postactivity>().Property(x => x.Keyword).HasMaxLength(200);
+            modelBuilder.Entity<Postactivity>().Property(x => x.Descriptionshort).HasMaxLength(500);
+            modelBuilder.Entity<Postactivity>().HasOne(x => x.Activitycategory).WithMany(x => x.Postactivities).HasForeignKey(x => x.Id_Categoryactivity);
+
+
 
 
 

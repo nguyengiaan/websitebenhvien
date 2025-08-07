@@ -1,0 +1,395 @@
+@model websitebenhvien.Models.EnitityVM.PostactivityVM
+@{
+    ViewData["Title"] = "Chỉnh sửa hoạt động";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Chỉnh sửa hoạt động</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home", new { Area = "Admin" })">Trang chủ</a></li>
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index")">Hoạt động</a></li>
+                        <li class="breadcrumb-item active">Chỉnh sửa</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Thông tin hoạt động</h3>
+                </div>
+
+                <form asp-action="Edit" method="post" enctype="multipart/form-data" class="form-horizontal">
+                    <div class="card-body">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <input asp-for="Id_Postactivity" type="hidden" />
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <!-- Tiêu đề -->
+                                <div class="form-group">
+                                    <label asp-for="Title" class="control-label">Tiêu đề <span class="text-danger">*</span></label>
+                                    <input asp-for="Title" class="form-control" placeholder="Nhập tiêu đề hoạt động..." />
+                                    <span asp-validation-for="Title" class="text-danger"></span>
+                                </div>
+
+                                <!-- Mô tả ngắn -->
+                                <div class="form-group">
+                                    <label asp-for="Descriptionshort" class="control-label">Mô tả ngắn</label>
+                                    <textarea asp-for="Descriptionshort" class="form-control" rows="3" 
+                                              placeholder="Nhập mô tả ngắn..."></textarea>
+                                    <span asp-validation-for="Descriptionshort" class="text-danger"></span>
+                                </div>
+
+                                <!-- Nội dung chính với Summernote -->
+                                <div class="form-group">
+                                    <label asp-for="Description" class="control-label">Nội dung chính <span class="text-danger">*</span></label>
+                                    <textarea asp-for="Description" class="form-control summernote" rows="10"></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                    <div class="mt-2">
+                                        <button type="button" class="btn btn-info btn-sm" id="btnGenerateKeywords">
+                                            <i class="fa fa-magic"></i> Tạo từ khóa tự động
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-sm" id="btnGenerateSchema">
+                                            <i class="fa fa-code"></i> Tạo Schema tự động
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- URL -->
+                                <div class="form-group">
+                                    <label asp-for="Url" class="control-label">URL</label>
+                                    <input asp-for="Url" class="form-control" placeholder="Nhập URL..." />
+                                    <span asp-validation-for="Url" class="text-danger"></span>
+                                </div>
+
+                                <!-- Alias URL -->
+                                <div class="form-group">
+                                    <label asp-for="Alias_url" class="control-label">Alias URL</label>
+                                    <input asp-for="Alias_url" class="form-control" placeholder="Nhập alias URL..." />
+                                    <span asp-validation-for="Alias_url" class="text-danger"></span>
+                                </div>
+
+                                <!-- Từ khóa -->
+                                <div class="form-group">
+                                    <label asp-for="Keyword" class="control-label">Từ khóa SEO</label>
+                                    <input asp-for="Keyword" class="form-control" placeholder="Nhập từ khóa SEO..." />
+                                    <span asp-validation-for="Keyword" class="text-danger"></span>
+                                </div>
+
+                                <!-- Schema Markup -->
+                                <div class="form-group">
+                                    <label asp-for="SchemaMakup" class="control-label">Schema Markup</label>
+                                    <textarea asp-for="SchemaMakup" class="form-control" rows="4" 
+                                              placeholder="Nhập schema markup..."></textarea>
+                                    <span asp-validation-for="SchemaMakup" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <!-- Hình ảnh thumbnail -->
+                                <div class="form-group">
+                                    <label asp-for="ThumbnailFile" class="control-label">Hình ảnh đại diện</label>
+                                    <div class="custom-file">
+                                        <input asp-for="ThumbnailFile" class="custom-file-input" id="thumbnailFile" accept="image/*" />
+                                        <label class="custom-file-label" for="thumbnailFile">Chọn hình ảnh mới...</label>
+                                    </div>
+                                    <span asp-validation-for="ThumbnailFile" class="text-danger"></span>
+                                    <div class="mt-2">
+                                        @if (!string.IsNullOrEmpty(Model.Thumbnail))
+                                        {
+                                            <img id="currentThumbnail" src="/Resources/@Model.Thumbnail" alt="Current thumbnail" 
+                                                 style="max-width: 200px; max-height: 200px;" class="img-thumbnail" />
+                                        }
+                                        else
+                                        {
+                                            <div id="currentThumbnail" class="text-muted">
+                                                <i class="fa fa-image fa-3x"></i>
+                                                <p>Chưa có hình ảnh</p>
+                                            </div>
+                                        }
+                                        <img id="thumbnailPreview" src="#" alt="Preview" 
+                                             style="max-width: 200px; max-height: 200px; display: none;" class="img-thumbnail" />
+                                    </div>
+                                </div>
+
+                                <!-- Danh mục -->
+                                <div class="form-group">
+                                    <label asp-for="Id_Categoryactivity" class="control-label">Danh mục <span class="text-danger">*</span></label>
+                                    <select asp-for="Id_Categoryactivity" class="form-control">
+                                        <option value="">-- Chọn danh mục --</option>
+                                        @foreach (var item in ViewBag.Categories as SelectList)
+                                        {
+                                            <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Id_Categoryactivity" class="text-danger"></span>
+                                </div>
+
+                                <!-- Trạng thái -->
+                                <div class="form-group">
+                                    <label asp-for="Status" class="control-label">Trạng thái</label>
+                                    <div class="form-check">
+                                        <input asp-for="Status" class="form-check-input" type="checkbox" />
+                                        <label class="form-check-label" asp-for="Status">
+                                            Kích hoạt
+                                        </label>
+                                    </div>
+                                    <span asp-validation-for="Status" class="text-danger"></span>
+                                </div>
+
+                                <!-- Thông tin bổ sung -->
+                                <div class="card card-info">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Thông tin</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <p><strong>ID:</strong> @Model.Id_Postactivity</p>
+                                        @if (Model.Createat != DateTime.MinValue)
+                                        {
+                                            <p><strong>Ngày tạo:</strong> @Model.Createat.ToString("dd/MM/yyyy HH:mm")</p>
+                                        }
+                                        <hr>
+                                        <ul class="list-unstyled">
+                                            <li><i class="fa fa-check text-success"></i> Tiêu đề và nội dung là bắt buộc</li>
+                                            <li><i class="fa fa-check text-success"></i> URL phải là duy nhất</li>
+                                            <li><i class="fa fa-check text-success"></i> Sử dụng Summernote để định dạng</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-save"></i> Cập nhật
+                                </button>
+                                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                                    <i class="fa fa-times"></i> Hủy bỏ
+                                </a>
+                                <a href="@Url.Action("Details", new { id = Model.Id_Postactivity })" class="btn btn-info">
+                                    <i class="fa fa-eye"></i> Xem chi tiết
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <!-- Summernote CSS and JS -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // Khởi tạo Summernote
+            $('.summernote').summernote({
+                height: 300,
+                lang: 'vi-VN',
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['fontname', ['fontname']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ],
+                placeholder: 'Nhập nội dung hoạt động...',
+                callbacks: {
+                    onImageUpload: function(files) {
+                        // Xử lý upload ảnh nếu cần
+                        console.log('Image upload:', files);
+                    }
+                }
+            });
+
+            // Auto-generate alias URL from title (chỉ khi alias trống)
+            $('#Title').on('input', function() {
+                var aliasField = $('#Alias_url');
+                if (aliasField.val() === '') {
+                    var title = $(this).val();
+                    var alias = convertToSlug(title);
+                    aliasField.val(alias);
+                }
+            });
+
+            // Thumbnail file preview
+            $('#thumbnailFile').on('change', function() {
+                var file = this.files[0];
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#thumbnailPreview').attr('src', e.target.result).show();
+                        $('#currentThumbnail').hide();
+                    };
+                    reader.readAsDataURL(file);
+                    
+                    // Update file label
+                    $('.custom-file-label').text(file.name);
+                } else {
+                    $('#thumbnailPreview').hide();
+                    $('#currentThumbnail').show();
+                    $('.custom-file-label').text('Chọn hình ảnh mới...');
+                }
+            });
+
+            // Generate Keywords AJAX
+            $('#btnGenerateKeywords').on('click', function() {
+                var title = $('#Title').val();
+                var description = $('.summernote').summernote('code');
+                
+                // Remove HTML tags for keywords generation
+                var textDescription = $('<div>').html(description).text();
+                
+                if (!textDescription.trim()) {
+                    Swal.fire('Lỗi', 'Vui lòng nhập nội dung trước khi tạo từ khóa', 'error');
+                    return;
+                }
+
+                var baseUrl = '@Url.Action("GenerateKeywords", "Activitypost", new { Area = "Admin" })';
+                
+                $.ajax({
+                    url: baseUrl,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        title: title,
+                        description: textDescription
+                    }),
+                    beforeSend: function() {
+                        $('#btnGenerateKeywords').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Đang tạo...');
+                    },
+                    success: function(response) {
+                        if (response.status) {
+                            $('#Keyword').val(response.data.keywords);
+                            Swal.fire('Thành công', response.message, 'success');
+                        } else {
+                            Swal.fire('Lỗi', response.message, 'error');
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Lỗi', 'Có lỗi xảy ra khi tạo từ khóa', 'error');
+                    },
+                    complete: function() {
+                        $('#btnGenerateKeywords').prop('disabled', false).html('<i class="fa fa-magic"></i> Tạo từ khóa tự động');
+                    }
+                });
+            });
+
+            // Generate Schema Markup AJAX
+            $('#btnGenerateSchema').on('click', function() {
+                var title = $('#Title').val();
+                var description = $('.summernote').summernote('code');
+                var url = $('#Url').val();
+                var shortDescription = $('#Descriptionshort').val();
+                
+                // Remove HTML tags for schema generation
+                var textDescription = $('<div>').html(description).text();
+                
+                // Validate all required fields
+                if (!title.trim()) {
+                    Swal.fire('Lỗi', 'Vui lòng nhập tiêu đề', 'error');
+                    $('#Title').focus();
+                    return;
+                }
+                
+                if (!textDescription.trim()) {
+                    Swal.fire('Lỗi', 'Vui lòng nhập nội dung chính', 'error');
+                    $('.summernote').summernote('focus');
+                    return;
+                }
+                
+                if (!shortDescription.trim()) {
+                    Swal.fire('Lỗi', 'Vui lòng nhập mô tả ngắn để tạo Schema', 'error');
+                    $('#Descriptionshort').focus();
+                    return;
+                }
+                
+                if (!url.trim()) {
+                    Swal.fire('Lỗi', 'Vui lòng nhập URL để tạo Schema', 'error');
+                    $('#Url').focus();
+                    return;
+                }
+
+                var baseUrl = '@Url.Action("GenerateSchemaMarkup", "Activitypost", new { Area = "Admin" })';
+                
+                // Get thumbnail URL - prefer new uploaded file, fallback to existing thumbnail
+                var thumbnailUrl = '@Model.Thumbnail';
+                var thumbnailFile = $('#thumbnailFile')[0].files[0];
+                if (thumbnailFile) {
+                    // For new files, we'll use a placeholder since file isn't uploaded yet
+                    thumbnailUrl = '/uploads/activities/placeholder.jpg';
+                }
+                
+                $.ajax({
+                    url: baseUrl,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        title: title,
+                        description: shortDescription, // Use short description for schema
+                        url: url,
+                        thumbnail: thumbnailUrl
+                    }),
+                    beforeSend: function() {
+                        $('#btnGenerateSchema').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Đang tạo...');
+                    },
+                    success: function(response) {
+                        if (response.status) {
+                            $('#SchemaMakup').val(response.data.schemaMarkup);
+                            Swal.fire('Thành công', response.message, 'success');
+                        } else {
+                            Swal.fire('Lỗi', response.message, 'error');
+                        }
+                    },
+                    error: function() {
+                        Swal.fire('Lỗi', 'Có lỗi xảy ra khi tạo Schema Markup', 'error');
+                    },
+                    complete: function() {
+                        $('#btnGenerateSchema').prop('disabled', false).html('<i class="fa fa-code"></i> Tạo Schema tự động');
+                    }
+                });
+                });
+            });
+
+            function convertToSlug(text) {
+                return text
+                    .toLowerCase()
+                    .replace(/á|à|ả|ạ|ã|ă|ắ|ằ|ẳ|ẵ|ặ|â|ấ|ầ|ẩ|ẫ|ậ/gi, 'a')
+                    .replace(/é|è|ẻ|ẽ|ẹ|ê|ế|ề|ể|ễ|ệ/gi, 'e')
+                    .replace(/i|í|ì|ỉ|ĩ|ị/gi, 'i')
+                    .replace(/ó|ò|ỏ|õ|ọ|ô|ố|ồ|ổ|ỗ|ộ|ơ|ớ|ờ|ở|ỡ|ợ/gi, 'o')
+                    .replace(/ú|ù|ủ|ũ|ụ|ư|ứ|ừ|ử|ữ|ự/gi, 'u')
+                    .replace(/ý|ỳ|ỷ|ỹ|ỵ/gi, 'y')
+                    .replace(/đ/gi, 'd')
+                    .replace(/\s+/g, '-')
+                    .replace(/[^\w\-]+/g, '')
+                    .replace(/\-\-+/g, '-')
+                    .replace(/^-+/, '')
+                    .replace(/-+$/, '');
+            }
+        });
+    </script>
+}

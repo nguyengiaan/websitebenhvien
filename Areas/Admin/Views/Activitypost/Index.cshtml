@@ -1,0 +1,249 @@
+﻿@model websitebenhvien.Models.EnitityVM.PagedPostactivityResult
+@{
+    ViewData["Title"] = "Quản lý Hoạt động";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Quản lý Hoạt động</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+                        <li class="breadcrumb-item active">Hoạt động</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Thông báo -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fa fa-check-circle"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span>&times;</span>
+                    </button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fa fa-exclamation-circle"></i> @TempData["ErrorMessage"]
+                    <button type="button" class="close" data-dismiss="alert">
+                        <span>&times;</span>
+                    </button>
+                </div>
+            }
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3 class="card-title">Danh sách hoạt động</h3>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            <a href="@Url.Action("Create")" class="btn btn-primary">
+                                <i class="fa fa-plus"></i> Thêm mới
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form tìm kiếm và lọc -->
+                <div class="card-body">
+                    <form method="get" asp-action="Index" class="mb-3">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="SearchTerm">Tìm kiếm:</label>
+                                    <input type="text" class="form-control" name="SearchTerm" value="@ViewBag.SearchTerm" 
+                                           placeholder="Tìm theo tiêu đề, mô tả...">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="CategoryId">Danh mục:</label>
+                                    <select class="form-control" name="CategoryId">
+                                        <option value="">-- Tất cả danh mục --</option>
+                                        @foreach (var item in ViewBag.Categories as SelectList)
+                                        {
+                                            <option value="@item.Value" selected="@item.Selected">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="Status">Trạng thái:</label>
+                                    <select class="form-control" name="Status">
+                                        <option value="">-- Tất cả --</option>
+                                        <option value="true">Kích hoạt</option>
+                                        <option value="false">Vô hiệu</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="PageSize">Hiển thị:</label>
+                                    <select class="form-control" name="PageSize">
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>&nbsp;</label><br>
+                                    <button type="submit" class="btn btn-info btn-block">
+                                        <i class="fa fa-search"></i> Tìm kiếm
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Bảng dữ liệu -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tiêu đề</th>
+                                    <th>Danh mục</th>
+                                    <th>Mô tả ngắn</th>
+                                    <th>Trạng thái</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Items.Any())
+                                {
+                                    var index = (Model.Page - 1) * Model.PageSize + 1;
+                                    @foreach (var item in Model.Items)
+                                    {
+                                        <tr>
+                                            <td>@index</td>
+                                            <td>
+                                                <strong>@item.Title</strong>
+                                                @if (!string.IsNullOrEmpty(item.Url))
+                                                {
+                                                    <br><small class="text-muted">@item.Url</small>
+                                                }
+                                            </td>
+                                            <td>@item.CategoryName</td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.Descriptionshort))
+                                                {
+                                                    @(item.Descriptionshort.Length > 100 ? item.Descriptionshort.Substring(0, 100) + "..." : item.Descriptionshort)
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (item.Status)
+                                                {
+                                                    <span class="badge badge-success">Kích hoạt</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-danger">Vô hiệu</span>
+                                                }
+                                            </td>
+                                            <td>@item.Createat.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>
+                                                <div class="btn-group" role="group">
+                                                    <a href="@Url.Action("Details", new { id = item.Id_Postactivity })" 
+                                                       class="btn btn-info btn-sm" title="Xem chi tiết">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+                                                    <a href="@Url.Action("Edit", new { id = item.Id_Postactivity })" 
+                                                       class="btn btn-warning btn-sm" title="Chỉnh sửa">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                    <a href="@Url.Action("Delete", new { id = item.Id_Postactivity })" 
+                                                       class="btn btn-danger btn-sm" title="Xóa">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        index++;
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="7" class="text-center">Không có dữ liệu</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Phân trang -->
+                    @if (Model.TotalPages > 1)
+                    {
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <p>Hiển thị @((Model.Page - 1) * Model.PageSize + 1) đến @(Math.Min(Model.Page * Model.PageSize, Model.TotalItems)) 
+                                   trong tổng số @Model.TotalItems kết quả</p>
+                            </div>
+                            <div class="col-md-6">
+                                <nav>
+                                    <ul class="pagination justify-content-end">
+                                        @if (Model.Page > 1)
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="@Url.Action("Index", new { 
+                                                    Page = Model.Page - 1, 
+                                                    SearchTerm = ViewBag.SearchTerm,
+                                                    CategoryId = ViewBag.CategoryId,
+                                                    Status = ViewBag.Status,
+                                                    PageSize = Model.PageSize 
+                                                })">Trước</a>
+                                            </li>
+                                        }
+
+                                        @for (int i = Math.Max(1, Model.Page - 2); i <= Math.Min(Model.TotalPages, Model.Page + 2); i++)
+                                        {
+                                            <li class="page-item @(i == Model.Page ? "active" : "")">
+                                                <a class="page-link" href="@Url.Action("Index", new { 
+                                                    Page = i,
+                                                    SearchTerm = ViewBag.SearchTerm,
+                                                    CategoryId = ViewBag.CategoryId,
+                                                    Status = ViewBag.Status,
+                                                    PageSize = Model.PageSize 
+                                                })">@i</a>
+                                            </li>
+                                        }
+
+                                        @if (Model.Page < Model.TotalPages)
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="@Url.Action("Index", new { 
+                                                    Page = Model.Page + 1,
+                                                    SearchTerm = ViewBag.SearchTerm,
+                                                    CategoryId = ViewBag.CategoryId,
+                                                    Status = ViewBag.Status,
+                                                    PageSize = Model.PageSize 
+                                                })">Tiếp</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

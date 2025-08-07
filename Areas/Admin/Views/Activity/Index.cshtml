@@ -1,0 +1,694 @@
+﻿@model websitebenhvien.Models.EnitityVM.PagedActivityCategoryResult
+@{
+    ViewData["Title"] = "Quản lý danh mục hoạt động";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+   
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Thống kê -->
+            <div class="row">
+                
+
+            <!-- Card quản lý -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Danh sách danh mục hoạt động</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-add">
+                            <i class="fas fa-plus"></i> Thêm mới
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- Form tìm kiếm -->
+                    <form id="searchForm" method="get">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Tìm kiếm:</label>
+                                    <input type="text" name="SearchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Nhập tên danh mục...">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Số bản ghi:</label>
+                                    <select name="PageSize" class="form-control">
+                                        @if (Model.PageSize == 5) {
+                                            <option value="5" selected>5</option>
+                                        } else {
+                                            <option value="5">5</option>
+                                        }
+                                        @if (Model.PageSize == 10) {
+                                            <option value="10" selected>10</option>
+                                        } else {
+                                            <option value="10">10</option>
+                                        }
+                                        @if (Model.PageSize == 25) {
+                                            <option value="25" selected>25</option>
+                                        } else {
+                                            <option value="25">25</option>
+                                        }
+                                        @if (Model.PageSize == 50) {
+                                            <option value="50" selected>50</option>
+                                        } else {
+                                            <option value="50">50</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Sắp xếp theo:</label>
+                                    <select name="SortBy" class="form-control">
+                                        @if (Model.SortBy == "title") {
+                                            <option value="title" selected>Tiêu đề</option>
+                                        } else {
+                                            <option value="title">Tiêu đề</option>
+                                        }
+                                        @if (Model.SortBy == "description") {
+                                            <option value="description" selected>Mô tả</option>
+                                        } else {
+                                            <option value="description">Mô tả</option>
+                                        }
+                                        @if (Model.SortBy == "id") {
+                                            <option value="id" selected>ID</option>
+                                        } else {
+                                            <option value="id">ID</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Thứ tự:</label>
+                                    <select name="SortDirection" class="form-control">
+                                        @if (Model.SortDirection == "asc") {
+                                            <option value="asc" selected>Tăng dần</option>
+                                        } else {
+                                            <option value="asc">Tăng dần</option>
+                                        }
+                                        @if (Model.SortDirection == "desc") {
+                                            <option value="desc" selected>Giảm dần</option>
+                                        } else {
+                                            <option value="desc">Giảm dần</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>&nbsp;</label>
+                                    <div>
+                                        <button type="submit" class="btn btn-info">
+                                            <i class="fas fa-search"></i> Tìm kiếm
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="Page" value="1">
+                    </form>
+
+                    <!-- Enhanced Data Table -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th width="8%" class="text-center">
+                                        <i class="fas fa-hashtag"></i> STT
+                                    </th>
+                                    <th width="25%">
+                                        <i class="fas fa-heading"></i> Tiêu đề
+                                    </th>
+                                    <th width="45%">
+                                        <i class="fas fa-align-left"></i> Mô tả
+                                    </th>
+                                    <th width="12%" class="text-center">
+                                        <i class="fas fa-calendar"></i> Ngày tạo
+                                    </th>
+                                    <th width="10%" class="text-center">
+                                        <i class="fas fa-cogs"></i> Thao tác
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Items != null && Model.Items.Any())
+                                {
+                                    @for (int i = 0; i < Model.Items.Count; i++)
+                                    {
+                                        var item = Model.Items[i];
+                                        var stt = (Model.Page - 1) * Model.PageSize + i + 1;
+                                        <tr>
+                                            <td class="text-center">
+                                                <span class="badge badge-primary badge-pill">@stt</span>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="category-icon bg-primary text-white rounded-circle mr-3 d-flex align-items-center justify-content-center" 
+                                                         style="width: 40px; height: 40px;">
+                                                        <i class="fas fa-layer-group"></i>
+                                                    </div>
+                                                    <div>
+                                                        <strong class="text-primary">@item.Title</strong>
+                                                        <br>
+                                                        <small class="text-muted">ID: @item.Id_activitycategory</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.Description))
+                                                {
+                                                    <div class="description-text">
+                                                        <span>@(item.Description.Length > 120 ? item.Description.Substring(0, 120) + "..." : item.Description)</span>
+                                                        @if (item.Description.Length > 120)
+                                                        {
+                                                            <br>
+                                                            <small class="text-info">
+                                                                <i class="fas fa-info-circle"></i> Nhấn chỉnh sửa để xem đầy đủ
+                                                            </small>
+                                                        }
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <em class="text-muted">
+                                                        <i class="fas fa-exclamation-triangle text-warning"></i> Chưa có mô tả
+                                                    </em>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="date-info">
+                                                    <i class="fas fa-calendar-alt text-info"></i>
+                                                    <br>
+                                                    <small class="text-muted font-weight-bold">
+                                                        @DateTime.Now.ToString("dd/MM/yyyy")
+                                                    </small>
+                                                    <br>
+                                                    <small class="text-muted">
+                                                        @DateTime.Now.ToString("HH:mm")
+                                                    </small>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="btn-group btn-group-sm">
+                                                    <button type="button" class="btn btn-info btn-edit" 
+                                                            data-id="@item.Id_activitycategory" 
+                                                            title="Chỉnh sửa danh mục">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger btn-delete" 
+                                                            data-id="@item.Id_activitycategory" 
+                                                            title="Xóa danh mục">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5" class="text-center p-5">
+                                            <div class="empty-state">
+                                                <div class="empty-icon mb-3">
+                                                    <i class="fas fa-inbox fa-3x text-muted"></i>
+                                                </div>
+                                                <h5 class="text-muted">Không có dữ liệu</h5>
+                                                <p class="text-muted">Chưa có danh mục hoạt động nào được tạo.</p>
+                                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add">
+                                                    <i class="fas fa-plus"></i> Tạo danh mục đầu tiên
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Phân trang -->
+                    @if (Model.TotalItems > Model.PageSize)
+                    {
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <p class="text-muted">
+                                    Hiển thị @((Model.Page - 1) * Model.PageSize + 1) đến @Math.Min(Model.Page * Model.PageSize, Model.TotalItems) trong tổng số @Model.TotalItems bản ghi
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination pagination-sm justify-content-end">
+                                        @{
+                                            var totalPages = Math.Ceiling((double)Model.TotalItems / Model.PageSize);
+                                            var startPage = Math.Max(1, Model.Page - 2);
+                                            var endPage = Math.Min(totalPages, Model.Page + 2);
+                                            var baseUrl = Url.Action("Index", "Activity", new { area = "Admin" });
+                                        }
+
+                                        @if (Model.Page > 1)
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="@(baseUrl)?Page=1&PageSize=@Model.PageSize&SearchTerm=@Model.SearchTerm&SortBy=@Model.SortBy&SortDirection=@Model.SortDirection" aria-label="First">
+                                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="@(baseUrl)?Page=@(Model.Page - 1)&PageSize=@Model.PageSize&SearchTerm=@Model.SearchTerm&SortBy=@Model.SortBy&SortDirection=@Model.SortDirection" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                        }
+
+                                        @for (var i = startPage; i <= endPage; i++)
+                                        {
+                                            <li class="page-item @(i == Model.Page ? "active" : "")">
+                                                <a class="page-link" href="@(baseUrl)?Page=@i&PageSize=@Model.PageSize&SearchTerm=@Model.SearchTerm&SortBy=@Model.SortBy&SortDirection=@Model.SortDirection">@i</a>
+                                            </li>
+                                        }
+
+                                        @if (Model.Page < totalPages)
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="@(baseUrl)?Page=@(Model.Page + 1)&PageSize=@Model.PageSize&SearchTerm=@Model.SearchTerm&SortBy=@Model.SortBy&SortDirection=@Model.SortDirection" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="@(baseUrl)?Page=@((int)totalPages)&PageSize=@Model.PageSize&SearchTerm=@Model.SearchTerm&SortBy=@Model.SortBy&SortDirection=@Model.SortDirection" aria-label="Last">
+                                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Modal Thêm/Sửa với thiết kế đẹp hơn -->
+<div class="modal fade" id="modal-add" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content shadow-lg border-0">
+            <div class="modal-header bg-gradient-primary text-white">
+                <h5 class="modal-title" id="modalLabel">
+                    <i class="fas fa-plus-circle"></i> Thêm danh mục hoạt động
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="activityCategoryForm">
+                <div class="modal-body p-4">
+                    <input type="hidden" id="Id_activitycategory" name="Id_activitycategory" value="0">
+                    
+                    <div class="form-group mb-4">
+                        <label for="Title" class="form-label fw-bold">
+                            <i class="fas fa-heading text-primary"></i> Tiêu đề 
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-primary text-white">
+                                <i class="fas fa-tag"></i>
+                            </span>
+                            <input type="text" class="form-control form-control-lg" id="Title" name="Title" 
+                                   required maxlength="255" placeholder="Nhập tiêu đề danh mục...">
+                        </div>
+                        <div class="invalid-feedback"></div>
+                        <small class="form-text text-muted">
+                            <i class="fas fa-info-circle"></i> Tối đa 255 ký tự
+                        </small>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="Description" class="form-label fw-bold">
+                            <i class="fas fa-align-left text-success"></i> Mô tả
+                        </label>
+                        <textarea class="form-control" id="Description" name="Description" 
+                                  rows="5" maxlength="1000" placeholder="Nhập mô tả chi tiết cho danh mục..."></textarea>
+                        <div class="invalid-feedback"></div>
+                        <small class="form-text text-muted">
+                            <i class="fas fa-info-circle"></i> Tối đa 1000 ký tự
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal">
+                        <i class="fas fa-times"></i> Hủy bỏ
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save"></i> Lưu thông tin
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section styles {
+    <style>
+        /* Enhanced Table Styling */
+        .table th {
+            background:#2a90df ;
+            color: white;
+            border-color: #2a90df;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: #f8f9fa;
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .table tbody td {
+            vertical-align: middle;
+            padding: 1rem 0.75rem;
+            border-color: #e9ecef;
+        }
+
+        /* Button Group Enhancements */
+        .btn-group-sm > .btn, .btn-sm {
+            padding: .375rem .75rem;
+            font-size: .875rem;
+            line-height: 1.5;
+            border-radius: .25rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(220,53,69,0.3);
+        }
+
+        /* Statistics Cards */
+        .small-box {
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .small-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .small-box .icon {
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .small-box:hover .icon {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .small-box-footer {
+            background: rgba(0,0,0,0.1);
+            color: rgba(255,255,255,0.8);
+            padding: 8px 15px;
+            font-size: 0.8rem;
+        }
+
+        /* Modal Enhancements */
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+
+        .modal-header {
+            border-radius: 15px 15px 0 0;
+            padding: 1.5rem;
+        }
+
+        .form-control:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+            transform: scale(1.02);
+            transition: all 0.3s ease;
+        }
+
+        .input-group-text {
+            border: none;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 10px;
+            margin: 15px;
+        }
+
+        .form-select:focus, .form-control:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+
+        /* Card Styling */
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: none;
+        }
+
+        .card-header {
+            border-radius: 15px 15px 0 0 !important;
+            background: #2a90df;
+            border-bottom: none;
+        }
+
+        /* Alert Styling */
+        .alert-info {
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+            border: none;
+            border-radius: 10px;
+        }
+
+        /* Pagination */
+        .pagination {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .page-link {
+            border: none;
+            margin: 0 2px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .page-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb-item.active {
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+        .breadcrumb-item a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        /* Loading Animation */
+        .btn .fa-spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @@keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @@media (max-width: 768px) {
+            .small-box h3 {
+                font-size: 1.5rem;
+            }
+            
+            .btn-group-sm > .btn {
+                padding: .25rem .5rem;
+                font-size: .75rem;
+            }
+            
+            .search-section {
+                margin: 10px;
+            }
+            
+            .table-responsive {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+}
+
+@section scripts {
+    <script>
+        $(document).ready(function() {
+            // Tạo base URLs một cách rõ ràng
+            var createUrl = '@Url.Action("CreateActivityCategory", "Activity", new { area = "Admin" })';
+            var updateUrl = '@Url.Action("UpdateActivityCategory", "Activity", new { area = "Admin" })';
+            var deleteUrl = '@Url.Action("DeleteActivityCategory", "Activity", new { area = "Admin" })';
+            var getUrl = '@Url.Action("GetActivityCategory", "Activity", new { area = "Admin" })';
+            
+            // Reset form khi đóng modal
+            $('#modal-add').on('hidden.bs.modal', function() {
+                $('#activityCategoryForm')[0].reset();
+                $('#Id_activitycategory').val('0');
+                $('#modalLabel').html('<i class="fas fa-plus-circle"></i> Thêm danh mục hoạt động');
+                $('.form-control').removeClass('is-invalid');
+                $('.invalid-feedback').text('');
+            });
+
+            // Xử lý form submit
+            $('#activityCategoryForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                var id = $('#Id_activitycategory').val();
+                var isEdit = id !== '0';
+                var url = isEdit ? updateUrl : createUrl;
+                
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    beforeSend: function() {
+                        $('.btn[type="submit"]').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Đang xử lý...');
+                    },
+                    success: function(response) {
+                        if (response.status) {
+                            Swal.fire({
+                                title: 'Thành công!',
+                                text: response.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(function() {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Lỗi!',
+                                text: response.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error details:', xhr.responseText);
+                        Swal.fire({
+                            title: 'Lỗi!',
+                            text: 'Có lỗi xảy ra trong quá trình xử lý: ' + error,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    },
+                    complete: function() {
+                        $('.btn[type="submit"]').prop('disabled', false).html('<i class="fas fa-save"></i> Lưu');
+                    }
+                });
+            });
+
+            // Xử lý nút chỉnh sửa
+            $('.btn-edit').on('click', function() {
+                var id = $(this).data('id');
+                
+                $.ajax({
+                    url: getUrl,
+                    type: 'GET',
+                    data: { id: id },
+                    success: function(response) {
+                        if (response.status) {
+                            var data = response.data;
+                            $('#Id_activitycategory').val(data.id_activitycategory);
+                            $('#Title').val(data.title);
+                            $('#Description').val(data.description);
+                            $('#modalLabel').html('<i class="fas fa-edit"></i> Chỉnh sửa danh mục hoạt động');
+                            $('#modal-add').modal('show');
+                        } else {
+                            Swal.fire('Lỗi!', response.message, 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error details:', xhr.responseText);
+                        Swal.fire('Lỗi!', 'Không thể tải thông tin danh mục: ' + error, 'error');
+                    }
+                });
+            });
+
+            // Xử lý nút xóa
+            $('.btn-delete').on('click', function() {
+                var id = $(this).data('id');
+                
+                Swal.fire({
+                    title: 'Xác nhận xóa',
+                    text: 'Bạn có chắc chắn muốn xóa danh mục này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Xóa',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: deleteUrl,
+                            type: 'POST',
+                            data: { id: id },
+                            success: function(response) {
+                                if (response.status) {
+                                    Swal.fire({
+                                        title: 'Thành công!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    }).then(function() {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire('Lỗi!', response.message, 'error');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.log('Error details:', xhr.responseText);
+                                Swal.fire('Lỗi!', 'Có lỗi xảy ra trong quá trình xóa: ' + error, 'error');
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Tự động submit form khi thay đổi page size hoặc sort
+            $('select[name="PageSize"], select[name="SortBy"], select[name="SortDirection"]').on('change', function() {
+                $('#searchForm').submit();
+            });
+        });
+    </script>
+}

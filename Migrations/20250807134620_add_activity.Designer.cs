@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using websitebenhvien.Data;
 
@@ -11,9 +12,11 @@ using websitebenhvien.Data;
 namespace websitebenhvien.Migrations
 {
     [DbContext(typeof(MyDbcontext))]
-    partial class MyDbcontextModelSnapshot : ModelSnapshot
+    [Migration("20250807134620_add_activity")]
+    partial class add_activity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -947,63 +950,6 @@ namespace websitebenhvien.Migrations
                     b.ToTable("Permissions", (string)null);
                 });
 
-            modelBuilder.Entity("websitebenhvien.Models.Enitity.Postactivity", b =>
-                {
-                    b.Property<int>("Id_Postactivity")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_Postactivity"));
-
-                    b.Property<string>("Alias_url")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime>("Createat")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(2147483647)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Descriptionshort")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("Id_Categoryactivity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Keyword")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("SchemaMakup")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Thumbnail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id_Postactivity");
-
-                    b.HasIndex("Id_Categoryactivity");
-
-                    b.ToTable("Postactivity", (string)null);
-                });
-
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Postpersonnel", b =>
                 {
                     b.Property<int>("id_recruitmentpost")
@@ -1643,17 +1589,6 @@ namespace websitebenhvien.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("websitebenhvien.Models.Enitity.Postactivity", b =>
-                {
-                    b.HasOne("websitebenhvien.Models.Enitity.Activitycategory", "Activitycategory")
-                        .WithMany("Postactivities")
-                        .HasForeignKey("Id_Categoryactivity")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Activitycategory");
-                });
-
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Postrelate", b =>
                 {
                     b.HasOne("websitebenhvien.Models.Enitity.Specialty", "Specialty")
@@ -1718,11 +1653,6 @@ namespace websitebenhvien.Migrations
                         .IsRequired();
 
                     b.Navigation("Doctor");
-                });
-
-            modelBuilder.Entity("websitebenhvien.Models.Enitity.Activitycategory", b =>
-                {
-                    b.Navigation("Postactivities");
                 });
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.ApplicationUser", b =>

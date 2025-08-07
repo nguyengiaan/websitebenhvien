@@ -1,0 +1,200 @@
+@model websitebenhvien.Models.EnitityVM.PostactivityVM
+@{
+    ViewData["Title"] = "Chi tiết hoạt động";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Chi tiết hoạt động</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home", new { Area = "Admin" })">Trang chủ</a></li>
+                        <li class="breadcrumb-item"><a href="@Url.Action("Index")">Hoạt động</a></li>
+                        <li class="breadcrumb-item active">Chi tiết</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">@Model.Title</h3>
+                    <div class="card-tools">
+                        @if (Model.Status)
+                        {
+                            <span class="badge badge-success">Kích hoạt</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-danger">Vô hiệu</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <!-- Thông tin chính -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <strong>ID:</strong> @Model.Id_Postactivity
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Danh mục:</strong> @Model.CategoryName
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(Model.Url))
+                            {
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <strong>URL:</strong> 
+                                        <a href="@Model.Url" target="_blank" class="text-primary">@Model.Url</a>
+                                    </div>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(Model.Alias_url))
+                            {
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <strong>Alias URL:</strong> @Model.Alias_url
+                                    </div>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(Model.Keyword))
+                            {
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <strong>Từ khóa SEO:</strong> @Model.Keyword
+                                    </div>
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrEmpty(Model.Descriptionshort))
+                            {
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <strong>Mô tả ngắn:</strong>
+                                        <p class="mt-2">@Model.Descriptionshort</p>
+                                    </div>
+                                </div>
+                            }
+
+                            <!-- Nội dung chính -->
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <strong>Nội dung:</strong>
+                                    <div class="mt-2 p-3 border rounded">
+                                        @Html.Raw(Model.Description)
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(Model.SchemaMakup))
+                            {
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <strong>Schema Markup:</strong>
+                                        <pre class="mt-2 p-3 bg-light border rounded"><code>@Model.SchemaMakup</code></pre>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="col-md-4">
+                            <!-- Hình ảnh thumbnail -->
+                            @if (!string.IsNullOrEmpty(Model.Thumbnail))
+                            {
+                                <div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Hình ảnh đại diện</h3>
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <img src="/Resources/@Model.Thumbnail" alt="Thumbnail" class="img-fluid rounded" style="max-height: 300px;" />
+                                    </div>
+                                </div>
+                            }
+
+                            <!-- Thông tin chi tiết -->
+                            <div class="card card-info">
+                                <div class="card-header">
+                                    <h3 class="card-title">Thông tin chi tiết</h3>
+                                </div>
+                                <div class="card-body">
+                                    <dl class="row">
+                                        <dt class="col-sm-5">ID:</dt>
+                                        <dd class="col-sm-7">@Model.Id_Postactivity</dd>
+
+                                        <dt class="col-sm-5">Trạng thái:</dt>
+                                        <dd class="col-sm-7">
+                                            @if (Model.Status)
+                                            {
+                                                <span class="badge badge-success">Kích hoạt</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-danger">Vô hiệu</span>
+                                            }
+                                        </dd>
+
+                                        @if (Model.Createat != DateTime.MinValue)
+                                        {
+                                            <dt class="col-sm-5">Ngày tạo:</dt>
+                                            <dd class="col-sm-7">@Model.Createat.ToString("dd/MM/yyyy HH:mm")</dd>
+                                        }
+
+                                        <dt class="col-sm-5">Danh mục:</dt>
+                                        <dd class="col-sm-7">@Model.CategoryName</dd>
+                                    </dl>
+                                </div>
+                            </div>
+
+                            <!-- Thao tác -->
+                            <div class="card card-warning">
+                                <div class="card-header">
+                                    <h3 class="card-title">Thao tác</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="btn-group-vertical btn-block" role="group">
+                                        <a href="@Url.Action("Edit", new { id = Model.Id_Postactivity })" 
+                                           class="btn btn-warning">
+                                            <i class="fa fa-edit"></i> Chỉnh sửa
+                                        </a>
+                                        <a href="@Url.Action("Delete", new { id = Model.Id_Postactivity })" 
+                                           class="btn btn-danger">
+                                            <i class="fa fa-trash"></i> Xóa
+                                        </a>
+                                        <a href="@Url.Action("Index")" class="btn btn-secondary">
+                                            <i class="fa fa-list"></i> Quay lại danh sách
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Syntax highlighting cho schema markup
+            $('pre code').each(function(i, block) {
+                // Có thể thêm syntax highlighting nếu cần
+            });
+        });
+    </script>
+}

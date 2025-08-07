@@ -11,6 +11,11 @@ namespace websitebenhvien.Helper
         {
             // Ví dụ: map từ MenuAdmin sang MenuAdminDto
             CreateMap<MenuAdmin, MenuAdminVM>().ReverseMap();
+
+            CreateMap<Activitycategory, ActivitycategoryVM>().ReverseMap();
+
+
+            CreateMap<Postactivity, PostactivityVM>().ReverseMap();
         }
     }
 }
