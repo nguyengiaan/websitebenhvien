@@ -84,6 +84,8 @@ namespace websitebenhvien.Data
 
 
         public DbSet<MenuAdmin> MenuAdmins { get; set; }
+        
+        public DbSet<ReceivingAngle> Receivingangles { get; set; }
 
 
 
@@ -91,7 +93,7 @@ namespace websitebenhvien.Data
         #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-             base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
             //Tiêu đề header
             modelBuilder.Entity<Header>().ToTable("Header");
             modelBuilder.Entity<Header>().HasKey(x => x.Id_header);
@@ -127,7 +129,7 @@ namespace websitebenhvien.Data
             //News
             modelBuilder.Entity<News>().ToTable("News");
             modelBuilder.Entity<News>().HasKey(x => x.Id_News);
-            modelBuilder.Entity<News>().Property(x=>x.Id_News).ValueGeneratedOnAdd();
+            modelBuilder.Entity<News>().Property(x => x.Id_News).ValueGeneratedOnAdd();
             modelBuilder.Entity<News>().HasIndex(x => x.Alias_url).IsUnique();
             modelBuilder.Entity<News>().HasOne(x => x.Categorynews).WithMany(x => x.News).HasForeignKey(x => x.Id_Categorynews);
             // danh mục sản phẩm
@@ -153,11 +155,11 @@ namespace websitebenhvien.Data
             // chuyên gia 
             modelBuilder.Entity<Specialty>().ToTable("Specialty");
             modelBuilder.Entity<Specialty>().HasKey(x => x.Id_Specialty);
-            modelBuilder.Entity<Specialty>().Property(x=>x.Id_Specialty).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Specialty>().Property(x => x.Id_Specialty).ValueGeneratedOnAdd();
             // bài viết liên quan
             modelBuilder.Entity<Postrelate>().ToTable("Postrelate");
             modelBuilder.Entity<Postrelate>().HasKey(x => x.Id_Postrelate);
-      
+
             modelBuilder.Entity<Postrelate>().HasOne(x => x.Specialty).WithMany(x => x.Postrelate).HasForeignKey(x => x.Id_Specialty);
             // video chuyên gia
             modelBuilder.Entity<ListvideoSpectialty>().ToTable("ListvideoSpectialty");
@@ -187,8 +189,8 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<Makeanappointment>().HasOne(x => x.Specialty).WithMany(x => x.Makeanappointment).HasForeignKey(x => x.Id_Specialty);
             // tin nhắn mẫu
             modelBuilder.Entity<SampleMessage>().ToTable("SampleMessage");
-            modelBuilder.Entity<SampleMessage>().HasKey(x=>x.Id_SampleMessager);
-        
+            modelBuilder.Entity<SampleMessage>().HasKey(x => x.Id_SampleMessager);
+
             // nút mẫu
             modelBuilder.Entity<ButtonSample>().ToTable("ButtonSample");
             modelBuilder.Entity<ButtonSample>().HasKey(x => x.Id_ButtonSample);
@@ -240,7 +242,16 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<MenuAdmin>().Property(x => x.Title).HasMaxLength(100);
             modelBuilder.Entity<MenuAdmin>().Property(x => x.Icon).HasMaxLength(50);
             modelBuilder.Entity<MenuAdmin>().Property(x => x.Url).HasMaxLength(200);
-
+            // Quản lý góc tiếp nhận
+            modelBuilder.Entity<ReceivingAngle>().ToTable("ReceivingAngle");
+            modelBuilder.Entity<ReceivingAngle>().HasKey(x => x.id);
+            modelBuilder.Entity<ReceivingAngle>().Property(x => x.id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<ReceivingAngle>().Property(x => x.title).HasMaxLength(200);
+            modelBuilder.Entity<ReceivingAngle>().Property(x => x.description).HasMaxLength(int.MaxValue);
+            modelBuilder.Entity<ReceivingAngle>().Property(x => x.image).HasMaxLength(100);
+            modelBuilder.Entity<ReceivingAngle>().Property(x => x.link).HasMaxLength(100);
+            modelBuilder.Entity<ReceivingAngle>().Property(x => x.status).HasDefaultValue(true);
+            modelBuilder.Entity<ReceivingAngle>().Property(x => x.order).HasDefaultValue(0);
 
         }
     }

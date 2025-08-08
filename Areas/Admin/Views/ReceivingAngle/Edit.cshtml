@@ -1,0 +1,369 @@
+@model websitebenhvien.Models.EnitityVM.ReceivingAngleVM
+@{
+    ViewData["Title"] = "Chỉnh sửa Góc Tiếp Nhận";
+}
+
+<div class="container-fluid mt-4">
+    <!-- Page Header -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-edit text-warning me-2"></i>
+                Chỉnh sửa Góc Tiếp Nhận
+            </h1>
+            <p class="mb-0 text-muted">Cập nhật thông tin góc tiếp nhận</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Details" asp-route-id="@Model.id" class="btn btn-outline-info">
+                <i class="fas fa-eye me-1"></i>
+                Xem chi tiết
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>
+                Quay lại danh sách
+            </a>
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Form Card -->
+    <div class="row justify-content-center">
+        <div class="col-xl-10 col-lg-12">
+            <div class="card shadow border-0">
+                <div class="card-header py-3 bg-gradient-warning">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-edit me-2"></i>
+                        Cập nhật thông tin Góc Tiếp Nhận
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" method="post" enctype="multipart/form-data" id="editReceivingAngleForm">
+                        @Html.HiddenFor(model => model.id)
+                        @Html.HiddenFor(model => model.created_at)
+                        @Html.HiddenFor(model => model.image)
+                        
+                        <div class="row">
+                            <!-- Title Field -->
+                            <div class="col-md-12 mb-4">
+                                <label asp-for="title" class="form-label fw-bold required">
+                                    <i class="fas fa-heading text-warning me-2"></i>
+                                    Tiêu đề
+                                </label>
+                                <input asp-for="title" class="form-control form-control-lg border-left-warning" 
+                                       placeholder="Nhập tiêu đề góc tiếp nhận..." />
+                                <span asp-validation-for="title" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Description Field -->
+                            <div class="col-md-12 mb-4">
+                                <label asp-for="description" class="form-label fw-bold">
+                                    <i class="fas fa-align-left text-warning me-2"></i>
+                                    Mô tả
+                                </label>
+                                <textarea asp-for="description" class="form-control border-left-warning" rows="4"
+                                          placeholder="Nhập mô tả chi tiết..."></textarea>
+                                <div class="form-text text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Mô tả chi tiết về nội dung góc tiếp nhận
+                                </div>
+                                <span asp-validation-for="description" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Link Field -->
+                            <div class="col-md-12 mb-4">
+                                <label asp-for="link" class="form-label fw-bold">
+                                    <i class="fas fa-link text-warning me-2"></i>
+                                    Đường dẫn liên kết
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-warning text-white">
+                                        <i class="fas fa-globe"></i>
+                                    </span>
+                                    <input asp-for="link" class="form-control form-control-lg" 
+                                           placeholder="Ví dụ: https://example.com hoặc /page-url" />
+                                </div>
+                                <div class="form-text text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    URL đầy đủ hoặc đường dẫn tương đối
+                                </div>
+                                <span asp-validation-for="link" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Current Image and New Image Upload -->
+                            <div class="col-md-6 mb-4">
+                                <label asp-for="formFile" class="form-label fw-bold">
+                                    <i class="fas fa-image text-warning me-2"></i>
+                                    Hình ảnh mới (tùy chọn)
+                                </label>
+                                
+                                @if (!string.IsNullOrEmpty(Model.image))
+                                {
+                                    <div class="current-image-preview mb-3">
+                                        <label class="form-label fw-bold text-muted">Hình ảnh hiện tại:</label>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <img src="/Resources/@Model.image" alt="Current Image" 
+                                                 class="img-thumbnail shadow" 
+                                                 style="max-width: 150px; max-height: 150px; object-fit: cover;" />
+                                            <div class="current-image-info">
+                                                <p class="text-muted mb-0">
+                                                    <i class="fas fa-check text-success me-1"></i>
+                                                    Hình ảnh đã tải lên
+                                                </p>
+                                                <small class="text-muted">Chọn file mới để thay thế</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                
+                                <div class="custom-file-upload">
+                                    <input asp-for="formFile" type="file" class="form-control" id="imageFile"
+                                           accept="image/*" />
+                                    <div class="file-upload-preview mt-3" id="filePreview" style="display: none;">
+                                        <div class="preview-container p-3 border rounded bg-light">
+                                            <h6 class="mb-2">Xem trước hình ảnh mới:</h6>
+                                            <img id="previewImage" src="" alt="Preview" class="img-thumbnail" 
+                                                 style="max-width: 200px; max-height: 200px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-text text-muted">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Chấp nhận các định dạng: PNG, JPG, GIF. Kích thước tối đa: 5MB. Để trống nếu không muốn thay đổi.
+                                </div>
+                                <span asp-validation-for="formFile" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Order and Status Fields -->
+                            <div class="col-md-6 mb-4">
+                                <div class="row">
+                                    <!-- Order Field -->
+                                    <div class="col-12 mb-3">
+                                        <label asp-for="order" class="form-label fw-bold">
+                                            <i class="fas fa-sort-numeric-up text-warning me-2"></i>
+                                            Thứ tự hiển thị
+                                        </label>
+                                        <input asp-for="order" type="number" class="form-control border-left-warning" 
+                                               placeholder="Nhập số thứ tự..." min="0" />
+                                        <div class="form-text text-muted">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Số thứ tự hiển thị (số nhỏ hiển thị trước)
+                                        </div>
+                                        <span asp-validation-for="order" class="text-danger small"></span>
+                                    </div>
+
+                                    <!-- Status Field -->
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold">
+                                            <i class="fas fa-toggle-on text-warning me-2"></i>
+                                            Trạng thái
+                                        </label>
+                                        <div class="form-check form-switch">
+                                            <input asp-for="status" class="form-check-input" type="checkbox" 
+                                                   id="statusSwitch" />
+                                            <label class="form-check-label" for="statusSwitch">
+                                                <span id="statusLabel">@(Model.status ? "Đã kích hoạt" : "Chưa kích hoạt")</span>
+                                            </label>
+                                        </div>
+                                        <div class="form-text text-muted">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Bật/tắt hiển thị góc tiếp nhận trên trang web
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <hr class="my-4">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                                        <i class="fas fa-times me-2"></i>
+                                        Hủy bỏ
+                                    </a>
+                                    <div class="d-flex gap-2">
+                                        <a asp-action="Details" asp-route-id="@Model.id" class="btn btn-outline-info btn-lg">
+                                            <i class="fas fa-eye me-2"></i>
+                                            Xem chi tiết
+                                        </a>
+                                        <button type="submit" class="btn btn-warning btn-lg px-5" id="submitBtn">
+                                            <i class="fas fa-save me-2"></i>
+                                            Cập nhật
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    .border-left-warning {
+        border-left: 4px solid #f6c23e !important;
+    }
+    
+    .custom-file-upload {
+        position: relative;
+    }
+    
+    .preview-container {
+        background: linear-gradient(135deg, #fff3cd 0%, #fdf2e9 100%);
+        border: 2px dashed #f6c23e !important;
+    }
+    
+    .current-image-preview {
+        background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
+        border: 1px solid #e3e6f0;
+        border-radius: 10px;
+        padding: 15px;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #f6c23e;
+        box-shadow: 0 0 0 0.2rem rgba(246, 194, 62, 0.25);
+    }
+    
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+    
+    .btn {
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .alert {
+        border-radius: 10px;
+        border: none;
+    }
+    
+    .required::after {
+        content: " *";
+        color: #e74c3c;
+        font-weight: bold;
+    }
+    
+    .form-check-input:checked {
+        background-color: #f6c23e;
+        border-color: #f6c23e;
+    }
+    
+    .form-check-input:focus {
+        border-color: #f6c23e;
+        box-shadow: 0 0 0 0.25rem rgba(246, 194, 62, 0.25);
+    }
+</style>
+
+<!-- JavaScript for Enhanced Functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('imageFile');
+        const filePreview = document.getElementById('filePreview');
+        const previewImage = document.getElementById('previewImage');
+        const submitBtn = document.getElementById('submitBtn');
+        const statusSwitch = document.getElementById('statusSwitch');
+        const statusLabel = document.getElementById('statusLabel');
+        
+        // File preview functionality
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validate file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Kích thước file không được vượt quá 5MB!');
+                    fileInput.value = '';
+                    filePreview.style.display = 'none';
+                    return;
+                }
+                
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Vui lòng chọn file hình ảnh!');
+                    fileInput.value = '';
+                    filePreview.style.display = 'none';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    filePreview.style.display = 'block';
+                    
+                    // Add animation
+                    filePreview.style.opacity = '0';
+                    setTimeout(() => {
+                        filePreview.style.transition = 'opacity 0.3s ease';
+                        filePreview.style.opacity = '1';
+                    }, 100);
+                };
+                reader.readAsDataURL(file);
+            } else {
+                filePreview.style.display = 'none';
+            }
+        });
+        
+        // Status switch functionality
+        statusSwitch.addEventListener('change', function() {
+            statusLabel.textContent = this.checked ? 'Đã kích hoạt' : 'Chưa kích hoạt';
+        });
+        
+        // Form submission with loading state
+        document.getElementById('editReceivingAngleForm').addEventListener('submit', function() {
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang cập nhật...';
+            submitBtn.disabled = true;
+        });
+        
+        // Auto-hide alerts after 5 seconds
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        if (alert.parentNode) {
+                            alert.remove();
+                        }
+                    }, 500);
+                }
+            }, 5000);
+        });
+    });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

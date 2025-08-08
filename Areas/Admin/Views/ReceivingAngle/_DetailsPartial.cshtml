@@ -1,0 +1,173 @@
+@model websitebenhvien.Models.EnitityVM.ReceivingAngleVM
+
+<div class="details-content">
+    <!-- Title -->
+    <div class="detail-item mb-3">
+        <div class="detail-label">
+            <i class="fas fa-heading text-primary me-2"></i>
+            <strong>Tiêu đề:</strong>
+        </div>
+        <div class="detail-value">
+            <h5 class="text-dark mb-0">@Model.title</h5>
+        </div>
+    </div>
+
+    <!-- Description -->
+    <div class="detail-item mb-3">
+        <div class="detail-label">
+            <i class="fas fa-align-left text-primary me-2"></i>
+            <strong>Mô tả:</strong>
+        </div>
+        <div class="detail-value">
+            @if (!string.IsNullOrEmpty(Model.description))
+            {
+                <div class="description-box p-3 bg-light rounded">
+                    @Html.Raw(Model.description.Replace("\n", "<br/>"))
+                </div>
+            }
+            else
+            {
+                <span class="text-muted fst-italic">Không có mô tả</span>
+            }
+        </div>
+    </div>
+
+    <!-- Image -->
+    @if (!string.IsNullOrEmpty(Model.image))
+    {
+        <div class="detail-item mb-3">
+            <div class="detail-label">
+                <i class="fas fa-image text-primary me-2"></i>
+                <strong>Hình ảnh:</strong>
+            </div>
+            <div class="detail-value text-center">
+                <img src="@Model.image" alt="@Model.title" 
+                     class="img-fluid rounded shadow" 
+                     style="max-height: 200px; object-fit: cover;" />
+            </div>
+        </div>
+    }
+
+    <!-- Link -->
+    @if (!string.IsNullOrEmpty(Model.link))
+    {
+        <div class="detail-item mb-3">
+            <div class="detail-label">
+                <i class="fas fa-link text-primary me-2"></i>
+                <strong>Liên kết:</strong>
+            </div>
+            <div class="detail-value">
+                <div class="d-flex align-items-center gap-2">
+                    <code class="bg-light px-2 py-1 text-primary flex-grow-1">@Model.link</code>
+                    <a href="@Model.link" target="_blank" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Status and Order -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="detail-item mb-3">
+                <div class="detail-label">
+                    <i class="fas fa-toggle-on text-primary me-2"></i>
+                    <strong>Trạng thái:</strong>
+                </div>
+                <div class="detail-value">
+                    @if (Model.status)
+                    {
+                        <span class="badge bg-success">
+                            <i class="fas fa-check me-1"></i>
+                            Đang kích hoạt
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">
+                            <i class="fas fa-times me-1"></i>
+                            Chưa kích hoạt
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-item mb-3">
+                <div class="detail-label">
+                    <i class="fas fa-sort-numeric-up text-primary me-2"></i>
+                    <strong>Thứ tự:</strong>
+                </div>
+                <div class="detail-value">
+                    @if (Model.order.HasValue)
+                    {
+                        <span class="badge bg-info">@Model.order</span>
+                    }
+                    else
+                    {
+                        <span class="text-muted">Chưa đặt thứ tự</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Created Date -->
+    <div class="detail-item mb-3">
+        <div class="detail-label">
+            <i class="fas fa-calendar text-primary me-2"></i>
+            <strong>Ngày tạo:</strong>
+        </div>
+        <div class="detail-value">
+            <span class="text-muted">
+                @Model.created_at.ToString("dd/MM/yyyy HH:mm:ss")
+            </span>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <hr class="my-3">
+    <div class="text-end">
+        <a asp-action="Edit" asp-route-id="@Model.id" class="btn btn-warning btn-sm me-2">
+            <i class="fas fa-edit me-1"></i>
+            Chỉnh sửa
+        </a>
+        <a asp-action="Details" asp-route-id="@Model.id" class="btn btn-primary btn-sm">
+            <i class="fas fa-eye me-1"></i>
+            Xem đầy đủ
+        </a>
+    </div>
+</div>
+
+<style>
+    .detail-item {
+        padding: 10px 0;
+        border-bottom: 1px solid #e3e6f0;
+    }
+    
+    .detail-item:last-child {
+        border-bottom: none;
+    }
+    
+    .detail-label {
+        font-weight: 600;
+        color: #5a5c69;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+    }
+    
+    .detail-value {
+        color: #3a3b45;
+    }
+    
+    .description-box {
+        border-left: 4px solid #4e73df;
+        line-height: 1.6;
+    }
+    
+    .badge {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+</style>

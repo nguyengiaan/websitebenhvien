@@ -1,0 +1,401 @@
+@model websitebenhvien.Models.EnitityVM.ReceivingAngleVM
+@{
+    ViewData["Title"] = "Xóa Góc Tiếp Nhận";
+}
+
+<div class="container-fluid mt-4">
+    <!-- Page Header -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-trash text-danger me-2"></i>
+                Xóa Góc Tiếp Nhận
+            </h1>
+            <p class="mb-0 text-muted">Xác nhận xóa góc tiếp nhận khỏi hệ thống</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Details" asp-route-id="@Model.id" class="btn btn-outline-info">
+                <i class="fas fa-eye me-1"></i>
+                Xem chi tiết
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>
+                Quay lại danh sách
+            </a>
+        </div>
+    </div>
+
+    <!-- Warning Alert -->
+    <div class="alert alert-warning border-0 shadow-sm mb-4" role="alert">
+        <div class="d-flex align-items-center">
+            <div class="me-3">
+                <i class="fas fa-exclamation-triangle fa-2x text-warning"></i>
+            </div>
+            <div>
+                <h5 class="alert-heading mb-2">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Cảnh báo: Hành động không thể hoàn tác
+                </h5>
+                <p class="mb-0">
+                    Bạn đang thực hiện xóa góc tiếp nhận. Tất cả dữ liệu liên quan bao gồm hình ảnh sẽ bị xóa vĩnh viễn và không thể khôi phục.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Card -->
+    <div class="row justify-content-center">
+        <div class="col-xl-10 col-lg-12">
+            <div class="card shadow border-0">
+                <div class="card-header py-3 bg-gradient-danger">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-trash me-2"></i>
+                        Xác nhận xóa Góc Tiếp Nhận
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <!-- Item Information -->
+                        <div class="col-lg-8 mb-4">
+                            <h5 class="text-danger mb-4">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Thông tin góc tiếp nhận sẽ bị xóa:
+                            </h5>
+                            
+                            <div class="delete-info-container">
+                                <!-- Title -->
+                                <div class="info-row">
+                                    <div class="info-label">
+                                        <i class="fas fa-heading text-danger me-2"></i>
+                                        <strong>Tiêu đề:</strong>
+                                    </div>
+                                    <div class="info-value">
+                                        <span class="text-dark fw-bold">@Model.title</span>
+                                    </div>
+                                </div>
+
+                                <!-- Description -->
+                                <div class="info-row">
+                                    <div class="info-label">
+                                        <i class="fas fa-align-left text-danger me-2"></i>
+                                        <strong>Mô tả:</strong>
+                                    </div>
+                                    <div class="info-value">
+                                        @if (!string.IsNullOrEmpty(Model.description))
+                                        {
+                                            <span class="text-muted">@(Model.description.Length > 100 ? Model.description.Substring(0, 100) + "..." : Model.description)</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">Không có mô tả</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <!-- Link -->
+                                <div class="info-row">
+                                    <div class="info-label">
+                                        <i class="fas fa-link text-danger me-2"></i>
+                                        <strong>Liên kết:</strong>
+                                    </div>
+                                    <div class="info-value">
+                                        @if (!string.IsNullOrEmpty(Model.link))
+                                        {
+                                            <code class="bg-light px-2 py-1 text-primary">@Model.link</code>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">Không có liên kết</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <!-- Status and Order -->
+                                <div class="info-row">
+                                    <div class="info-label">
+                                        <i class="fas fa-toggle-on text-danger me-2"></i>
+                                        <strong>Trạng thái:</strong>
+                                    </div>
+                                    <div class="info-value">
+                                        @if (Model.status)
+                                        {
+                                            <span class="badge bg-success">Đang kích hoạt</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Chưa kích hoạt</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="info-row">
+                                    <div class="info-label">
+                                        <i class="fas fa-sort-numeric-up text-danger me-2"></i>
+                                        <strong>Thứ tự:</strong>
+                                    </div>
+                                    <div class="info-value">
+                                        @if (Model.order.HasValue)
+                                        {
+                                            <span class="badge bg-info">@Model.order</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">Chưa đặt thứ tự</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <!-- Created Date -->
+                                <div class="info-row">
+                                    <div class="info-label">
+                                        <i class="fas fa-calendar text-danger me-2"></i>
+                                        <strong>Ngày tạo:</strong>
+                                    </div>
+                                    <div class="info-value">
+                                        <span class="text-muted">@Model.created_at.ToString("dd/MM/yyyy HH:mm")</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image Preview -->
+                        <div class="col-lg-4 mb-4">
+                            <div class="text-center">
+                                <h6 class="text-danger mb-3">
+                                    <i class="fas fa-image me-2"></i>
+                                    Hình ảnh sẽ bị xóa:
+                                </h6>
+                                @if (!string.IsNullOrEmpty(Model.image))
+                                {
+                                    <div class="image-to-delete">
+                                        <img src="@Model.image" alt="@Model.title" 
+                                             class="img-fluid rounded shadow" 
+                                             style="max-height: 200px; object-fit: cover; opacity: 0.7;" />
+                                        <div class="mt-2">
+                                            <small class="text-danger">
+                                                <i class="fas fa-exclamation-circle me-1"></i>
+                                                File hình ảnh sẽ bị xóa vĩnh viễn
+                                            </small>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="no-image-placeholder py-4">
+                                        <i class="fas fa-image fa-3x text-gray-300"></i>
+                                        <p class="text-muted mt-2 mb-0">Không có hình ảnh</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Confirmation Section -->
+                    <hr class="my-4">
+                    <div class="confirmation-section">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-shield-alt text-danger fa-2x me-3"></i>
+                                    <div>
+                                        <h6 class="mb-1 text-danger">Xác nhận xóa</h6>
+                                        <p class="mb-0 text-muted small">
+                                            Để xác nhận xóa, vui lòng kiểm tra thông tin và nhấn nút "Xác nhận xóa" bên dưới.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="confirmCheck" required>
+                                    <label class="form-check-label text-danger fw-bold" for="confirmCheck">
+                                        Tôi hiểu và xác nhận xóa
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <hr class="my-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex gap-2">
+                                    <a asp-action="Index" class="btn btn-outline-secondary btn-lg">
+                                        <i class="fas fa-times me-2"></i>
+                                        Hủy bỏ
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@Model.id" class="btn btn-outline-info btn-lg">
+                                        <i class="fas fa-eye me-2"></i>
+                                        Xem chi tiết
+                                    </a>
+                                </div>
+                                <form asp-action="Delete" method="post" id="deleteForm">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" asp-for="id" />
+                                    <button type="submit" class="btn btn-danger btn-lg px-5" id="deleteBtn" disabled>
+                                        <i class="fas fa-trash me-2"></i>
+                                        Xác nhận xóa
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    .delete-info-container {
+        background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+        border: 1px solid #fc8181;
+        border-radius: 10px;
+        padding: 20px;
+    }
+    
+    .info-row {
+        display: flex;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #fed7d7;
+    }
+    
+    .info-row:last-child {
+        margin-bottom: 0;
+        border-bottom: none;
+    }
+    
+    .info-label {
+        min-width: 120px;
+        font-weight: 600;
+    }
+    
+    .info-value {
+        flex: 1;
+        margin-left: 15px;
+    }
+    
+    .image-to-delete {
+        position: relative;
+    }
+    
+    .image-to-delete::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 10px,
+            rgba(220, 53, 69, 0.1) 10px,
+            rgba(220, 53, 69, 0.1) 20px
+        );
+        border-radius: 8px;
+        pointer-events: none;
+    }
+    
+    .no-image-placeholder {
+        background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
+        border: 2px dashed #d1d3e2;
+        border-radius: 10px;
+    }
+    
+    .confirmation-section {
+        background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+        border: 1px solid #ffb74d;
+        border-radius: 10px;
+        padding: 20px;
+    }
+    
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+    
+    .btn {
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .alert {
+        border-radius: 10px;
+        border: none;
+    }
+    
+    .form-check-input:checked {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    .form-check-input:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+    }
+    
+    #deleteBtn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+</style>
+
+<!-- JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const confirmCheck = document.getElementById('confirmCheck');
+        const deleteBtn = document.getElementById('deleteBtn');
+        const deleteForm = document.getElementById('deleteForm');
+        
+        // Enable/disable delete button based on checkbox
+        confirmCheck.addEventListener('change', function() {
+            deleteBtn.disabled = !this.checked;
+            
+            if (this.checked) {
+                deleteBtn.classList.remove('btn-outline-danger');
+                deleteBtn.classList.add('btn-danger');
+            } else {
+                deleteBtn.classList.remove('btn-danger');
+                deleteBtn.classList.add('btn-outline-danger');
+            }
+        });
+        
+        // Form submission with confirmation
+        deleteForm.addEventListener('submit', function(e) {
+            if (!confirmCheck.checked) {
+                e.preventDefault();
+                alert('Vui lòng xác nhận việc xóa bằng cách đánh dấu vào ô kiểm tra.');
+                return false;
+            }
+            
+            // Final confirmation
+            const confirmed = confirm('Bạn có chắc chắn muốn xóa góc tiếp nhận "' + '@Model.title' + '" không?\n\nHành động này không thể hoàn tác!');
+            if (!confirmed) {
+                e.preventDefault();
+                return false;
+            }
+            
+            // Show loading state
+            deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xóa...';
+            deleteBtn.disabled = true;
+        });
+    });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

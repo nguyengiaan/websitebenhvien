@@ -1,0 +1,675 @@
+@model websitebenhvien.Models.EnitityVM.PaginatedReceivingAngleVM
+@{
+    ViewData["Title"] = "Quản lý Góc Tiếp Nhận";
+}
+
+<div class="container-fluid mt-4">
+    <!-- Page Header -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-comment-dots text-primary me-2"></i>
+                Quản lý Góc Tiếp Nhận
+            </h1>
+            <p class="mb-0 text-muted">Danh sách tất cả các góc tiếp nhận trên trang web</p>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-info" onclick="refreshPage()">
+                <i class="fas fa-sync-alt me-1"></i>
+                Làm mới
+            </button>
+            <a asp-action="Create" class="btn btn-success btn-lg">
+                <i class="fas fa-plus-circle me-2"></i>
+                Thêm mới Góc Tiếp Nhận
+            </a>
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
+            <i class="fas fa-check-circle me-2"></i>
+            <strong>Thành công!</strong> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Lỗi!</strong> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Search & Filter Section -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <form method="get" asp-action="Index" id="searchForm">
+                        <div class="input-group">
+                            <span class="input-group-text bg-primary text-white">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" name="searchTerm" value="@Model.SearchTerm" 
+                                   class="form-control form-control-lg" 
+                                   placeholder="Tìm kiếm theo tiêu đề hoặc mô tả..."
+                                   id="searchInput">
+                            <input type="hidden" name="page" value="1">
+                            <input type="hidden" name="pageSize" value="@Model.PageSize">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search me-1"></i>
+                                Tìm kiếm
+                            </button>
+                            @if (!string.IsNullOrEmpty(Model.SearchTerm))
+                            {
+                                <a href="@Url.Action("Index")" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times me-1"></i>
+                                    Xóa bộ lọc
+                                </a>
+                            }
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="d-flex align-items-center justify-content-end gap-3">
+                        <span class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Hiển thị @Model.Items.Count() / @Model.TotalCount góc tiếp nhận
+                        </span>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-list me-1"></i>
+                                @Model.PageSize mục/trang
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="@Url.Action("Index", new { searchTerm = Model.SearchTerm, page = 1, pageSize = 5 })">5 mục/trang</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", new { searchTerm = Model.SearchTerm, page = 1, pageSize = 10 })">10 mục/trang</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", new { searchTerm = Model.SearchTerm, page = 1, pageSize = 20 })">20 mục/trang</a></li>
+                                <li><a class="dropdown-item" href="@Url.Action("Index", new { searchTerm = Model.SearchTerm, page = 1, pageSize = 50 })">50 mục/trang</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                Tổng số Góc Tiếp Nhận
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                @Model.TotalCount
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-comment-dots fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Đã kích hoạt
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                @Model.Items.Count(x => x.status)
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-toggle-on fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-warning shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Có hình ảnh
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                @Model.Items.Count(x => !string.IsNullOrEmpty(x.image))
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-image fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-info shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                Trang hiện tại
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                @Model.CurrentPage / @Model.TotalPages
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-file-alt fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ReceivingAngle Table -->
+    <div class="card shadow border-0">
+        <div class="card-header py-3 bg-gradient-primary">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-white">
+                    <i class="fas fa-table me-2"></i>
+                    Danh sách Góc Tiếp Nhận
+                </h6>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="text-white-50 small">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Trang @Model.CurrentPage/@Model.TotalPages
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-body p-0">
+            @if (Model.Items != null && Model.Items.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0" id="receivingAngleTable">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="border-0 text-center" style="width: 60px;">
+                                    <i class="fas fa-hashtag text-muted"></i>
+                                </th>
+                                <th class="border-0" style="width: 100px;">
+                                    <i class="fas fa-image text-muted me-1"></i>
+                                    Hình ảnh
+                                </th>
+                                <th class="border-0">
+                                    <i class="fas fa-heading text-muted me-1"></i>
+                                    Tiêu đề
+                                </th>
+                                <th class="border-0">
+                                    <i class="fas fa-align-left text-muted me-1"></i>
+                                    Mô tả
+                                </th>
+                                <th class="border-0" style="width: 120px;">
+                                    <i class="fas fa-link text-muted me-1"></i>
+                                    Liên kết
+                                </th>
+                                <th class="border-0 text-center" style="width: 100px;">
+                                    <i class="fas fa-sort-numeric-up text-muted me-1"></i>
+                                    Thứ tự
+                                </th>
+                                <th class="border-0 text-center" style="width: 100px;">
+                                    <i class="fas fa-toggle-on text-muted me-1"></i>
+                                    Trạng thái
+                                </th>
+                                <th class="border-0 text-center" style="width: 200px;">
+                                    <i class="fas fa-cogs text-muted me-1"></i>
+                                    Thao tác
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @{
+                            int startIndex = (Model.CurrentPage - 1) * Model.PageSize + 1;
+                            int index = startIndex;
+                            foreach (var item in Model.Items)
+                            {
+                                <tr class="receiving-angle-row" data-id="@item.id">
+                                    <td class="text-center align-middle">
+                                        <span class="badge bg-secondary">@index</span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="image-container">
+                                            @if (!string.IsNullOrEmpty(item.image))
+                                            {
+                                                <div class="image-preview">
+                                                    <img src="/Resources/@item.image" alt="@item.title" 
+                                                         class="rounded shadow-sm" 
+                                                         style="width:60px;height:60px;object-fit:cover;border:2px solid #e3e6f0;" />
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="no-image-placeholder">
+                                                    <div class="d-flex align-items-center justify-content-center bg-light rounded" 
+                                                         style="width:60px;height:60px;border:2px dashed #d1d3e2;">
+                                                        <i class="fas fa-image text-muted"></i>
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="title-container">
+                                            <strong class="text-gray-800 d-block">@item.title</strong>
+                                            <small class="text-muted">
+                                                <i class="fas fa-calendar me-1"></i>
+                                                @item.created_at.ToString("dd/MM/yyyy HH:mm")
+                                            </small>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="description-container">
+                                            @if (!string.IsNullOrEmpty(item.description))
+                                            {
+                                                <span class="text-muted" title="@item.description">
+                                                    @(item.description.Length > 60 ? item.description.Substring(0, 60) + "..." : item.description)
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted fst-italic">Không có mô tả</span>
+                                            }
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        @if (!string.IsNullOrEmpty(item.link))
+                                        {
+                                            <a href="@item.link" target="_blank" class="btn btn-sm btn-outline-info" title="Mở liên kết">
+                                                <i class="fas fa-external-link-alt"></i>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted fst-italic">-</span>
+                                        }
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @if (item.order.HasValue)
+                                        {
+                                            <span class="badge bg-info">@item.order</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">-</span>
+                                        }
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @if (item.status)
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check me-1"></i>
+                                                Kích hoạt
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                <i class="fas fa-times me-1"></i>
+                                                Tắt
+                                            </span>
+                                        }
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-sm btn-outline-info" 
+                                                    onclick="viewDetails(@item.id)"
+                                                    title="Xem chi tiết">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <a asp-action="Edit" asp-route-id="@item.id" 
+                                               class="btn btn-sm btn-outline-primary" 
+                                               title="Chỉnh sửa">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <button type="button" 
+                                                    class="btn btn-sm btn-outline-danger" 
+                                                    onclick="confirmDelete(@item.id, '@Html.Raw(Html.Encode(item.title))')"
+                                                    title="Xóa">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                index++;
+                            }
+                        }
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                @if (Model.TotalPages > 1)
+                {
+                    <div class="card-footer bg-light">
+                        <nav aria-label="ReceivingAngle pagination">
+                            <ul class="pagination justify-content-center mb-0">
+                                <!-- Previous Page -->
+                                <li class="page-item @(Model.HasPrevious ? "" : "disabled")">
+                                    <a class="page-link" href="@(Model.HasPrevious ? Url.Action("Index", new { searchTerm = Model.SearchTerm, page = Model.CurrentPage - 1, pageSize = Model.PageSize }) : "#")" 
+                                       aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+
+                                <!-- First Page -->
+                                @if (Model.StartPage > 1)
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", new { searchTerm = Model.SearchTerm, page = 1, pageSize = Model.PageSize })">1</a>
+                                    </li>
+                                    @if (Model.StartPage > 2)
+                                    {
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                    }
+                                }
+
+                                <!-- Page Numbers -->
+                                @for (int i = Model.StartPage; i <= Model.EndPage; i++)
+                                {
+                                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                        <a class="page-link" href="@Url.Action("Index", new { searchTerm = Model.SearchTerm, page = i, pageSize = Model.PageSize })">@i</a>
+                                    </li>
+                                }
+
+                                <!-- Last Page -->
+                                @if (Model.EndPage < Model.TotalPages)
+                                {
+                                    @if (Model.EndPage < Model.TotalPages - 1)
+                                    {
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                    }
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", new { searchTerm = Model.SearchTerm, page = Model.TotalPages, pageSize = Model.PageSize })">@Model.TotalPages</a>
+                                    </li>
+                                }
+
+                                <!-- Next Page -->
+                                <li class="page-item @(Model.HasNext ? "" : "disabled")">
+                                    <a class="page-link" href="@(Model.HasNext ? Url.Action("Index", new { searchTerm = Model.SearchTerm, page = Model.CurrentPage + 1, pageSize = Model.PageSize }) : "#")" 
+                                       aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                        
+                        <div class="text-center mt-2">
+                            <small class="text-muted">
+                                Hiển thị @((Model.CurrentPage - 1) * Model.PageSize + 1) - @Math.Min(Model.CurrentPage * Model.PageSize, Model.TotalCount) 
+                                trong tổng số @Model.TotalCount góc tiếp nhận
+                            </small>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state text-center py-5">
+                    <div class="mb-4">
+                        @if (!string.IsNullOrEmpty(Model.SearchTerm))
+                        {
+                            <i class="fas fa-search fa-4x text-gray-300"></i>
+                            <h4 class="text-gray-400 mt-3">Không tìm thấy kết quả</h4>
+                            <p class="text-muted">Không tìm thấy góc tiếp nhận nào với từ khóa <strong>"@Model.SearchTerm"</strong></p>
+                            <a href="@Url.Action("Index")" class="btn btn-outline-primary">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Quay lại danh sách
+                            </a>
+                        }
+                        else
+                        {
+                            <i class="fas fa-comment-dots fa-4x text-gray-300"></i>
+                            <h4 class="text-gray-400 mt-3">Chưa có góc tiếp nhận nào</h4>
+                            <p class="text-muted">Hãy thêm góc tiếp nhận đầu tiên để bắt đầu quản lý.</p>
+                            <a asp-action="Create" class="btn btn-primary btn-lg">
+                                <i class="fas fa-plus-circle me-2"></i>
+                                Thêm góc tiếp nhận đầu tiên
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- View Details Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel">
+                    <i class="fas fa-eye me-2"></i>
+                    Chi tiết Góc Tiếp Nhận
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="detailsModalBody">
+                <!-- Details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+                    Xác nhận xóa
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa góc tiếp nhận <strong id="deleteItemName"></strong> không?</p>
+                <p class="text-muted small">Hành động này không thể hoàn tác.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                    <i class="fas fa-trash me-1"></i>
+                    Xóa
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    .border-left-primary {
+        border-left: 4px solid #4e73df !important;
+    }
+    
+    .border-left-success {
+        border-left: 4px solid #1cc88a !important;
+    }
+    
+    .border-left-warning {
+        border-left: 4px solid #f6c23e !important;
+    }
+    
+    .border-left-info {
+        border-left: 4px solid #36b9cc !important;
+    }
+    
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+    
+    .btn {
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .alert {
+        border-radius: 10px;
+        border: none;
+    }
+    
+    .table th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+    
+    .receiving-angle-row:hover {
+        background-color: #f8f9fc;
+    }
+    
+    .image-preview img {
+        transition: transform 0.3s ease;
+    }
+    
+    .image-preview img:hover {
+        transform: scale(1.1);
+    }
+    
+    .badge {
+        font-size: 0.75rem;
+    }
+    
+    .empty-state {
+        min-height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .pagination .page-link {
+        border-radius: 8px;
+        margin: 0 2px;
+        border: none;
+        color: #4e73df;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #4e73df;
+        border-color: #4e73df;
+    }
+</style>
+
+<!-- JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Auto-hide alerts after 5 seconds
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                if (alert.parentNode) {
+                    alert.style.transition = 'opacity 0.5s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        if (alert.parentNode) {
+                            alert.remove();
+                        }
+                    }, 500);
+                }
+            }, 5000);
+        });
+        
+        // Search form auto-submit on Enter
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('searchForm').submit();
+            }
+        });
+    });
+    
+    // Refresh page function
+    function refreshPage() {
+        window.location.reload();
+    }
+    
+    // View details function
+    function viewDetails(id) {
+        document.getElementById('detailsModalBody').innerHTML = `
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Đang tải...</span>
+                </div>
+                <p class="mt-2">Đang tải thông tin chi tiết...</p>
+            </div>
+        `;
+        
+        const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
+        modal.show();
+        
+        // Make AJAX call to get details
+        fetch('/Admin/ReceivingAngle/GetDetails/' + id)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(html => {
+                document.getElementById('detailsModalBody').innerHTML = html;
+            })
+            .catch(error => {
+                document.getElementById('detailsModalBody').innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Có lỗi xảy ra khi tải thông tin chi tiết. Vui lòng thử lại sau.
+                    </div>
+                `;
+            });
+    }
+    
+    // Confirm delete function
+    function confirmDelete(id, name) {
+        document.getElementById('deleteItemName').textContent = name;
+        
+        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        modal.show();
+        
+        document.getElementById('confirmDeleteBtn').onclick = function() {
+            // Redirect to delete confirmation page
+            window.location.href = '/Admin/ReceivingAngle/Delete/' + id;
+        };
+    }
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,382 @@
+@model websitebenhvien.Models.EnitityVM.ReceivingAngleVM
+@{
+    ViewData["Title"] = "Chi tiết Góc Tiếp Nhận";
+}
+
+<div class="container-fluid mt-4">
+    <!-- Page Header -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">
+                <i class="fas fa-eye text-info me-2"></i>
+                Chi tiết Góc Tiếp Nhận
+            </h1>
+            <p class="mb-0 text-muted">Xem thông tin chi tiết góc tiếp nhận</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.id" class="btn btn-warning">
+                <i class="fas fa-edit me-1"></i>
+                Chỉnh sửa
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i>
+                Quay lại danh sách
+            </a>
+        </div>
+    </div>
+
+    <!-- Details Cards -->
+    <div class="row">
+        <!-- Main Information Card -->
+        <div class="col-xl-8 col-lg-7 mb-4">
+            <div class="card shadow border-0">
+                <div class="card-header py-3 bg-gradient-info">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Thông tin chi tiết
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <!-- Title -->
+                        <div class="col-12 mb-4">
+                            <div class="info-item">
+                                <label class="info-label">
+                                    <i class="fas fa-heading text-info me-2"></i>
+                                    Tiêu đề
+                                </label>
+                                <div class="info-value">
+                                    <h4 class="text-gray-800 mb-0">@Model.title</h4>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12 mb-4">
+                            <div class="info-item">
+                                <label class="info-label">
+                                    <i class="fas fa-align-left text-info me-2"></i>
+                                    Mô tả
+                                </label>
+                                <div class="info-value">
+                                    @if (!string.IsNullOrEmpty(Model.description))
+                                    {
+                                        <div class="description-content p-3 bg-light rounded">
+                                            @Html.Raw(Model.description.Replace("\n", "<br/>"))
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">Không có mô tả</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Link -->
+                        <div class="col-12 mb-4">
+                            <div class="info-item">
+                                <label class="info-label">
+                                    <i class="fas fa-link text-info me-2"></i>
+                                    Đường dẫn liên kết
+                                </label>
+                                <div class="info-value">
+                                    @if (!string.IsNullOrEmpty(Model.link))
+                                    {
+                                        <div class="d-flex align-items-center gap-3">
+                                            <code class="bg-light px-3 py-2 rounded text-primary flex-grow-1">@Model.link</code>
+                                            <a href="@Model.link" target="_blank" class="btn btn-sm btn-outline-info">
+                                                <i class="fas fa-external-link-alt me-1"></i>
+                                                Mở liên kết
+                                            </a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">Không có liên kết</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order and Status -->
+                        <div class="col-md-6 mb-3">
+                            <div class="info-item">
+                                <label class="info-label">
+                                    <i class="fas fa-sort-numeric-up text-info me-2"></i>
+                                    Thứ tự hiển thị
+                                </label>
+                                <div class="info-value">
+                                    @if (Model.order.HasValue)
+                                    {
+                                        <span class="badge bg-info fs-6">@Model.order</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Chưa đặt thứ tự</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="info-item">
+                                <label class="info-label">
+                                    <i class="fas fa-toggle-on text-info me-2"></i>
+                                    Trạng thái
+                                </label>
+                                <div class="info-value">
+                                    @if (Model.status)
+                                    {
+                                        <span class="badge bg-success fs-6">
+                                            <i class="fas fa-check me-1"></i>
+                                            Đang kích hoạt
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary fs-6">
+                                            <i class="fas fa-times me-1"></i>
+                                            Chưa kích hoạt
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Created Date -->
+                        <div class="col-12">
+                            <div class="info-item">
+                                <label class="info-label">
+                                    <i class="fas fa-calendar text-info me-2"></i>
+                                    Ngày tạo
+                                </label>
+                                <div class="info-value">
+                                    <span class="text-muted">
+                                        @Model.created_at.ToString("dd/MM/yyyy HH:mm:ss")
+                                        (@TimeZoneInfo.ConvertTime(Model.created_at, TimeZoneInfo.Local).ToString("'ngày' dd 'tháng' MM 'năm' yyyy"))
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Image and Actions Card -->
+        <div class="col-xl-4 col-lg-5 mb-4">
+            <!-- Image Card -->
+            <div class="card shadow border-0 mb-4">
+                <div class="card-header py-3 bg-gradient-secondary">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-image me-2"></i>
+                        Hình ảnh
+                    </h6>
+                </div>
+                <div class="card-body text-center p-4">
+                    @if (!string.IsNullOrEmpty(Model.image))
+                    {
+                        <div class="image-container">
+                            <img src="@Model.image" alt="@Model.title" 
+                                 class="img-fluid rounded shadow" 
+                                 style="max-height: 300px; object-fit: cover;" 
+                                 onclick="openImageModal('@Model.image', '@Model.title')" />
+                            <div class="mt-3">
+                                <button type="button" class="btn btn-outline-primary btn-sm" 
+                                        onclick="openImageModal('@Model.image', '@Model.title')">
+                                    <i class="fas fa-search-plus me-1"></i>
+                                    Xem phóng to
+                                </button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="no-image-placeholder py-5">
+                            <div class="d-flex flex-column align-items-center justify-content-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-image fa-4x text-gray-300"></i>
+                                </div>
+                                <p class="text-muted mb-0">Không có hình ảnh</p>
+                                <small class="text-muted">Chưa tải lên hình ảnh cho góc tiếp nhận này</small>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Actions Card -->
+            <div class="card shadow border-0">
+                <div class="card-header py-3 bg-gradient-warning">
+                    <h6 class="m-0 font-weight-bold text-white">
+                        <i class="fas fa-cogs me-2"></i>
+                        Thao tác
+                    </h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="d-grid gap-2">
+                        <a asp-action="Edit" asp-route-id="@Model.id" class="btn btn-warning">
+                            <i class="fas fa-edit me-2"></i>
+                            Chỉnh sửa thông tin
+                        </a>
+                        <button type="button" class="btn btn-outline-danger" 
+                                onclick="confirmDelete(@Model.id, '@Html.Raw(Html.Encode(Model.title))')]')">
+                            <i class="fas fa-trash me-2"></i>
+                            Xóa góc tiếp nhận
+                        </button>
+                        <hr>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="fas fa-list me-2"></i>
+                            Danh sách tất cả
+                        </a>
+                        <a asp-action="Create" class="btn btn-success">
+                            <i class="fas fa-plus me-2"></i>
+                            Tạo mới
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">
+                    <i class="fas fa-image me-2"></i>
+                    Xem hình ảnh
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <img id="modalImage" src="" alt="" class="img-fluid" style="max-height: 70vh;" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">
+                    <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+                    Xác nhận xóa
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xóa góc tiếp nhận <strong id="deleteItemName"></strong> không?</p>
+                <p class="text-muted small">Hành động này không thể hoàn tác và sẽ xóa cả hình ảnh liên quan.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <form asp-action="Delete" asp-route-id="@Model.id" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i>
+                        Xác nhận xóa
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Styles -->
+<style>
+    .info-item {
+        margin-bottom: 20px;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #5a5c69;
+        margin-bottom: 8px;
+        display: block;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .info-value {
+        font-size: 1rem;
+        color: #3a3b45;
+    }
+    
+    .description-content {
+        line-height: 1.6;
+        border-left: 4px solid #36b9cc;
+    }
+    
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .card-header {
+        border-radius: 15px 15px 0 0 !important;
+    }
+    
+    .btn {
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    .image-container img {
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+    
+    .image-container img:hover {
+        transform: scale(1.02);
+    }
+    
+    .no-image-placeholder {
+        background: linear-gradient(135deg, #f8f9fc 0%, #e9ecef 100%);
+        border: 2px dashed #d1d3e2;
+        border-radius: 10px;
+    }
+    
+    .badge {
+        font-size: 0.85rem;
+        padding: 8px 12px;
+    }
+</style>
+
+<!-- JavaScript -->
+<script>
+    // Open image in modal
+    function openImageModal(imageSrc, imageAlt) {
+        document.getElementById('modalImage').src = imageSrc;
+        document.getElementById('modalImage').alt = imageAlt;
+        document.getElementById('imageModalLabel').innerHTML = '<i class="fas fa-image me-2"></i>' + imageAlt;
+        
+        const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+        modal.show();
+    }
+    
+    // Confirm delete function
+    function confirmDelete(id, name) {
+        document.getElementById('deleteItemName').textContent = name;
+        
+        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        modal.show();
+    }
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
