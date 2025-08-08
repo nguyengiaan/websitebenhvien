@@ -52,6 +52,7 @@ builder.Services.AddScoped<EmailSender>();
 builder.Services.AddScoped<Hubnot>();
 builder.Services.AddScoped<Uploadfile>();
 builder.Services.AddScoped<IAdminmenu, AdminmenuReponsive>();
+builder.Services.AddScoped<IReceivingAngle, ReceivingAngleReponsive>();
 builder.Services.Configure<FileSystemConfig>(builder.Configuration.GetSection(FileSystemConfig.ConfigName));
 builder.Services.Configure<IpRateLimitOptions>(builder.Configuration.GetSection("IpRateLimiting"));
 builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
