@@ -144,8 +144,39 @@ namespace websitebenhvien.Service.Reponser
 
                 // Lưu thumbnail cũ để xóa nếu cần
                 string? oldThumbnail = existingPostactivity.Thumbnail;
+                bool shouldDeleteOldThumbnail = false;
 
+                // Map các thuộc tính từ model sang entity (trừ thumbnail)
+                var originalThumbnail = existingPostactivity.Thumbnail;
                 _mapper.Map(model, existingPostactivity);
+                
+                // Xử lý thumbnail
+                if (model.ThumbnailFile != null && model.ThumbnailFile.Length > 0)
+                {
+                    // Upload thumbnail mới
+                    var uploadResult = await _uploadfile.SaveMedia(model.ThumbnailFile, true, false, 75);
+                    if (uploadResult.Item1 == 1)
+                    {
+                        existingPostactivity.Thumbnail = uploadResult.Item2;
+                        shouldDeleteOldThumbnail = true; // Đánh dấu để xóa file cũ
+                    }
+                    else
+                    {
+                        // Nếu upload thất bại, giữ lại thumbnail cũ
+                        existingPostactivity.Thumbnail = originalThumbnail;
+                    }
+                }
+                else if (string.IsNullOrEmpty(model.Thumbnail))
+                {
+                    // Nếu model.Thumbnail rỗng và không có file mới, người dùng muốn xóa thumbnail
+                    existingPostactivity.Thumbnail = null;
+                    shouldDeleteOldThumbnail = true;
+                }
+                else
+                {
+                    // Giữ lại thumbnail hiện tại nếu không có thay đổi
+                    existingPostactivity.Thumbnail = originalThumbnail;
+                }
                 
                 // Tự động cập nhật Alias URL nếu tiêu đề thay đổi
                 if (string.IsNullOrEmpty(existingPostactivity.Alias_url))
@@ -157,22 +188,6 @@ namespace websitebenhvien.Service.Reponser
                 if (string.IsNullOrEmpty(existingPostactivity.Keyword))
                 {
                     existingPostactivity.Keyword = SeoHelper.GenerateSeoKeywords(existingPostactivity.Title, existingPostactivity.Descriptionshort);
-                }
-                
-                // Upload thumbnail mới nếu có
-                if (model.ThumbnailFile != null)
-                {
-                    var uploadResult = await _uploadfile.SaveMedia(model.ThumbnailFile, true, false, 75);
-                    if (uploadResult.Item1 == 1)
-                    {
-                        // Xóa thumbnail cũ nếu có
-                        if (!string.IsNullOrEmpty(oldThumbnail))
-                        {
-                            _uploadfile.DeleteMedia(oldThumbnail);
-                        }
-                        
-                        existingPostactivity.Thumbnail = uploadResult.Item2;
-                    }
                 }
                 
                 // Tự động cập nhật URL nếu trống
@@ -190,7 +205,24 @@ namespace websitebenhvien.Service.Reponser
                     existingPostactivity.Createat
                 );
                 
-                return await _context.SaveChangesAsync() > 0;
+                // Lưu thay đổi vào database
+                var result = await _context.SaveChangesAsync() > 0;
+                
+                // Xóa file cũ sau khi lưu thành công
+                if (result && shouldDeleteOldThumbnail && !string.IsNullOrEmpty(oldThumbnail))
+                {
+                    try
+                    {
+                        _uploadfile.DeleteMedia(oldThumbnail);
+                    }
+                    catch
+                    {
+                        // Log error nhưng không làm thất bại toàn bộ operation
+                        // Có thể implement logging ở đây
+                    }
+                }
+                
+                return result;
             }
             catch
             {

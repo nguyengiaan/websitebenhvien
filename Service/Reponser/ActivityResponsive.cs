@@ -106,6 +106,8 @@ namespace websitebenhvien.Service.Reponser
 
                 entity.Title = model.Title;
                 entity.Description = model.Description;
+                entity.link_alias = model.link_alias;
+              
 
                 _context.Activitycategories.Update(entity);
                 var result = await _context.SaveChangesAsync();

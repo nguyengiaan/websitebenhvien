@@ -48,6 +48,8 @@
                                     <textarea asp-for="Descriptionshort" class="form-control" rows="3" 
                                               placeholder="Nhập mô tả ngắn..."></textarea>
                                     <span asp-validation-for="Descriptionshort" class="text-danger"></span>
+
+
                                 </div>
 
                                 <!-- Nội dung chính với Summernote -->
@@ -169,39 +171,18 @@
         </div>
     </section>
 </div>
-
+@{
+    var summenote = new websitebenhvien.Models.EnitityVM.Summenote(".summernote");
+}
+<partial name="_Summernote" model="summenote" />
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     
-    <!-- Summernote CSS and JS -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
     
     <script>
         $(document).ready(function() {
             // Khởi tạo Summernote
-            $('.summernote').summernote({
-                height: 300,
-                lang: 'vi-VN',
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['fontname', ['fontname']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ],
-                placeholder: 'Nhập nội dung hoạt động...',
-                callbacks: {
-                    onImageUpload: function(files) {
-                        // Xử lý upload ảnh nếu cần
-                        console.log('Image upload:', files);
-                    }
-                }
-            });
-
+    
             // Auto-generate alias URL from title
             $('#Title').on('input', function() {
                 var title = $(this).val();

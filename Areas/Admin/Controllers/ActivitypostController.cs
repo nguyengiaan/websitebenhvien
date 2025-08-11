@@ -29,6 +29,11 @@ namespace websitebenhvien.Areas.Admin.Controllers
             // Lấy danh sách categories cho dropdown filter
             var categories = await _context.Activitycategories.ToListAsync();
             ViewBag.Categories = new SelectList(categories, "Id_activitycategory", "Title", searchModel.CategoryId);
+            
+            // Truyền thông tin search để hiển thị trong form
+            ViewBag.SearchTerm = searchModel.SearchTerm;
+            ViewBag.CategoryId = searchModel.CategoryId;
+            ViewBag.Status = searchModel.Status;
 
             return View(result);
         }

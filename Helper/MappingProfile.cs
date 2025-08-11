@@ -14,8 +14,11 @@ namespace websitebenhvien.Helper
 
             CreateMap<Activitycategory, ActivitycategoryVM>().ReverseMap();
 
-
-            CreateMap<Postactivity, PostactivityVM>().ReverseMap();
+            // Map Postactivity với CategoryName từ navigation property
+            CreateMap<Postactivity, PostactivityVM>()
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Activitycategory != null ? src.Activitycategory.Title : ""))
+                .ReverseMap()
+                .ForMember(dest => dest.Activitycategory, opt => opt.Ignore());
         }
     }
 }

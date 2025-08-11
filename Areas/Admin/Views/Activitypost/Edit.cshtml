@@ -106,21 +106,43 @@
                                         <label class="custom-file-label" for="thumbnailFile">Chọn hình ảnh mới...</label>
                                     </div>
                                     <span asp-validation-for="ThumbnailFile" class="text-danger"></span>
-                                    <div class="mt-2">
-                                        @if (!string.IsNullOrEmpty(Model.Thumbnail))
-                                        {
-                                            <img id="currentThumbnail" src="/Resources/@Model.Thumbnail" alt="Current thumbnail" 
-                                                 style="max-width: 200px; max-height: 200px;" class="img-thumbnail" />
-                                        }
-                                        else
-                                        {
-                                            <div id="currentThumbnail" class="text-muted">
-                                                <i class="fa fa-image fa-3x"></i>
-                                                <p>Chưa có hình ảnh</p>
+                                    
+                                    <!-- Hidden field để lưu thumbnail hiện tại -->
+                                    <input asp-for="Thumbnail" type="hidden" id="currentThumbnailPath" />
+                                    
+                                    <div class="mt-3">
+                                        <div id="thumbnailContainer" class="position-relative d-inline-block">
+                                            <!-- Current or new thumbnail will be displayed here -->
+                                            <img id="thumbnailDisplay" 
+                                                 src="@(!string.IsNullOrEmpty(Model.Thumbnail) ? "/Resources/" + Model.Thumbnail : "#")" 
+                                                 alt="Thumbnail" 
+                                                 style="max-width: 200px; max-height: 200px; border-radius: 8px; @(!string.IsNullOrEmpty(Model.Thumbnail) ? "" : "display: none;")" 
+                                                 class="img-thumbnail" />
+                                            
+                                            <!-- No thumbnail placeholder -->
+                                            <div id="noThumbnail" 
+                                                 class="text-muted text-center p-3 border rounded" 
+                                                 style="width: 200px; @(!string.IsNullOrEmpty(Model.Thumbnail) ? "display: none;" : "")">
+                                                <i class="fa fa-image fa-3x mb-2"></i>
+                                                <p class="mb-0">Chưa có hình ảnh</p>
                                             </div>
-                                        }
-                                        <img id="thumbnailPreview" src="#" alt="Preview" 
-                                             style="max-width: 200px; max-height: 200px; display: none;" class="img-thumbnail" />
+                                            
+                                            <!-- Remove button -->
+                                            <button type="button" 
+                                                    id="btnRemoveThumbnail" 
+                                                    class="btn btn-sm btn-danger position-absolute" 
+                                                    style="top: 5px; right: 5px; padding: 2px 6px; z-index: 10; @(!string.IsNullOrEmpty(Model.Thumbnail) ? "" : "display: none;")" 
+                                                    title="Xóa hình ảnh">
+                                                <i class="fa fa-times"></i>
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="mt-2">
+                                            <small class="text-muted">
+                                                <i class="fa fa-info-circle"></i> 
+                                                Chọn file mới để thay đổi hình ảnh. Để trống nếu muốn giữ hình ảnh hiện tại.
+                                            </small>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -192,39 +214,63 @@
         </div>
     </section>
 </div>
-
+@{
+    var summenote = new websitebenhvien.Models.EnitityVM.Summenote(".summernote");
+}
+<partial name="_Summernote" model="summenote" />
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     
     <!-- Summernote CSS and JS -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
     
+    <style>
+        #thumbnailContainer {
+            display: inline-block;
+            position: relative;
+        }
+        
+        #thumbnailContainer img {
+            transition: all 0.3s ease;
+        }
+        
+        #thumbnailContainer:hover img {
+            filter: brightness(0.9);
+        }
+        
+        #btnRemoveThumbnail {
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+        }
+        
+        #btnRemoveThumbnail:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        #noThumbnail {
+            border: 2px dashed #dee2e6;
+            color: #6c757d;
+        }
+        
+        .custom-file-label {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+   
     <script>
         $(document).ready(function() {
+            // Debug initial state
+            console.log('Page loaded, checking initial state');
+            console.log('Current thumbnail path:', $('#currentThumbnailPath').val());
+            console.log('Thumbnail display element:', $('#thumbnailDisplay').length);
+            console.log('No thumbnail element:', $('#noThumbnail').length);
+            console.log('Remove button exists:', $('#btnRemoveThumbnail').length);
+            
             // Khởi tạo Summernote
-            $('.summernote').summernote({
-                height: 300,
-                lang: 'vi-VN',
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['fontname', ['fontname']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'picture', 'video']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ],
-                placeholder: 'Nhập nội dung hoạt động...',
-                callbacks: {
-                    onImageUpload: function(files) {
-                        // Xử lý upload ảnh nếu cần
-                        console.log('Image upload:', files);
-                    }
-                }
-            });
-
+         
             // Auto-generate alias URL from title (chỉ khi alias trống)
             $('#Title').on('input', function() {
                 var aliasField = $('#Alias_url');
@@ -235,25 +281,120 @@
                 }
             });
 
-            // Thumbnail file preview
+            // Thumbnail file preview and management
             $('#thumbnailFile').on('change', function() {
+                console.log('File input changed');
                 var file = this.files[0];
+                
                 if (file) {
+                    console.log('File selected:', file.name, file.type, file.size);
+                    
+                    // Validate file type
+                    var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                    if (!allowedTypes.includes(file.type)) {
+                        Swal.fire('Lỗi', 'Vui lòng chọn file hình ảnh hợp lệ (JPG, PNG, GIF, WebP)', 'error');
+                        $(this).val('');
+                        $('.custom-file-label').text('Chọn hình ảnh mới...');
+                        return;
+                    }
+                    
+                    // Validate file size (max 5MB)
+                    var maxSize = 5 * 1024 * 1024; // 5MB
+                    if (file.size > maxSize) {
+                        Swal.fire('Lỗi', 'Kích thước file không được vượt quá 5MB', 'error');
+                        $(this).val('');
+                        $('.custom-file-label').text('Chọn hình ảnh mới...');
+                        return;
+                    }
+                    
+                    console.log('File validation passed, reading file...');
                     var reader = new FileReader();
                     reader.onload = function(e) {
-                        $('#thumbnailPreview').attr('src', e.target.result).show();
-                        $('#currentThumbnail').hide();
+                        console.log('File loaded successfully');
+                        
+                        // Update image source and show it
+                        $('#thumbnailDisplay').attr('src', e.target.result).show();
+                        $('#noThumbnail').hide();
+                        $('#btnRemoveThumbnail').show();
+                        
+                        console.log('Image preview updated');
                     };
+                    
+                    reader.onerror = function(e) {
+                        console.error('Error reading file:', e);
+                        Swal.fire('Lỗi', 'Không thể đọc file hình ảnh', 'error');
+                    };
+                    
                     reader.readAsDataURL(file);
                     
                     // Update file label
                     $('.custom-file-label').text(file.name);
+                    console.log('File label updated to:', file.name);
                 } else {
-                    $('#thumbnailPreview').hide();
-                    $('#currentThumbnail').show();
-                    $('.custom-file-label').text('Chọn hình ảnh mới...');
+                    console.log('No file selected, resetting display');
+                    resetThumbnailDisplay();
                 }
             });
+            
+            // Remove thumbnail functionality
+            $(document).on('click', '#btnRemoveThumbnail', function(e) {
+                e.preventDefault();
+                console.log('Remove button clicked');
+                
+                Swal.fire({
+                    title: 'Xác nhận xóa',
+                    text: 'Bạn có chắc muốn xóa hình ảnh này?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Xóa',
+                    cancelButtonText: 'Hủy'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        console.log('User confirmed removal');
+                        
+                        // Clear file input
+                        $('#thumbnailFile').val('');
+                        $('.custom-file-label').text('Chọn hình ảnh mới...');
+                        
+                        // Clear hidden field to mark for deletion
+                        $('#currentThumbnailPath').val('');
+                        
+                        // Show no thumbnail state
+                        $('#thumbnailDisplay').hide();
+                        $('#noThumbnail').show();
+                        $('#btnRemoveThumbnail').hide();
+                        
+                        console.log('Thumbnail removed successfully');
+                        Swal.fire('Đã xóa!', 'Hình ảnh sẽ được xóa khi lưu.', 'success');
+                    }
+                });
+            });
+            
+            function resetThumbnailDisplay() {
+                console.log('Resetting thumbnail display');
+                var currentThumbnail = $('#currentThumbnailPath').val();
+                
+                console.log('Current thumbnail path:', currentThumbnail);
+                
+                if (currentThumbnail && currentThumbnail !== '') {
+                    console.log('Showing original thumbnail');
+                    // Show original thumbnail
+                    $('#thumbnailDisplay').attr('src', '/Resources/' + currentThumbnail).show();
+                    $('#noThumbnail').hide();
+                    $('#btnRemoveThumbnail').show();
+                } else {
+                    console.log('Showing no thumbnail state');
+                    // Show no thumbnail state
+                    $('#thumbnailDisplay').hide();
+                    $('#noThumbnail').show();
+                    $('#btnRemoveThumbnail').hide();
+                }
+                
+                $('.custom-file-label').text('Chọn hình ảnh mới...');
+                console.log('Reset complete');
+            }
 
             // Generate Keywords AJAX
             $('#btnGenerateKeywords').on('click', function() {
@@ -370,7 +511,6 @@
                     complete: function() {
                         $('#btnGenerateSchema').prop('disabled', false).html('<i class="fa fa-code"></i> Tạo Schema tự động');
                     }
-                });
                 });
             });
 

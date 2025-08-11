@@ -48,7 +48,15 @@
                                     <strong>ID:</strong> @Model.Id_Postactivity
                                 </div>
                                 <div class="col-md-6">
-                                    <strong>Danh mục:</strong> @Model.CategoryName
+                                    <strong>Danh mục:</strong> 
+                                    @if (!string.IsNullOrEmpty(Model.CategoryName))
+                                    {
+                                        @Model.CategoryName
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Chưa có danh mục (ID: @Model.Id_Categoryactivity)</span>
+                                    }
                                 </div>
                             </div>
 
@@ -154,7 +162,16 @@
                                         }
 
                                         <dt class="col-sm-5">Danh mục:</dt>
-                                        <dd class="col-sm-7">@Model.CategoryName</dd>
+                                        <dd class="col-sm-7">
+                                            @if (!string.IsNullOrEmpty(Model.CategoryName))
+                                            {
+                                                @Model.CategoryName
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Chưa có danh mục</span>
+                                            }
+                                        </dd>
                                     </dl>
                                 </div>
                             </div>

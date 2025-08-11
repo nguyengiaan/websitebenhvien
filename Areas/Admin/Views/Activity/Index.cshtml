@@ -124,8 +124,11 @@
                                     <th width="25%">
                                         <i class="fas fa-heading"></i> Tiêu đề
                                     </th>
-                                    <th width="45%">
+                                    <th width="15%">
                                         <i class="fas fa-align-left"></i> Mô tả
+                                    </th>
+                                    <th width="30%">
+                                        <i class="fas fa-link"></i> Liên kết
                                     </th>
                                     <th width="12%" class="text-center">
                                         <i class="fas fa-calendar"></i> Ngày tạo
@@ -178,6 +181,19 @@
                                                     <em class="text-muted">
                                                         <i class="fas fa-exclamation-triangle text-warning"></i> Chưa có mô tả
                                                     </em>
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.link_alias))
+                                                {
+                                                    <a href="@Url.Action("Index", "Postactivity", new { area = "Admin", link_alias = item.link_alias })" 
+                                                       class="text-primary" target="_blank">
+                                                        @item.link_alias
+                                                    </a>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Chưa có liên kết</span>
                                                 }
                                             </td>
                                             <td class="text-center">
@@ -303,7 +319,7 @@
                 <h5 class="modal-title" id="modalLabel">
                     <i class="fas fa-plus-circle"></i> Thêm danh mục hoạt động
                 </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-white" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -340,9 +356,21 @@
                             <i class="fas fa-info-circle"></i> Tối đa 1000 ký tự
                         </small>
                     </div>
+
+                    <div class="form-group mb-3">
+                        <label for="link_alias" class="form-label fw-bold">
+                            <i class="fas fa-link text-info"></i> Liên kết
+                        </label>
+                        <input type="text" class="form-control" id="link_alias" name="link_alias" 
+                               maxlength="255" placeholder="Nhập liên kết cho danh mục...">
+                        <div class="invalid-feedback"></div>
+                        <small class="form-text text-muted">
+                            <i class="fas fa-info-circle"></i> Tối đa 255 ký tự
+                        </small>
+                    </div>
                 </div>
                 <div class="modal-footer bg-light">
-                    <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal">
+                    <button type="button" class="btn btn-secondary btn-lg" data-dismiss="modal" data-bs-dismiss="modal">
                         <i class="fas fa-times"></i> Hủy bỏ
                     </button>
                     <button type="submit" class="btn btn-primary btn-lg">
@@ -631,6 +659,7 @@
                             $('#Title').val(data.title);
                             $('#Description').val(data.description);
                             $('#modalLabel').html('<i class="fas fa-edit"></i> Chỉnh sửa danh mục hoạt động');
+                            $('#link_alias').val(data.link_alias);
                             $('#modal-add').modal('show');
                         } else {
                             Swal.fire('Lỗi!', response.message, 'error');
@@ -690,5 +719,47 @@
                 $('#searchForm').submit();
             });
         });
+
+    function toSlug(str) {
+    str = str.toLowerCase();
+    // Chuyển đ thành d
+    str = str.replace(/đ/g, 'd').replace(/Đ/g, 'd');
+    // Bỏ dấu tiếng Việt
+    str = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    // Thay ký tự đặc biệt thành khoảng trắng
+    str = str.replace(/[^a-z0-9\s-]/g, '');
+    // Thay khoảng trắng bằng dấu gạch ngang
+    str = str.trim().replace(/\s+/g, '-');
+    // Xóa gạch ngang thừa
+    str = str.replace(/-+/g, '-');
+    return str;
+}
+
+    document.getElementById("Title").addEventListener("input", function () {
+        var slug = toSlug(this.value);
+        document.getElementById("link_alias").value = "/" + slug;
+    });
+
+    // Modal close handling để đảm bảo modal đóng được
+    document.addEventListener('DOMContentLoaded', function() {
+        var modalElement = document.getElementById('modal-add');
+        if (modalElement) {
+            var modal = new bootstrap.Modal(modalElement);
+            
+            // Đóng modal khi click nút close
+            var closeButtons = modalElement.querySelectorAll('[data-dismiss="modal"], [data-bs-dismiss="modal"]');
+            closeButtons.forEach(function(button) {
+                button.addEventListener('click', function() {
+                    modal.hide();
+                });
+            });
+
+            // Reset form khi modal đóng
+            modalElement.addEventListener('hidden.bs.modal', function () {
+                modalElement.querySelector('form').reset();
+                modalElement.querySelector('#modalLabel').innerHTML = '<i class="fas fa-plus-circle"></i> Thêm danh mục hoạt động';
+            });
+        }
+    });
     </script>
 }

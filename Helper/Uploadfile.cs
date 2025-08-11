@@ -8,80 +8,83 @@ using SixLabors.ImageSharp.Processing;
 using FFMpegCore;
 using FFMpegCore.Enums;
 using System.Linq;
-using SixLabors.ImageSharp.Formats.Png;
+using System.Collections.Generic;
 
 namespace websitebenhvien.Helper
 {
     public class Uploadfile
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private static readonly string[] AllowedImageExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
-        private static readonly string[] AllowedVideoExtensions = { ".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv" };
-        private static readonly string[] AllowedDocumentExtensions = { ".pdf", ".docx" };
-        private static readonly string[] AllowedExtensions;
 
-        static Uploadfile()
-        {
-            AllowedExtensions = AllowedImageExtensions
-                .Concat(AllowedVideoExtensions)
-                .Concat(AllowedDocumentExtensions)
-                .ToArray();
-        }
+        // Dùng HashSet để tìm kiếm nhanh hơn (O(1))
+        private static readonly HashSet<string> AllowedImageExtensions = new(StringComparer.OrdinalIgnoreCase)
+        { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
+
+        private static readonly HashSet<string> AllowedVideoExtensions = new(StringComparer.OrdinalIgnoreCase)
+        { ".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv" };
+
+        private static readonly HashSet<string> AllowedDocumentExtensions = new(StringComparer.OrdinalIgnoreCase)
+        { ".pdf", ".docx" };
+
+        private static readonly HashSet<string> AllowedExtensions = new(
+            AllowedImageExtensions.Concat(AllowedVideoExtensions).Concat(AllowedDocumentExtensions),
+            StringComparer.OrdinalIgnoreCase
+        );
+
+        private readonly string _uploadsPath;
 
         public Uploadfile(IWebHostEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
+            _uploadsPath = Path.Combine(_hostingEnvironment.ContentRootPath, "Uploads");
 
-            // Cấu hình FFmpeg (đảm bảo FFmpeg đã được cài đặt trên hệ thống)
+            // Đảm bảo thư mục tồn tại
+            Directory.CreateDirectory(_uploadsPath);
+
+            // Cấu hình FFmpeg
             GlobalFFOptions.Configure(options =>
-                options.BinaryFolder = "/usr/bin"); // Thay đổi tùy theo hệ thống
+                options.BinaryFolder = "/usr/bin" // Thay đổi tùy hệ thống
+            );
         }
 
-        public async Task<Tuple<int, string>> SaveMedia(IFormFile file,
-                                                       bool compressImages = true,
-                                                       bool compressVideos = true,
-                                                       int imageQuality = 75,
-                                                       int videoCrf = 28)
+        public async Task<(int Status, string Message)> SaveMedia(
+            IFormFile file,
+            bool compressImages = true,
+            bool compressVideos = true,
+            int imageQuality = 75,
+            int videoCrf = 28)
         {
             try
             {
-                var ext = Path.GetExtension(file.FileName).ToLower();
-
+                var ext = Path.GetExtension(file.FileName);
                 if (!AllowedExtensions.Contains(ext))
                 {
-                    string msg = $"Only the following formats are allowed: {string.Join(", ", AllowedExtensions)}";
-                    return Tuple.Create(0, msg);
+                    return (0, $"Only the following formats are allowed: {string.Join(", ", AllowedExtensions)}");
                 }
-
-                var uploadsPath = Path.Combine(_hostingEnvironment.ContentRootPath, "Uploads");
-                Directory.CreateDirectory(uploadsPath); // An toàn, không ném exception nếu thư mục tồn tại
 
                 var newFileName = $"{Guid.NewGuid():N}{ext}";
-                var filePath = Path.Combine(uploadsPath, newFileName);
+                var filePath = Path.Combine(_uploadsPath, newFileName);
 
-                // Xử lý nén ảnh
-                if (compressImages && AllowedImageExtensions.Contains(ext))
+                if (AllowedImageExtensions.Contains(ext) && compressImages)
                 {
-                    await using var outputStream = new FileStream(filePath, FileMode.Create);
-                    await CompressImageAsync(file.OpenReadStream(), outputStream, imageQuality);
+                    await using var output = new FileStream(filePath, FileMode.Create);
+                    await CompressImageAsync(file.OpenReadStream(), output, imageQuality);
                 }
-                // Xử lý nén video
-                else if (compressVideos && AllowedVideoExtensions.Contains(ext))
+                else if (AllowedVideoExtensions.Contains(ext) && compressVideos)
                 {
                     await CompressVideoAsync(file, filePath, videoCrf);
                 }
-                // Xử lý file bình thường
                 else
                 {
-                    await using var stream = new FileStream(filePath, FileMode.Create);
-                    await file.CopyToAsync(stream);
+                    await using var output = new FileStream(filePath, FileMode.Create);
+                    await file.CopyToAsync(output);
                 }
 
-                return Tuple.Create(1, newFileName);
+                return (1, newFileName);
             }
             catch (Exception ex)
             {
-                return Tuple.Create(0, $"Error: {ex.Message}");
+                return (0, $"Error: {ex.Message}");
             }
         }
 
@@ -89,22 +92,16 @@ namespace websitebenhvien.Helper
         {
             using var image = await Image.LoadAsync(inputStream);
 
-            // Tính toán kích thước mới giữ nguyên tỷ lệ
-            var resizeOptions = new ResizeOptions
+            image.Mutate(x => x.Resize(new ResizeOptions
             {
                 Mode = ResizeMode.Max,
-                Size = new Size(1024) // Giới hạn chiều dài nhất là 1920px
-            };
+                Size = new Size(1024) // Chiều dài tối đa
+            }));
 
-            image.Mutate(x => x.Resize(resizeOptions));
-
-            var encoder = new JpegEncoder
+            await image.SaveAsync(outputStream, new JpegEncoder
             {
-                Quality = quality,
-  
-            };
-
-            await image.SaveAsync(outputStream, encoder);
+                Quality = quality
+            });
         }
 
         private static async Task CompressVideoAsync(IFormFile videoFile, string outputPath, int crf)
@@ -113,23 +110,20 @@ namespace websitebenhvien.Helper
 
             try
             {
-                // Lưu file tạm
                 await using (var tempStream = File.Create(tempInputPath))
                 {
                     await videoFile.CopyToAsync(tempStream);
                 }
 
-                // Cấu hình nén video tối ưu
                 await FFMpegArguments
                     .FromFileInput(tempInputPath)
                     .OutputToFile(outputPath, true, options => options
                         .WithVideoCodec(VideoCodec.LibX264)
-                        .WithConstantRateFactor(crf) // CRF: 18-28 (23 là mặc định)
-                
+                        .WithConstantRateFactor(crf)
                         .WithAudioCodec(AudioCodec.Aac)
-                        .WithAudioBitrate(128) // 128kbps cho âm thanh
-                        .WithFastStart() // Tối ưu cho phát trực tuyến
-                        .WithCustomArgument("-movflags +faststart")) // Tương thích web
+                        .WithAudioBitrate(128)
+                        .WithFastStart()
+                        .WithCustomArgument("-movflags +faststart"))
                     .ProcessAsynchronously();
             }
             finally
@@ -145,8 +139,7 @@ namespace websitebenhvien.Helper
         {
             try
             {
-                var filePath = Path.Combine(_hostingEnvironment.ContentRootPath, "Uploads", fileName);
-
+                var filePath = Path.Combine(_uploadsPath, fileName);
                 if (!File.Exists(filePath)) return false;
 
                 File.Delete(filePath);
@@ -157,6 +150,5 @@ namespace websitebenhvien.Helper
                 return false;
             }
         }
-        
     }
 }

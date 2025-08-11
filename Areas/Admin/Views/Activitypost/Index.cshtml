@@ -85,8 +85,11 @@
                                     <label for="Status">Trạng thái:</label>
                                     <select class="form-control" name="Status">
                                         <option value="">-- Tất cả --</option>
-                                        <option value="true">Kích hoạt</option>
-                                        <option value="false">Vô hiệu</option>
+                                        @{
+                                            var statusValue = ViewBag.Status?.ToString();
+                                        }
+                                        <option value="true" selected="@(statusValue == "True")">Kích hoạt</option>
+                                        <option value="false" selected="@(statusValue == "False")">Vô hiệu</option>
                                     </select>
                                 </div>
                             </div>
@@ -94,9 +97,9 @@
                                 <div class="form-group">
                                     <label for="PageSize">Hiển thị:</label>
                                     <select class="form-control" name="PageSize">
-                                        <option value="10">10</option>
-                                        <option value="20">20</option>
-                                        <option value="50">50</option>
+                                        <option value="10" selected="@(Model.PageSize == 10)">10</option>
+                                        <option value="20" selected="@(Model.PageSize == 20)">20</option>
+                                        <option value="50" selected="@(Model.PageSize == 50)">50</option>
                                     </select>
                                 </div>
                             </div>
@@ -140,7 +143,16 @@
                                                     <br><small class="text-muted">@item.Url</small>
                                                 }
                                             </td>
-                                            <td>@item.CategoryName</td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.CategoryName))
+                                                {
+                                                    @item.CategoryName
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Chưa có danh mục</span>
+                                                }
+                                            </td>
                                             <td>
                                                 @if (!string.IsNullOrEmpty(item.Descriptionshort))
                                                 {
