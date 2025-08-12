@@ -106,17 +106,12 @@ namespace websitebenhvien.Service.Reponser
                     }
                 }
                 
-                // Tự động tạo URL nếu trống
-                if (string.IsNullOrEmpty(postactivity.Url))
-                {
-                    postactivity.Url = $"/hoat-dong/{postactivity.Alias_url}";
-                }
-                
+              
                 // Tự động tạo Schema Markup
                 postactivity.SchemaMakup = SeoHelper.GenerateSchemaMarkup(
                     postactivity.Title,
                     postactivity.Descriptionshort,
-                    postactivity.Url,
+                    postactivity.Alias_url,
                     postactivity.Thumbnail,
                     postactivity.Createat
                 );
@@ -191,20 +186,9 @@ namespace websitebenhvien.Service.Reponser
                 }
                 
                 // Tự động cập nhật URL nếu trống
-                if (string.IsNullOrEmpty(existingPostactivity.Url))
-                {
-                    existingPostactivity.Url = $"/hoat-dong/{existingPostactivity.Alias_url}";
-                }
+            
                 
-                // Tự động cập nhật Schema Markup
-                existingPostactivity.SchemaMakup = SeoHelper.GenerateSchemaMarkup(
-                    existingPostactivity.Title,
-                    existingPostactivity.Descriptionshort,
-                    existingPostactivity.Url,
-                    existingPostactivity.Thumbnail,
-                    existingPostactivity.Createat
-                );
-                
+            
                 // Lưu thay đổi vào database
                 var result = await _context.SaveChangesAsync() > 0;
                 
@@ -274,7 +258,7 @@ namespace websitebenhvien.Service.Reponser
 
         public async Task<bool> IsUrlExistsAsync(string url, int? excludeId = null)
         {
-            var query = _context.Postactivity.Where(p => p.Url == url);
+            var query = _context.Postactivity.Where(p => p.Alias_url == url);
             
             if (excludeId.HasValue)
                 query = query.Where(p => p.Id_Postactivity != excludeId.Value);

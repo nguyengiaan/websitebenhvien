@@ -258,7 +258,7 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<Postactivity>().Property(x => x.Id_Postactivity).ValueGeneratedOnAdd();
             modelBuilder.Entity<Postactivity>().Property(x => x.Title).HasMaxLength(200);
             modelBuilder.Entity<Postactivity>().Property(x => x.Description).HasMaxLength(int.MaxValue);
-            modelBuilder.Entity<Postactivity>().Property(x => x.Url).HasMaxLength(200);
+      
             modelBuilder.Entity<Postactivity>().Property(x => x.Alias_url).HasMaxLength(200);
             modelBuilder.Entity<Postactivity>().Property(x => x.Keyword).HasMaxLength(200);
             modelBuilder.Entity<Postactivity>().Property(x => x.Descriptionshort).HasMaxLength(500);

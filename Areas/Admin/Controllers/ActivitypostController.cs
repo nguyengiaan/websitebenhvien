@@ -70,11 +70,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                     ModelState.AddModelError("Title", "Tiêu đề đã tồn tại");
                 }
                 
-                // Kiểm tra trùng lặp URL
-                if (!string.IsNullOrEmpty(model.Url) && await _postActivityService.IsUrlExistsAsync(model.Url))
-                {
-                    ModelState.AddModelError("Url", "URL đã tồn tại");
-                }
+        
 
                 if (ModelState.IsValid)
                 {
@@ -134,9 +130,9 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 }
                 
                 // Kiểm tra trùng lặp URL (loại trừ bản ghi hiện tại)
-                if (!string.IsNullOrEmpty(model.Url) && await _postActivityService.IsUrlExistsAsync(model.Url, model.Id_Postactivity))
+                if (!string.IsNullOrEmpty(model.Alias_url) && await _postActivityService.IsUrlExistsAsync(model.Alias_url, model.Id_Postactivity))
                 {
-                    ModelState.AddModelError("Url", "URL đã tồn tại");
+                    ModelState.AddModelError("Alias_url", "URL đã tồn tại");
                 }
 
                 if (ModelState.IsValid)

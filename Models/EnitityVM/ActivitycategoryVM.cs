@@ -12,8 +12,8 @@ namespace websitebenhvien.Models.EnitityVM
 
         [StringLength(1000, ErrorMessage = "Mô tả không được vượt quá 1000 ký tự")]
         public string? Description { get; set; }
-    
 
+        public string? link_alias { get; set; }
     }
 
     public class ActivityCategorySearchVM
@@ -37,5 +37,32 @@ namespace websitebenhvien.Models.EnitityVM
         public string? SearchTerm { get; set; }
         public string SortBy { get; set; } = "Title";
         public string SortDirection { get; set; } = "asc";
+    }
+
+    // ViewModel cho trang hiển thị bài viết theo danh mục
+    public class ActivityCategoryPageVM
+    {
+        public ActivitycategoryVM Category { get; set; } = new();
+        public List<PostactivityVM> Posts { get; set; } = new List<PostactivityVM>();
+        public int CurrentPage { get; set; } = 1;
+        public int TotalPages { get; set; }
+        public int TotalItems { get; set; }
+        public int PageSize { get; set; } = 12;
+        public bool HasPreviousPage { get; set; }
+        public bool HasNextPage { get; set; }
+    }
+
+    // ViewModel cho trang tổng hợp hoạt động
+    public class ActivityIndexPageVM
+    {
+        public List<PostactivityVM> Posts { get; set; } = new List<PostactivityVM>();
+        public List<ActivitycategoryVM> Categories { get; set; } = new List<ActivitycategoryVM>();
+        public int CurrentPage { get; set; } = 1;
+        public int TotalPages { get; set; }
+        public int TotalItems { get; set; }
+        public int PageSize { get; set; } = 12;
+        public bool HasPreviousPage { get; set; }
+        public bool HasNextPage { get; set; }
+        public string? SearchTerm { get; set; }
     }
 }

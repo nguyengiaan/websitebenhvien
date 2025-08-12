@@ -13,9 +13,6 @@ namespace websitebenhvien.Models.EnitityVM
 
         public string? Description { get; set; }
 
-        [Required(ErrorMessage = "URL là bắt buộc")]
-        [StringLength(255, ErrorMessage = "URL không được vượt quá 255 ký tự")]
-        public string Url { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Alias URL là bắt buộc")]
         [StringLength(255, ErrorMessage = "Alias URL không được vượt quá 255 ký tự")]

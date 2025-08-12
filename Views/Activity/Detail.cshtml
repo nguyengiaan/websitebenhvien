@@ -1,0 +1,536 @@
+@model websitebenhvien.Models.EnitityVM.PostactivityVM
+@{
+    ViewData["Title"] = Model.Title;
+    ViewData["Description"] = !string.IsNullOrEmpty(Model.Descriptionshort) ? Model.Descriptionshort : Model.Title;
+    ViewData["Keywords"] = !string.IsNullOrEmpty(Model.Keyword) ? Model.Keyword : Model.Title;
+    ViewData["Schema"] = Model.SchemaMakup;
+}
+
+<!-- Breadcrumb -->
+<section class="breadcrumb-section bg-light py-3">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 bg-transparent">
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index", "Home")" class="text-decoration-none">
+                        <i class="fas fa-home me-1"></i>Trang chủ
+                    </a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="@Url.Action("Index")" class="text-decoration-none">Hoạt động</a>
+                </li>
+                @if (!string.IsNullOrEmpty(Model.CategoryName))
+                {
+                    <li class="breadcrumb-item">
+                        <a href="#" onclick="history.back()" class="text-decoration-none">@Model.CategoryName</a>
+                    </li>
+                }
+                <li class="breadcrumb-item active fw-bold" aria-current="page">Chi tiết</li>
+            </ol>
+        </nav>
+    </div>
+</section>
+
+<!-- Article Hero -->
+<section class="article-hero">
+    @if (!string.IsNullOrEmpty(Model.Thumbnail))
+    {
+        <div class="hero-image position-relative">
+            <img src="/Resources/@Model.Thumbnail" class="w-100" alt="@Model.Title" 
+                 style="height: 400px; object-fit: cover;">
+            <div class="hero-overlay">
+                <div class="container h-100 d-flex align-items-end">
+                    <div class="hero-content text-white py-4">
+                        <div class="mb-2">
+                            <span class="badge bg-primary rounded-pill me-2">
+                                <i class="fas fa-calendar me-1"></i>
+                                @Model.Createat.ToString("dd/MM/yyyy")
+                            </span>
+                            @if (!string.IsNullOrEmpty(Model.CategoryName))
+                            {
+                                <span class="badge bg-secondary rounded-pill">
+                                    <i class="fas fa-tag me-1"></i>
+                                    @Model.CategoryName
+                                </span>
+                            }
+                        </div>
+                        <h1 class="display-6 fw-bold mb-3">@Model.Title</h1>
+                        @if (!string.IsNullOrEmpty(Model.Descriptionshort))
+                        {
+                            <p class="lead mb-0 opacity-90">@Model.Descriptionshort</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="hero-no-image bg-gradient-primary text-white py-5">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 text-center">
+                        <div class="mb-3">
+                            <span class="badge bg-white bg-opacity-20 rounded-pill me-2">
+                                <i class="fas fa-calendar me-1"></i>
+                                @Model.Createat.ToString("dd/MM/yyyy")
+                            </span>
+                            @if (!string.IsNullOrEmpty(Model.CategoryName))
+                            {
+                                <span class="badge bg-white bg-opacity-20 rounded-pill">
+                                    <i class="fas fa-tag me-1"></i>
+                                    @Model.CategoryName
+                                </span>
+                            }
+                        </div>
+                        <h1 class="display-5 fw-bold mb-4">@Model.Title</h1>
+                        @if (!string.IsNullOrEmpty(Model.Descriptionshort))
+                        {
+                            <p class="lead opacity-90">@Model.Descriptionshort</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</section>
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Main Content -->
+        <div class="col-lg-8 col-xl-9">
+            <article class="article-content">
+                <!-- Article Meta -->
+                <div class="article-meta bg-light rounded-4 p-4 mb-5">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <div class="meta-icon me-3">
+                                    <i class="fas fa-clock text-primary"></i>
+                                </div>
+                                <div>
+                                    <small class="text-muted d-block">Thời gian đăng</small>
+                                    <strong>@Model.Createat.ToString("dd/MM/yyyy HH:mm")</strong>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <!-- Article Body -->
+                <div class="article-body">
+                    <div class="content-prose">
+                        @Html.Raw(Model.Description)
+                    </div>
+
+                    <!-- Tags -->
+                    @if (!string.IsNullOrEmpty(Model.Keyword))
+                    {
+                        <div class="article-tags mt-5 pt-4 border-top">
+                            <h6 class="text-muted mb-3">
+                                <i class="fas fa-tags me-2"></i>Từ khóa liên quan:
+                            </h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                @{
+                                    var tags = Model.Keyword.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                                }
+                                @foreach (var tag in tags)
+                                {
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2">
+                                        @tag.Trim()
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Share Section -->
+                    <div class="article-share mt-5 pt-4 border-top">
+                        <h6 class="text-muted mb-3">
+                            <i class="fas fa-share-alt me-2"></i>Chia sẻ bài viết:
+                        </h6>
+                        <div class="d-flex flex-wrap gap-3">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u=@(Context.Request.Scheme)://@(Context.Request.Host)@(Context.Request.Path)" 
+                               target="_blank" class="btn btn-outline-primary share-btn">
+                                <i class="fab fa-facebook-f me-2"></i>Facebook
+                            </a>
+                            <a href="https://twitter.com/intent/tweet?text=@Model.Title&url=@(Context.Request.Scheme)://@(Context.Request.Host)@(Context.Request.Path)" 
+                               target="_blank" class="btn btn-outline-info share-btn">
+                                <i class="fab fa-twitter me-2"></i>Twitter
+                            </a>
+                       
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Navigation -->
+            <div class="article-navigation mt-5 pt-4 border-top">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <button class="btn btn-outline-secondary w-100" onclick="history.back()">
+                            <i class="fas fa-arrow-left me-2"></i>Quay lại
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <a href="@Url.Action("Index")" class="btn btn-primary w-100">
+                            Tất cả hoạt động<i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4 col-xl-3">
+            <div class="sidebar-sticky">
+                <!-- Article Info Card -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-gradient-primary text-white border-0">
+                        <h6 class="mb-0 fw-bold">
+                            <i class="fas fa-info-circle me-2"></i>Thông tin bài viết
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-item d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <span class="text-muted small">Ngày đăng:</span>
+                            <strong class="small">@Model.Createat.ToString("dd/MM/yyyy")</strong>
+                        </div>
+                        <div class="info-item d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <span class="text-muted small">Thời gian:</span>
+                            <strong class="small">@Model.Createat.ToString("HH:mm")</strong>
+                        </div>
+                        @if (!string.IsNullOrEmpty(Model.CategoryName))
+                        {
+                            <div class="info-item d-flex justify-content-between align-items-center py-2 border-bottom">
+                                <span class="text-muted small">Danh mục:</span>
+                                <strong class="small">@Model.CategoryName</strong>
+                            </div>
+                        }
+                        <div class="info-item d-flex justify-content-between align-items-center py-2">
+                            <span class="text-muted small">Trạng thái:</span>
+                            <span class="badge bg-success">Đã xuất bản</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Posts -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-gradient-info text-white border-0">
+                        <h6 class="mb-0 fw-bold">
+                            <i class="fas fa-newspaper me-2"></i>Bài viết liên quan
+                        </h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="relatedPosts">
+                            <!-- Loading state -->
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Đang tải...</span>
+                                </div>
+                                <p class="text-muted small mt-2 mb-0">Đang tìm bài viết liên quan...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-gradient-warning text-white border-0">
+                        <h6 class="mb-0 fw-bold">
+                            <i class="fas fa-bolt me-2"></i>Thao tác nhanh
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary btn-sm" onclick="scrollToTop()">
+                                <i class="fas fa-arrow-up me-2"></i>Lên đầu trang
+                            </button>
+                            <button class="btn btn-outline-success btn-sm" onclick="copyToClipboard()">
+                                <i class="fas fa-share me-2"></i>Chia sẻ
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm" onclick="printArticle()">
+                                <i class="fas fa-print me-2"></i>In bài viết
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .breadcrumb-section {
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .hero-image {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    }
+    
+    .hero-no-image {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .article-meta {
+        border: 1px solid #e9ecef;
+    }
+    
+    .meta-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(0,123,255,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .content-prose {
+        font-family: Georgia, serif;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #333;
+    }
+    
+    .content-prose h1, .content-prose h2, .content-prose h3, 
+    .content-prose h4, .content-prose h5, .content-prose h6 {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 600;
+        margin: 2rem 0 1rem;
+        color: #2c3e50;
+    }
+    
+    .content-prose p {
+        margin-bottom: 1.5rem;
+        text-align: justify;
+    }
+    
+    .content-prose img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        margin: 1.5rem 0;
+    }
+    
+    .content-prose blockquote {
+        border-left: 4px solid #007bff;
+        background: #f8f9fa;
+        padding: 1rem 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 0 8px 8px 0;
+        font-style: italic;
+    }
+    
+    .share-btn {
+        transition: all 0.3s ease;
+        border-radius: 25px;
+        padding: 0.5rem 1rem;
+    }
+    
+    .share-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .sidebar-sticky {
+        position: sticky;
+        top: 20px;
+        z-index: 100;
+    }
+    
+    .info-item:last-child {
+        border-bottom: none !important;
+    }
+    
+    .related-post-item {
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        padding: 0.75rem;
+    }
+    
+    .related-post-item:hover {
+        background-color: #f8f9fa;
+        transform: translateX(5px);
+    }
+    
+    @@media (max-width: 768px) {
+        .hero-content {
+            padding: 2rem 0 !important;
+        }
+        
+        .hero-content h1 {
+            font-size: 1.5rem !important;
+        }
+        
+        .content-prose {
+            font-size: 1rem;
+        }
+        
+        .sidebar-sticky {
+            position: relative;
+            top: auto;
+        }
+        
+        .article-meta .row {
+            text-align: center;
+        }
+        
+        .share-btn {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+    }
+    
+    @@media print {
+        .sidebar-sticky,
+        .article-navigation,
+        .article-share,
+        .breadcrumb-section {
+            display: none !important;
+        }
+        
+        .article-content {
+            max-width: 100% !important;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            loadRelatedPosts();
+            updateViewCount();
+        });
+
+        // Copy to clipboard function
+        function copyToClipboard() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(function() {
+                showToast('Đã sao chép liên kết vào clipboard!', 'success');
+            }, function(err) {
+                console.error('Không thể sao chép: ', err);
+                showToast('Không thể sao chép liên kết', 'error');
+            });
+        }
+
+        // Print article
+        function printArticle() {
+            window.print();
+        }
+
+        // Scroll to top
+        function scrollToTop() {
+            $('html, body').animate({
+                scrollTop: 0
+            }, 1000);
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = $(`
+                <div class="toast-notification position-fixed top-0 end-0 m-3 alert alert-${type === 'success' ? 'success' : 'info'} alert-dismissible" 
+                     style="z-index: 9999;">
+                    ${message}
+                    <button type="button" class="btn-close" onclick="$(this).parent().remove()"></button>
+                </div>
+            `);
+            
+            $('body').append(toast);
+            
+            setTimeout(() => {
+                toast.fadeOut(() => toast.remove());
+            }, 3000);
+        }
+
+        // Load related posts
+        function loadRelatedPosts() {
+            setTimeout(function() {
+                $('#relatedPosts').html(`
+                    <div class="list-group list-group-flush">
+                        <a href="#" class="list-group-item list-group-item-action border-0 related-post-item">
+                            <div class="d-flex align-items-start">
+                                <div class="me-3">
+                                    <div class="bg-primary rounded" style="width: 50px; height: 40px;"></div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1 small fw-bold">Hoạt động khám sức khỏe miễn phí</h6>
+                                    <small class="text-muted">25/12/2024</small>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 related-post-item">
+                            <div class="d-flex align-items-start">
+                                <div class="me-3">
+                                    <div class="bg-success rounded" style="width: 50px; height: 40px;"></div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1 small fw-bold">Hội thảo y khoa quốc tế</h6>
+                                    <small class="text-muted">24/12/2024</small>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action border-0 related-post-item">
+                            <div class="d-flex align-items-start">
+                                <div class="me-3">
+                                    <div class="bg-warning rounded" style="width: 50px; height: 40px;"></div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-1 small fw-bold">Chương trình từ thiện cho trẻ em</h6>
+                                    <small class="text-muted">23/12/2024</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                `);
+            }, 1500);
+        }
+
+        function updateViewCount() {
+            // Simulate view count update
+            const count = Math.floor(Math.random() * 1000) + 100;
+            $('#viewCount').text(count.toLocaleString());
+        }
+
+        // Smooth scroll for anchor links
+        $('a[href^="#"]').on('click', function(event) {
+            var target = $($(this).attr('href'));
+            if(target.length) {
+                event.preventDefault();
+                $('html, body').animate({
+                    scrollTop: target.offset().top - 80
+                }, 1000);
+            }
+        });
+
+        // Reading progress bar
+        $(window).scroll(function() {
+            const article = $('.article-content');
+            if (article.length) {
+                const articleTop = article.offset().top;
+                const articleHeight = article.outerHeight();
+                const windowTop = $(window).scrollTop();
+                const windowHeight = $(window).height();
+                
+                const progress = Math.min(100, Math.max(0, 
+                    ((windowTop + windowHeight - articleTop) / articleHeight) * 100
+                ));
+                
+                // You can add a progress bar here if needed
+            }
+        });
+    </script>
+}
