@@ -1,7 +1,7 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
-  font-family: "Gabarito", sans-serif;
+  font-family:"Montserrat", "Helvetica Neue", Arial, sans-serif;
 }
 
 :root {
@@ -10,7 +10,7 @@ html {
   --background-color: #f9f9f9;
   --text-color: #222222;
   --border-radius: 8px;
-  --font-main: "Gabarito", sans-serif;
+  --font-main: "Montserrat", "Helvetica Neue", Arial, sans-serif;
   --font-hover: rgb(250, 30, 30);
 }
 

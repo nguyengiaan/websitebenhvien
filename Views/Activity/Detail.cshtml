@@ -7,7 +7,7 @@
 }
 
 <!-- Breadcrumb -->
-<section class="breadcrumb-section bg-light py-3">
+<section class="breadcrumb-section bg-white py-3">
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 bg-transparent">
@@ -19,13 +19,13 @@
                 <li class="breadcrumb-item">
                     <a href="@Url.Action("Index")" class="text-decoration-none">Hoạt động</a>
                 </li>
-                @if (!string.IsNullOrEmpty(Model.CategoryName))
+                @if (!string.IsNullOrEmpty(Model.CategoryName) && !string.IsNullOrEmpty(ViewBag.CategoryAlias?.ToString()))
                 {
                     <li class="breadcrumb-item">
-                        <a href="#" onclick="history.back()" class="text-decoration-none">@Model.CategoryName</a>
+                        <a href="/hoat-dong/@ViewBag.CategoryAlias" class="text-decoration-none">@Model.CategoryName</a>
                     </li>
                 }
-                <li class="breadcrumb-item active fw-bold" aria-current="page">Chi tiết</li>
+                <li class="breadcrumb-item active fw-bold" aria-current="page">@Model.Title</li>
             </ol>
         </nav>
     </div>
@@ -101,22 +101,7 @@
         <div class="col-lg-8 col-xl-9">
             <article class="article-content">
                 <!-- Article Meta -->
-                <div class="article-meta bg-light rounded-4 p-4 mb-5">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="d-flex align-items-center">
-                                <div class="meta-icon me-3">
-                                    <i class="fas fa-clock text-primary"></i>
-                                </div>
-                                <div>
-                                    <small class="text-muted d-block">Thời gian đăng</small>
-                                    <strong>@Model.Createat.ToString("dd/MM/yyyy HH:mm")</strong>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
+                
 
                 <!-- Article Body -->
                 <div class="article-body">
@@ -124,26 +109,7 @@
                         @Html.Raw(Model.Description)
                     </div>
 
-                    <!-- Tags -->
-                    @if (!string.IsNullOrEmpty(Model.Keyword))
-                    {
-                        <div class="article-tags mt-5 pt-4 border-top">
-                            <h6 class="text-muted mb-3">
-                                <i class="fas fa-tags me-2"></i>Từ khóa liên quan:
-                            </h6>
-                            <div class="d-flex flex-wrap gap-2">
-                                @{
-                                    var tags = Model.Keyword.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                                }
-                                @foreach (var tag in tags)
-                                {
-                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2">
-                                        @tag.Trim()
-                                    </span>
-                                }
-                            </div>
-                        </div>
-                    }
+                  
 
                     <!-- Share Section -->
                     <div class="article-share mt-5 pt-4 border-top">
@@ -157,8 +123,13 @@
                             </a>
                             <a href="https://twitter.com/intent/tweet?text=@Model.Title&url=@(Context.Request.Scheme)://@(Context.Request.Host)@(Context.Request.Path)" 
                                target="_blank" class="btn btn-outline-info share-btn">
-                                <i class="fab fa-twitter me-2"></i>Twitter
+                                <i class="fab fa-twitter me-2"></i>X
                             </a>
+
+
+
+
+
                        
                         </div>
                     </div>
@@ -188,7 +159,7 @@
                 <!-- Article Info Card -->
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-header bg-gradient-primary text-white border-0">
-                        <h6 class="mb-0 fw-bold">
+                        <h6 class="mb-0 fw-bold text-primary ">
                             <i class="fas fa-info-circle me-2"></i>Thông tin bài viết
                         </h6>
                     </div>
@@ -218,7 +189,7 @@
                 <!-- Related Posts -->
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-header bg-gradient-info text-white border-0">
-                        <h6 class="mb-0 fw-bold">
+                        <h6 class="mb-0 fw-bold text-primary">
                             <i class="fas fa-newspaper me-2"></i>Bài viết liên quan
                         </h6>
                     </div>
@@ -236,26 +207,7 @@
                 </div>
 
                 <!-- Quick Actions -->
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-gradient-warning text-white border-0">
-                        <h6 class="mb-0 fw-bold">
-                            <i class="fas fa-bolt me-2"></i>Thao tác nhanh
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-outline-primary btn-sm" onclick="scrollToTop()">
-                                <i class="fas fa-arrow-up me-2"></i>Lên đầu trang
-                            </button>
-                            <button class="btn btn-outline-success btn-sm" onclick="copyToClipboard()">
-                                <i class="fas fa-share me-2"></i>Chia sẻ
-                            </button>
-                            <button class="btn btn-outline-warning btn-sm" onclick="printArticle()">
-                                <i class="fas fa-print me-2"></i>In bài viết
-                            </button>
-                        </div>
-                    </div>
-                </div>
+               
             </div>
         </div>
     </div>
@@ -264,11 +216,14 @@
 <style>
     .breadcrumb-section {
         border-bottom: 1px solid #e9ecef;
+        position: relative;
+        z-index: 10;
     }
     
     .hero-image {
         position: relative;
         overflow: hidden;
+        z-index: 1;
     }
     
     .hero-overlay {
@@ -278,14 +233,19 @@
         right: 0;
         bottom: 0;
         background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        z-index: 2;
     }
     
     .hero-no-image {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        position: relative;
+        z-index: 1;
     }
     
     .article-meta {
         border: 1px solid #e9ecef;
+        position: relative;
+        z-index: 1;
     }
     
     .meta-icon {
@@ -303,6 +263,8 @@
         font-size: 1.1rem;
         line-height: 1.8;
         color: #333;
+        position: relative;
+        z-index: 1;
     }
     
     .content-prose h1, .content-prose h2, .content-prose h3, 
@@ -349,7 +311,9 @@
     .sidebar-sticky {
         position: sticky;
         top: 20px;
-        z-index: 100;
+        z-index: 5;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
     }
     
     .info-item:last-child {
@@ -360,11 +324,32 @@
         transition: all 0.3s ease;
         border-radius: 8px;
         padding: 0.75rem;
+        position: relative;
     }
     
     .related-post-item:hover {
         background-color: #f8f9fa;
         transform: translateX(5px);
+        z-index: 1;
+    }
+    
+    .related-post-item img {
+        transition: transform 0.3s ease;
+    }
+    
+    .related-post-item:hover img {
+        transform: scale(1.05);
+    }
+    
+    /* Toast notification z-index */
+    .toast-notification {
+        z-index: 9999 !important;
+    }
+    
+    /* Share buttons */
+    .share-btn {
+        position: relative;
+        z-index: 1;
     }
     
     @@media (max-width: 768px) {
@@ -383,6 +368,9 @@
         .sidebar-sticky {
             position: relative;
             top: auto;
+            z-index: 1;
+            max-height: none;
+            overflow-y: visible;
         }
         
         .article-meta .row {
@@ -392,6 +380,70 @@
         .share-btn {
             width: 100%;
             margin-bottom: 0.5rem;
+        }
+    }
+    
+    /* Additional fixes for layout conflicts */
+    .container, .row, .col-lg-8, .col-lg-4, .col-xl-9, .col-xl-3 {
+        position: relative;
+        z-index: auto;
+    }
+    
+    .article-content {
+        position: relative;
+        z-index: 1;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .card {
+        position: relative;
+        z-index: 1;
+        isolation: isolate;
+    }
+    
+    .card-header {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .card-body {
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Fix for dropdown and modal overlays */
+    .dropdown-menu {
+        z-index: 1050;
+    }
+    
+    .modal {
+        z-index: 1060;
+    }
+    
+    .modal-backdrop {
+        z-index: 1040;
+    }
+    
+    /* Ensure proper stacking context */
+    .list-group {
+        position: relative;
+        z-index: auto;
+    }
+    
+    .list-group-item {
+        position: relative;
+        z-index: auto;
+        isolation: isolate;
+    }
+    
+    @@media (max-width: 768px) {
+        .article-content {
+            padding: 1rem;
+            margin-bottom: 1rem;
         }
     }
     
@@ -458,45 +510,78 @@
 
         // Load related posts
         function loadRelatedPosts() {
-            setTimeout(function() {
-                $('#relatedPosts').html(`
-                    <div class="list-group list-group-flush">
-                        <a href="#" class="list-group-item list-group-item-action border-0 related-post-item">
-                            <div class="d-flex align-items-start">
-                                <div class="me-3">
-                                    <div class="bg-primary rounded" style="width: 50px; height: 40px;"></div>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1 small fw-bold">Hoạt động khám sức khỏe miễn phí</h6>
-                                    <small class="text-muted">25/12/2024</small>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0 related-post-item">
-                            <div class="d-flex align-items-start">
-                                <div class="me-3">
-                                    <div class="bg-success rounded" style="width: 50px; height: 40px;"></div>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1 small fw-bold">Hội thảo y khoa quốc tế</h6>
-                                    <small class="text-muted">24/12/2024</small>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action border-0 related-post-item">
-                            <div class="d-flex align-items-start">
-                                <div class="me-3">
-                                    <div class="bg-warning rounded" style="width: 50px; height: 40px;"></div>
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-1 small fw-bold">Chương trình từ thiện cho trẻ em</h6>
-                                    <small class="text-muted">23/12/2024</small>
-                                </div>
-                            </div>
-                        </a>
+            const categoryId = @ViewBag.CategoryId;
+            const postId = @ViewBag.PostId;
+            
+            if (!categoryId) {
+                $('#relatedPosts').html('<p class="text-muted text-center py-4">Không có bài viết liên quan</p>');
+                return;
+            }
+
+            // Show loading state
+            $('#relatedPosts').html(`
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Đang tải...</span>
                     </div>
-                `);
-            }, 1500);
+                    <p class="text-muted small mt-2 mb-0">Đang tìm bài viết liên quan...</p>
+                </div>
+            `);
+
+            // Fetch related posts from API
+            $.ajax({
+                url: `/api/activity/related/${categoryId}`,
+                method: 'GET',
+                data: { currentPostId: postId, take: 5 },
+                success: function(data) {
+                    if (data && data.length > 0) {
+                        let relatedPostsHtml = '<div class="list-group list-group-flush">';
+                        
+                        data.forEach(function(post) {
+                            const postUrl = `/hoat-dong/chi-tiet/${post.alias.split('/').pop()}`;
+                            const thumbnailUrl = post.thumbnail ? `/Resources/${post.thumbnail}` : null;
+                            
+                            relatedPostsHtml += `
+                                <a href="${postUrl}" class="list-group-item list-group-item-action border-0 related-post-item">
+                                    <div class="d-flex align-items-start">
+                                        <div class="me-3">
+                                            ${thumbnailUrl ? 
+                                                `<img src="${thumbnailUrl}" alt="${post.title}" class="rounded" style="width: 50px; height: 40px; object-fit: cover;">` :
+                                                `<div class="bg-primary rounded d-flex align-items-center justify-content-center text-white" style="width: 50px; height: 40px;">
+                                                    <i class="fas fa-image"></i>
+                                                </div>`
+                                            }
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="mb-1 small fw-bold">${post.title}</h6>
+                                            <small class="text-muted">${post.createAt}</small>
+                                            ${post.descriptionShort ? `<p class="small text-muted mb-0 mt-1">${post.descriptionShort.substring(0, 80)}...</p>` : ''}
+                                        </div>
+                                    </div>
+                                </a>
+                            `;
+                        });
+                        
+                        relatedPostsHtml += '</div>';
+                        $('#relatedPosts').html(relatedPostsHtml);
+                    } else {
+                        $('#relatedPosts').html(`
+                            <div class="text-center py-4">
+                                <i class="fas fa-info-circle text-muted fa-2x mb-2"></i>
+                                <p class="text-muted small mb-0">Không có bài viết liên quan trong danh mục này</p>
+                            </div>
+                        `);
+                    }
+                },
+                error: function() {
+                    $('#relatedPosts').html(`
+                        <div class="text-center py-4">
+                            <i class="fas fa-exclamation-triangle text-warning fa-2x mb-2"></i>
+                            <p class="text-muted small mb-0">Không thể tải bài viết liên quan</p>
+                        </div>
+                    `);
+                }
+            });
         }
 
         function updateViewCount() {

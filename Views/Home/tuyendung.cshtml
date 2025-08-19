@@ -1,362 +1,1361 @@
 @model IEnumerable<websitebenhvien.Models.Enitity.Postpersonnel>
 
-<div class="container mt-5">
-    <h1 class="text-center mb-4" style="color: #2c3e50; font-weight: 700; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);">
-        <i class="fas fa-briefcase me-2"></i>Thông Tin Tuyển Dụng
-    </h1>
+<!-- Hero Section -->
 
-    <!-- Phần lý do chọn bệnh viện -->
-    <div class="why-choose-us mb-5 position-relative overflow-hidden" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
-        <div class="container py-5">
-            <h2 class="text-center mb-5" style="color: #2c3e50; font-weight: 700;">
-                <span class="position-relative">
-                    <i class="fas fa-heart me-2 text-danger animate__animated animate__heartBeat animate__infinite"></i>
-                    Tại sao chọn Bệnh viện Mỹ Phước?
-                    <span class="position-absolute bottom-0 start-50 translate-middle-x" style="width: 50%; height: 3px; background: linear-gradient(90deg, transparent, #2c3e50, transparent);"></span>
-                </span>
-            </h2>
 
-            <div class="row g-4 justify-content-center">
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-lg rounded-4 transform-hover"
-                         style="transition: all 0.3s ease;">
-                        <div class="card-body text-center p-5">
-                            <div class="icon-wrapper mb-4">
-                                <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center"
-                                     style="width: 90px; height: 90px; background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);">
-                                    <i class="fas fa-user-md fa-2x text-white"></i>
-                                </div>
-                            </div>
-                            <h5 class="card-title fw-bold mb-3" style="color: #2c3e50;">Môi trường chuyên nghiệp</h5>
-                            <p class="card-text text-muted">Làm việc trong môi trường y tế hiện đại, được trang bị đầy đủ thiết bị tiên tiến với đội ngũ chuyên gia hàng đầu</p>
+<div class="main-content">
+    <!-- Stats Section -->
+  
+
+    <!-- Why Choose Us Section -->
+    <section class="why-choose-section py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">
+                    <span >Tại sao chọn</span> Bệnh viện Mỹ Phước?
+                </h2>
+                <p class="section-subtitle">Những lý do khiến chúng tôi trở thành nơi làm việc lý tưởng</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-hospital"></i>
                         </div>
+                        <h5 class="feature-title">Môi trường chuyên nghiệp</h5>
+                        <p class="feature-description">Làm việc trong môi trường y tế hiện đại với trang thiết bị tiên tiến và đội ngũ chuyên gia hàng đầu</p>
                     </div>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-lg rounded-4 transform-hover"
-                         style="transition: all 0.3s ease;">
-                        <div class="card-body text-center p-5">
-                            <div class="icon-wrapper mb-4">
-                                <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center"
-                                     style="width: 90px; height: 90px; background: linear-gradient(135deg, #2dce89 0%, #1f8f62 100%);">
-                                    <i class="fas fa-graduation-cap fa-2x text-white"></i>
-                                </div>
-                            </div>
-                            <h5 class="card-title fw-bold mb-3" style="color: #2c3e50;">Cơ hội phát triển</h5>
-                            <p class="card-text text-muted">Được đào tạo chuyên sâu và có nhiều cơ hội thăng tiến trong sự nghiệp với lộ trình rõ ràng</p>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-graduation-cap"></i>
                         </div>
+                        <h5 class="feature-title">Cơ hội phát triển</h5>
+                        <p class="feature-description">Được đào tạo chuyên sâu và có nhiều cơ hội thăng tiến với lộ trình sự nghiệp rõ ràng</p>
                     </div>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-lg rounded-4 transform-hover"
-                         style="transition: all 0.3s ease;">
-                        <div class="card-body text-center p-5">
-                            <div class="icon-wrapper mb-4">
-                                <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center"
-                                     style="width: 90px; height: 90px; background: linear-gradient(135deg, #f6365b 0%, #d40b33 100%);">
-                                    <i class="fas fa-hand-holding-heart fa-2x text-white"></i>
-                                </div>
-                            </div>
-                            <h5 class="card-title fw-bold mb-3" style="color: #2c3e50;">Phúc lợi hấp dẫn</h5>
-                            <p class="card-text text-muted">Chế độ đãi ngộ cạnh tranh, bảo hiểm đầy đủ cùng nhiều đặc quyền dành cho nhân viên</p>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-hand-holding-usd"></i>
                         </div>
+                        <h5 class="feature-title">Phúc lợi hấp dẫn</h5>
+                        <p class="feature-description">Chế độ đãi ngộ cạnh tranh, bảo hiểm đầy đủ cùng nhiều đặc quyền dành cho nhân viên</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h5 class="feature-title">Đồng nghiệp thân thiện</h5>
+                        <p class="feature-description">Làm việc cùng đội ngũ nhiệt tình, hỗ trợ lẫn nhau và chia sẻ kinh nghiệm</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h5 class="feature-title">Cân bằng cuộc sống</h5>
+                        <p class="feature-description">Thời gian làm việc linh hoạt, nghỉ phép đầy đủ để đảm bảo sức khỏe cá nhân</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h5 class="feature-title">Ghi nhận thành tích</h5>
+                        <p class="feature-description">Được đánh giá công bằng và ghi nhận đóng góp qua các chương trình khen thưởng</p>
                     </div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <div class="position-absolute" style="width: 150px; height: 150px; background: radial-gradient(circle, rgba(13,110,253,0.1) 0%, rgba(13,110,253,0) 70%); top: -75px; left: -75px; border-radius: 50%;"></div>
-        <div class="position-absolute" style="width: 100px; height: 100px; background: radial-gradient(circle, rgba(220,53,69,0.1) 0%, rgba(220,53,69,0) 70%); bottom: -50px; right: -50px; border-radius: 50%;"></div>
-    </div>
+    <!-- Job Listings Section -->
+    <section id="job-listings" class="jobs-section py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="section-title">
+                    <span >Cơ hội nghề nghiệp</span> đang chờ bạn
+                </h2>
+                <p class="section-subtitle">Khám phá các vị trí tuyển dụng phù hợp với kỹ năng của bạn</p>
+            </div>
 
-    <!-- Phần tin tức tuyển dụng -->
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <div class="job-listings bg-white rounded-3 shadow-sm p-4 mb-5">
-                <h3 class="text-center mb-4" style="color: #2c3e50;">
-                    <i class="fas fa-list-alt me-2"></i>Vị trí đang tuyển
-                </h3>
-
-                <div class="job-cards" id="recruitmentCards" style="max-height: 800px; overflow-y: auto; scrollbar-width: thin;">
-                    <!-- Các vị trí tuyển dụng -->
-                    @foreach (var item in Model)
-                    {
-                        <div class="job-card mb-4">
-                            <div class="card border-0 shadow-sm hover-shadow">
-                                <div class="card-body p-4">
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <div class="d-flex align-items-center">
-                                            <div>
-                                                <h5 class="mb-1">@item.title_recruitmentpost</h5>
-                                                <span class="text-muted small">
-                                                    <i class="fas fa-map-marker-alt me-1"></i>Bình Dương
-                                                </span>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="jobs-container">
+                        @foreach (var item in Model)
+                        {
+                            <div class="job-item">
+                                <div class="job-card">
+                                    <div class="job-header">
+                                        <div class="job-info">
+                                            <div class="job-icon">
+                                                <i class="fas fa-briefcase"></i>
+                                            </div>
+                                            <div class="job-details">
+                                                <h5 class="job-title">@item.title_recruitmentpost</h5>
+                                                <div class="job-meta">
+                                                    <span class="job-location">
+                                                        <i class="fas fa-map-marker-alt"></i>
+                                                        Bình Dương
+                                                    </span>
+                                                    <span class="job-type">
+                                                        <i class="fas fa-clock"></i>
+                                                        Full-time
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                        @if (item.Status == "1")
-                                        {
-                                            <span class="badge bg-success">Đang tuyển</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="badge bg-danger">Ngưng tuyển</span>
-                                        }
+                                        <div class="job-status">
+                                            @if (item.Status == "1")
+                                            {
+                                                <span class="status-badge status-active">
+                                                    <i class="fas fa-check-circle"></i>
+                                                    Đang tuyển
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="status-badge status-inactive">
+                                                    <i class="fas fa-pause-circle"></i>
+                                                    Tạm dừng
+                                                </span>
+                                            }
+                                        </div>
                                     </div>
-                                    <div class="job-info mb-3">
-                                        <span class="badge bg-light text-dark me-2">
-                                            <i class="far fa-clock me-1"></i>Full-time
+                                    
+                                    <div class="job-tags">
+                                        <span class="job-tag">
+                                            <i class="fas fa-dollar-sign"></i>
+                                            Thỏa thuận
                                         </span>
-                                        <span class="badge bg-light text-dark">
-                                            <i class="fas fa-money-bill-wave me-1"></i>Thỏa thuận
+                                        <span class="job-tag">
+                                            <i class="fas fa-graduation-cap"></i>
+                                            Y khoa
                                         </span>
                                     </div>
-                                    <button class="btn btn-outline-primary btn-sm" data-bs-toggle="collapse" data-bs-target="#details-@item.id_recruitmentpost">
-                                        Xem chi tiết <i class="fas fa-chevron-down ms-1"></i>
-                                    </button>
-                                </div>
-                                <div class="collapse mt-3" id="details-@item.id_recruitmentpost">
-                                    <div class="card card-body bg-light">
-                                        @Html.Raw(item.Content_recruitmentpost)
+
+                                    <div class="job-actions">
+                                        <button class="btn-details" data-bs-toggle="collapse" data-bs-target="#job-@item.id_recruitmentpost">
+                                            <i class="fas fa-info-circle"></i>
+                                            Chi tiết
+                                        </button>
+                                        <button class="btn-apply" onclick="scrollToForm()">
+                                            <i class="fas fa-paper-plane"></i>
+                                            Ứng tuyển
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="collapse job-content" id="job-@item.id_recruitmentpost">
+                                        <div class="job-description">
+                                            @Html.Raw(item.Content_recruitmentpost)
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    }
-                </div>
-            </div>
-
-            <!-- Form đăng ký ứng tuyển -->
-            <div class="recruitment-form bg-white rounded-3 shadow">
-                <div class="p-4 bg-primary text-white rounded-top">
-                    <h4 class="text-center mb-0">
-                        <i class="fas fa-paper-plane me-2"></i>Đăng ký ứng tuyển
-                    </h4>
-                </div>
-
-                <form id="recruitmentForm" class="needs-validation p-4" novalidate>
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="Name" name="Name" placeholder="Họ và tên" required>
-                                <label for="Name"><i class="far fa-user me-1"></i>Họ và tên</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="Position" name="Position" placeholder="Vị trí ứng tuyển" required>
-                                <label for="Position"><i class="fas fa-briefcase me-1"></i>Vị trí ứng tuyển</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="tel" class="form-control" id="Phone" name="Phone" placeholder="Số điện thoại" required>
-                                <label for="Phone"><i class="fas fa-phone me-1"></i>Số điện thoại</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="email" class="form-control" id="Email" name="Email" placeholder="Email" required>
-                                <label for="Email"><i class="far fa-envelope me-1"></i>Email</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" id="Address" name="Address" placeholder="Địa chỉ" required>
-                                <label for="Address"><i class="fas fa-map-marker-alt me-1"></i>Địa chỉ</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <select class="form-select" id="Sex" name="Sex" required>
-                              
-                                    <option value="Nam">Nam</option>
-                                    <option value="Nữ">Nữ</option>
-                                  
-                                </select>
-                                <label for="Gender"><i class="fas fa-venus-mars me-1"></i>Giới tính</label>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="upload-cv p-4 border rounded bg-light text-center">
-                                <i class="fas fa-cloud-upload-alt fa-2x text-primary mb-3"></i>
-                                <h6 class="mb-2">Tải lên CV của bạn</h6>
-                                <input type="file" class="form-control" id="CV_Url" name="CV_Url" accept=".pdf,.doc,.docx" >
-                                <small class="text-muted d-block mt-2">Hỗ trợ định dạng: PDF, DOC, DOCX (Tối đa 5MB)</small>
-                                    <small id="fileError" class="text-danger d-block mt-2" style="display: none;"></small>
-                            </div>
-                        </div>
-
-                        <div class="col-12">
-                            <div class="form-floating">
-                                <textarea class="form-control" id="Note" name="Note" style="height: 120px" placeholder="Thư giới thiệu"></textarea>
-                                <label for="Note"><i class="fas fa-pen me-1"></i>Thư giới thiệu</label>
-                            </div>
-                        </div>
-
-                        <div class="col-12 text-center">
-                            <button type="button" onclick="SubmitRecruitment()" class="btn btn-primary px-5 py-3 rounded-pill">
-                                <i class="fas fa-paper-plane me-2"></i>Gửi đơn ứng tuyển
-                            </button>
-                        </div>
+                        }
                     </div>
-                </form>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Application Form Section -->
+    <section id="application-form" class="application-section py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="application-form-wrapper">
+                        <div class="form-header">
+                            <div class="form-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <h3 class="form-title">Ứng tuyển ngay hôm nay</h3>
+                            <p class="form-subtitle">Điền thông tin để chúng tôi có thể liên hệ với bạn</p>
+                        </div>
+
+                        <form id="recruitmentForm" class="application-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-icon">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <input type="text" class="form-input" id="Name" name="Name" placeholder="Họ và tên" required>
+                                 
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-icon">
+                                            <i class="fas fa-briefcase"></i>
+                                        </div>
+                                        <input type="text" class="form-input" id="Position" name="Position" placeholder="Vị trí ứng tuyển" required>
+                                      
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-icon">
+                                            <i class="fas fa-phone"></i>
+                                        </div>
+                                        <input type="tel" class="form-input" id="Phone" name="Phone" placeholder="Số điện thoại" required>
+                              
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <input type="email" class="form-input" id="Email" name="Email" placeholder="Email" required>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-icon">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                        </div>
+                                        <input type="text" class="form-input" id="Address" name="Address" placeholder="Địa chỉ" required>
+                                    
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-icon">
+                                            <i class="fas fa-venus-mars"></i>
+                                        </div>
+                                        <select class="form-input" id="Sex" name="Sex" required>
+                                            <option value="">Chọn giới tính</option>
+                                            <option value="Nam">Nam</option>
+                                            <option value="Nữ">Nữ</option>
+                                        </select>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="file-upload">
+                                    <div class="file-upload-icon">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                    <div class="file-upload-content">
+                                        <h6>Tải lên CV của bạn</h6>
+                                        <p>Kéo thả file vào đây hoặc <span class="upload-link">chọn file</span></p>
+                                        <small>Hỗ trợ: PDF, DOC, DOCX (Tối đa 5MB)</small>
+                                    </div>
+                                    <input type="file" class="file-input" id="CV_Url" name="CV_Url" accept=".pdf,.doc,.docx">
+                                    <div id="fileError" class="file-error"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-icon">
+                                        <i class="fas fa-edit"></i>
+                                    </div>
+                                    <textarea class="form-input" id="Note" name="Note" placeholder="Thư giới thiệu bản thân" rows="4"></textarea>
+                        
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" onclick="SubmitRecruitment()" class="btn-submit">
+                                    <span class="btn-text">
+                                        <i class="fas fa-paper-plane"></i>
+                                        Gửi đơn ứng tuyển
+                                    </span>
+                                    <div class="btn-loader">
+                                        <div class="spinner"></div>
+                                    </div>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
 
 @section Styles {
     <style>
-        .hover-card {
+        :root {
+            --primary-blue: #0066cc;
+            --secondary-blue: #004499;
+            --light-blue: #e6f3ff;
+            --gradient-blue: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+            --gradient-light: linear-gradient(135deg, #e6f3ff 0%, #cce6ff 100%);
+            --text-dark: #2c3e50;
+            --text-light: #6c757d;
+            --white: #ffffff;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --shadow: 0 10px 30px rgba(0, 102, 204, 0.1);
+            --shadow-hover: 0 15px 40px rgba(0, 102, 204, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: var(--gradient-blue);
+            min-height: 70vh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+        }
+
+        .text-gradient {
+            background: linear-gradient(45deg, #ffffff, #e6f3ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            max-width: 500px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary-custom {
+            background: var(--white);
+            color: var(--primary-blue);
+            border: none;
+            padding: 0.875rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
+            color: var(--secondary-blue);
+        }
+
+        .btn-outline-white {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 0.875rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
             transition: all 0.3s ease;
         }
 
-            .hover-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-            }
+        .btn-outline-white:hover {
+            background: var(--white);
+            color: var(--primary-blue);
+            border-color: var(--white);
+            transform: translateY(-2px);
+        }
 
-        .icon-wrapper {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto;
+        /* Floating Cards */
+        .hero-image {
+            position: relative;
+            height: 400px;
+        }
+
+        .floating-card {
+            position: absolute;
+            background: var(--white);
+            border-radius: 20px;
+            padding: 1rem 1.5rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .floating-card i {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+        }
+
+        .floating-card span {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .floating-card:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-card-2 {
+            top: 50%;
+            right: 20%;
+            animation-delay: 1s;
+        }
+
+        .floating-card-3 {
+            bottom: 20%;
+            left: 20%;
+            animation-delay: 2s;
+        }
+
+        @@keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Hero Shapes */
+        .hero-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--white);
+            top: -150px;
+            right: -150px;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            background: var(--white);
+            bottom: -100px;
+            left: -100px;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            background: var(--white);
+            top: 50%;
+            left: -75px;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: #f8fafc;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: var(--white);
+            margin-top: -50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 102, 204, 0.1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-light);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .stat-icon i {
+            color: var(--primary-blue);
+            font-size: 1.5rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        /* Section Titles */
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-light);
+            margin-bottom: 0;
+        }
+
+        /* Feature Cards */
+        .feature-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            height: 100%;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 102, 204, 0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-blue);
             border-radius: 50%;
-            background: rgba(13, 110, 253, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
         }
 
-        .form-control, .form-select {
-            border: 2px solid #e9ecef;
-            padding: 0.75rem 1rem;
+        .feature-icon i {
+            color: var(--white);
+            font-size: 1.5rem;
         }
 
-            .form-control:focus, .form-select:focus {
-                border-color: #0d6efd;
-                box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-            }
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
 
-        .upload-cv {
-            border: 2px dashed #dee2e6 !important;
+        .feature-description {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Job Cards */
+        .jobs-section {
+            background: var(--white);
+        }
+
+        .job-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .job-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 102, 204, 0.1);
+        }
+
+        .job-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .job-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .job-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .job-icon i {
+            color: var(--primary-blue);
+            font-size: 1.25rem;
+        }
+
+        .job-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+        }
+
+        .job-meta {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .job-location, .job-type {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .job-location i, .job-type i {
+            margin-right: 0.25rem;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-active {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+
+        .status-inactive {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+        }
+
+        .job-tags {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .job-tag {
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-details, .btn-apply {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-details {
+            background: rgba(0, 102, 204, 0.1);
+            color: var(--primary-blue);
+        }
+
+        .btn-details:hover {
+            background: rgba(0, 102, 204, 0.2);
+        }
+
+        .btn-apply {
+            background: var(--gradient-blue);
+            color: var(--white);
+        }
+
+        .btn-apply:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.3);
+        }
+
+        .job-content {
+            margin-top: 1rem;
+        }
+
+        .job-description {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 15px;
+            color: var(--text-light);
+        }
+
+        /* Application Form */
+        .application-section {
+            background: var(--gradient-light);
+        }
+
+        .application-form-wrapper {
+            background: var(--white);
+            border-radius: 25px;
+            box-shadow: var(--shadow-hover);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background: var(--gradient-blue);
+            color: var(--white);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .form-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .form-icon i {
+            font-size: 2rem;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-subtitle {
+            font-size: 1.125rem;
+            opacity: 0.9;
+            margin-bottom: 0;
+        }
+
+        .application-form {
+            padding: 3rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-blue);
+            z-index: 2;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: var(--white);
             transition: all 0.3s ease;
         }
 
-            .upload-cv:hover {
-                border-color: #0d6efd !important;
-                background-color: rgba(13, 110, 253, 0.05) !important;
-            }
-
-        .btn-primary {
-            transition: all 0.3s ease;
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
         }
 
-            .btn-primary:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+        .form-input:focus + .form-label,
+        .form-input:not(:placeholder-shown) + .form-label {
+            transform: translateY(-2.5rem) scale(0.85);
+            color: var(--primary-blue);
+        }
+
+        .form-label {
+            position: absolute;
+            left: 3rem;
+            top: 1rem;
+            color: var(--text-light);
+            pointer-events: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .file-upload {
+            border: 2px dashed #cbd5e0;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary-blue);
+            background: rgba(0, 102, 204, 0.02);
+        }
+
+        .file-upload-icon i {
+            font-size: 3rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-content h6 {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload-content p {
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-link {
+            color: var(--primary-blue);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-error {
+            color: var(--danger);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .form-actions {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .btn-submit {
+            background: var(--gradient-blue);
+            color: var(--white);
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 50px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-submit:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid var(--white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
             }
 
-        #recruitmentCards::-webkit-scrollbar {
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary-custom,
+            .btn-outline-white {
+                width: 100%;
+                max-width: 300px;
+                text-align: center;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .application-form {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-header {
+                padding: 2rem 1.5rem;
+            }
+
+            .job-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .job-actions {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-details,
+            .btn-apply {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .floating-card {
+                display: none;
+            }
+        }
+
+        /* Animations */
+        @@keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @@keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Custom Scrollbar */
+        .jobs-container::-webkit-scrollbar {
             width: 8px;
         }
 
-        #recruitmentCards::-webkit-scrollbar-track {
-            background: #f8f9fa;
-            border-radius: 4px;
+        .jobs-container::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
         }
 
-        #recruitmentCards::-webkit-scrollbar-thumb {
-            background: #2c3e50;
-            border-radius: 4px;
+        .jobs-container::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 10px;
         }
 
-            #recruitmentCards::-webkit-scrollbar-thumb:hover {
-                background: #1a252f;
-            }
+        .jobs-container::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-blue);
+        }
 
-        .why-choose-us {
-            background: linear-gradient(to right, #f8f9fa, #e9ecef);
-            padding: 3rem 0;
-            border-radius: 1rem;
+        /* Loading states */
+        .btn-submit.loading .btn-text {
+            opacity: 0;
+        }
+
+        .btn-submit.loading .btn-loader {
+            opacity: 1;
         }
     </style>
 }
 
 @section Scripts {
     <script>
-    $(document).ready(function() {
-                    $('#CV_Url').on('change', function() {
-                var file = this.files[0]; // Lấy file được chọn
-                var fileError = $('#fileError'); // Phần tử hiển thị thông báo lỗi
+        $(document).ready(function() {
+            // Animate statistics on scroll
+            animateStats();
+            
+            // Smooth scrolling for navigation
+            setupSmoothScrolling();
+            
+            // File upload validation
+            setupFileUpload();
+            
+            // Form input animations
+            setupFormInputs();
+        });
 
-                // Kiểm tra định dạng file
-                var allowedExtensions = /(\.pdf|\.doc|\.docx)$/i;
-                if (!allowedExtensions.exec(file.name)) {
-                    fileError.text('Định dạng file không hợp lệ. Chỉ chấp nhận file PDF, DOC, DOCX.').show();
-                    this.value = ''; // Xóa file đã chọn
+        // Statistics animation
+        function animateStats() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const number = entry.target;
+                        const target = parseInt(number.dataset.count);
+                        animateNumber(number, target);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.stat-number').forEach(number => {
+                observer.observe(number);
+            });
+        }
+
+        function animateNumber(element, target) {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target + (target === 1000 ? '+' : '');
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, 40);
+        }
+
+        // Smooth scrolling
+        function setupSmoothScrolling() {
+            $('a[href^="#"]').on('click', function(event) {
+                event.preventDefault();
+                const target = $($(this).attr('href'));
+                if (target.length) {
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 80
+                    }, 800);
+                }
+            });
+        }
+
+        // Scroll to form function
+        function scrollToForm() {
+            $('html, body').animate({
+                scrollTop: $('#application-form').offset().top - 80
+            }, 800);
+        }
+
+        // File upload setup
+        function setupFileUpload() {
+            const fileInput = $('#CV_Url');
+            const fileUpload = $('.file-upload');
+            const fileError = $('.file-error');
+
+            // Drag and drop events
+            fileUpload.on('dragover', function(e) {
+                e.preventDefault();
+                $(this).addClass('dragover');
+            });
+
+            fileUpload.on('dragleave', function(e) {
+                e.preventDefault();
+                $(this).removeClass('dragover');
+            });
+
+            fileUpload.on('drop', function(e) {
+                e.preventDefault();
+                $(this).removeClass('dragover');
+                const files = e.originalEvent.dataTransfer.files;
+                if (files.length > 0) {
+                    fileInput[0].files = files;
+                    validateFile(files[0]);
+                }
+            });
+
+            // File input change
+            fileInput.on('change', function() {
+                if (this.files.length > 0) {
+                    validateFile(this.files[0]);
+                }
+            });
+
+            function validateFile(file) {
+                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                const maxSize = 5 * 1024 * 1024; // 5MB
+
+                fileError.text('').hide();
+
+                if (!allowedTypes.includes(file.type)) {
+                    fileError.text('Định dạng file không hợp lệ. Chỉ chấp nhận PDF, DOC, DOCX.').show();
+                    fileInput.val('');
                     return false;
                 }
 
-                // Kiểm tra kích thước file (tối đa 5MB)
-                var maxSize = 5 * 1024 * 1024; // 5MB
                 if (file.size > maxSize) {
                     fileError.text('Kích thước file vượt quá 5MB.').show();
-                    this.value = ''; // Xóa file đã chọn
+                    fileInput.val('');
                     return false;
                 }
 
-                // Nếu file hợp lệ, ẩn thông báo lỗi
-                fileError.hide();
+                // Update UI to show file selected
+                $('.file-upload-content h6').text('File đã chọn: ' + file.name);
+                $('.file-upload').addClass('file-selected');
+                
+                return true;
+            }
+        }
+
+        // Form input animations
+        function setupFormInputs() {
+            $('.form-input').on('focus blur', function() {
+                $(this).parent().toggleClass('focused');
             });
-        });
-   function SubmitRecruitment(){
-            var form = $('#recruitmentForm')[0];
-            var data = new FormData(form);
+
+            $('.form-input').each(function() {
+                if ($(this).val()) {
+                    $(this).parent().addClass('has-value');
+                }
+            });
+
+            $('.form-input').on('input', function() {
+                if ($(this).val()) {
+                    $(this).parent().addClass('has-value');
+                } else {
+                    $(this).parent().removeClass('has-value');
+                }
+            });
+        }
+
+        // Submit recruitment form
+        function SubmitRecruitment() {
+            const form = $('#recruitmentForm')[0];
+            const submitBtn = $('.btn-submit');
+            
+            // Basic validation
+            if (!validateForm()) {
+                return;
+            }
+
+            const formData = new FormData(form);
+            
+            // Show loading state
+            submitBtn.addClass('loading');
+            submitBtn.prop('disabled', true);
 
             $.ajax({
                 url: "/api/ungtuyencv",
                 type: "POST",
-                data: data,
+                data: formData,
                 processData: false,
                 contentType: false,
-                beforeSend: function() {
-                    Swal.fire({
-                        title: "Đang xử lý",
-                        html: "Vui lòng chờ trong giây lát...",
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                        willOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
-                },
-                success: function(response){
-                    if(response.status){
+                success: function(response) {
+                    submitBtn.removeClass('loading');
+                    submitBtn.prop('disabled', false);
+                    
+                    if (response.status) {
                         Swal.fire({
                             icon: "success",
-                            title: "Thành công!",
+                            title: "Ứng tuyển thành công!",
                             text: response.message,
+                            confirmButtonColor: "#0066cc",
                             showConfirmButton: false,
-                            timer: 2000
+                            timer: 3000
                         });
-                        $('#recruitmentForm')[0].reset();
+                        
+                        // Reset form
+                        form.reset();
+                        $('.input-group').removeClass('has-value focused');
+                        $('.file-upload-content h6').text('Tải lên CV của bạn');
+                        $('.file-upload').removeClass('file-selected');
                     } else {
                         Swal.fire({
                             icon: "error",
-                            title: "Thất bại!",
-                            text: response.message
+                            title: "Có lỗi xảy ra!",
+                            text: response.message,
+                            confirmButtonColor: "#0066cc"
                         });
                     }
+                },
+                error: function() {
+                    submitBtn.removeClass('loading');
+                    submitBtn.prop('disabled', false);
+                    
+                    Swal.fire({
+                        icon: "error",
+                        title: "Lỗi kết nối!",
+                        text: "Vui lòng thử lại sau.",
+                        confirmButtonColor: "#0066cc"
+                    });
                 }
             });
         }
+
+        // Form validation
+        function validateForm() {
+            let isValid = true;
+            const requiredFields = ['Name', 'Position', 'Phone', 'Email', 'Address', 'Sex'];
+            
+            requiredFields.forEach(field => {
+                const input = $(`#${field}`);
+                if (!input.val().trim()) {
+                    input.addClass('error');
+                    isValid = false;
+                } else {
+                    input.removeClass('error');
+                }
+            });
+
+            // Email validation
+            const email = $('#Email').val();
+            const atSymbol = String.fromCharCode(64);
+            if (email && (email.indexOf(atSymbol) === -1 || !email.includes('.'))) {
+                $('#Email').addClass('error');
+                isValid = false;
+            }
+
+            // Phone validation  
+            const phone = $('#Phone').val();
+            if (phone && (phone.length < 10 || phone.length > 11 || isNaN(phone))) {
+                $('#Phone').addClass('error');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Thông tin chưa đầy đủ!",
+                    text: "Vui lòng điền đầy đủ thông tin bắt buộc.",
+                    confirmButtonColor: "#0066cc"
+                });
+            }
+
+            return isValid;
+        }
+
+        // Add error styles
+        $('<style>')
+            .prop('type', 'text/css')
+            .html(`
+                .form-input.error {
+                    border-color: #dc3545 !important;
+                    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
+                }
+                .file-upload.file-selected {
+                    border-color: #0066cc;
+                    background: rgba(0, 102, 204, 0.05);
+                }
+                .file-upload.dragover {
+                    border-color: #0066cc;
+                    background: rgba(0, 102, 204, 0.1);
+                    transform: scale(1.02);
+                }
+            `)
+            .appendTo('head');
     </script>
 }
