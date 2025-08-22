@@ -1,0 +1,395 @@
+@model websitebenhvien.Models.EnitityVM.PagedTitlemenuResult
+@{
+    ViewData["Title"] = "Quản lý Title Menu";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Card quản lý -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Danh sách Title Menu</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-add">
+                            <i class="fas fa-plus"></i> Thêm mới
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <!-- Form tìm kiếm -->
+                    <form id="searchForm" method="get">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Tìm kiếm:</label>
+                                    <input type="text" name="SearchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Nhập tên title menu...">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Số bản ghi:</label>
+                                    <select name="PageSize" class="form-control">
+                                        <option value="5" selected="@(Model.PageSize == 5)">5</option>
+                                        <option value="10" selected="@(Model.PageSize == 10)">10</option>
+                                        <option value="25" selected="@(Model.PageSize == 25)">25</option>
+                                        <option value="50" selected="@(Model.PageSize == 50)">50</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Sắp xếp theo:</label>
+                                    <select name="SortBy" class="form-control">
+                                        <option value="name" selected="@(Model.SortBy == "name")">Tên</option>
+                                        <option value="id_titlemenu" selected="@(Model.SortBy == "id_titlemenu")">ID</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Thứ tự:</label>
+                                    <select name="SortDirection" class="form-control">
+                                        <option value="asc" selected="@(Model.SortDirection == "asc")">Tăng dần</option>
+                                        <option value="desc" selected="@(Model.SortDirection == "desc")">Giảm dần</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-info" style="margin-top: 32px;">
+                                    <i class="fas fa-search"></i> Tìm kiếm
+                                </button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="Page" value="1">
+                    </form>
+
+                    <!-- Bảng dữ liệu -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tên</th>
+                                    <th>Icon</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Items != null && Model.Items.Any())
+                                {
+                                    @foreach (var item in Model.Items)
+                                    {
+                                        <tr>
+                                            <td>@item.Id_titlemenu</td>
+                                            <td>@item.Name</td>
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(item.Url_icon))
+                                                {
+                                                    <img src="~/Resources/@item.Url_icon" alt="Icon" style="width: 30px; height: 30px;">
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Không có icon</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-warning" onclick="editTitlemenu(@item.Id_titlemenu)">
+                                                    <i class="fas fa-edit"></i> Sửa
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" onclick="deleteTitlemenu(@item.Id_titlemenu, '@item.Name')">
+                                                    <i class="fas fa-trash"></i> Xóa
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-center">Không có dữ liệu</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Phân trang -->
+                    @if (Model.TotalPages > 1)
+                    {
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <p class="text-muted">
+                                    Hiển thị @((Model.Page - 1) * Model.PageSize + 1) đến @Math.Min(Model.Page * Model.PageSize, Model.TotalItems) 
+                                    trong tổng số @Model.TotalItems bản ghi
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-end">
+                                        @if (Model.HasPreviousPage)
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="?Page=@(Model.Page - 1)&SearchTerm=@Model.SearchTerm&PageSize=@Model.PageSize&SortBy=@Model.SortBy&SortDirection=@Model.SortDirection">Trước</a>
+                                            </li>
+                                        }
+
+                                        @for (int i = Math.Max(1, Model.Page - 2); i <= Math.Min(Model.TotalPages, Model.Page + 2); i++)
+                                        {
+                                            <li class="page-item @(i == Model.Page ? "active" : "")">
+                                                <a class="page-link" href="?Page=@i&SearchTerm=@Model.SearchTerm&PageSize=@Model.PageSize&SortBy=@Model.SortBy&SortDirection=@Model.SortDirection">@i</a>
+                                            </li>
+                                        }
+
+                                        @if (Model.HasNextPage)
+                                        {
+                                            <li class="page-item">
+                                                <a class="page-link" href="?Page=@(Model.Page + 1)&SearchTerm=@Model.SearchTerm&PageSize=@Model.PageSize&SortBy=@Model.SortBy&SortDirection=@Model.SortDirection">Sau</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Modal Thêm mới -->
+<div class="modal fade" id="modal-add" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Thêm Title Menu</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="form-add" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="add-name">Tên <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="add-name" name="Name" required>
+                    </div>
+                  <div class="mb-3">
+    <label for="add-icon" class="form-label">Icon</label>
+    <input type="file" class="form-control" id="add-icon" name="formFile" accept="image/*">
+    <div class="form-text">Chọn file ảnh (jpg, png, gif...)</div>
+</div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Thêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Sửa -->
+<div class="modal fade" id="modal-edit" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Sửa Title Menu</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="form-edit" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input type="hidden" id="edit-id" name="Id_titlemenu">
+                    <div class="form-group">
+                        <label for="edit-name">Tên <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="edit-name" name="Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-icon">Icon</label>
+                        <input type="file" class="form-control-file" id="edit-icon" name="formFile" accept="image/*">
+                        <small class="text-muted">Chọn file ảnh mới (để trống nếu không thay đổi)</small>
+                        <div id="current-icon" class="mt-2"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Xử lý form thêm mới
+    $('#form-add').submit(function(e) {
+        e.preventDefault();
+        
+        var formData = new FormData(this);
+        
+        $.ajax({
+            url: '@Url.Action("CreateTitlemenu")',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.status) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: response.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        $('#modal-add').modal('hide');
+                        $('#form-add')[0].reset();
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: response.message
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: 'Có lỗi xảy ra khi thêm title menu'
+                });
+            }
+        });
+    });
+
+    // Xử lý form cập nhật
+    $('#form-edit').submit(function(e) {
+        e.preventDefault();
+        
+        var formData = new FormData(this);
+        
+        $.ajax({
+            url: '@Url.Action("UpdateTitlemenu")',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                if (response.status) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Thành công!',
+                        text: response.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        $('#modal-edit').modal('hide');
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: response.message
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: 'Có lỗi xảy ra khi cập nhật title menu'
+                });
+            }
+        });
+    });
+});
+
+function editTitlemenu(id) {
+    $.ajax({
+        url: '@Url.Action("GetTitlemenu")',
+        type: 'GET',
+        data: { id: id },
+        success: function(response) {
+            if (response.status) {
+                var data = response.data;
+                $('#edit-id').val(data.id_titlemenu);
+                $('#edit-name').val(data.name);
+                
+                // Hiển thị icon hiện tại
+                if (data.url_icon) {
+                    $('#current-icon').html('<p>Icon hiện tại:</p><img src="/Resources/' + data.url_icon + '" style="width: 50px; height: 50px;">');
+                } else {
+                    $('#current-icon').html('<p class="text-muted">Chưa có icon</p>');
+                }
+                
+                $('#modal-edit').modal('show');
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: response.message
+                });
+            }
+        },
+        error: function() {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Có lỗi xảy ra khi tải thông tin title menu'
+            });
+        }
+    });
+}
+
+function deleteTitlemenu(id, name) {
+    Swal.fire({
+        title: 'Xác nhận xóa',
+        text: 'Bạn có chắc chắn muốn xóa title menu "' + name + '" không?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Xóa',
+        cancelButtonText: 'Hủy'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '@Url.Action("DeleteTitlemenu")',
+                type: 'POST',
+                data: { id: id },
+                success: function(response) {
+                    if (response.status) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Đã xóa!',
+                            text: response.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: response.message
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi xóa title menu'
+                    });
+                }
+            });
+        }
+    });
+}
+</script>
