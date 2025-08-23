@@ -92,6 +92,11 @@ namespace websitebenhvien.Data
         public DbSet<Postactivity> Postactivity { get; set; }
 
 
+        public DbSet<Titlemenu> Titlemenus { get; set; }
+
+        public DbSet<Menunav> Menunavs { get; set; }
+
+
 
 
         #endregion
@@ -263,6 +268,25 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<Postactivity>().Property(x => x.Keyword).HasMaxLength(200);
             modelBuilder.Entity<Postactivity>().Property(x => x.Descriptionshort).HasMaxLength(500);
             modelBuilder.Entity<Postactivity>().HasOne(x => x.Activitycategory).WithMany(x => x.Postactivities).HasForeignKey(x => x.Id_Categoryactivity);
+
+            // Tiêu đề menu
+            modelBuilder.Entity<Titlemenu>().ToTable("Titlemenu");
+            modelBuilder.Entity<Titlemenu>().HasKey(x => x.Id_titlemenu);
+            modelBuilder.Entity<Titlemenu>().Property(x => x.Id_titlemenu).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Titlemenu>().Property(x => x.Name).HasMaxLength(100);
+            // Menu điều hướng
+            modelBuilder.Entity<Menunav>().ToTable("Menunav");
+            modelBuilder.Entity<Menunav>().HasKey(x=>x.Id_menunav);
+            modelBuilder.Entity<Menunav>().Property(x => x.Id_menunav).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Menunav>().Property(x => x.Name).HasMaxLength(100);
+            modelBuilder.Entity<Menunav>().Property(x => x.Url).HasMaxLength(200);
+            modelBuilder.Entity<Menunav>().HasOne(x => x.Titlemenu).WithMany(x => x.TitlemenuList).HasForeignKey(x => x.Id_titlemenu);
+
+
+
+
+
+
 
 
 

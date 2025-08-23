@@ -19,6 +19,10 @@ namespace websitebenhvien.Helper
                 .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Activitycategory != null ? src.Activitycategory.Title : ""))
                 .ReverseMap()
                 .ForMember(dest => dest.Activitycategory, opt => opt.Ignore());
+            CreateMap<Titlemenu, TitlemenuVM>()
+                .ForMember(dest => dest.formFile, opt => opt.Ignore())
+                .ReverseMap()
+                .ForMember(dest => dest.TitlemenuList, opt => opt.Ignore());
         }
     }
 }

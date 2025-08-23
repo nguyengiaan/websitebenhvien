@@ -118,6 +118,11 @@ namespace websitebenhvien.Controllers
                 CategoryName = post.Activitycategory?.Title
             };
 
+            // Pass category ID and post ID to view for related posts
+            ViewBag.CategoryId = post.Id_Categoryactivity;
+            ViewBag.PostId = post.Id_Postactivity;
+            ViewBag.CategoryAlias = post.Activitycategory?.link_alias;
+
             return View(viewModel);
         }
 
@@ -250,6 +255,33 @@ namespace websitebenhvien.Controllers
             };
 
             return View(viewModel);
+        }
+
+        // API: Get related posts by category
+        [HttpGet]
+        [Route("api/activity/related/{categoryId}")]
+        public async Task<IActionResult> GetRelatedPosts(int categoryId, int currentPostId = 0, int take = 5)
+        {
+            var relatedPosts = await _context.Postactivity
+                .Include(p => p.Activitycategory)
+                .Where(p => p.Id_Categoryactivity == categoryId && 
+                           p.Status == true && 
+                           p.Id_Postactivity != currentPostId)
+                .OrderByDescending(p => p.Createat)
+                .Take(take)
+                .Select(p => new
+                {
+                    id = p.Id_Postactivity,
+                    title = p.Title,
+                    thumbnail = p.Thumbnail,
+                    alias = p.Alias_url,
+                    createAt = p.Createat.ToString("dd/MM/yyyy"),
+                    descriptionShort = p.Descriptionshort,
+                    categoryName = p.Activitycategory.Title
+                })
+                .ToListAsync();
+
+            return Json(relatedPosts);
         }
     }
 }

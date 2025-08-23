@@ -21,7 +21,7 @@ $(document).ready(function() {
     GetSchema();
     GetAllEquipment();
     ListService();
-    loadSpecialties1();
+
     loadSpecialties();
     laydscauhoi();
     $(window).scroll(function() {
