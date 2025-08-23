@@ -121,6 +121,71 @@ namespace websitebenhvien.Controllers
             return View(viewModel);
         }
 
+        // API: Lấy bài viết liên quan
+        [HttpGet]
+        [Route("api/activity/related/{postId}")]
+        public async Task<IActionResult> GetRelatedPosts(int postId, int limit = 5)
+        {
+            var currentPost = await _context.Postactivity
+                .Include(p => p.Activitycategory)
+                .FirstOrDefaultAsync(p => p.Id_Postactivity == postId);
+
+            if (currentPost == null)
+            {
+                return NotFound();
+            }
+
+            // Tìm bài viết liên quan theo:
+            // 1. Cùng danh mục
+            // 2. Có từ khóa tương tự
+            // 3. Loại bỏ bài viết hiện tại
+            var relatedPosts = await _context.Postactivity
+                .Include(p => p.Activitycategory)
+                .Where(p => p.Status == true && p.Id_Postactivity != postId)
+                .Where(p => p.Id_Categoryactivity == currentPost.Id_Categoryactivity ||
+                           (currentPost.Keyword != null && p.Keyword != null && 
+                            p.Keyword.Split().Any(k => currentPost.Keyword.Contains(k.Trim()))))
+                .OrderByDescending(p => p.Createat)
+                .Take(limit)
+                .Select(p => new
+                {
+                    id = p.Id_Postactivity,
+                    title = p.Title,
+                    alias = p.Alias_url,
+                    thumbnail = p.Thumbnail,
+                    createAt = p.Createat.ToString("dd/MM/yyyy"),
+                    categoryName = p.Activitycategory != null ? p.Activitycategory.Title : "",
+                    shortDescription = p.Descriptionshort
+                })
+                .ToListAsync();
+
+            // Nếu không đủ bài viết cùng danh mục, lấy thêm bài viết mới nhất
+            if (relatedPosts.Count < limit)
+            {
+                var additionalPosts = await _context.Postactivity
+                    .Include(p => p.Activitycategory)
+                    .Where(p => p.Status == true && p.Id_Postactivity != postId &&
+                               !relatedPosts.Select(rp => rp.id).Contains(p.Id_Postactivity))
+                    .OrderByDescending(p => p.Createat)
+                    .Take(limit - relatedPosts.Count)
+                    .Select(p => new
+                    {
+                        id = p.Id_Postactivity,
+                        title = p.Title,
+                        alias = p.Alias_url,
+                        thumbnail = p.Thumbnail,
+                        createAt = p.Createat.ToString("dd/MM/yyyy"),
+                        categoryName = p.Activitycategory != null ? p.Activitycategory.Title : "",
+                        shortDescription = p.Descriptionshort
+                    })
+                    .ToListAsync();
+
+                relatedPosts.AddRange(additionalPosts);
+            }
+
+            return Json(relatedPosts);
+        }
+
         // GET: /Activity (Trang tổng hợp tất cả hoạt động)
         [Route("hoat-dong")]
         public async Task<IActionResult> Index(int page = 1, int pageSize = 12, string? search = null)
