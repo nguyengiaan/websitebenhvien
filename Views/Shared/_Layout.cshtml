@@ -1,9 +1,10 @@
 ﻿﻿@using Microsoft.AspNetCore.Http.Extensions
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>@ViewData["Title"]</title>
     <!-- Open Graph tags for social media sharing -->
     <link rel="icon" type="image/png" href="/Images/Logo-rm.png" />
@@ -15,6 +16,17 @@
     <meta name="description" content="@ViewData["Description"]" />
     <meta name="keywords" content="@ViewData["Keywords"]" />
     <meta name="robots" content="index, follow" />
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <!-- Lazy load CSS -->
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="~/css/trangchu.css" asp-append-version="true">
@@ -76,7 +88,8 @@
                         style="width: 50px; height: 50px; background: linear-gradient(45deg, #0063EC, #00a5ff); border: none; transition: all 0.3s ease;"
                         data-bs-toggle="tooltip" 
                         data-bs-placement="left"
-                        title="Tôi có thể giúp gì cho bạn?">
+                        title="Tôi có thể giúp gì cho bạn?"
+                        aria-label="Mở chat hỗ trợ trực tuyến">
                     <i class="fas fa-comments fa-lg" style="color: white; filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));"></i>
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
                           style="font-size: 0.6rem;" id="count-notification">
@@ -114,7 +127,7 @@
                     <div class="card-footer animate__animated animate__fadeInUp" style="border-radius: 0 0 10px 10px;">
                         <div class="input-group">
                             <input type="text" id="messageInput" class="form-control" placeholder="Nhập tin nhắn..." style="border-radius: 20px 0 0 20px;">
-                            <button class="btn btn-primary animate__animated animate__pulse animate__infinite" id="sendMessageBtn" style="border-radius: 0 20px 20px 0; transition: all 0.3s;">
+                            <button class="btn btn-primary animate__animated animate__pulse animate__infinite" id="sendMessageBtn" style="border-radius: 0 20px 20px 0; transition: all 0.3s;" aria-label="Gửi tin nhắn">
                                 <i class="fas fa-paper-plane" style="transition: transform 0.3s;"></i>
                             </button>
                         </div>
@@ -132,7 +145,8 @@
             <!-- Back to top button -->
             <button id="backToTop" 
                     class="btn btn-primary rounded-circle shadow animate__animated animate__bounceIn animate__delay-2s" 
-                    style="width: 50px; height: 50px;">
+                    style="width: 50px; height: 50px;"
+                    aria-label="Về đầu trang">
                 <i class="fas fa-arrow-up animate__animated animate__bounce animate__infinite"></i>
             </button>
         </div>

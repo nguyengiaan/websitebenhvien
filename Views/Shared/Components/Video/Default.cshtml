@@ -14,6 +14,7 @@
                         <video class="w-100" controls title="@video.Title_video" preload="metadata"
                         style="height: 338px !important;">
                             <source src="/Resources/@video.Link_video" type="video/mp4" />
+                            <track kind="captions" src="/Resources/captions/@(System.IO.Path.GetFileNameWithoutExtension(video.Link_video)).vtt" srclang="vi" label="Phụ đề tiếng Việt" default />
                             Trình duyệt của bạn không hỗ trợ thẻ video.
                         </video>
                         <div class="mt-2 text-center text-secondary" style="font-size: 1rem;">

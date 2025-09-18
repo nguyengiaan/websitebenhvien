@@ -1,0 +1,144 @@
+@{
+    Layout = "_PerformanceOptimizedLayout";
+    ViewData["Title"] = "Performance Test - Bệnh viện XYZ";
+    ViewData["Description"] = "Kiểm tra hiệu suất website bệnh viện với tối ưu hóa render-blocking resources";
+    ViewData["Keywords"] = "performance, tối ưu, render-blocking, website bệnh viện";
+}
+
+<!-- Critical above-the-fold content -->
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-content fade-in">
+            <h1 class="hero-title">Bệnh viện hiện đại - Tối ưu Performance</h1>
+            <p class="hero-subtitle">Website được tối ưu hóa cho tốc độ tải nhanh nhất</p>
+            <div class="d-flex justify-content-center mt-3">
+                <a href="#services" class="btn btn-primary me-3">Dịch vụ</a>
+                <a href="#contact" class="btn btn-outline-light">Liên hệ</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services section with lazy loading -->
+<section id="services" class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2>Dịch vụ y tế</h2>
+                <p class="lead">Chúng tôi cung cấp dịch vụ y tế chất lượng cao</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 lazy-load">
+                    @Html.OptimizedImage("/Images/service1.jpg", "Khám tổng quát", 0, 0, "card-img-top", true)
+                    <div class="card-body">
+                        <h5 class="card-title">Khám tổng quát</h5>
+                        <p class="card-text">Dịch vụ khám sức khỏe tổng quát với đội ngũ bác sĩ giàu kinh nghiệm.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 lazy-load">
+                    @Html.OptimizedImage("/Images/service2.jpg", "Chẩn đoán hình ảnh", 0, 0, "card-img-top", true)
+                    <div class="card-body">
+                        <h5 class="card-title">Chẩn đoán hình ảnh</h5>
+                        <p class="card-text">Trang thiết bị hiện đại cho chẩn đoán hình ảnh chính xác.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 lazy-load">
+                    @Html.OptimizedImage("/Images/service3.jpg", "Cấp cứu 24/7", 0, 0, "card-img-top", true)
+                    <div class="card-body">
+                        <h5 class="card-title">Cấp cứu 24/7</h5>
+                        <p class="card-text">Dịch vụ cấp cứu 24/7 với đội ngũ y bác sĩ túc trực.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Performance metrics section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h2>Tối ưu Performance</h2>
+                <p>Các cải tiến đã được áp dụng:</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6 col-lg-3 mb-3 text-center">
+                <div class="p-3">
+                    <i class="fas fa-tachometer-alt fa-3x text-primary mb-3"></i>
+                    <h5>Critical CSS Inline</h5>
+                    <p class="small">CSS quan trọng được nhúng trực tiếp</p>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3 mb-3 text-center">
+                <div class="p-3">
+                    <i class="fas fa-images fa-3x text-success mb-3"></i>
+                    <h5>Lazy Loading Images</h5>
+                    <p class="small">Ảnh tải khi cần thiết</p>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3 mb-3 text-center">
+                <div class="p-3">
+                    <i class="fas fa-compress-alt fa-3x text-info mb-3"></i>
+                    <h5>Compression</h5>
+                    <p class="small">Nén Brotli/Gzip cho tất cả tài nguyên</p>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3 mb-3 text-center">
+                <div class="p-3">
+                    <i class="fas fa-database fa-3x text-warning mb-3"></i>
+                    <h5>Caching</h5>
+                    <p class="small">Cache 1 năm cho static resources</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // Intersection Observer for lazy loading
+        if ('IntersectionObserver' in window) {
+            const lazyElements = document.querySelectorAll('.lazy-load');
+            const lazyObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('loaded');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+            
+            lazyElements.forEach(el => lazyObserver.observe(el));
+        } else {
+            // Fallback for older browsers
+            document.querySelectorAll('.lazy-load').forEach(el => {
+                el.classList.add('loaded');
+            });
+        }
+
+        // Performance measurement
+        window.addEventListener('load', function() {
+            if ('performance' in window) {
+                const perfData = performance.getEntriesByType('navigation')[0];
+                console.log('Page Load Time:', perfData.loadEventEnd - perfData.fetchStart, 'ms');
+                console.log('DOM Content Loaded:', perfData.domContentLoadedEventEnd - perfData.fetchStart, 'ms');
+                console.log('First Paint:', performance.getEntriesByType('paint')[0]?.startTime, 'ms');
+            }
+        });
+    </script>
+}

@@ -36,7 +36,7 @@ namespace websitebenhvien.ViewComponents
             // Cấu hình cache
             var cacheOptions = new MemoryCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15),
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5),
             };
 
             // Lưu dữ liệu vào cache

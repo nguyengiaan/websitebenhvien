@@ -33,8 +33,8 @@
                     </li>
                 </ul> 
         </div>
-        <div class="d-flex flex-column container-xl ">
-            <div class="row container-fluid d-flex align-items-center justify-content-between">
+        <div class="d-flex flex-column container-xl justify-content-center align-items-center" >
+            <div class="row container-fluid d-flex align-items-center ">
                 <div class="col-xl-2 col-md-2 col-6">
                 @foreach (var a in @Model.headers)
                 { 
@@ -46,21 +46,38 @@
                 <div class="col-xl-6 col-md-6 d-none d-md-block">
                     <form class="d-flex" role="search">
                         <input class="form-control me-2 " type="search" placeholder="Tìm kiếm..." aria-label="Search">
-                        <button id="search" class="btn btn-outline-bg-dark bg-danger" >
+                        <button id="search" class="btn btn-outline-bg-dark bg-danger" aria-label="Tìm kiếm">
                             <i class="bi bi-search text-white"></i>
                         </button>
                     </form>
                 </div>
-                <div class="col-xl-3 col-md-3 col-6">
-                    <div class="col-xl-3 col-md-3 col-6">
-                      @foreach (var a in Model.headers)
-                      {
-                          <span id="capcuu" class="badge bg-danger fs-5">
-                              <i class="bi bi-bus-front-fill"></i>
-                              CẤP CỨU 24/7: @a.telephone
-                          </span>
-                      }
-                   </div>
+          <div class="col-xl-3 col-md-3 col-6" >
+            @foreach (var a in Model.headers)
+            {
+              <div class="d-flex align-items-center justify-content-center bg-white rounded-2 shadow-sm px-3 py-2 gap-3 mx-auto" style="min-height:56px; width: 440px;">
+                <!-- Icon + label -->
+                <div class="d-flex align-items-center gap-2">
+                  <span style="color: #ec0707; display: flex; align-items: center;">
+                    <i class="bi bi-bus-front-fill" style="font-size: 1.7rem;"></i>
+                  </span>
+                  <span class="d-none d-md-inline " style="color: #212529; font-size: 1.05rem; font-weight: bold;">CẤP CỨU 24/7:</span>
+                </div>
+                <!-- Phone -->
+                <div class="d-flex align-items-center gap-1">
+                  <span style="color: #ec0707; font-size: 1.3rem;">
+                    <i class="bi bi-telephone-fill"></i>
+                  </span>
+                  <span class="fw-bold" style="color: hsl(199, 65%, 51%); font-size: 1.15rem;">@a.telephone</span>
+                </div>
+                <!-- 115 -->
+                <div class="d-flex align-items-center gap-1">
+                  <span style="color: #ec0707; font-size: 1.3rem;">
+                    <i class="bi bi-telephone-fill"></i>
+                  </span>
+                  <span class="fw-bold" style="color: hsl(199, 65%, 51%); font-size: 1.15rem;">115</span>
+                </div>
+              </div>
+            }
                 </div>
             </div>
 

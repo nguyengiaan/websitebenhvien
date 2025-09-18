@@ -1,0 +1,207 @@
+@using Microsoft.AspNetCore.Http.Extensions
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>@ViewData["Title"]</title>
+
+    <!-- Critical CSS Inline -->
+    <style>
+        /* Critical CSS for above-the-fold content */
+        body { margin: 0; font-family: Arial, sans-serif; overflow-x: hidden; }
+        .header { background: #fff; position: sticky; top: 0; z-index: 1000; }
+        .navbar { padding: 0.5rem 1rem; }
+        .main-content { min-height: 60vh; }
+        .loading { display: flex; justify-content: center; align-items: center; min-height: 200px; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #007bff; border-radius: 50%; animation: spin 1s linear infinite; }
+        @@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+
+    <!-- Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="~/lib/bootstrap/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="~/css/trangchu.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    
+    <!-- Fallback for preloaded CSS -->
+    <noscript>
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="~/css/trangchu.css" asp-append-version="true">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gabarito:wght@400..900&display=swap">
+    </noscript>
+
+    <!-- Meta tags for SEO -->
+    <link rel="icon" type="image/png" href="/Images/Logo-rm.png" />
+    <meta property="og:title" content="@ViewData["Title"]" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="@Context.Request.GetDisplayUrl()" />
+    <meta property="og:image" content="@ViewData["Image"]" />
+    <meta name="description" content="@ViewData["Description"]" />
+    <meta name="keywords" content="@ViewData["Keywords"]" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@Html.Raw("\"@context\": \"https://schema.org\",")"
+        "@Html.Raw("\"@type\": \"Organization\",")"
+        "name": "@ViewData["Title"]",
+        "url": "@Context.Request.GetDisplayUrl()",
+        "logo": "@ViewData["Image"]"
+    }
+    </script>
+
+    <!-- Resource hints for better performance -->
+    <link rel="dns-prefetch" href="//translate.google.com">
+    <link rel="dns-prefetch" href="//www.google-analytics.com">
+</head>
+<body>
+    <!-- Loading indicator -->
+    <div id="pageLoader" class="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <header class="header">
+        @await Component.InvokeAsync("Headertrangchu")
+    </header>
+
+    <main class="main-content">
+        @RenderBody()
+    </main>
+
+    <footer>
+        @await Component.InvokeAsync("Footer")
+    </footer>
+
+    <!-- Chat component with lazy loading -->
+    <div id="chatContainer"></div>
+
+    <!-- Deferred CSS Loading -->
+    <script>
+        // Load non-critical CSS asynchronously
+        function loadCSS(href) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = href;
+            document.head.appendChild(link);
+        }
+
+        // Load CSS after page load
+        window.addEventListener('load', function() {
+            // Hide loader
+            document.getElementById('pageLoader').style.display = 'none';
+            
+            // Load non-critical CSS
+            loadCSS('~/css/Responsive.css?v=@DateTime.Now.Ticks');
+            loadCSS('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css');
+            loadCSS('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css');
+            
+            // Load chat component after delay
+            setTimeout(function() {
+                loadChatComponent();
+            }, 2000);
+        });
+
+        // Lazy load chat component
+        function loadChatComponent() {
+            const chatContainer = document.getElementById('chatContainer');
+            if (chatContainer) {
+                fetch('/PartialView/ChatComponent')
+                    .then(response => response.text())
+                    .then(html => {
+                        chatContainer.innerHTML = html;
+                        initializeChat();
+                    })
+                    .catch(error => console.log('Chat component failed to load'));
+            }
+        }
+
+        function initializeChat() {
+            // Chat initialization code will be here
+        }
+    </script>
+
+    <!-- Deferred JavaScript Loading -->
+    <script>
+        // Load JavaScript modules after page interaction or timeout
+        let scriptsLoaded = false;
+        
+        function loadScripts() {
+            if (scriptsLoaded) return;
+            scriptsLoaded = true;
+
+            // Load jQuery first
+            const jquery = document.createElement('script');
+            jquery.src = '~/lib/jquery/dist/jquery.min.js';
+            jquery.onload = function() {
+                // Load Bootstrap after jQuery
+                const bootstrap = document.createElement('script');
+                bootstrap.src = '~/lib/bootstrap/dist/js/bootstrap.bundle.min.js';
+                document.body.appendChild(bootstrap);
+                
+                // Load other scripts
+                loadGoogleTranslate();
+                loadOtherScripts();
+            };
+            document.body.appendChild(jquery);
+        }
+
+        function loadGoogleTranslate() {
+            window.googleTranslateElementInit = function() {
+                new google.translate.TranslateElement(
+                    { pageLanguage: 'vi', includedLanguages: 'vi,en,zh-CN,ja,ko'},
+                    'google_translate_element'
+                );
+            };
+            
+            const translateScript = document.createElement('script');
+            translateScript.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+            translateScript.async = true;
+            document.body.appendChild(translateScript);
+        }
+
+        function loadOtherScripts() {
+            // Load other non-critical JavaScript
+            @if (IsSectionDefined("Scripts"))
+            {
+                @RenderSection("Scripts", required: false)
+            }
+        }
+
+        // Load scripts on user interaction or after timeout
+        ['touchstart', 'click', 'scroll', 'keydown'].forEach(event => {
+            document.addEventListener(event, loadScripts, { once: true, passive: true });
+        });
+        
+        // Fallback timeout
+        setTimeout(loadScripts, 3000);
+    </script>
+
+    <!-- Service Worker for caching -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(function(registrationError) {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

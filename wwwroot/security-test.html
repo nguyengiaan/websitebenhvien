@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Test Report</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; margin: 40px; }
+        .header { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .pass { color: #28a745; }
+        .fail { color: #dc3545; }
+        .warning { color: #ffc107; }
+        .code { background: #f4f4f4; padding: 10px; border-radius: 4px; font-family: 'Courier New', monospace; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+        th { background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔒 Security Test Report</h1>
+        <p>Kiểm tra security headers và HTTPS configuration cho Hospital Website</p>
+    </div>
+
+    <div class="test-section">
+        <h2>📊 Test Results</h2>
+        <div id="testResults">
+            <p>⏳ Đang chạy security tests...</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🛡️ Security Headers Check</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Header</th>
+                    <th>Expected Value</th>
+                    <th>Actual Value</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="headersTable">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="test-section">
+        <h2>🔐 HTTPS & Mixed Content</h2>
+        <div id="httpsResults">
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🍪 Cookies Analysis</h2>
+        <div id="cookiesResults">
+        </div>
+    </div>
+
+    <script>
+        async function runSecurityTests() {
+            const results = document.getElementById('testResults');
+            const headersTable = document.getElementById('headersTable');
+            const httpsResults = document.getElementById('httpsResults');
+            const cookiesResults = document.getElementById('cookiesResults');
+
+            try {
+                // Test 1: Check if running on HTTPS
+                const isHttps = location.protocol === 'https:';
+                const httpsStatus = isHttps ? '✅ PASS' : '❌ FAIL';
+                
+                // Test 2: Check security headers via API
+                const response = await fetch('/api/security-check');
+                const securityInfo = await response.json();
+
+                // Test 3: Check response headers
+                const testUrl = location.origin;
+                const testResponse = await fetch(testUrl);
+                const headers = {};
+                
+                for (let [key, value] of testResponse.headers) {
+                    headers[key.toLowerCase()] = value;
+                }
+
+                // Display results
+                results.innerHTML = `
+                    <h3>Overall Security Status</h3>
+                    <p><strong>HTTPS Status:</strong> <span class="${isHttps ? 'pass' : 'fail'}">${httpsStatus}</span></p>
+                    <p><strong>Security Headers:</strong> <span id="headersStatus">Checking...</span></p>
+                    <p><strong>Mixed Content:</strong> <span id="mixedContentStatus">Checking...</span></p>
+                `;
+
+                // Check headers
+                const expectedHeaders = {
+                    'strict-transport-security': 'max-age=31536000; includeSubDomains; preload',
+                    'x-frame-options': 'SAMEORIGIN',
+                    'x-content-type-options': 'nosniff',
+                    'referrer-policy': 'strict-origin-when-cross-origin',
+                    'cross-origin-opener-policy': 'same-origin',
+                    'content-security-policy': 'Should be present',
+                    'permissions-policy': 'Should be present'
+                };
+
+                let passedHeaders = 0;
+                let totalHeaders = Object.keys(expectedHeaders).length;
+
+                for (let [headerName, expectedValue] of Object.entries(expectedHeaders)) {
+                    const actualValue = headers[headerName] || 'NOT SET';
+                    const isPresent = headers[headerName] !== undefined;
+                    const status = isPresent ? '✅ PASS' : '❌ FAIL';
+                    
+                    if (isPresent) passedHeaders++;
+
+                    headersTable.innerHTML += `
+                        <tr>
+                            <td><strong>${headerName}</strong></td>
+                            <td><code>${expectedValue}</code></td>
+                            <td><code style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">${actualValue}</code></td>
+                            <td><span class="${isPresent ? 'pass' : 'fail'}">${status}</span></td>
+                        </tr>
+                    `;
+                }
+
+                // Update headers status
+                const headersStatusEl = document.getElementById('headersStatus');
+                const headersPassed = passedHeaders === totalHeaders;
+                headersStatusEl.innerHTML = `<span class="${headersPassed ? 'pass' : 'warning'}">${passedHeaders}/${totalHeaders} headers configured</span>`;
+
+                // HTTPS Results
+                httpsResults.innerHTML = `
+                    <h3>HTTPS Configuration</h3>
+                    <ul>
+                        <li><strong>Protocol:</strong> ${location.protocol}</li>
+                        <li><strong>HSTS Header:</strong> ${headers['strict-transport-security'] ? '✅ Present' : '❌ Missing'}</li>
+                        <li><strong>Mixed Content Policy:</strong> ${headers['content-security-policy'] && headers['content-security-policy'].includes('upgrade-insecure-requests') ? '✅ Configured' : '⚠️ Check CSP'}</li>
+                    </ul>
+                `;
+
+                // Cookie Analysis
+                const cookies = document.cookie.split(';').filter(c => c.trim());
+                cookiesResults.innerHTML = `
+                    <h3>Cookie Security</h3>
+                    <p><strong>Total Cookies:</strong> ${cookies.length}</p>
+                    <p><strong>Secure Cookies:</strong> Use browser DevTools → Application → Cookies to check Secure and SameSite flags</p>
+                    <div class="code">
+                        ${cookies.length > 0 ? cookies.map(c => c.trim()).join('<br>') : 'No cookies found'}
+                    </div>
+                `;
+
+                // Check for mixed content
+                checkMixedContent();
+
+            } catch (error) {
+                results.innerHTML = `<p class="fail">❌ Error running tests: ${error.message}</p>`;
+            }
+        }
+
+        function checkMixedContent() {
+            const mixedContentStatus = document.getElementById('mixedContentStatus');
+            const isHttps = location.protocol === 'https:';
+            
+            if (!isHttps) {
+                mixedContentStatus.innerHTML = '<span class="warning">⚠️ Not running on HTTPS</span>';
+                return;
+            }
+
+            // Check for HTTP resources
+            const httpResources = [];
+            const allImages = document.querySelectorAll('img');
+            const allScripts = document.querySelectorAll('script');
+            const allLinks = document.querySelectorAll('link');
+
+            [allImages, allScripts, allLinks].forEach(nodeList => {
+                nodeList.forEach(element => {
+                    const src = element.src || element.href;
+                    if (src && src.startsWith('http://')) {
+                        httpResources.push(src);
+                    }
+                });
+            });
+
+            if (httpResources.length === 0) {
+                mixedContentStatus.innerHTML = '<span class="pass">✅ No mixed content detected</span>';
+            } else {
+                mixedContentStatus.innerHTML = `<span class="fail">❌ ${httpResources.length} HTTP resources found</span>`;
+            }
+        }
+
+        // Performance test
+        function testPerformance() {
+            if ('performance' in window && 'timing' in window.performance) {
+                const timing = window.performance.timing;
+                const loadTime = timing.loadEventEnd - timing.navigationStart;
+                const domReady = timing.domContentLoadedEventEnd - timing.navigationStart;
+                
+                return {
+                    loadTime: loadTime,
+                    domReady: domReady
+                };
+            }
+            return null;
+        }
+
+        // Run tests when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            runSecurityTests();
+            
+            // Add performance info
+            const perfInfo = testPerformance();
+            if (perfInfo) {
+                setTimeout(() => {
+                    document.body.innerHTML += `
+                        <div class="test-section">
+                            <h2>⚡ Performance</h2>
+                            <p><strong>Page Load Time:</strong> ${perfInfo.loadTime}ms</p>
+                            <p><strong>DOM Ready Time:</strong> ${perfInfo.domReady}ms</p>
+                        </div>
+                    `;
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

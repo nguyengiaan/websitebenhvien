@@ -1,0 +1,98 @@
+<!-- Chat Button (Floating) -->
+<div id="chatContainer" class="position-fixed" style="bottom: 20px; right: 20px; z-index: 1050;">
+    <button class="btn btn-primary rounded-circle p-3 shadow-lg animate__animated animate__bounce animate__infinite"
+            id="chatToggleBtn"
+            data-bs-toggle="tooltip"
+            data-bs-placement="left"
+            title="Tôi có thể giúp gì cho bạn?"
+            aria-label="Mở chat hỗ trợ trực tuyến"
+            style="width: 60px; height: 60px; position: relative; border: none; background: linear-gradient(135deg, #007bff, #0056b3);">
+        <i class="fas fa-comments fa-lg" style="color: white; filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));"></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
+              style="font-size: 0.6rem;" id="count-notification">
+            <i class="fas fa-bell text-white" id="count-notification"></i>
+        </span>
+        <div class="ripple position-absolute w-100 h-100 rounded-circle" style="animation: ripple 1.5s linear infinite; border: 2px solid #fff; opacity: 0;"></div>
+        <div class="bell-shake"></div>
+        <div class="position-absolute" style="bottom: 100%; right: 0; margin-bottom: 10px; background: rgba(0,0,0,0.8); color: white; padding: 8px 12px; border-radius: 4px; font-size: 14px; display: none;" id="chatTooltip">
+            Tôi có thể giúp gì cho bạn?
+        </div>
+    </button>
+
+    <!-- Chat Window -->
+    <div id="chatWindow" class="card position-absolute bottom-100 mb-2 animate__animated animate__fadeIn" style="width: 300px; display: none; right: 0; transform-origin: bottom right;">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" style="border-radius: 10px 10px 0 0;">
+            <h6 class="m-0 new-label">
+                <i class="fas fa-circle text-success me-2" style="font-size: 10px;"></i>
+                Chat với chúng tôi
+            </h6>
+            <button type="button" class="btn-close btn-close-white animate__animated animate__rotateIn" id="closeChatBtn" style="transition: transform 0.3s;" onmouseover="this.style.transform='rotate(90deg)';" onmouseout="this.style.transform='rotate(0deg)';"></button>
+        </div>
+        <div class="card-body" style="height: 300px; overflow-y: auto; scroll-behavior: smooth;" id="chatMessages">
+            <!-- Welcome message -->
+            <div class="mb-2 animate__animated animate__fadeInLeft">
+                <div class="d-inline-block bg-light rounded p-2" style="position: relative;">
+                    <p class="m-0">Xin chào! Chúng tôi có thể giúp gì cho bạn? 👋</p>
+                </div>
+            </div>
+            <!-- Quick actions will be loaded here -->
+        </div>
+        <div class="card-footer p-2">
+            <div class="input-group input-group-sm">
+                <input type="text" class="form-control" placeholder="Nhập tin nhắn..." id="messageInput" style="border-radius: 20px 0 0 20px;">
+                <button class="btn btn-primary" type="button" id="sendMessageBtn" style="border-radius: 0 20px 20px 0;" aria-label="Gửi tin nhắn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@@keyframes ripple {
+    0% { opacity: 1; transform: scale(0); }
+    100% { opacity: 0; transform: scale(4); }
+}
+
+.bell-shake {
+    animation: bell-shake 2s infinite;
+}
+
+@@keyframes bell-shake {
+    0%, 50%, 100% { transform: rotate(0deg); }
+    10%, 30% { transform: rotate(-10deg); }
+    20%, 40% { transform: rotate(10deg); }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatToggleBtn = document.getElementById('chatToggleBtn');
+    const chatWindow = document.getElementById('chatWindow');
+    const closeChatBtn = document.getElementById('closeChatBtn');
+    
+    if (chatToggleBtn && chatWindow && closeChatBtn) {
+        chatToggleBtn.addEventListener('click', function() {
+            if (chatWindow.style.display === 'none' || !chatWindow.style.display) {
+                chatWindow.style.display = 'block';
+                chatWindow.classList.add('animate__fadeInUp');
+                chatWindow.classList.remove('animate__fadeOutDown');
+            } else {
+                chatWindow.classList.add('animate__fadeOutDown');
+                chatWindow.classList.remove('animate__fadeInUp');
+                setTimeout(() => {
+                    chatWindow.style.display = 'none';
+                }, 300);
+            }
+        });
+
+        closeChatBtn.addEventListener('click', function() {
+            chatWindow.classList.add('animate__fadeOutDown');
+            chatWindow.classList.remove('animate__fadeInUp');
+            setTimeout(() => {
+                chatWindow.style.display = 'none';
+            }, 300);
+        });
+    }
+});
+</script>

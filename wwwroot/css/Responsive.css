@@ -13,10 +13,10 @@
 /* Small devices (phones in landscape, ≥576px) */
 @media (min-width: 576px) and (max-width: 767.98px) {
   /* Styles for small devices */
-    #capcuu
+  #capcuu
   {
      font-size: 14px !important  ;
-        font-weight: bold !important;
+     font-weight: bold !important;
   }
 }
 
@@ -45,7 +45,7 @@
 }
 #mainCaroushadowsel
 {
-border-radius: 10px !important;
+  border-radius: 10px !important;
 }
 }
 
@@ -53,7 +53,6 @@ border-radius: 10px !important;
 @media (min-width: 1200px) and (max-width: 1399.98px) {
   /* Styles for extra large devices */
   .nav-item:hover .dropdown-menu {
-
   display: block !important;
 
 }

@@ -142,6 +142,16 @@ public class HomeController : Controller
             return Json(new { status = false, message = e.Message });
         }
     }
+    [Route("/performance-test")]
+    public IActionResult PerformanceTest()
+    {
+        ViewData["Title"] = "Performance Test - Bệnh viện Mỹ Phước";
+        ViewData["Description"] = "Kiểm tra hiệu suất website bệnh viện với các tối ưu hóa render-blocking resources và caching";
+        ViewData["Keywords"] = "performance, tối ưu, render-blocking, website bệnh viện, tốc độ tải";
+        ViewData["Image"] = "https://benhvienmyphuoc.com.vn/Images/Logo-rm.png";
+        return View();
+    }
+
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

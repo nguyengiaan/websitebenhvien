@@ -34,7 +34,7 @@ namespace websitebenhvien.ViewComponents
                     }
 
                     var cacheEntryOptions = new MemoryCacheEntryOptions()
-                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(15));
+                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
                     _memoryCache.Set(cacheKey, listNews, cacheEntryOptions);
                 }
 

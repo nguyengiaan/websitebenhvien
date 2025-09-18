@@ -149,7 +149,7 @@ namespace websitebenhvien.Controllers
                 .Where(p => p.Status == true && p.Id_Postactivity != postId)
                 .Where(p => p.Id_Categoryactivity == currentPost.Id_Categoryactivity ||
                            (currentPost.Keyword != null && p.Keyword != null && 
-                            p.Keyword.Split().Any(k => currentPost.Keyword.Contains(k.Trim()))))
+                            p.Keyword.Split(Array.Empty<char>()).Any(k => currentPost.Keyword.Contains(k.Trim()))))
                 .OrderByDescending(p => p.Createat)
                 .Take(limit)
                 .Select(p => new

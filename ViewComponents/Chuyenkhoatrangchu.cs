@@ -31,7 +31,7 @@ namespace Websitebenhvien.ViewComponents
                 // Set cache options
                 var cacheOptions = new MemoryCacheEntryOptions
                 {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15), // Cache for 30 minutes
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5), // Cache for 30 minutes
                   // Reset expiration if accessed
                 };
 

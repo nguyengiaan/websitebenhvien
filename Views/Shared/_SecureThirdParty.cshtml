@@ -1,0 +1,128 @@
+@* Secure third-party integrations *@
+
+@section Scripts {
+    <script>
+        // Lazy load Google Translate
+        function loadGoogleTranslate() {
+            if (typeof google === 'undefined' || typeof google.translate === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+                script.async = true;
+                script.defer = true;
+                script.crossOrigin = 'anonymous';
+                document.head.appendChild(script);
+            } else {
+                googleTranslateElementInit();
+            }
+        }
+
+        // Lazy load YouTube
+        function loadYouTubeVideo(container, videoId, title = 'Video YouTube') {
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0&modestbranding=1`;
+            iframe.width = '560';
+            iframe.height = '315';
+            iframe.frameBorder = '0';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+            iframe.loading = 'lazy';
+            iframe.title = title;
+            container.appendChild(iframe);
+        }
+
+        // Secure cookie handling
+        function setCookie(name, value, days, sameSite = 'Strict', secure = true) {
+            let expires = '';
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = '; expires=' + date.toUTCString();
+            }
+            
+            let cookieString = `${name}=${value}${expires}; path=/; SameSite=${sameSite}`;
+            if (secure && location.protocol === 'https:') {
+                cookieString += '; Secure';
+            }
+            
+            document.cookie = cookieString;
+        }
+
+        // Content Security Policy violation reporting
+        document.addEventListener('securitypolicyviolation', (e) => {
+            console.warn('CSP Violation:', {
+                directive: e.violatedDirective,
+                blockedURI: e.blockedURI,
+                lineNumber: e.lineNumber,
+                sourceFile: e.sourceFile
+            });
+            
+            // Report to server if needed
+            fetch('/api/csp-violation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    directive: e.violatedDirective,
+                    blockedURI: e.blockedURI,
+                    timestamp: new Date().toISOString()
+                })
+            }).catch(err => console.error('Failed to report CSP violation:', err));
+        });
+
+        // Initialize secure third-party integrations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load Google Translate only if needed
+            const translateTrigger = document.querySelector('#google_translate_element');
+            if (translateTrigger) {
+                // Intersection Observer for lazy loading
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            loadGoogleTranslate();
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                });
+                observer.observe(translateTrigger);
+            }
+
+            // Handle YouTube videos
+            document.querySelectorAll('[data-youtube-id]').forEach(container => {
+                const videoId = container.dataset.youtubeId;
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            loadYouTubeVideo(container, videoId);
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                });
+                observer.observe(container);
+            });
+
+            // Remove third-party cookies periodically
+            setInterval(() => {
+                const thirdPartyCookies = ['__gads', '__gpi', '_hjSessionUser_', 'NID', 'COMPASS'];
+                thirdPartyCookies.forEach(cookieName => {
+                    document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.${location.hostname}`;
+                });
+            }, 300000); // Every 5 minutes
+        });
+
+        // Google Translate callback
+        function googleTranslateElementInit() {
+            if (typeof google !== 'undefined' && google.translate) {
+                new google.translate.TranslateElement(
+                    { pageLanguage: 'vi', includedLanguages: 'en,vi,ja,ko,zh' },
+                    'google_translate_element'
+                );
+            }
+        }
+    </script>
+}
+
+<!-- Fallback for users without JavaScript -->
+<noscript>
+    <p>Để sử dụng đầy đủ tính năng của website, vui lòng bật JavaScript trong trình duyệt của bạn.</p>
+</noscript>

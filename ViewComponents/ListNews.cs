@@ -33,7 +33,7 @@ namespace websitebenhvien.ViewComponents
 
                     // Set cache options
                     var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(15));
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
                     // Store data in cache
                     _memoryCache.Set(cacheKey, listNews, cacheEntryOptions);
                 }

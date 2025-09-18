@@ -23,7 +23,7 @@ namespace WebsiteBenhVien.ViewComponents
             {
                 slides = await _page.GetSlide();
                 var cacheEntryOptions = new MemoryCacheEntryOptions()
-                .SetSlidingExpiration(TimeSpan.FromMinutes(30));
+                .SetSlidingExpiration(TimeSpan.FromMinutes(5));
                 _cache.Set("slides", slides, cacheEntryOptions);
             }
             return View(slides);

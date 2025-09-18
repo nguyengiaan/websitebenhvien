@@ -16,6 +16,24 @@ namespace websitebenhvien.Controllers
             _pagemain = pageMain;
             _memoryCache = memoryCache;
         }
-      
+
+        public IActionResult ChatComponent()
+        {
+            return PartialView("_ChatComponent");
+        }
+
+        public async Task<IActionResult> GetNotifications()
+        {
+            try
+            {
+                // Lấy danh sách thông báo từ database
+                var notifications = new List<object>(); // Thay thế bằng logic thực tế
+                return Json(notifications);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { error = "Có lỗi xảy ra khi tải thông báo" });
+            }
+        }
     }
 }
