@@ -9,6 +9,34 @@
   }
 
 }
+@media  (max-width: 1300px) 
+{
+  #search-bar{
+
+    
+  }
+  #hotline
+  {
+     width: 400px !important;
+  }
+ 
+  
+}
+@media  (max-width: 600px) {
+  #hotline
+  {
+     width: 250px !important;
+
+  }
+  #hotline span{
+    font-size: 9px !important;
+  }
+
+
+  
+
+}
+
 
 /* Small devices (phones in landscape, ≥576px) */
 @media (min-width: 576px) and (max-width: 767.98px) {

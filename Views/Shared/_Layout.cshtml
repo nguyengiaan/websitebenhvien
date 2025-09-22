@@ -53,12 +53,12 @@
     </script>
 </head>
 <body>
-
+<header>
     @await Component.InvokeAsync("Headertrangchu")
-
-<main role="main" style="padding-top: 25px;"  >
+</header>
+<div role="main" style="padding-top: 25px;">
     @RenderBody()
-</main>
+</div>
 
 <footer class="bg-white py-5 border-top fade-in w-100" >
     @await Component.InvokeAsync("Footertrangchu")

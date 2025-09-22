@@ -16,7 +16,22 @@ namespace websitebenhvien.ViewComponents
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-          return View();
+            try
+            {
+                string cacheKey = "VideoViewComponent_Videos";
+                if (!_cache.TryGetValue(cacheKey, out var video))
+                {
+                    video = await _recruitment.GetVideosClient();
+                    var cacheEntryOptions = new MemoryCacheEntryOptions()
+                        .SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
+                    _cache.Set(cacheKey, video, cacheEntryOptions);
+                }
+                return View(video);
+            }
+            catch (Exception)
+            {
+                return View(null);
+            }
         }
     }
 }

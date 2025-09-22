@@ -4,7 +4,7 @@
 @{
 }
 @model websitebenhvien.Models.EnitityVM.Header_trangchu
- <header class="container-fluid shadow-sm " id="header">
+ <div class="container-fluid shadow-sm "  id="header_trangchu" >
         <div class="w-100 d-flex justify-content-xxl-end justify-content-xl-center justify-content-md-start border-bottom border-2 border-secondary mb-2" >
                 <ul class="menu-custom  d-flex flex-row list-unstyled m-0 p-0 w-50 " >
                    @if (Model.headers != null)
@@ -20,7 +20,7 @@
                       }
                    }
                      <li class="nav-item dropdown"></li>
-                        <a class="nav-link dropdown-toggle " href="#"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle clo-text  " href="#"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-translate pr-5"></i>Ngôn ngữ
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="languageDropdown"  >
@@ -35,7 +35,7 @@
         </div>
         <div class="d-flex flex-column container-xl justify-content-center align-items-center" >
             <div class="row container-fluid d-flex align-items-center ">
-                <div class="col-xl-2 col-md-2 col-6">
+                <div class="col-xl-2 col-lg-2  " >
                 @foreach (var a in @Model.headers)
                 { 
                     <a href="/#">
@@ -43,7 +43,7 @@
                     </a>
                 }
                 </div>
-                <div class="col-xl-6 col-md-6 d-none d-md-block">
+                <div class="col-xl-5 col-lg-4 d-lg-block d-sm-none" id="search-bar">
                     <form class="d-flex" role="search">
                         <input class="form-control me-2 " type="search" placeholder="Tìm kiếm..." aria-label="Search">
                         <button id="search" class="btn btn-outline-bg-dark bg-danger" aria-label="Tìm kiếm">
@@ -51,34 +51,34 @@
                         </button>
                     </form>
                 </div>
-          <div class="col-xl-3 col-md-3 col-6" >
+          <div class="col-xl-4 col-md-3 col-10">
             @foreach (var a in Model.headers)
             {
-              <div class="d-flex align-items-center justify-content-center bg-white rounded-2 shadow-sm px-3 py-2 gap-3 mx-auto" style="min-height:56px; width: 440px;">
+              <div class="d-flex align-items-center justify-content-center bg-white rounded-2 shadow-sm px-3 py-2 gap-3 mx-auto" id="hotline">
                 <!-- Icon + label -->
                 <div class="d-flex align-items-center gap-2">
-                  <span style="color: #ec0707; display: flex; align-items: center;">
-                    <i class="bi bi-bus-front-fill" style="font-size: 1.7rem;"></i>
+                  <span style="color: #ec0707; display: flex; align-items: center; font-size: 1.3rem;">
+                    <i class="bi bi-bus-front-fill" "></i>
                   </span>
-                  <span class="d-none d-md-inline " style="color: #212529; font-size: 1.05rem; font-weight: bold;">CẤP CỨU 24/7:</span>
+                  <span class="fs-lg-3 fw-bold fs-md-2 fs-sm-1" style="color: #212529;">CẤP CỨU 24/7:</span>
                 </div>
                 <!-- Phone -->
                 <div class="d-flex align-items-center gap-1">
                   <span style="color: #ec0707; font-size: 1.3rem;">
                     <i class="bi bi-telephone-fill"></i>
                   </span>
-                  <span class="fw-bold" style="color: hsl(199, 65%, 51%); font-size: 1.15rem;">@a.telephone</span>
+                  <span class="fw-bold fs-lg-3 fs-md-2  fs-sm-1" style="color: hsl(199, 65%, 51%); ">@a.telephone</span>
                 </div>
                 <!-- 115 -->
                 <div class="d-flex align-items-center gap-1">
                   <span style="color: #ec0707; font-size: 1.3rem;">
                     <i class="bi bi-telephone-fill"></i>
-                  </span>
-                  <span class="fw-bold" style="color: hsl(199, 65%, 51%); font-size: 1.15rem;">115</span>
+                  </span> 
+                  <span class="fw-bold fs-lg-3 fs-md-2  fs-sm-1" style="color: hsl(199, 65%, 51%); ">115</span>
                 </div>
               </div>
             }
-                </div>
+              </div>
             </div>
 
 </div>
@@ -125,5 +125,9 @@
     </div>
   </div>
 </nav>
-<header>
-
+<div>
+<style>
+    #header_trangchu a{
+        color: hsl(199, 65%, 51%) !important ;
+    }
+  </style>
