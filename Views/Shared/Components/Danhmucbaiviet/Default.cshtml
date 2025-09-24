@@ -1,113 +1,97 @@
 @model IEnumerable<websitebenhvien.Models.EnitityVM.CategorynewsVM>
 
-<div class="list-group border rounded shadow-sm" style="max-height: 500px; overflow-y: auto;">
+<div class="list-group category-menu shadow-sm">
     @foreach (var category in Model)
     {
         var isActive = ViewData["CurrentCategory"]?.ToString() == category.Alias_url;
-     <a href="@category.Alias_url"
-   class="list-group-item list-group-item-action d-flex align-items-center @(isActive ? "active" : "")"
-   onclick="localStorage.setItem('selectedCategoryTitle', '@category.Title')"
-   style="transition: all 0.3s ease; border: 1px solid #ddd; margin-bottom: -1px;">
-    <i class="fas fa-arrow-right me-3 @(isActive ? "text-light" : "text-primary")"></i>
-    <span class="@(isActive ? "fw-bold text-light" : "fw-semibold text-dark")">@category.Title</span>
-</a>
+        <a href="@category.Alias_url"
+           class="list-group-item list-group-item-action d-flex align-items-center gap-2 @(isActive ? "active" : "")"
+           onclick="localStorage.setItem('selectedCategoryTitle', '@category.Title'); localStorage.setItem('selectedCategory','@category.Alias_url')">
+            <i class="fas fa-folder-open @(isActive ? "text-white" : "text-primary")"></i>
+            <span class="@(isActive ? "fw-bold text-white" : "fw-semibold text-dark")">@category.Title</span>
+        </a>
     }
 </div>
 
 <style>
-    /* Tổng thể danh sách */
-    .list-group {
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        overflow: hidden;
+    /* Container */
+    .category-menu {
+        border-radius: 12px;
+        overflow-y: auto;
+        max-height: 500px;
+        background: #fff;
+        padding: 6px;
+        border: 1px solid #e5e5e5;
     }
 
-    /* Scrollbar styling */
-    .list-group::-webkit-scrollbar {
+    /* Scrollbar */
+    .category-menu::-webkit-scrollbar {
         width: 8px;
     }
-    
-    .list-group::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 4px;
+    .category-menu::-webkit-scrollbar-track {
+        background: #f9f9f9;
     }
-    
-    .list-group::-webkit-scrollbar-thumb {
+    .category-menu::-webkit-scrollbar-thumb {
         background: #c1c1c1;
         border-radius: 4px;
     }
-    
-    .list-group::-webkit-scrollbar-thumb:hover {
-        background: #a8a8a8;
+    .category-menu::-webkit-scrollbar-thumb:hover {
+        background: #999;
     }
 
-    /* Các mục trong danh sách */
-    .list-group-item {
-        border: 1px solid #ddd !important;
-        border-left: 4px solid transparent !important;
-        transition: all 0.3s ease;
-        padding: 12px 16px;
-        font-size: 1rem;
-        margin-bottom: -1px; /* Để các border chồng lên nhau */
+    /* Item */
+    .category-menu .list-group-item {
+        border: none;
+        border-radius: 8px;
+        margin-bottom: 4px;
+        padding: 12px 14px;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        transition: all 0.25s ease;
+        background: #fff;
     }
 
-    /* Bỏ border-bottom của phần tử cuối cùng */
-    .list-group-item:last-child {
-        border-bottom: 1px solid #ddd !important;
-        margin-bottom: 0;
+    /* Hover */
+    .category-menu .list-group-item:hover {
+        background: linear-gradient(90deg, rgba(13,110,253,0.1) 0%, rgba(13,110,253,0.05) 100%);
+        color: #31a0d3;
+        transform: translateX(4px);
     }
 
-    /* Hiệu ứng hover */
-    .list-group-item:hover {
-        background-color: #f1f1f1;
-        border-left: 4px solid #0d6efd !important;
-        color: #0d6efd;
-        z-index: 1; /* Đảm bảo border hiển thị đẹp khi hover */
-    }
-
-    /* Mục đang hoạt động */
-    .list-group-item.active {
-        background-color: #0d6efd !important;
+    /* Active */
+    .category-menu .list-group-item.active {
+        background: linear-gradient(135deg, #31a0d3, #0056b3);
         color: #fff !important;
-        border-left: 4px solid #fff !important;
-        border-color: #0d6efd !important;
         font-weight: bold;
-        z-index: 2; /* Đảm bảo phần tử active nằm trên cùng */
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
-    /* Biểu tượng */
-    .list-group-item i {
-        font-size: 1.2rem;
-        transition: color 0.3s ease;
+    /* Icon */
+    .category-menu i {
+        font-size: 1.1rem;
+        transition: transform 0.3s ease;
+    }
+    .category-menu .list-group-item:hover i {
+        transform: scale(1.2);
     }
 
-    /* Hiệu ứng click */
-    .list-group-item:active {
+    /* Click effect */
+    .category-menu .list-group-item:active {
         transform: scale(0.98);
     }
 </style>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const storedAlias = localStorage.getItem("selectedCategory");
-
         if (storedAlias) {
-            const items = document.querySelectorAll(".list-group-item");
+            const items = document.querySelectorAll(".category-menu .list-group-item");
             items.forEach(item => {
                 if (item.getAttribute("href") === storedAlias) {
                     item.classList.add("active");
-                    item.querySelector("i").classList.replace("text-primary", "text-light");
-                    const span = item.querySelector("span");
-                    span.classList.replace("text-dark", "text-light");
-                    span.classList.replace("fw-semibold", "fw-bold");
                 }
             });
         }
-
-        const links = document.querySelectorAll(".list-group-item");
-        links.forEach(link => {
-            link.addEventListener("click", function () {
-                localStorage.setItem("selectedCategory", this.getAttribute("href"));
-            });
-        });
     });
 </script>

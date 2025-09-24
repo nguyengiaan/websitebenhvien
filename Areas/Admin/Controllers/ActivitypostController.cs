@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using websitebenhvien.Data;
@@ -8,6 +9,8 @@ using websitebenhvien.Service.Interface;
 namespace websitebenhvien.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles ="admin,Quanlyhoatdong")]
+
     public class ActivitypostController : Controller
     {
         private readonly IActivitypost _postActivityService;
@@ -29,7 +32,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             // Lấy danh sách categories cho dropdown filter
             var categories = await _context.Activitycategories.ToListAsync();
             ViewBag.Categories = new SelectList(categories, "Id_activitycategory", "Title", searchModel.CategoryId);
-            
+
             // Truyền thông tin search để hiển thị trong form
             ViewBag.SearchTerm = searchModel.SearchTerm;
             ViewBag.CategoryId = searchModel.CategoryId;
@@ -43,7 +46,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             var categories = await _context.Activitycategories.ToListAsync();
             ViewBag.Categories = new SelectList(categories, "Id_activitycategory", "Title");
-            
+
             return View(new PostactivityVM());
         }
 
@@ -61,7 +64,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                     model.ThumbnailFile = thumbnailFile;
                 }
             }
-            
+
             if (ModelState.IsValid)
             {
                 // Kiểm tra trùng lặp title
@@ -69,8 +72,8 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError("Title", "Tiêu đề đã tồn tại");
                 }
-                
-        
+
+
 
                 if (ModelState.IsValid)
                 {
@@ -90,7 +93,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             // Reload categories if validation fails
             var categories = await _context.Activitycategories.ToListAsync();
             ViewBag.Categories = new SelectList(categories, "Id_activitycategory", "Title", model.Id_Categoryactivity);
-            
+
             return View(model);
         }
 
@@ -128,7 +131,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 {
                     ModelState.AddModelError("Title", "Tiêu đề đã tồn tại");
                 }
-                
+
                 // Kiểm tra trùng lặp URL (loại trừ bản ghi hiện tại)
                 if (!string.IsNullOrEmpty(model.Alias_url) && await _postActivityService.IsUrlExistsAsync(model.Alias_url, model.Id_Postactivity))
                 {
@@ -213,11 +216,12 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 }
 
                 var keywords = Helper.SeoHelper.GenerateSeoKeywords(request.Title ?? "", request.Description);
-                
-                return Json(new { 
-                    status = true, 
-                    message = "Tạo từ khóa thành công", 
-                    data = new { keywords = keywords } 
+
+                return Json(new
+                {
+                    status = true,
+                    message = "Tạo từ khóa thành công",
+                    data = new { keywords = keywords }
                 });
             }
             catch (Exception ex)
@@ -250,7 +254,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
 
                 // Get the current request's base URL
                 var baseUrl = $"{Request.Scheme}://{Request.Host}";
-                
+
                 // Process thumbnail URL if provided
                 var thumbnailUrl = request.Thumbnail;
                 if (!string.IsNullOrEmpty(thumbnailUrl) && !thumbnailUrl.StartsWith("http"))
@@ -259,18 +263,19 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 }
 
                 var schemaMarkup = Helper.SeoHelper.GenerateSchemaMarkup(
-                    request.Title, 
-                    request.Description, 
-                    request.Url, 
-                    thumbnailUrl, 
+                    request.Title,
+                    request.Description,
+                    request.Url,
+                    thumbnailUrl,
                     DateTime.Now,
                     baseUrl
                 );
-                
-                return Json(new { 
-                    status = true, 
-                    message = "Tạo Schema Markup thành công", 
-                    data = new { schemaMarkup = schemaMarkup } 
+
+                return Json(new
+                {
+                    status = true,
+                    message = "Tạo Schema Markup thành công",
+                    data = new { schemaMarkup = schemaMarkup }
                 });
             }
             catch (Exception ex)

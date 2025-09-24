@@ -45,7 +45,9 @@ public class HomeController : Controller
     }
     [HttpGet("/bai-viet/{catogery}")]
     public IActionResult PostCategory()
+    
     {
+       
         return View();
     }
     [HttpGet()]
@@ -106,6 +108,7 @@ public class HomeController : Controller
     {
         try
         {
+            ViewData["Title"] = "Tuyển dụng - Bệnh viện Mỹ Phước";
             var data = await _recruitment.Getallpostrecruiment();
             if(data != null)
             {

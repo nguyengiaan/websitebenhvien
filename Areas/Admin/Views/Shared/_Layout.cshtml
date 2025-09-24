@@ -39,7 +39,7 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Favicon -->
 
-    <link rel="icon" type="image/png" href="/Images/Logo_BVMP.jpg" />
+    <link rel="icon" type="image/png" href="/Images/Picture1.jpg" />
     <!-- Bootstrap core JavaScript-->
     <script src="~/Admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -84,8 +84,8 @@
             <div class="sidebar-heading">
                 Chức năng
             </div>
-            @if (roles.Contains("admin"))
-            {
+            @* @if (roles.Contains("admin"))
+            { *@
                         <!-- Nav Item - Account Management -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAccount"
@@ -117,7 +117,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Cấu hình</h6>
                         <a class="collapse-item" href="/Admin/Trangquantri/Cauhinhdautrang">Đầu trang</a>
-                        <a class="collapse-item" href="/Admin/Trangquantri/Slidetrang">Slide trang chủ</a>
+                        <a class="collapse-item" href="/Admin/Trangquantri/Slidetrang">Quản lý Slide</a>
                         <a class="collapse-item" href="/Admin/Trangquantri/Chantrang">Chân trang</a>
                         <a class="collapse-item" href="/Admin/Trangquantri/Logokhachhang">Logo khách hàng</a>
                         <a class="collapse-item" href="/Admin/Trangquantri/Chiasekhachhang">Chia sẻ khách hàng</a>
@@ -263,7 +263,7 @@
                 </div>
             </li>
 
-            }
+            @* }
             else 
             {
                 <!-- Menu cho user không phải admin -->
@@ -309,7 +309,7 @@
                 }
             }
 
-        
+         *@
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 

@@ -6,7 +6,7 @@ using websitebenhvien.Service.Interface;
 namespace websitebenhvien.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize("admin")]
+    [Authorize(Roles ="admin,Quanlydanhmuchoatdong")]
     public class ActivityController : Controller
     {
         private readonly IActivity _activityService;

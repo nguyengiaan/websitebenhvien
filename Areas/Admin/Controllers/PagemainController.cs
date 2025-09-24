@@ -21,7 +21,9 @@ namespace websitebenhvien.Areas.Admin.Controllers
             _page = page;
             _cache= cache;
         }
-              [Authorize(Roles = "admin,Dautrang")]
+        // cấu hình đầu trang
+        //chỉnh sửa đầu trang
+         [Authorize(Roles = "admin,Dautrang")]
         [HttpPost]
         public async Task<IActionResult> Editheader(HeaderVM header)
         {
@@ -56,7 +58,9 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = 0, message = "Có lỗi xảy ra" });
             }
         }
-         [Authorize(Roles = "admin,Dautrang")]
+        // hiển thị đầu trang
+
+        [Authorize(Roles = "admin,Dautrang")]
         [HttpGet]
         public async Task<IActionResult> GetTitleheader()
         {
@@ -71,6 +75,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // trang slide
+        //thêm slide
          [Authorize(Roles = "admin,Slidetrangchu")]
         [HttpPost]
         public async Task<IActionResult> Addslide(SlideVM slidepage)
@@ -114,6 +119,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
+        // xoá slide
         [Authorize(Roles = "admin,Slidetrangchu")]
         [HttpPost]
         public async Task<IActionResult> DeleteSlide(string id_slidepage)
@@ -135,6 +141,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Có lỗi xảy ra" });
             }
         }
+        // update status slide
              [Authorize(Roles = "admin,Slidetrangchu")]
         [HttpPost]
         public async Task<IActionResult> UpdateStatus(string id_slidepage)

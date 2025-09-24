@@ -59,6 +59,54 @@ builder.Services.AddScoped<IPageMain, PageMainReponser>();
 
 ## Key Conventions
 
+### Search & Autocomplete Integration
+- Smart search for posts, activities, recruitments is implemented via unified API endpoints (see `Controllers/SearchController.cs`).
+- Autocomplete in header uses JS to call `/api-get-posts?keyword=...` and display suggestions. See `Views/Shared/Components/Headertrangchu/Default.cshtml` for integration pattern.
+- API returns JSON objects with key fields (e.g. `Title`, `Alias_url`).
+- For new search types, extend service layer (e.g. `IPost`, `PostReponser`) and update frontend JS accordingly.
+
+### Developer Workflow
+- Build: `dotnet build` or use Visual Studio build commands.
+- Run: `dotnet run` or launch via IIS Express/VS.
+- Migrate DB: `dotnet ef migrations add <name>` then `dotnet ef database update`.
+- Debug: Use breakpoints in Visual Studio, inspect service/controller boundaries.
+- Test: Manual browser testing, check JSON API responses for `{ status: bool, data: any }` format.
+
+### Project-Specific Patterns
+- Always use Vietnamese for user-facing text, English for code.
+- Service layer (Reponser) handles all business logic; controllers only call services.
+- Use dependency injection for all services in `Program.cs`.
+- ViewModels (`Models/EnitityVM/`) are mapped via AutoMapper (`Helper/MappingProfile.cs`).
+- File uploads handled via `Helper/Uploadfile.cs`, images auto-optimized.
+- Custom middleware for security, compression, rate limiting in `Middleware/`.
+- Static files (images, assets) served from `/Resources/` and `/Uploads/` with caching.
+
+### Integration Points
+- SignalR (`Helper/Hubnot.cs`) for real-time notifications.
+- Summernote editor for rich text in admin views.
+- Bootstrap/jQuery for UI and interactivity.
+
+### Example: Search API Pattern
+```csharp
+[HttpGet("/api-get-posts")]
+public async Task<IActionResult> GetPosts(string keyword) {
+        var posts = await _postService.GetSuggestPostsAsync(keyword);
+        return Json(posts.Select(p => new { Title = p.Title, Alias_url = p.Alias_url }));
+}
+```
+
+### Example: Frontend Autocomplete
+```html
+<input type="search" oninput="postSearchSuggest(this.value)">
+<script>
+function postSearchSuggest(val) {
+    fetch(`/api-get-posts?keyword=${encodeURIComponent(val)}`)
+        .then(r => r.json())
+        .then(data => {/* render suggestions */});
+}
+</script>
+```
+
 ### Vietnamese Naming
 - **Routes**: Use Vietnamese slugs (`/trang-quan-tri/quan-ly-tai-khoan`)
 - **Methods**: English method names with Vietnamese parameters

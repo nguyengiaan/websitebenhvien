@@ -58,7 +58,7 @@
                         <div class="list-group list-group-flush">
                             <a href="@Url.Action("Index")" 
                                class="list-group-item list-group-item-action border-0 py-3 @(string.IsNullOrEmpty(Context.Request.Query["category"]) ? "active bg-primary text-white" : "")">
-                                <i class="fas fa-home me-2"></i> Tất cả hoạt động
+                                <i class="fas fa-home me-2"></i>Hoạt động
                                 <span class="badge bg-light text-dark ms-auto">@Model.TotalItems</span>
                             </a>
                             @foreach (var category in Model.Categories)
