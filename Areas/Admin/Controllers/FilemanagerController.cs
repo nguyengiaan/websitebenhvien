@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using elFinder.NetCore;
@@ -47,7 +47,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         private Connector GetConnector()
         {
             // Thư mục gốc lưu trữ là wwwwroot/files (đảm bảo có tạo thư mục này)
-            string pathroot = "Uploads";
+            string pathroot = Path.Combine("wwwroot", "Uploads");
             string Requesturl = "Resources";
             var driver = new FileSystemDriver();
 

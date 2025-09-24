@@ -1,4 +1,4 @@
-﻿﻿using System.IO;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -35,7 +35,7 @@ namespace websitebenhvien.Helper
         public Uploadfile(IWebHostEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
-            _uploadsPath = Path.Combine(_hostingEnvironment.ContentRootPath, "Uploads");
+            _uploadsPath = Path.Combine(_hostingEnvironment.ContentRootPath, "wwwroot", "Uploads");
 
             // Đảm bảo thư mục tồn tại
             Directory.CreateDirectory(_uploadsPath);

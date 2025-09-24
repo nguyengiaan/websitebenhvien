@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -115,7 +115,7 @@ else
     app.UseHsts();
 }
 
-var uploadsPath = Path.Combine(builder.Environment.ContentRootPath, "Uploads");
+var uploadsPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "Uploads");
 if (!Directory.Exists(uploadsPath))
 {
     Directory.CreateDirectory(uploadsPath);
