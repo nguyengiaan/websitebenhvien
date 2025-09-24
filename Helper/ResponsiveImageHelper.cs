@@ -21,7 +21,7 @@ namespace websitebenhvien.Helper
 
             try
             {
-                var uploadsPath = Path.Combine(_environment.ContentRootPath, "Uploads");
+                var uploadsPath = Path.Combine(_environment.ContentRootPath, "wwwroot", "Uploads");
                 var fullPath = Path.Combine(uploadsPath, originalPath);
                 
                 if (!File.Exists(fullPath))
