@@ -22,7 +22,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
 builder.Services.AddDbContext<MyDbcontext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -65,13 +64,11 @@ builder.Services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 builder.Services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
-
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddMemoryCache();
 builder.Services.AddCustomCompression();
 builder.Services.AddServerSideBlazor();
-
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("user", policy => policy.RequireRole("user"));
@@ -97,8 +94,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
             options.SlidingExpiration = true;
         });
 
-
 var app = builder.Build();
+
 app.UseStatusCodePages(context =>
 {
     if (context.HttpContext.Response.StatusCode == 403)
@@ -108,130 +105,80 @@ app.UseStatusCodePages(context =>
     return Task.CompletedTask;
 });
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 else
 {
-    // Enable HSTS even in development for testing
     app.UseHsts();
 }
+
 var uploadsPath = Path.Combine(builder.Environment.ContentRootPath, "Uploads");
 if (!Directory.Exists(uploadsPath))
 {
     Directory.CreateDirectory(uploadsPath);
 }
+
 app.UseSecurityHeaders();
 app.UseResponseCompression();
 app.UseIpRateLimiting();
 app.UseCustomRateLimit();
-app.UseStaticFiles(
-    new StaticFileOptions
-    {
-        FileProvider = new PhysicalFileProvider(uploadsPath),
-        RequestPath = "/Resources",
-        OnPrepareResponse = ctx =>
-        {
-            // Cache images for 1 year
-            if (ctx.File.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                ctx.File.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-                ctx.File.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                ctx.File.Name.EndsWith(".gif", StringComparison.OrdinalIgnoreCase) ||
-                ctx.File.Name.EndsWith(".webp", StringComparison.OrdinalIgnoreCase) ||
-                ctx.File.Name.EndsWith(".avif", StringComparison.OrdinalIgnoreCase))
-            {
-                ctx.Context.Response.Headers.CacheControl = "public,max-age=31536000"; // 1 year
-                ctx.Context.Response.Headers.Expires = DateTime.UtcNow.AddYears(1).ToString("R");
-            }
-            
-            // Add compression hint
-            if (!ctx.Context.Response.Headers.ContainsKey("Vary"))
-            {
-                ctx.Context.Response.Headers.Vary = "Accept-Encoding";
-            }
-        }
-    }
-);
-
-app.UseCustomHttpsRedirection();
-
-// Static files with optimized caching
 app.UseStaticFiles(new StaticFileOptions
 {
+    FileProvider = new PhysicalFileProvider(uploadsPath),
+    RequestPath = "/Resources",
     OnPrepareResponse = ctx =>
     {
-        var headers = ctx.Context.Response.Headers;
-        
-        // CSS and JS files - cache for 1 month with ETag validation
-        if (ctx.File.Name.EndsWith(".css", StringComparison.OrdinalIgnoreCase) ||
-            ctx.File.Name.EndsWith(".js", StringComparison.OrdinalIgnoreCase))
+        if (ctx.File.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+            ctx.File.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+            ctx.File.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+            ctx.File.Name.EndsWith(".gif", StringComparison.OrdinalIgnoreCase) ||
+            ctx.File.Name.EndsWith(".webp", StringComparison.OrdinalIgnoreCase) ||
+            ctx.File.Name.EndsWith(".avif", StringComparison.OrdinalIgnoreCase))
         {
-            headers.CacheControl = "public,max-age=2592000"; // 30 days
-            headers.Expires = DateTime.UtcNow.AddDays(30).ToString("R");
+            ctx.Context.Response.Headers.CacheControl = "public,max-age=31536000";
+            ctx.Context.Response.Headers.Expires = DateTime.UtcNow.AddYears(1).ToString("R");
         }
-        // Images - cache for 1 year
-        else if (ctx.File.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                 ctx.File.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-                 ctx.File.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                 ctx.File.Name.EndsWith(".gif", StringComparison.OrdinalIgnoreCase) ||
-                 ctx.File.Name.EndsWith(".webp", StringComparison.OrdinalIgnoreCase) ||
-                 ctx.File.Name.EndsWith(".avif", StringComparison.OrdinalIgnoreCase) ||
-                 ctx.File.Name.EndsWith(".svg", StringComparison.OrdinalIgnoreCase) ||
-                 ctx.File.Name.EndsWith(".ico", StringComparison.OrdinalIgnoreCase))
+
+        if (!ctx.Context.Response.Headers.ContainsKey("Vary"))
         {
-            headers.CacheControl = "public,max-age=31536000,immutable"; // 1 year + immutable
-            headers.Expires = DateTime.UtcNow.AddYears(1).ToString("R");
+            ctx.Context.Response.Headers.Vary = "Accept-Encoding";
         }
-        // Fonts - cache for 1 year
-        else if (ctx.File.Name.EndsWith(".woff", StringComparison.OrdinalIgnoreCase) ||
-                 ctx.File.Name.EndsWith(".woff2", StringComparison.OrdinalIgnoreCase) ||
-                 ctx.File.Name.EndsWith(".ttf", StringComparison.OrdinalIgnoreCase) ||
-                 ctx.File.Name.EndsWith(".eot", StringComparison.OrdinalIgnoreCase))
-        {
-            headers.CacheControl = "public,max-age=31536000,immutable";
-            headers.Expires = DateTime.UtcNow.AddYears(1).ToString("R");
-        }
-        // Other files - short cache
-        else
-        {
-            headers.CacheControl = "public,max-age=86400"; // 1 day
-            headers.Expires = DateTime.UtcNow.AddDays(1).ToString("R");
-        }
-        
-        // Add security and performance headers
-        headers.Vary = "Accept-Encoding";
-        headers["X-Content-Type-Options"] = "nosniff";
     }
 });
+
+// ⚠️ Nếu hosting đã tự HTTPS redirect, comment dòng này lại
+// app.UseCustomHttpsRedirection();
+
+app.UseStaticFiles();
+
 app.UseRouting();
+
+// ✅ Đúng thứ tự: Authentication trước, Authorization sau
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapBlazorHub();
 app.MapHub<Hubnot>("/friendHub");
-// Route cho Areas
+
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Trangquantri}/{action=Dangnhap}/{id?}");
 
-// Route mặc định
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapControllerRoute(
     name: "bai-viet",
     defaults: new { controller = "Home", action = "PostCategory" },
     pattern: "bai-viet/{catogery}");
+
 app.MapControllerRoute(
     name: "bai-viet-detail",
     defaults: new { controller = "Home", action = "PostDetail" },
     pattern: "chi-tiet-tin/{alias_url}");
-
-
-
-
 
 app.Run();

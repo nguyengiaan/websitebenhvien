@@ -10,8 +10,10 @@ namespace websitebenhvien.Models.EnitityVM
 
         [Required(ErrorMessage = "Vui lòng nhập chi tiết")]
         public string Description { get; set; }
+        
 
-        public string ?Url { get; set; }
+
+        public string? Url { get; set; }
         public string ?Alias_url { get; set; }
 
         public string ?Id_Categorynews { get; set; }
@@ -19,8 +21,9 @@ namespace websitebenhvien.Models.EnitityVM
         public bool ?Status { get; set; }
 
         public DateTime ?Createat { get; set; }
+        [Required(ErrorMessage = "Vui lòng chọn ảnh")]
 
-        public IFormFile ? formFile { get; set; }
+        public IFormFile? formFile { get; set; }
 
         public string? Keyword { get; set; }
 

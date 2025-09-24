@@ -5,8 +5,7 @@ using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
-using FFMpegCore;
-using FFMpegCore.Enums;
+
 using System.Linq;
 using System.Collections.Generic;
 
@@ -41,10 +40,7 @@ namespace websitebenhvien.Helper
             // Đảm bảo thư mục tồn tại
             Directory.CreateDirectory(_uploadsPath);
 
-            // Cấu hình FFmpeg
-            GlobalFFOptions.Configure(options =>
-                options.BinaryFolder = "/usr/bin" // Thay đổi tùy hệ thống
-            );
+        
         }
 
         public async Task<(int Status, string Message)> SaveMedia(
@@ -115,16 +111,7 @@ namespace websitebenhvien.Helper
                     await videoFile.CopyToAsync(tempStream);
                 }
 
-                await FFMpegArguments
-                    .FromFileInput(tempInputPath)
-                    .OutputToFile(outputPath, true, options => options
-                        .WithVideoCodec(VideoCodec.LibX264)
-                        .WithConstantRateFactor(crf)
-                        .WithAudioCodec(AudioCodec.Aac)
-                        .WithAudioBitrate(128)
-                        .WithFastStart()
-                        .WithCustomArgument("-movflags +faststart"))
-                    .ProcessAsynchronously();
+             
             }
             finally
             {

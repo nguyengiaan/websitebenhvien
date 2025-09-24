@@ -94,7 +94,8 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
 
-     
+
+        [Authorize(Roles = "admin,Quanlyphanquyen ")]
         [HttpGet("/api/ds-phan-quyen")]
         public async Task<IActionResult> GetRoles()
         {
@@ -108,6 +109,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
                 return Json(new { status = false, message = ex.Message });
             }
         }
+        [Authorize(Roles = "admin,Quanlyphanquyen ")]
         [Authorize]
         [HttpPost("/api/them-phan-quyen")]
 
