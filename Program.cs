@@ -116,10 +116,12 @@ else
 }
 
 var uploadsPath = Path.Combine(builder.Environment.ContentRootPath, "Uploads");
-if (!Directory.Exists(uploadsPath))
+app.UseStaticFiles(new StaticFileOptions
 {
-    Directory.CreateDirectory(uploadsPath);
-}
+    FileProvider = new PhysicalFileProvider(uploadsPath),
+    RequestPath = "/Uploads",
+    // ... OnPrepareResponse ...
+});
 
 app.UseSecurityHeaders();
 app.UseResponseCompression();

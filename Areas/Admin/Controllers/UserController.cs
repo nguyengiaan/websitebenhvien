@@ -10,6 +10,7 @@ using System.Security.Claims;
 
 namespace websitebenhvien.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class UserController : Controller
     {
         private readonly IUser _user;
@@ -19,7 +20,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             _user = user;
         }
         [Authorize(Roles = "admin,Quanlytaikhoan")]
-        [HttpPost]
+        [HttpPost("/api/dang-ky-tai-khoan")]
         public async Task<IActionResult> RegisterUser(RegisteruserVM registeruser)
         {
             try
@@ -44,8 +45,8 @@ namespace websitebenhvien.Areas.Admin.Controllers
 
             }
         }
-          [Authorize(Roles = "admin,Quanlytaikhoan")]
-        [HttpGet]
+        [Authorize(Roles = "admin,Quanlytaikhoan")]
+        [HttpGet("/api/ds-tai-khoan-dang-ky")]
         public async Task<IActionResult> GetRegisterUsers()
         {
             try
@@ -59,7 +60,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         [Authorize(Roles = "admin,Quanlytaikhoan")]
-        [HttpPost]
+        [HttpPost("/api/xoa-tai-khoan-dang-ky")]
         public async Task<IActionResult> DeleteUser(string id)
         {
             try
@@ -77,21 +78,33 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         [HttpPost]
-        public async Task<IActionResult> Login(LoginVM login)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(string Username, string Password)
         {
             try
             {
-                var data = await _user.Login(login);
+                var loginVM = new LoginVM { Username = Username, Password = Password };
+                var data = await _user.Login(loginVM);
                 if (data.status == 1)
                 {
-                    return Json(new { status = true, message = data.messager });
+                    TempData["LoginSuccess"] = data.messager ?? "Đăng nhập thành công!";
+                    return RedirectToAction("Index", "Trangquantri", new { area = "Admin" });
                 }
-                return Json(new { status = false, message = data.messager });
+                TempData["LoginError"] = data.messager ?? "Sai tên đăng nhập hoặc mật khẩu!";
+                return RedirectToAction("Dangnhap", "Trangquantri", new { area = "Admin" });
             }
             catch (Exception ex)
             {
-                return Json(new { status = false, message = ex.Message });
+                TempData["LoginError"] = "Lỗi hệ thống: " + ex.Message;
+                return RedirectToAction("Dangnhap", "Trangquantri", new { area = "Admin" });
             }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Login()
+        {
+            return RedirectToAction("Dangnhap", "Trangquantri", new { area = "Admin" });
         }
 
 

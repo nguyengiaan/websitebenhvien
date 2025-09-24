@@ -2,14 +2,16 @@
     Layout = null;
 }
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập - Hệ thống quản trị bệnh viện</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="~/css/login.css">
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -24,89 +26,44 @@
 
     <div class="container">
         <div class="logo">
-            <img src="~/Images/Logo-rm.png" alt="Logo bệnh viện" style="max-width: 150px; height: auto;">
+            <img src="~/Images/Logo-rm.png" alt="Logo bệnh viện" style="max-width: 150px; height: auto;" asp-append-version="true" />
         </div>
         <h2>Đăng nhập hệ thống</h2>
-        <form id="loginForm">
+
+        @using (Html.BeginForm("Login", "User", new { area = "Admin" }, FormMethod.Post, null, new { id = "loginForm" }))
+        {
+            @Html.AntiForgeryToken()
             <div class="input-group">
                 <i class="fas fa-user"></i>
-                <input type="text" id="username" placeholder="Tên đăng nhập" required>
+                <input type="text" id="username" name="Username" placeholder="Tên đăng nhập" required />
             </div>
             <div class="input-group">
                 <i class="fas fa-lock"></i>
-                <input type="password" id="password" placeholder="Mật khẩu" required>
+                <input type="password" id="password" name="Password" placeholder="Mật khẩu" required />
             </div>
-   
-          
             <button type="submit" class="login-button">Đăng nhập</button>
-        </form>
+        }
     </div>
 
-    <script>
- 
-    
-
-        $(document).ready(function() {
-       
-
-            $('#loginForm').submit(function(e) {
-                e.preventDefault();
-                
-                const username = $('#username').val();
-                const password = $('#password').val();
-               
-
-              
-
-                Swal.fire({
-                    title: 'Đang xử lý...',
-                    html: 'Vui lòng chờ trong giây lát',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading()
-                    }
-                });
-
-                $.ajax({
-                    url: '/User/Login',
-                    type: 'POST',
-                    data: {
-                        Username: username,
-                        Password: password,
-                    },
-                    success: function(response) {
-                        if (response.status) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Đăng nhập thành công!',
-                                text: response.message,
-                                timer: 1500,
-                                showConfirmButton: false
-                            }).then(() => {
-                                window.location.href = '/trang-quan-tri';
-                            });
-                        } else {
-                            currentCaptcha = displayCaptcha();
-                            $('#captchaInput').val('');
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Đăng nhập thất bại!',
-                                text: response.message
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        currentCaptcha = displayCaptcha();
-                        $('#captchaInput').val('');
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Lỗi!',
-                            text: 'Đã xảy ra lỗi trong quá trình đăng nhập'
-                        });
-                    }
-                });
+    @if (TempData["LoginError"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Thất bại',
+                text: 'Sai mật khẩu hoặc tài khoản'
             });
-        });
-    </script>
+        </script>
+    }
+    @if (TempData["LoginSuccess"] != null)
+    {
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công',
+                text: 'Đăng xuất thành công!'
+            });
+        </script>
+    }
 </body>
 </html>

@@ -55,7 +55,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             var uri = new Uri(absoluteUrl);
 
             // .. ... wwww/files
-            string rootDirectory = Path.Combine(_env.ContentRootPath, pathroot);
+            string rootDirectory = Path.Combine(_env.WebRootPath, pathroot);
 
             // https://localhost:5001/files/
             string url = $"{uri.Scheme}://{uri.Authority}/{Requesturl}/";

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using websitebenhvien.Models.EnitityVM;
 using websitebenhvien.Service.Interface;
-
+                          
 namespace websitebenhvien.Areas.Admin.Controllers
 {
     [Area("Admin")]
