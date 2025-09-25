@@ -36,7 +36,7 @@ public class HomeController : Controller
         ViewData["Title"] = "Bệnh Viện Đa Khoa Mỹ Phước";
         ViewData["Description"] = "Bệnh Viện Đa Khoa Mỹ Phước cung cấp dịch vụ y tế chất lượng cao với đội ngũ bác sĩ chuyên nghiệp và trang thiết bị hiện đại.";
         ViewData["Keywords"] = "Bệnh Viện Đa Khoa, Mỹ Phước, dịch vụ y tế, bác sĩ chuyên nghiệp, trang thiết bị hiện đại";
-        ViewData["Image"] = "https://benhvienmyphuoc.com.vn/Images/Logo-rm.png";
+        ViewData["Image"] = "/Images/Logo-rm.png";
         return View();
     }
     public IActionResult Privacy()
@@ -47,7 +47,7 @@ public class HomeController : Controller
     public IActionResult PostCategory()
     
     {
-       
+        ViewData["Image"] = "/Images/Logo-rm.png";
         return View();
     }
     [HttpGet()]
@@ -95,11 +95,15 @@ public class HomeController : Controller
     }
     [HttpGet("/danh-muc-khoa/{chuyenkhoa}")]
     public IActionResult SpecialtyDetail()
+    
     {
+       
         return View();
+
     }
     [HttpGet("/bac-si/{tenbacsi}")]
     public IActionResult DoctorDetail()
+
     {
         return View();
     }
@@ -109,6 +113,10 @@ public class HomeController : Controller
         try
         {
             ViewData["Title"] = "Tuyển dụng - Bệnh viện Mỹ Phước";
+            ViewData["Description"] = "Bệnh Viện Đa Khoa Mỹ Phước cung cấp dịch vụ y tế chất lượng cao với đội ngũ bác sĩ chuyên nghiệp và trang thiết bị hiện đại.";
+            ViewData["Keywords"] = "Bệnh Viện Đa Khoa, Mỹ Phước, dịch vụ y tế, bác sĩ chuyên nghiệp, trang thiết bị hiện đại";
+            ViewData["Image"] = "/Images/Logo-rm.png";
+      
             var data = await _recruitment.Getallpostrecruiment();
             if(data != null)
             {
@@ -128,6 +136,10 @@ public class HomeController : Controller
     {
         try
         {
+            ViewData["Title"] = "Dành cho doanh nghiệp - Bệnh viện Mỹ Phước";
+            ViewData["Description"] = "Bệnh Viện Đa Khoa Mỹ Phước cung cấp dịch vụ y tế chất lượng cao với đội ngũ bác sĩ chuyên nghiệp và trang thiết bị hiện đại.";
+            ViewData["Keywords"] = "Bệnh Viện Đa Khoa, Mỹ Phước, dịch vụ y tế, bác sĩ chuyên nghiệp, trang thiết bị hiện đại";
+            ViewData["Image"] = "/Images/Logo-rm.png";
             var cacheKey = "Danhchodoanhnghiep";
             if (!_cache.TryGetValue(cacheKey, out var data))
             {

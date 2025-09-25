@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\PartialView\**" />
+    <Content Remove="Views\PartialView\**" />
+    <EmbeddedResource Remove="Views\PartialView\**" />
+    <None Remove="Views\PartialView\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="elFinder.AspNet" Version="1.1.1" />
@@ -35,7 +42,6 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
-    <Folder Include="Views\PartialView\" />
     <Folder Include="wwwroot\Files\" />
   </ItemGroup>
 

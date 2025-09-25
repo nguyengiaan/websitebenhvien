@@ -115,41 +115,14 @@ else
     app.UseHsts();
 }
 
-var uploadsPath = Path.Combine(builder.Environment.ContentRootPath, "Uploads");
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(uploadsPath),
-    RequestPath = "/Uploads",
-    // ... OnPrepareResponse ...
-});
+
+
 
 app.UseSecurityHeaders();
 app.UseResponseCompression();
 app.UseIpRateLimiting();
 app.UseCustomRateLimit();
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(uploadsPath),
-    RequestPath = "/Resources",
-    OnPrepareResponse = ctx =>
-    {
-        if (ctx.File.Name.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-            ctx.File.Name.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-            ctx.File.Name.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-            ctx.File.Name.EndsWith(".gif", StringComparison.OrdinalIgnoreCase) ||
-            ctx.File.Name.EndsWith(".webp", StringComparison.OrdinalIgnoreCase) ||
-            ctx.File.Name.EndsWith(".avif", StringComparison.OrdinalIgnoreCase))
-        {
-            ctx.Context.Response.Headers.CacheControl = "public,max-age=31536000";
-            ctx.Context.Response.Headers.Expires = DateTime.UtcNow.AddYears(1).ToString("R");
-        }
 
-        if (!ctx.Context.Response.Headers.ContainsKey("Vary"))
-        {
-            ctx.Context.Response.Headers.Vary = "Accept-Encoding";
-        }
-    }
-});
 
 // ⚠️ Nếu hosting đã tự HTTPS redirect, comment dòng này lại
 // app.UseCustomHttpsRedirection();

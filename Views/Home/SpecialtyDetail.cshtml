@@ -1,6 +1,11 @@
 
 @{
-    ViewData["Title"] = "Chuyên khoa";
+    ViewData["Title"] = "Chi tiết chuyên khoa";
+    ViewData["Image"] = "/Images/Logo-rm.png";
+    ViewData["Description"]="Chuyên khoa bệnh viện đa khoa Mỹ Phước";
+    ViewData["Keywords"]="Bệnh viện đa khoa Mỹ Phước,chuyên khoa";
+     ViewData["Image"] = !string.IsNullOrEmpty(Model.Thumbnail) ? $"/Uploads/{Model.Thumbnail}" : "/Images/Logo-rm.png";
+}
    
 }
 <section>
@@ -263,7 +268,7 @@
                         $('#specialtyIntroduction').html(data.introduction);
                         
                         // Update image
-                        $('#specialtyImage').attr('src', '/Resources/' + data.thumnail);
+                        $('#specialtyImage').attr('src', '/Uploads/' + data.thumnail);
                         
                         // Update services
                         $('#specialtyServices').html(data.service);
@@ -281,7 +286,7 @@
                                 <div class="col-md-6 col-lg-4 mb-4">
                                     <div class="card h-100 border-0" style="transform-style: preserve-3d; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
                                         <div class="card-image-wrapper" style="perspective: 1000px;">
-                                            <img src="/Resources/${doctor.thumnail}" 
+                                            <img src="/Uploads/${doctor.thumnail}" 
                                                  class="card-img-top"
                                                  alt="${doctor.name}"
                                                  style="height: 200px; object-fit: cover; border-radius: 8px 8px 0 0; transform: translateZ(20px);">

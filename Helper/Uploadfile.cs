@@ -35,13 +35,13 @@ namespace websitebenhvien.Helper
         public Uploadfile(IWebHostEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
-            _uploadsPath = Path.Combine(_hostingEnvironment.ContentRootPath, "Uploads");
+            // Đảm bảo lưu file vào wwwroot/Uploads (public folder)
+            _uploadsPath = Path.Combine(_hostingEnvironment.WebRootPath, "Uploads");
 
             // Đảm bảo thư mục tồn tại
             Directory.CreateDirectory(_uploadsPath);
-
-        
         }
+        
 
         public async Task<(int Status, string Message)> SaveMedia(
             IFormFile file,
@@ -102,23 +102,10 @@ namespace websitebenhvien.Helper
 
         private static async Task CompressVideoAsync(IFormFile videoFile, string outputPath, int crf)
         {
-            var tempInputPath = Path.GetTempFileName();
-
-            try
+            // Lưu video trực tiếp vào outputPath (chưa nén, chỉ copy file)
+            await using (var outputStream = new FileStream(outputPath, FileMode.Create))
             {
-                await using (var tempStream = File.Create(tempInputPath))
-                {
-                    await videoFile.CopyToAsync(tempStream);
-                }
-
-             
-            }
-            finally
-            {
-                if (File.Exists(tempInputPath))
-                {
-                    File.Delete(tempInputPath);
-                }
+                await videoFile.CopyToAsync(outputStream);
             }
         }
 
@@ -126,7 +113,8 @@ namespace websitebenhvien.Helper
         {
             try
             {
-                var filePath = Path.Combine(_uploadsPath, fileName);
+                // Đảm bảo xóa file trong wwwroot/Uploads
+                var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "Uploads", fileName);
                 if (!File.Exists(filePath)) return false;
 
                 File.Delete(filePath);

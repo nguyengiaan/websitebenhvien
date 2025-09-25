@@ -167,7 +167,7 @@
                 currentPage = page;
                 
                 $.ajax({
-                    url: '/User/GetRegisterUsers',
+                    url: '/api/ds-tai-khoan-dang-ky',
                     type: 'GET',
                     data: {
                         page: page,
@@ -313,7 +313,7 @@
             $('#saveUser').click(function() {
                 let formData = new FormData($('#userForm')[0]);
                 $.ajax({
-                    url: '/User/RegisterUser',
+                    url: '/api/dang-ky-tai-khoan',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -346,7 +346,7 @@
                     if (result.isConfirmed) {
                         let id = $(this).data('id');
                         $.ajax({
-                            url: '/User/DeleteUser',
+                            url: '/api/xoa-tai-khoan-dang-ky',
                             type: 'POST',
                             data: { id: id },
                             success: function(response) {

@@ -3,6 +3,7 @@
     ViewData["Title"] = $"{Model.Category.Title} - Hoạt động bệnh viện";
     ViewData["Description"] = !string.IsNullOrEmpty(Model.Category.Description) ? Model.Category.Description : $"Các hoạt động thuộc danh mục {Model.Category.Title}";
     ViewData["Keywords"] = $"{Model.Category.Title}, hoạt động bệnh viện, sự kiện y tế";
+    ViewData["Image"] = "/Images/Logo-rm.png";
 }
 
 <!-- Breadcrumb Section -->
@@ -147,7 +148,7 @@
                             <div class="card h-100 shadow-sm">
                                 @if (!string.IsNullOrEmpty(post.Thumbnail))
                                 {
-                                    <img src="/Resources/@post.Thumbnail" class="card-img-top" alt="@post.Title" 
+                                    <img src="/Uploads/@post.Thumbnail" class="card-img-top" alt="@post.Title" 
                                          style="height: 200px; object-fit: cover;">
                                 }
                                 <div class="card-body d-flex flex-column">

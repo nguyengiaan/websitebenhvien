@@ -40,7 +40,7 @@
                         <div class="service-icon">
                             @if (!string.IsNullOrEmpty(item.Icon_Forbusiness))
                             {
-                                <img src="~/Resources/@item.Icon_Forbusiness" alt="@item.Name_Forbusiness">
+                                <img src="~/Uploads/@item.Icon_Forbusiness" alt="@item.Name_Forbusiness">
                             }
                             else
                             {
@@ -76,16 +76,7 @@
         </div>
         
         <!-- No Results -->
-        <div id="noResults" class="no-results">
-            <div class="no-results-content">
-                <i class="fas fa-search-minus"></i>
-                <h4>Không tìm thấy kết quả</h4>
-                <p>Vui lòng thử lại với từ khóa khác hoặc liên hệ trực tiếp với chúng tôi</p>
-                <button class="btn btn-primary" onclick="document.getElementById('searchInput').value=''; searchBusinesses();">
-                    Xem tất cả dịch vụ
-                </button>
-            </div>
-        </div>
+      
     </div>
 </section>
 @section Styles {

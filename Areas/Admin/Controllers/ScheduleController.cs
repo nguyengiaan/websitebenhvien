@@ -87,7 +87,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
             }
         }
         // đăng ký khám bệnh 
-              [Authorize(Roles ="Dangkykhambenh,admin")]
+       
         [HttpPost("/api/dang-ky-kb")]
         public async Task<IActionResult> Makeanappointment(MakeanappointmentVM makeanappointment)
         {

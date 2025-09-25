@@ -141,7 +141,7 @@ function displayServiceCarousel(productData) {
                     <div class="service-card">
                         <div class="service-card-inner">
                             <div class="service-card-front">
-                                <img src="/Resources/${item.url}" alt="${item.title}" class="service-image">
+                                <img src="/Uploads/${item.url}" alt="${item.title}" class="service-image">
                                 <div class="service-overlay">
                                     <h4 class="service-title">${item.title}</h4>
                                 </div>
@@ -940,7 +940,7 @@ function GetAllEquipment() {
                             <div class="col-lg-4 col-md-6 mb-4">
                                 <div class="equipment-card fade-in">
                                     <div class="equipment-image">
-                                        <img src="/Resources/${item.image_machine}" alt="${item.name_machine}" class="img-fluid">
+                                        <img src="/Uploads/${item.image_machine}" alt="${item.name_machine}" class="img-fluid">
                                         <div class="equipment-overlay">
                                             <h4>${item.name_machine}</h4>
                                             <p>${item.description_machine}</p>

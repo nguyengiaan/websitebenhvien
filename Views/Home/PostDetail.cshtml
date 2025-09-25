@@ -1,7 +1,7 @@
 @model websitebenhvien.Models.Enitity.News
 @{
     ViewData["Title"] = Model.Title;
-    ViewData["Image"] = "/Resources/" + Model.Url;
+    ViewData["Image"] = "/Uploads/" + Model.Url;
     ViewData["description"] = Model.Descriptionshort;
     ViewData["keywords"] = Model.Keyword;
     ViewData["Schema"] = Model.SchemaMakup;
@@ -277,7 +277,7 @@
                                              style="transition: all 0.3s ease;">
                                             <a href="${item.alias_url}" class="text-decoration-none">
                                                 <div class="position-relative">
-                                                    <img src="/Resources/${item.url}" 
+                                                    <img src="/Uploads/${item.url}" 
                                                          class="img-fluid w-100 rounded-top" 
                                                          alt="${item.title}"
                                                          style="height: 200px; object-fit: cover;">

@@ -3,7 +3,7 @@
 @if (Model != null && Model.Any())
 {
     var index = 0;
-    <div id="carouselExampleControls" class="carousel slide rounded-3" data-bs-ride="carousel" style="max-width: 700px; margin: 0 auto;">
+    <div id="videoCarousel" class="carousel slide rounded-3" data-bs-ride="carousel" style="max-width: 700px; margin: 0 auto;">
         <div class="carousel-inner r shadow-sm" style="background: rgb(15, 15, 15);">
             @foreach (var video in Model)
             {
@@ -13,8 +13,8 @@
                     <div class="d-flex flex-column align-items-center">
                         <video class="w-100" controls title="@video.Title_video" preload="metadata"
                         style="height: 338px !important;">
-                            <source src="/Resources/@video.Link_video" type="video/mp4" />
-                            <track kind="captions" src="/Resources/captions/@(System.IO.Path.GetFileNameWithoutExtension(video.Link_video)).vtt" srclang="vi" label="Phụ đề tiếng Việt" default />
+                            <source src="/Uploads/@video.Link_video" type="video/mp4" />
+                            <track kind="captions" src="/Uploads/captions/@(System.IO.Path.GetFileNameWithoutExtension(video.Link_video)).vtt" srclang="vi" label="Phụ đề tiếng Việt" default />
                             Trình duyệt của bạn không hỗ trợ thẻ video.
                         </video>
                         <div class="mt-2 text-center text-secondary" style="font-size: 1rem;">
@@ -27,16 +27,16 @@
 
             }
         </div>
-           <button class="carousel-control-prev" type="button" data-bs-target="#specialtyCarousel" data-bs-slide="prev" 
-                            style="width: 30px; height: 30px; background: rgba(0,0,0,0.5); border-radius: 50%; margin: auto 10px;">
-                        <span class="carousel-control-prev-icon" aria-hidden="true" style="width: 15px; height: 15px;"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#specialtyCarousel" data-bs-slide="next"
-                            style="width: 30px; height: 30px; background: rgba(0,0,0,0.5); border-radius: 50%; margin: auto 10px;">
-                        <span class="carousel-control-next-icon" aria-hidden="true" style="width: 15px; height: 15px;"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
+        <button class="carousel-control-prev" type="button" data-bs-target="#videoCarousel" data-bs-slide="prev"
+                style="width: 30px; height: 30px; background: rgba(0,0,0,0.5); border-radius: 50%; margin: auto 10px;">
+            <span class="carousel-control-prev-icon" aria-hidden="true" style="width: 15px; height: 15px;"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#videoCarousel" data-bs-slide="next"
+                style="width: 30px; height: 30px; background: rgba(0,0,0,0.5); border-radius: 50%; margin: auto 10px;">
+            <span class="carousel-control-next-icon" aria-hidden="true" style="width: 15px; height: 15px;"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
 }
 else

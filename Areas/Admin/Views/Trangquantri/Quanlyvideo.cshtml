@@ -209,8 +209,8 @@
                         <td>${video.title_video}</td>
                         <td>
                             <video width="100%" height="90px" controls title="${video.title_video}">
-                                <source src="/Resources/${video.link_video}" type="video/mp4">
-                                <track kind="captions" src="/Resources/captions/${video.link_video.replace(/\.[^/.]+$/, "")}.vtt" srclang="vi" label="Phụ đề tiếng Việt" default>
+                                <source src="/Uploads/${video.link_video}" type="video/mp4">
+                                <track kind="captions" src="/Uploads/captions/${video.link_video.replace(/\.[^/.]+$/, "")}.vtt" srclang="vi" label="Phụ đề tiếng Việt" default>
                                 Trình duyệt của bạn không hỗ trợ video.
                             </video>
                         </td>

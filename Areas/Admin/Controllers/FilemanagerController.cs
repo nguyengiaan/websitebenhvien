@@ -48,7 +48,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         {
             // Thư mục gốc lưu trữ là wwwwroot/files (đảm bảo có tạo thư mục này)
             string pathroot = "Uploads";
-            string Requesturl = "Resources";
+            string Requesturl = "Uploads";
             var driver = new FileSystemDriver();
 
             string absoluteUrl = UriHelper.BuildAbsolute(Request.Scheme, Request.Host);

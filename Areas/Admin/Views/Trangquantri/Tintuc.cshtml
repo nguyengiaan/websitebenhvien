@@ -308,7 +308,7 @@
                     <tr>
                          <td class="ps-4">TT${item.id_News}</td>
                         <td>${item.title}</td>
-                        <td><img src="/Resources/${item.url}" alt="News Image" width="50"></td>
+                        <td><img src="/Uploads/${item.url}" alt="News Image" width="50"></td>
                         <td>${getCategoryName(item.id_Categorynews)}</td>
                         <td>${item.createat.split('T')[0]   }</td>
                         <td>${item.alias_url}</td>
@@ -659,7 +659,7 @@
                         $('#SchemaMakup').val(news.schemaMakup)
                         // Show image preview if exists
                         if (news.url) {
-                            $('#imagePreview').attr('src', '/Resources/' + news.url);
+                            $('#imagePreview').attr('src', '/Uploads/' + news.url);
                             $('#imagePreviewContainer').show();
                         } else {
                             $('#imagePreviewContainer').hide();
@@ -718,7 +718,7 @@
             },
             "datePublished": datePublished,
             "dateModified": datePublished,
-            "image": `/Resources/${filename}`,
+            "image": `/Uploads/${filename}`,
             "description": descriptionshort,
             "publisher": {
                 "@("@type")": "Organization",
