@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using websitebenhvien.Helper;
 
 namespace websitebenhvien.Models.EnitityVM
 {
@@ -19,7 +20,8 @@ namespace websitebenhvien.Models.EnitityVM
         [Required(ErrorMessage = "Vui lòng chọn giới tính")]
         public string Sex { get; set; }
         public DateTime ?CreatedAt { get; set; }
-        [Required(ErrorMessage = "Vui lòng tải lên CV")]
+        [Required(ErrorMessage = "Vui lòng tải lên CV ")]
+        [MaxFileSize(5, ErrorMessage = "Kích thước file tối đa là 5MB.")]
         public IFormFile CV_Url { get; set; }
         public string ?CV { get; set; }
 

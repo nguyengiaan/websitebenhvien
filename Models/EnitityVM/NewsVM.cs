@@ -21,7 +21,7 @@ namespace websitebenhvien.Models.EnitityVM
         public bool ?Status { get; set; }
 
         public DateTime ?Createat { get; set; }
-        [Required(ErrorMessage = "Vui lòng chọn ảnh")]
+  
 
         public IFormFile? formFile { get; set; }
 

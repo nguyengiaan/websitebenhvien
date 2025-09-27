@@ -98,7 +98,7 @@ namespace websitebenhvien.Service.Reponser
                 await _context.Notifications.AddAsync(notification);
                 await _context.SaveChangesAsync();
                 await _hubnot.SendNotification();
-              //  await _email.SendEmailAsync(email.email,"Nộp hồ sơ tuyển dụng",recruitment.Name+" "+" đã nộp hồ sơ tuyển dụng vị trí "+" "+recruitment.Position,recruitment.CV_Url);
+               await _email.SendEmailAsync(email.email,"Nộp hồ sơ tuyển dụng",recruitment.Name+" "+" đã nộp hồ sơ tuyển dụng vị trí "+" "+recruitment.Position,recruitment.CV_Url);
             
                return true;
             }
