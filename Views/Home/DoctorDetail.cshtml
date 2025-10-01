@@ -247,9 +247,9 @@
                 success: function(response) {
                     if(response.status) {
                         const doctor = response.data;
-                     
-                        
-                        $('#doctorImage').attr('src', '/Resources/' + doctor.thumnail)
+
+
+                        $('#doctorImage').attr('src', '/Uploads/' + doctor.thumnail)
                             .on('load', function() {
                                 $(this).fadeIn(500);
                             });

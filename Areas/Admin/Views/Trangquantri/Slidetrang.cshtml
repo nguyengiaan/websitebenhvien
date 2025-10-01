@@ -285,7 +285,7 @@
                                 <tr>
                                     <td>${index + 1}</td>
                                     <td>
-                                        <img src="/Resources/${item.slide}" alt="Slide ${index + 1}" style="max-width: 200px;" class="img-thumbnail">
+                                        <img src="/Uploads/${item.slide}" alt="Slide ${index + 1}" style="max-width: 200px;" class="img-thumbnail">
                                     </td>
                                     <td>
                                         <span class="form-control-plaintext">${item.title}</span>
@@ -343,7 +343,7 @@
                         $('#slideSortEdit').val(res.data.sort);
                         $('#id_slidepageEdit').val(res.data.id_slidepage);
                         if (res.data.slide) {
-                            $('#previewImageEdit').attr('src', '/Resources/' + res.data.slide).removeClass('d-none');
+                            $('#previewImageEdit').attr('src', '/Uploads/' + res.data.slide).removeClass('d-none');
                         }
                         $("#EditSlideModal").modal("show");
                     } else {

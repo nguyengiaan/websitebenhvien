@@ -11,7 +11,7 @@ namespace websitebenhvien.Service.Interface
         public Task<List<NewsVM>> GetNewsByCategory(string alias_url);
 
         // nộp cv tuyển dụng
-        public Task<Boolean> SubmitRecruitment(RecruitmentVM recruitment);
+        public Task<(bool status, string message)> SubmitRecruitment(RecruitmentVM recruitment);
 
         // lấy danh sách tuyển dụng
         public Task<(List<RecruitmentVM> ds, int total)> GetRecruitment(int page, int pageSize);
@@ -46,7 +46,7 @@ namespace websitebenhvien.Service.Interface
         // lấy chi tiết bác sĩ
         public Task<DoctorVM> GetDoctorById(string alias_url);
 
-
+   
     }
 }
 

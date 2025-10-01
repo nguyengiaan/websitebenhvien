@@ -148,7 +148,7 @@
                     if (response.success) {
                         console.log(response.data);
                         // Không set value cho input file
-                        $('#logoPreview').attr('src', response.data.logo ? '/Resources/' + response.data.logo : '');
+                        $('#logoPreview').attr('src', response.data.logo ? '/Uploads/' + response.data.logo : '');
                         $('#address').val(response.data.address || '');
                         $('#telephone').val(response.data.telephone || '');
                         $('#Email').val(response.data.email || '');

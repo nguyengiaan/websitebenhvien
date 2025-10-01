@@ -347,7 +347,7 @@ function renderDoctors(doctors) {
             <tr class="align-middle">
                 <td class="ps-4 fw-bold text-primary">${startIndex + index + 1}</td>
                 <td>
-                    <img src="/Resources/${doctor.thumnail}" 
+                    <img src="/Uploads/${doctor.thumnail}" 
                          class="rounded-3 shadow-sm" 
                          style="width: 80px; height: 80px; object-fit: cover">
                 </td>
@@ -458,7 +458,7 @@ function editDoctor(id) {
             
             // Show image preview if exists
             if (doctor.data[0].thumnail) {
-                $('#imagePreview').attr('src', '/Resources/' + doctor.data[0].thumnail).show();
+                $('#imagePreview').attr('src', '/Uploads/' + doctor.data[0].thumnail).show();
             }
             
             $('#categoryModal').modal('show');

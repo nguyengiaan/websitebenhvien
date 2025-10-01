@@ -301,7 +301,7 @@
                         <tr>
                              <td class="ps-4">DN${item.id_Forbusiness}</td>
                              <td>
-                                <img src="/Resources/${item.icon_Forbusiness}" 
+                                <img src="/Uploads/${item.icon_Forbusiness}" 
                                      alt="Ảnh doanh nghiệp" 
                                      class="img-fluid rounded"
                                      style="max-height: 80px; max-width: 120px;">
@@ -648,7 +648,7 @@
 
                             // Show image preview if icon_Forbusiness exists
                             if (news.icon_Forbusiness) {
-                                const imagePath = `/Resources/${news.icon_Forbusiness}`;
+                                const imagePath = `/Uploads/${news.icon_Forbusiness}`;
                                 $('#imagePreview').attr('src', imagePath);
                                 $('#imagePreviewContainer').show();
                             }

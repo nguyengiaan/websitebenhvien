@@ -74,15 +74,16 @@ public class HomeController : Controller
 
     if (post is null) return NotFound();
 
-    // post.Categorynews có sẵn nhờ Include phía trên
-    if (post.Categorynews is not null)
-    {
+        // post.Categorynews có sẵn nhờ Include phía trên
+        if (post.Categorynews is not null)
+        {
             ViewBag.breadcrumbs = new List<(string Title, string Url)>
-             {
+            {
                 new("Trang chủ", "/"),
                 new(post.Categorynews.Title, post.Categorynews.Alias_url),
                 new(post.Title, post.Alias_url)
-                };
+            };
+           
      }
 
     return View(post);
@@ -172,4 +173,5 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
 }

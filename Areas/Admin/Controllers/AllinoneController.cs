@@ -72,7 +72,7 @@ namespace websitebenhvien.Areas.Admin.Controllers
         //Tin tức
         [Authorize(Roles = "admin,Baiviet")]
         [HttpPost]
-        public async Task<IActionResult> AddNews(NewsVM news)
+        public async Task<IActionResult> AddNews([FromForm] NewsVM news)
         {
             try
             {

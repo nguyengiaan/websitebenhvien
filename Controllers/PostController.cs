@@ -106,11 +106,11 @@ namespace websitebenhvien.Controllers
                     return Json(new { status = false, message = string.Join(", ", errors), errors });
                 }
                 var data = await _post.SubmitRecruitment(recruitment);
-                if(data)
+                if(data.status)
                 {
-                    return Json(new { status = true,message = "Đăng ký ứng tuyển thành công" });
+                    return Json(new { status = true,message = data.message});
                 }
-                return Json(new { status = false,message = "Đăng ký ứng tuyển thất bại" });
+                return Json(new { status = false,message = data.message });
             }catch(Exception ex)
             {
                 return Json(new { status = false,message = ex.Message });

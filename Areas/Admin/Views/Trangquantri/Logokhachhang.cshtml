@@ -198,7 +198,7 @@
                             html += `<tr>
                                 <td>${index + 1}</td>
                                 <td>
-                                    <img src="/Resources/${item.logo}" alt="${item.customerName}" class="img-fluid" style="max-height: 100px">
+                                    <img src="/Uploads/${item.logo}" alt="${item.customerName}" class="img-fluid" style="max-height: 100px">
                                 </td>
                                 <td>${item.customerName}</td>
                                 <td>
@@ -321,7 +321,7 @@
         $('#editLogoModal').modal('show');
             $('#editLogoForm').find('#Id_logo').val(id_logocustomer);
             $('#editLogoForm').find('#CustomerName').val(customerName);
-            $('#editLogoForm').find('#editPreviewImage').attr('src', `/Resources/${logo}`);
+            $('#editLogoForm').find('#editPreviewImage').attr('src', `/Uploads/${logo}`);
     }
 	function Capnhatlogo()
     {

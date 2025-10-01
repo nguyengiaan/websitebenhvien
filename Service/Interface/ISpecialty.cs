@@ -6,7 +6,7 @@ namespace websitebenhvien.Service.Interface
     {
         public Task<Boolean> AddSpecialty(SpecialtyVM specialty);
 
-        public Task<(List<SpecialtyVM> ds,int TotalPages)> GetSpecialty(int page, int pageSize);
+        public Task<(List<SpecialtyVM> ds, int TotalPages)> GetSpecialty(int page, int pageSize);
 
         public Task<Boolean> DeleteSpecialty(int id);
 
@@ -20,9 +20,12 @@ namespace websitebenhvien.Service.Interface
 
         public Task<List<DoctorVM>> GetDoctorBySpecialty(int id);
 
-        public Task<(List<DoctorVM> ds, int TotalPages)> GetDoctorByAlias(int page, int pageSize,string search,int specialtyId);
+        public Task<(List<DoctorVM> ds, int TotalPages)> GetDoctorByAlias(int page, int pageSize, string search, int specialtyId);
 
         public Task<List<SpecialtyVM>> GetAllSpecialty();
+
+        // chuyên khoa bác sĩ
+        public Task<List<DoctorSpeciallyVM>> GetDoctorSpecialty();
 
         
 

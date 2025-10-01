@@ -387,7 +387,7 @@
                     html += `
                         <tr>
                             <td>${item.product_Id}</td>
-                            <td><img src="/Resources/${item.url}" width="50" /></td>
+                            <td><img src="/Uploads/${item.url}" width="50" /></td>
                             <td>${item.title}</td>
                             <td>${getCategoryName(item.id_Categoryproduct)}</td>
                             <td>${new Date(item.createat).toLocaleDateString()}</td>
@@ -454,7 +454,7 @@
                                 imgContainer.className = 'position-relative';
                                 
                                 const img = document.createElement('img');
-                                img.src = `/Resources/${product.url}`;
+                                img.src = `/Uploads/${product.url}`;
                                 img.className = 'img-thumbnail me-2 mb-2';
                                 img.style.maxHeight = '100px';
 
@@ -472,7 +472,7 @@
                                 $('#imagePreviewThumbContainer').append(imgContainer);
 
                                 // Create a new File object from the image URL
-                                fetch(`/Resources/${product.url}`)
+                                fetch(`/Uploads/${product.url}`)
                                     .then(res => res.blob())
                                     .then(blob => {
                                         const file = new File([blob], product.url, { type: blob.type });
@@ -491,7 +491,7 @@
                                     imgContainer.className = 'position-relative';
                                     
                                     const img = document.createElement('img');
-                                    img.src = `/Resources/${imgUrl}`;
+                                    img.src = `/Uploads/${imgUrl}`;
                                     img.className = 'img-thumbnail me-2 mb-2';
                                     img.style.maxHeight = '100px';
 
@@ -513,7 +513,7 @@
                                     $('#selectedImagesContainer').append(imgContainer);
 
                                     // Create File object for each image
-                                    fetch(`/Resources/${imgUrl}`)
+                                    fetch(`/Uploads/${imgUrl}`)
                                         .then(res => res.blob())
                                         .then(blob => {
                                             const file = new File([blob], imgUrl, { type: blob.type });

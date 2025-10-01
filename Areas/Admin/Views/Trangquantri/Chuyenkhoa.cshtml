@@ -197,7 +197,7 @@
                         response.data.forEach((item,index) => {
                             html += `<tr class="align-middle">
                                         <td class="ps-4">${index+1}</td>
-                                        <td><img src="/Resources/${item.thumnail}" alt="Ảnh đại diện" style="width: 100px; height: 100px;"></td>
+                                        <td><img src="/Uploads/${item.thumnail}" alt="Ảnh đại diện" style="width: 100px; height: 100px;"></td>
                                         <td>${item.title}</td>
                                         <td>${item.alias_url}</td>
                                         <td class="text-center">
@@ -322,7 +322,7 @@
                         $('#machine').summernote('code', response.data.machine);
                         $('#service').summernote('code', response.data.service);
 
-                        $('#imagePreview').attr('src', '/Resources/' + response.data.thumnail);
+                        $('#imagePreview').attr('src', '/Uploads/' + response.data.thumnail);
                     
                         $('#categoryModal').modal('show');
                         $('#modalTitle').text('Sửa chuyên khoa');

@@ -190,7 +190,7 @@
                         $.each(response.data, function(index, item) {
                             str += `<tr>
                                 <td>${index + 1}</td>
-                                <td><img src="/Resources/${item.image}" style="max-width: 100px;"></td>
+                                <td><img src="/Uploads/${item.image}" style="max-width: 100px;"></td>
                                 <td>${item.title}</td>
                                 <td>${item.description}</td>
                                 <td>
@@ -321,7 +321,7 @@
             $('#editShareForm').find('#editTitle').val(title);
             $('#editShareForm').find('#editDescription').val(description);
             $('#editShareForm').find('#editAliasurl').val(aliasurl);
-            $('#editShareForm').find('#editPreviewImage').attr('src', `/Resources/${image}`);
+            $('#editShareForm').find('#editPreviewImage').attr('src', `/Uploads/${image}`);
         }
 
         function Capnhatshare() {

@@ -68,42 +68,49 @@ namespace websitebenhvien.Service.Reponser
             }
         }
         // nộp cv tuyển dụng
-        public async Task<bool> SubmitRecruitment(RecruitmentVM recruitment)
+        public async Task<(bool status, string message)> SubmitRecruitment(RecruitmentVM recruitment)
         {
             var email = await _context.Emails.FirstOrDefaultAsync();
             try
             {
-                var data=new Recruitment();
-                data.Id_Recruitment=Guid.NewGuid().ToString();
-                data.Name=recruitment.Name;
-                data.Phone=recruitment.Phone;
-                data.Address=recruitment.Address;
-                data.CreatedAt=DateTime.Now;
-                data.Note=recruitment.Note;
-                data.Position=recruitment.Position;
-                data.Sex=recruitment.Sex;
-                var md= await _uploadfile.SaveMedia(recruitment.CV_Url);
-                if(md.Item1==1)
+                var data = new Recruitment();
+                data.Id_Recruitment = Guid.NewGuid().ToString();
+                data.Name = recruitment.Name;
+                data.Phone = recruitment.Phone;
+                data.Address = recruitment.Address;
+                data.CreatedAt = DateTime.Now;
+                data.Note = recruitment.Note;
+                data.Position = recruitment.Position;
+                data.Sex = recruitment.Sex;
+                var md = await _uploadfile.SaveMedia(recruitment.CV_Url);
+                if (md.Item1 == 1)
                 {
-                    data.CV_Url=md.Item2;
+                    data.CV_Url = md.Item2;
+
+
                 }
-                var notification=new Notification();
-                notification.Id_Notification=Guid.NewGuid().ToString();
-                notification.Title="Nộp hồ sơ tuyển dụng";
-                notification.Description=recruitment.Name+" "+" đã nộp hồ sơ tuyển dụng vị trí "+" "+recruitment.Position;
-                notification.Createat=DateTime.Now;
-                notification.Url="/trang-quan-tri/quan-ly-tuyen-dung";
-                notification.Status=false ;
+                else
+                {
+                    return (false, md.Message);
+                }
+                var notification = new Notification();
+                notification.Id_Notification = Guid.NewGuid().ToString();
+                notification.Title = "Nộp hồ sơ tuyển dụng";
+                notification.Description = recruitment.Name + " đã nộp hồ sơ tuyển dụng vị trí " + recruitment.Position;
+                notification.Createat = DateTime.Now;
+                notification.Url = "/trang-quan-tri/quan-ly-tuyen-dung";
+                notification.Status = false;
                 await _context.Recruitments.AddAsync(data);
                 await _context.Notifications.AddAsync(notification);
                 await _context.SaveChangesAsync();
                 await _hubnot.SendNotification();
-               await _email.SendEmailAsync(email.email,"Nộp hồ sơ tuyển dụng",recruitment.Name+" "+" đã nộp hồ sơ tuyển dụng vị trí "+" "+recruitment.Position,recruitment.CV_Url);
-            
-               return true;
+                await _email.SendEmailAsync(email.email, "Nộp hồ sơ tuyển dụng", recruitment.Name + " đã nộp hồ sơ tuyển dụng vị trí " + recruitment.Position, recruitment.CV_Url);
+
+                return (true, "Nộp hồ sơ thành công");
             }
-            catch(Exception ex){
-                return false;
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
             }
         }
         public async Task<List<Notification>> GetNotification()
@@ -384,6 +391,8 @@ namespace websitebenhvien.Service.Reponser
                 return null;
             }
         }
+
+     
 
         // rep tin nhắn khách hàng
 

@@ -312,5 +312,39 @@ namespace websitebenhvien.Service.Reponser
                 return (null,0);
             }
         }
+
+  
+        public Task<List<DoctorSpeciallyVM>> GetDoctorSpecialty()
+        {
+            try
+            {
+                var data = _context.Specialties.Select(s => new DoctorSpeciallyVM
+                {
+                    Id_Specialty = s.Id_Specialty,
+                    Name_Specialty = s.Title,
+                    Thumnail = s.Thumnail,
+                    Doctors = s.Doctor.Select(d => new DoctorVM
+                    {
+                        Id_doctor = d.Id_doctor,
+                        Name = d.Name,
+                        Thumnail = d.Thumnail,
+                        Alias_url = d.Alias_url,
+                        Introduction = d.Introduction,
+                        Organization = d.Organization,
+                        Award = d.Award,
+                        Research = d.Research,
+                        Training = d.Training,
+                        Experiencework = d.Experiencework,
+                        Id_specialty = d.Id_specialty
+                    }).ToList()
+                }).ToListAsync();
+
+                return data;
+            }
+            catch (Exception)
+            {
+                return Task.FromResult<List<DoctorSpeciallyVM>>(null);
+            }
+        }
     }
 }

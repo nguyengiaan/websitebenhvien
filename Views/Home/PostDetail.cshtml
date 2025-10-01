@@ -5,198 +5,117 @@
     ViewData["description"] = Model.Descriptionshort;
     ViewData["keywords"] = Model.Keyword;
     ViewData["Schema"] = Model.SchemaMakup;
-    var breadcrumbs = ViewBag.breadcrumbs as List<(string Title, string Url)>;
-
+    List<(string Title, string Url)>? breadcrumbs = ViewBag.breadcrumbs as List<(string Title, string Url)>;
 }
 
-<div class="container mt-5 ">
-@if (breadcrumbs != null)
-{
-    <nav aria-label="breadcrumb" style="z-index: 0 !important;">
-        <ol class="breadcrumb bg-transparent px-0">
-            @foreach (var crumb in breadcrumbs)
-            {
-                if (!string.IsNullOrEmpty(crumb.Url))
-                {
-                    <li class="breadcrumb-item">
-                            <a href="@crumb.Url" class="text-decoration-none">@crumb.Title</a>
-                    </li>
-                }
-                else
-                {
-                    <li class="breadcrumb-item active" aria-current="page">@crumb.Title</li>
-                }
-            }
-        </ol>
-    </nav>
-}
-</div>
+
 <div class="container mt-5">
-
-    <div class="row">
-        <!-- Nội dung bài viết -->
-        <div class="col-lg-12">
-            <article class="post-content bg-white p-4 rounded-3 shadow-sm">
-                <h1 class="post-title fw-bold mb-4" id="post-title">
-                    @if (Model.Title != null)
+    <!-- Breadcrumb -->
+    @if (breadcrumbs != null)
+    {
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent px-0">
+                @foreach ((string Title, string Url) crumb in breadcrumbs)
+                {
+                    if (!string.IsNullOrEmpty(crumb.Url))
                     {
-                        @Model.Title
+                        <li class="breadcrumb-item">
+                            <a href="@crumb.Url" class="text-decoration-none">@crumb.Title</a>
+                        </li>
                     }
                     else
                     {
-						var data = "Loading....";
-						@data
+                        <li class="breadcrumb-item active" aria-current="page">@crumb.Title</li>
                     }
-                    
-                    </h1>
-                
-                <div class="post-meta mb-4 d-flex align-items-center">
-                    <span class="me-4 d-flex align-items-center">
-                        <i class="far fa-calendar-alt me-2 text-danger"></i>
-                        <span class="fw-bold text-danger" id="post-date">
-                            @if (Model.Createat != null)
-                            {
-                                @Model.Createat.ToString("yyyy-MM-dd")
-                            }
-                            else
-                            {
-                                var dateData = "Loading....";
-                                @dateData
-                            }
-                        </span>
-                    </span>
-              
+                }
+            </ol>
+        </nav>
+    }
+
+    <div class="row mt-4">
+        <!-- Sidebar bên trái -->
+        <aside class="col-lg-3 mb-4">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-gradient text-white d-flex align-items-center" 
+                     style="background: linear-gradient(135deg, #007bff, #0056b3);">
+                    <i class="fas fa-list me-2 text-danger fw-bold"></i>
+                    <h6 class="mb-0 text-uppercase text-danger fw-bold">Danh mục</h6>
+                </div>
+                <div class="list-group list-group-flush">
+                    @await Component.InvokeAsync("Danhmucbaiviet")
+                </div>
+            </div>
+        </aside>
+
+        <!-- Nội dung chính -->
+        <div class="col-lg-9">
+            <article class="post-content bg-white p-4 rounded-3 shadow-sm mb-4">
+                <h1 class="post-title fw-bold mb-3">@Model.Title</h1>
+
+                <div class="post-meta mb-4 d-flex align-items-center text-muted small">
+                    <i class="far fa-calendar-alt me-2 text-danger"></i>
+                    <span>@Model.Createat.ToString("dd/MM/yyyy")</span>
                 </div>
 
-              
                 <div class="post-body" id="post-body">
-
-				
-                    @if (Model.Description != null)
-                    {
-                        @Html.Raw(Model.Description)
-                    }
-                    else
-                    {
-                        var description = "Loading....";
-                        @description
-                    }
-		
-                </div>
-                <div class="recruitment-form mt-5 bg-white p-5 rounded-4 shadow-lg border" id="recruitment-form">
-                    <div class="text-center mb-5">
-                        <h3 class="text-primary fw-bold mb-2">Đăng ký ứng tuyển</h3>
-                        <p class="text-muted">Hãy điền đầy đủ thông tin bên dưới để ứng tuyển</p>
-                    </div>
-
-                    <form id="recruitmentForm" class="needs-validation" novalidate>
-                        <div class="row g-4">
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control border-0 bg-light" id="Name" name="Name" placeholder="Họ và tên" required>
-                                    <label for="Name" class="text-muted">
-                                        <i class="far fa-user me-2"></i>Họ và tên
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="gender-select bg-light p-3 rounded-3 h-100">
-                                    <label class="form-label fw-medium mb-3 text-muted">
-                                        <i class="fas fa-venus-mars me-2"></i>Giới tính
-                                    </label>
-                                    <div class="d-flex gap-4">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="sex" id="sex" value="Nam" required>
-                                            <label class="form-check-label" for="male">Nam</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="sex" id="sex" value="Nữ" required>
-                                            <label class="form-check-label" for="female">Nữ</label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="tel" class="form-control border-0 bg-light" id="Phone" name="Phone" placeholder="Số điện thoại" required>
-                                    <label for="phone" class="text-muted">
-                                        <i class="fas fa-phone-alt me-2"></i>Số điện thoại
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control border-0 bg-light" id="Position" name="Position" placeholder="Vị trí ứng tuyển" required>
-                                    <label for="position" class="text-muted">
-                                        <i class="fas fa-briefcase me-2"></i>Vị trí ứng tuyển
-                                    </label>git status
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control border-0 bg-light" id="Address" name="Address" placeholder="Địa chỉ" required>
-                                    <label for="address" class="text-muted">
-                                        <i class="fas fa-map-marker-alt me-2"></i>Địa chỉ
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="upload-cv p-4 border border-dashed rounded-3 bg-light text-center">
-                                    <i class="fas fa-cloud-upload-alt fa-2x text-primary mb-3"></i>
-                                    <h6 class="fw-bold mb-2">Tải lên CV của bạn</h6>
-                                    <input type="file" class="form-control border-0" id="CV_Url" name="CV_Url" accept=".pdf,.doc,.docx">
-                                    <small class="text-muted mt-2 d-block">Chấp nhận file PDF, DOC, DOCX (Tối đa 5MB)</small>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="form-floating">
-                                    <textarea class="form-control border-0 bg-light" id="Note" name="Note" style="height: 120px" placeholder="Thư giới thiệu"></textarea>
-                                    <label for="coverLetter" class="text-muted">
-                                        <i class="fas fa-envelope me-2"></i>Thư giới thiệu
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="col-12 text-center mt-4">
-                                <button type="button" onclick="SubmitRecruitment()" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-sm hover-lift">
-                                    <i class="fas fa-paper-plane me-2"></i>Gửi đơn ứng tuyển
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                    @Html.Raw(Model.Description)
                 </div>
             </article>
 
-            <div class="share-buttons mt-4 text-center">
-                <h5 class="mb-3">Chia sẻ bài viết</h5>
-                <a onclick="shareToFacebook()" class="btn btn-primary me-2" style="cursor:pointer"><i class="fab fa-facebook-f me-2"></i>Facebook</a>
-                <a href="#" class="btn btn-info me-2"><i class="fab fa-twitter me-2"></i>Twitter</a>
-                <a href="#" class="btn btn-danger"><i class="fab fa-pinterest me-2"></i>Pinterest</a>
+            <!-- Nút chia sẻ -->
+            <div class="share-buttons mb-4 bg-white p-3 rounded-3 shadow-sm text-center">
+                <h6 class="mb-3">Chia sẻ bài viết</h6>
+                <a onclick="shareToFacebook()" class="btn btn-primary me-2">
+                    <i class="fab fa-facebook-f me-1"></i>Facebook
+                </a>
+                <a href="#" class="btn btn-info me-2">
+                    <i class="fab fa-twitter me-1"></i>Twitter
+                </a>
+                <a href="#" class="btn btn-danger">
+                    <i class="fab fa-pinterest me-1"></i>Pinterest
+                </a>
             </div>
 
             <!-- Bài viết nổi bật -->
-            <div class="featured-posts bg-white p-4 rounded-3 shadow-sm mt-4">
-                <h4 class="fw-bold border-bottom pb-3 mb-3 text-center text-danger">Bài viết nổi bật</h4>
-                <div id="post-category-news" class="overflow-auto position-relative" style="max-height: 900px;">
-                    <div class="scrolling-wrapper d-flex flex-row" style="animation: scroll-left 20s linear infinite;">
-                        <!-- Nội dung bài viết sẽ được thêm vào đây qua JavaScript -->
-                    </div>
+            <div class="featured-posts bg-white p-4 rounded-3 shadow-sm">
+                <h5 class="fw-bold border-bottom pb-3 mb-3 text-danger text-center">Bài viết nổi bật</h5>
+                <div id="post-category-news">
+                    <!-- Nội dung load bằng Ajax -->
                 </div>
-               
             </div>
         </div>
     </div>
 </div>
+
+
+  
+
+
+
+
 @section Styles
 {
   
- <link rel="stylesheet" type="text/css" href="~/css/tintuc.css">
+ @* <link rel="stylesheet" type="text/css" href="~/css/tintuc.css"> *@
+
+
+
+   <style>
+        .hover-bg:hover {
+            background-color: #f8f9fa;
+            color: #007bff !important;
+        }
+        .post-body img, 
+        .post-body table, 
+        .post-body input[type="image"] {
+            max-width: 100%;
+            height: auto;
+        }
+        .post-body table {
+            display: block;
+            overflow-x: auto;
+        }
+    </style>
 
 }
 
@@ -204,7 +123,7 @@
 @section Scripts{
     <script>
     var breadcrumbs = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(breadcrumbs));
-        console.log(breadcrumbs);
+  
         $(document).ready(function(){
            
   
