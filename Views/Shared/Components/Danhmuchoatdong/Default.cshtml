@@ -1,0 +1,46 @@
+@model List<websitebenhvien.Models.EnitityVM.CategoryActivityVM>
+
+@if (Model != null && Model.Any())
+{
+    @foreach (var category in Model)
+    {
+        <a href="@category.Link_alias" 
+           class="list-group-item list-group-item-action hover-bg">
+            <i class="fas fa-folder-open me-2 text-primary"></i>
+            <span>@category.Title</span>
+            <small class="text-muted float-end">
+                <i class="fas fa-arrow-right"></i>
+            </small>
+        </a>
+    }
+}
+else
+{
+    <div class="list-group-item text-center text-muted py-3">
+        <i class="fas fa-folder-open fa-2x mb-2"></i>
+        <p class="mb-0 small">Chưa có danh mục hoạt động</p>
+    </div>
+}
+
+<style>
+    .hover-bg {
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+    }
+    
+    .hover-bg:hover {
+        background-color: #f8f9fa !important;
+        color: #007bff !important;
+        border-left-color: #007bff;
+        transform: translateX(5px);
+    }
+    
+    .hover-bg i {
+        transition: all 0.3s ease;
+    }
+    
+    .hover-bg:hover i {
+        color: #007bff !important;
+        transform: scale(1.1);
+    }
+</style>

@@ -48,6 +48,7 @@ public class HomeController : Controller
     
     {
         ViewData["Image"] = "/Images/Logo-rm.png";
+        
         return View();
     }
     [HttpGet()]

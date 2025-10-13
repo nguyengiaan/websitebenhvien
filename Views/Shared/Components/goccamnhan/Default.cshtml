@@ -1,0 +1,627 @@
+@model List<websitebenhvien.Models.EnitityVM.FeedbackVM>
+
+<section class="goccamnhan-testimonials-section py-5">
+    <div class="container">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <div class="goccamnhan-section-badge mb-3">
+                <i class="fas fa-heart me-2"></i>
+                <span>Góc cảm nhận</span>
+            </div>
+            <h2 class="goccamnhan-section-title">Khách Hàng Chia Sẻ Cảm Nhận</h2>
+            <p class="goccamnhan-section-subtitle text-muted">Những trải nghiệm thực tế từ bệnh nhân đã tin tưởng chọn chúng tôi</p>
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <!-- Photo Carousel -->
+            <div id="goccamnhanPhotoCarousel" class="carousel slide goccamnhan-photo-carousel" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @{
+                        var itemsPerSlide = 5;
+                        var totalSlides = (int)Math.Ceiling((double)Model.Count / itemsPerSlide);
+                    }
+
+                    @for (int slideIndex = 0; slideIndex < totalSlides; slideIndex++)
+                    {
+                        <div class="carousel-item @(slideIndex == 0 ? "active" : "")">
+                            <div class="row g-3 justify-content-center">
+                                @{
+                                    var slideItems = Model.Skip(slideIndex * itemsPerSlide).Take(itemsPerSlide);
+                                }
+
+                                @foreach (var feedback in slideItems)
+                                {
+                                    <div class="col-lg-2 col-md-3 col-4">
+                                        <div class="goccamnhan-photo-item" 
+                                             data-name="@feedback.Title_Name" 
+                                             data-content="@Html.Raw(System.Text.RegularExpressions.Regex.Replace(feedback.Content ?? "", "<.*?>", ""))"
+                                             data-rating="5"
+                                             data-location="Khách hàng của bệnh viện">
+                                            @if (!string.IsNullOrEmpty(feedback.Thumnail))
+                                            {
+                                                <img src="/Uploads/@feedback.Thumnail" alt="@feedback.Title_Name" class="goccamnhan-photo">
+                                            }
+                                            else
+                                            {
+                                                <div class="goccamnhan-photo goccamnhan-photo-placeholder">
+                                                    <i class="fas fa-user"></i>
+                                                </div>
+                                            }
+                                            <div class="goccamnhan-photo-overlay">
+                                                <i class="fas fa-quote-left"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Carousel Controls -->
+                <button class="carousel-control-prev goccamnhan-carousel-control" type="button" data-bs-target="#goccamnhanPhotoCarousel" data-bs-slide="prev">
+                    <span class="goccamnhan-control-icon">
+                        <i class="fas fa-chevron-left"></i>
+                    </span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next goccamnhan-carousel-control" type="button" data-bs-target="#goccamnhanPhotoCarousel" data-bs-slide="next">
+                    <span class="goccamnhan-control-icon">
+                        <i class="fas fa-chevron-right"></i>
+                    </span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        }
+        else
+        {
+            <!-- No data message -->
+            <div class="text-center py-5">
+                <div class="goccamnhan-no-data">
+                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">Chưa có cảm nhận nào</h5>
+                    <p class="text-muted">Hãy chia sẻ trải nghiệm của bạn với chúng tôi</p>
+                </div>
+            </div>
+        }
+
+        @if (Model != null && Model.Any())
+        {
+            <!-- Testimonial Display -->
+            <div class="goccamnhan-testimonial-display">
+                <div class="goccamnhan-testimonial-card">
+                    <div class="goccamnhan-quote-icon">
+                        <i class="fas fa-quote-left"></i>
+                    </div>
+                    
+                    <div class="goccamnhan-rating mb-3" id="goccamnhanRating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    
+                    <div class="goccamnhan-testimonial-content">
+                        <p class="goccamnhan-testimonial-text" id="goccamnhanTestimonialText">
+                            Chọn một ảnh để xem cảm nhận của khách hàng
+                        </p>
+                    </div>
+                    
+                    <div class="goccamnhan-customer-info" id="goccamnhanCustomerInfo">
+                        <h5 class="goccamnhan-customer-name" id="goccamnhanCustomerName">Khách hàng</h5>
+                        <p class="goccamnhan-customer-location" id="goccamnhanCustomerLocation">
+                            <i class="fas fa-map-marker-alt me-2"></i>Địa điểm
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<style>
+/* Section Styles */
+.goccamnhan-testimonials-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.goccamnhan-testimonials-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="30" r="2" fill="rgba(0,123,255,0.1)"/><circle cx="80" cy="70" r="1.5" fill="rgba(40,167,69,0.1)"/></svg>');
+    opacity: 0.6;
+}
+
+.goccamnhan-testimonials-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+/* Header */
+.goccamnhan-section-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(220,53,69,0.1);
+    color: #dc3545;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-weight: 500;
+    border: 1px solid rgba(220,53,69,0.2);
+}
+
+.goccamnhan-section-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.goccamnhan-section-subtitle {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Photo Carousel */
+.goccamnhan-photo-carousel {
+    position: relative;
+    margin-bottom: 3rem;
+}
+
+.goccamnhan-photo-carousel .carousel-inner {
+    overflow: visible;
+    padding: 0 60px;
+}
+
+.goccamnhan-photo-carousel .carousel-item {
+    transition: transform 0.6s ease-in-out;
+}
+
+/* Photo Items */
+.goccamnhan-photo-item {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.goccamnhan-photo-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,123,255,0.2);
+}
+
+.goccamnhan-photo-item.active {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(0,123,255,0.3);
+    border: 3px solid #007bff;
+}
+
+.goccamnhan-photo {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.goccamnhan-photo-placeholder {
+    width: 100%;
+    height: 120px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #6c757d;
+    border-radius: 15px;
+}
+
+.goccamnhan-photo-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,123,255,0.9);
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.goccamnhan-photo-item:hover .goccamnhan-photo-overlay {
+    opacity: 1;
+}
+
+.goccamnhan-photo-item.active .goccamnhan-photo-overlay {
+    opacity: 1;
+    background: rgba(40,167,69,0.9);
+}
+
+/* Carousel Controls */
+.goccamnhan-carousel-control {
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    border: 2px solid #f0f0f0;
+    opacity: 0.9;
+    transition: all 0.3s ease;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.goccamnhan-carousel-control:hover {
+    opacity: 1;
+    background: linear-gradient(135deg, #007bff, #28a745);
+    border-color: transparent;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 8px 25px rgba(0,123,255,0.3);
+}
+
+.goccamnhan-carousel-control:hover .goccamnhan-control-icon {
+    color: white;
+}
+
+.goccamnhan-control-icon {
+    color: #007bff;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+/* Carousel Indicators */
+.goccamnhan-carousel-indicators {
+    bottom: -60px;
+    margin-bottom: 0;
+}
+
+.goccamnhan-carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ddd;
+    border: none;
+    margin: 0 6px;
+    transition: all 0.3s ease;
+    opacity: 0.6;
+}
+
+.goccamnhan-carousel-indicators button.active {
+    background: linear-gradient(135deg, #007bff, #28a745);
+    transform: scale(1.4);
+    opacity: 1;
+}
+
+.goccamnhan-carousel-indicators button:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* Testimonial Display */
+.goccamnhan-testimonial-display {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.goccamnhan-testimonial-card {
+    background: white;
+    border-radius: 25px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+    border: 1px solid #f0f0f0;
+    position: relative;
+    text-align: center;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: all 0.4s ease;
+}
+
+.goccamnhan-quote-icon {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #007bff, #28a745);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    box-shadow: 0 8px 25px rgba(0,123,255,0.3);
+}
+
+.goccamnhan-rating {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    font-size: 1.3rem;
+    color: #ffc107;
+    margin-bottom: 2rem;
+}
+
+.goccamnhan-testimonial-text {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #495057;
+    font-style: italic;
+    margin-bottom: 2rem;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.goccamnhan-customer-info {
+    border-top: 2px solid #f0f0f0;
+    padding-top: 1.5rem;
+    margin-top: auto;
+}
+
+.goccamnhan-customer-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.goccamnhan-customer-location {
+    color: #6c757d;
+    font-size: 1rem;
+    margin-bottom: 0;
+}
+
+/* Animations */
+.goccamnhan-fade-in {
+    animation: goccamnhanFadeIn 0.6s ease-out;
+}
+
+@@keyframes goccamnhanFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.goccamnhan-slide-up {
+    animation: goccamnhanSlideUp 0.6s ease-out;
+}
+
+@@keyframes goccamnhanSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@@media (max-width: 768px) {
+    .goccamnhan-section-title {
+        font-size: 1.8rem;
+    }
+    
+    .goccamnhan-photo {
+        height: 100px;
+    }
+    
+    .goccamnhan-testimonial-card {
+        padding: 2rem 1.5rem;
+        min-height: 250px;
+    }
+    
+    .goccamnhan-testimonial-text {
+        font-size: 1rem;
+        min-height: 80px;
+    }
+    
+    .goccamnhan-customer-name {
+        font-size: 1.2rem;
+    }
+    
+    .goccamnhan-quote-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+}
+
+@@media (max-width: 576px) {
+    .goccamnhan-photo {
+        height: 80px;
+    }
+    
+    .goccamnhan-testimonial-card {
+        padding: 1.5rem 1rem;
+    }
+    
+    .goccamnhan-section-title {
+        font-size: 1.6rem;
+    }
+}
+
+/* Loading state */
+.goccamnhan-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.goccamnhan-loading .goccamnhan-testimonial-text {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 8px;
+    color: transparent;
+}
+
+@@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* No data state */
+.goccamnhan-no-data {
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.goccamnhan-no-data i {
+    opacity: 0.5;
+}
+
+.goccamnhan-no-data h5 {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.goccamnhan-no-data p {
+    font-size: 0.95rem;
+    margin-bottom: 0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize carousel
+    const goccamnhanCarousel = new bootstrap.Carousel(document.getElementById('goccamnhanPhotoCarousel'), {
+        interval: 6000,
+        wrap: true,
+        pause: 'hover',
+        touch: true
+    });
+    
+    // Get all photo items from all slides
+    const photoItems = document.querySelectorAll('.goccamnhan-photo-item');
+    const testimonialText = document.getElementById('goccamnhanTestimonialText');
+    const customerName = document.getElementById('goccamnhanCustomerName');
+    const customerLocation = document.getElementById('goccamnhanCustomerLocation');
+    const customerInfo = document.getElementById('goccamnhanCustomerInfo');
+    const rating = document.getElementById('goccamnhanRating');
+    
+    // Set default first item as active if exists
+    if (photoItems.length > 0) {
+        photoItems[0].classList.add('active');
+        updateTestimonial(photoItems[0]);
+    } else {
+        // Hide testimonial display if no items
+        const testimonialDisplay = document.querySelector('.goccamnhan-testimonial-display');
+        if (testimonialDisplay) {
+            testimonialDisplay.style.display = 'none';
+        }
+    }
+    
+    // Add click event to all photo items
+    photoItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Remove active class from all items
+            photoItems.forEach(photo => photo.classList.remove('active'));
+            
+            // Add active class to clicked item
+            this.classList.add('active');
+            
+            // Add loading state
+            const testimonialCard = document.querySelector('.goccamnhan-testimonial-card');
+            testimonialCard.classList.add('goccamnhan-loading');
+            
+            // Update testimonial after short delay for better UX
+            setTimeout(() => {
+                updateTestimonial(this);
+                testimonialCard.classList.remove('goccamnhan-loading');
+                
+                // Add animation
+                testimonialText.classList.add('goccamnhan-fade-in');
+                customerInfo.classList.add('goccamnhan-slide-up');
+                
+                // Remove animation classes after animation completes
+                setTimeout(() => {
+                    testimonialText.classList.remove('goccamnhan-fade-in');
+                    customerInfo.classList.remove('goccamnhan-slide-up');
+                }, 600);
+            }, 300);
+        });
+        
+        // Add hover effects
+        item.addEventListener('mouseenter', function() {
+            this.style.boxShadow = '0 15px 40px rgba(0,123,255,0.2)';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('active')) {
+                this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.1)';
+            }
+        });
+    });
+    
+    function updateTestimonial(item) {
+        const name = item.dataset.name;
+        const content = item.dataset.content;
+        const location = item.dataset.location;
+        const ratingValue = parseInt(item.dataset.rating) || 5;
+        
+        // Update content
+        testimonialText.textContent = `"${content}"`;
+        customerName.textContent = name;
+        customerLocation.innerHTML = `<i class="fas fa-map-marker-alt me-2"></i>${location}`;
+        
+        // Update rating stars
+        const stars = rating.querySelectorAll('i');
+        stars.forEach((star, index) => {
+            if (index < ratingValue) {
+                star.classList.add('fas');
+                star.classList.remove('far');
+            } else {
+                star.classList.add('far');
+                star.classList.remove('fas');
+            }
+        });
+    }
+    
+    // Add stagger animation effect for carousel slides
+    const carouselElement = document.getElementById('goccamnhanPhotoCarousel');
+    carouselElement.addEventListener('slide.bs.carousel', function(e) {
+        const nextSlide = e.relatedTarget;
+        const photos = nextSlide.querySelectorAll('.goccamnhan-photo-item');
+        
+        photos.forEach((photo, index) => {
+            photo.style.animationDelay = `${index * 0.1}s`;
+        });
+    });
+    
+    carouselElement.addEventListener('slid.bs.carousel', function(e) {
+        const currentSlide = e.relatedTarget;
+        const photos = currentSlide.querySelectorAll('.goccamnhan-photo-item');
+        
+        photos.forEach(photo => {
+            photo.style.animationDelay = '';
+        });
+    });
+});
+</script>

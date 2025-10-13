@@ -321,6 +321,7 @@
             <div class="divider" style="background-color: #0984e3;"></div>
         </div>
         <div id="serviceCarousel" class="carousel slide" data-bs-ride="carousel">
+                  @await Component.InvokeAsync("Dichvunoibat")
         </div>
 
     </div>
@@ -338,7 +339,18 @@
 
     </div>
 </section>
+<section class="features-section py-5 fade-in" style="background-color: #ffffff;">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="text-primary fw-bold">GÓC CẢM NHẬN</h2>
+            <div class="divider" style="background-color: #0984e3;"></div>
+        </div>
+        <div id="newsCarousel" class="carousel slide" data-bs-ride="carousel">
+                 @await Component.InvokeAsync("Goccamnhan")
+        </div>
 
+    </div>
+</section>
 
 <section class="partners-section py-5 bg-light w-100 d-flex justify-content-center align-items-center fade-in">
     <div class="container-fluid">

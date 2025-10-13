@@ -1,6 +1,7 @@
 
 @{
     ViewData["Title"] = "Danh mục bài viết";
+    
 
 }
 <div class="container mt-4">
@@ -50,9 +51,12 @@
         const pageSize = 12;
         loadPosts(currentPage, pageSize);
 
-        const categoryTitle = localStorage.getItem("selectedCategoryTitle") || "Tất cả bài viết";
-        $("#categoryTitle").text(categoryTitle);
-        $("#categoryTitle1").text(categoryTitle);
+        const categoryTitle_1 = localStorage.getItem("selectedCategoryTitle") || "Tất cả bài viết";
+       
+      
+        $("#categoryTitle").text(categoryTitle_1);
+        $("#categoryTitle1").text(categoryTitle_1);
+
     });
 
     function loadPosts(page, pageSize) {
@@ -67,6 +71,7 @@
             success: function (response) {
                 $('#postList').empty();
                 $('#pagination').empty();
+                console.log(response);
 
                 response.ds.forEach(function (post) {
                     const today = new Date();
@@ -120,6 +125,7 @@
                 }
 
                 $('#pagination').html(paginationHtml);
+                
             },
             error: function () {
                 $('#postList').html('<div class="col-12"><p class="text-center text-danger">Có lỗi xảy ra khi tải bài viết</p></div>');

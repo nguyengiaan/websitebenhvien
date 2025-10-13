@@ -95,6 +95,9 @@ namespace websitebenhvien.Data
         public DbSet<Titlemenu> Titlemenus { get; set; }
 
         public DbSet<Menunav> Menunavs { get; set; }
+        
+
+        public DbSet<Feedback> Feedbacks { get; set; }
 
 
 
@@ -263,7 +266,7 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<Postactivity>().Property(x => x.Id_Postactivity).ValueGeneratedOnAdd();
             modelBuilder.Entity<Postactivity>().Property(x => x.Title).HasMaxLength(200);
             modelBuilder.Entity<Postactivity>().Property(x => x.Description).HasMaxLength(int.MaxValue);
-      
+
             modelBuilder.Entity<Postactivity>().Property(x => x.Alias_url).HasMaxLength(200);
             modelBuilder.Entity<Postactivity>().Property(x => x.Keyword).HasMaxLength(200);
             modelBuilder.Entity<Postactivity>().Property(x => x.Descriptionshort).HasMaxLength(500);
@@ -276,12 +279,18 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<Titlemenu>().Property(x => x.Name).HasMaxLength(100);
             // Menu điều hướng
             modelBuilder.Entity<Menunav>().ToTable("Menunav");
-            modelBuilder.Entity<Menunav>().HasKey(x=>x.Id_menunav);
+            modelBuilder.Entity<Menunav>().HasKey(x => x.Id_menunav);
             modelBuilder.Entity<Menunav>().Property(x => x.Id_menunav).ValueGeneratedOnAdd();
             modelBuilder.Entity<Menunav>().Property(x => x.Name).HasMaxLength(100);
             modelBuilder.Entity<Menunav>().Property(x => x.Url).HasMaxLength(200);
             modelBuilder.Entity<Menunav>().HasOne(x => x.Titlemenu).WithMany(x => x.TitlemenuList).HasForeignKey(x => x.Id_titlemenu);
-
+            // Phản hồi
+            modelBuilder.Entity<Feedback>().ToTable("Feedback");
+            modelBuilder.Entity<Feedback>().HasKey(x => x.Id);
+            modelBuilder.Entity<Feedback>().Property(x => x.Id).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Feedback>().Property(x => x.Title_Name).HasMaxLength(200);
+            modelBuilder.Entity<Feedback>().Property(x => x.Content).HasMaxLength(int.MaxValue);
+            modelBuilder.Entity<Feedback>().Property(x => x.Thumnail).HasMaxLength(200);    
 
 
 

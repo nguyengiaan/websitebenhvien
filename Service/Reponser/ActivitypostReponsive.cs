@@ -116,7 +116,7 @@ namespace websitebenhvien.Service.Reponser
                     postactivity.Createat
                 );
                 
-                postactivity.Createat = DateTime.Now;
+                postactivity.Createat = postactivity.Createat == default ? DateTime.Now : postactivity.Createat;
                 
                 _context.Postactivity.Add(postactivity);
                 return await _context.SaveChangesAsync() > 0;

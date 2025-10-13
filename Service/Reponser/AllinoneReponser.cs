@@ -137,7 +137,7 @@ namespace websitebenhvien.Service.Reponser
                         }
                     }
 
-                    data.Createat = DateTime.Now;
+                    data.Createat = (DateTime)news.Createat ;
                     data.Status = true;
                 }
 
@@ -149,6 +149,8 @@ namespace websitebenhvien.Service.Reponser
                 data.Descriptionshort = news.Descriptionshort;
                 data.Keyword = news.Keyword;
                 data.SchemaMakup = news.SchemaMakup;
+                data.Createat = (DateTime)news.Createat ; 
+
 
                 // Thêm hoặc cập nhật
                 if (news.Id_News == null)
@@ -716,6 +718,7 @@ namespace websitebenhvien.Service.Reponser
                         Alias_url = x.n.Alias_url,
                         Createat = x.n.Createat,
                         Status = x.n.Status,
+                
                     })
                     .ToListAsync();
 

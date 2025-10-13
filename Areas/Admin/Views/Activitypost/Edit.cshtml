@@ -50,7 +50,13 @@
                                     <textarea asp-for="Descriptionshort" class="form-control" rows="3" 
                                               placeholder="Nhập mô tả ngắn..."></textarea>
                                     <span asp-validation-for="Descriptionshort" class="text-danger"></span>
+                                </div>           
+                                <div class="form-group">
+                                    <label asp-for="Createat" class="control-label">Ngày đăng</label>
+                                    <input asp-for="Createat" class="form-control" type="date"  />
+                                    <span asp-validation-for="Createat" class="text-danger"></span>
                                 </div>
+
 
                                 <!-- Nội dung chính với Summernote -->
                                 <div class="form-group">
@@ -68,8 +74,7 @@
                                 </div>
 
                                 <!-- URL -->
-                           
-
+                 
                                 <!-- Alias URL -->
                                 <div class="form-group">
                                     <label asp-for="Alias_url" class="control-label">Alias URL</label>
@@ -110,11 +115,10 @@
                                         <div id="thumbnailContainer" class="position-relative d-inline-block">
                                             <!-- Current or new thumbnail will be displayed here -->
                                             <img id="thumbnailDisplay" 
-                                                 src="@(!string.IsNullOrEmpty(Model.Thumbnail) ? "/Resources/" + Model.Thumbnail : "#")" 
+                                                 src="@(!string.IsNullOrEmpty(Model.Thumbnail) ? "/Uploads/" + Model.Thumbnail : "#")" 
                                                  alt="Thumbnail" 
                                                  style="max-width: 200px; max-height: 200px; border-radius: 8px; @(!string.IsNullOrEmpty(Model.Thumbnail) ? "" : "display: none;")" 
                                                  class="img-thumbnail" />
-                                            
                                             <!-- No thumbnail placeholder -->
                                             <div id="noThumbnail" 
                                                  class="text-muted text-center p-3 border rounded" 
@@ -122,7 +126,6 @@
                                                 <i class="fa fa-image fa-3x mb-2"></i>
                                                 <p class="mb-0">Chưa có hình ảnh</p>
                                             </div>
-                                            
                                             <!-- Remove button -->
                                             <button type="button" 
                                                     id="btnRemoveThumbnail" 
@@ -132,7 +135,7 @@
                                                 <i class="fa fa-times"></i>
                                             </button>
                                         </div>
-                                        
+
                                         <div class="mt-2">
                                             <small class="text-muted">
                                                 <i class="fa fa-info-circle"></i> 
@@ -259,13 +262,6 @@
     <script>
         $(document).ready(function() {
             // Debug initial state
-            console.log('Page loaded, checking initial state');
-            console.log('Current thumbnail path:', $('#currentThumbnailPath').val());
-            console.log('Thumbnail display element:', $('#thumbnailDisplay').length);
-            console.log('No thumbnail element:', $('#noThumbnail').length);
-            console.log('Remove button exists:', $('#btnRemoveThumbnail').length);
-            
-            // Khởi tạo Summernote
          
             // Auto-generate alias URL from title (chỉ khi alias trống)
             $('#Title').on('input', function() {
@@ -279,11 +275,10 @@
 
             // Thumbnail file preview and management
             $('#thumbnailFile').on('change', function() {
-                console.log('File input changed');
                 var file = this.files[0];
                 
                 if (file) {
-                    console.log('File selected:', file.name, file.type, file.size);
+          
                     
                     // Validate file type
                     var allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
@@ -313,11 +308,11 @@
                         $('#noThumbnail').hide();
                         $('#btnRemoveThumbnail').show();
                         
-                        console.log('Image preview updated');
+             
                     };
                     
                     reader.onerror = function(e) {
-                        console.error('Error reading file:', e);
+                    
                         Swal.fire('Lỗi', 'Không thể đọc file hình ảnh', 'error');
                     };
                     
@@ -327,7 +322,7 @@
                     $('.custom-file-label').text(file.name);
                     console.log('File label updated to:', file.name);
                 } else {
-                    console.log('No file selected, resetting display');
+     
                     resetThumbnailDisplay();
                 }
             });
@@ -348,7 +343,7 @@
                     cancelButtonText: 'Hủy'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        console.log('User confirmed removal');
+                    
                         
                         // Clear file input
                         $('#thumbnailFile').val('');
@@ -362,14 +357,14 @@
                         $('#noThumbnail').show();
                         $('#btnRemoveThumbnail').hide();
                         
-                        console.log('Thumbnail removed successfully');
+                 
                         Swal.fire('Đã xóa!', 'Hình ảnh sẽ được xóa khi lưu.', 'success');
                     }
                 });
             });
             
             function resetThumbnailDisplay() {
-                console.log('Resetting thumbnail display');
+ 
                 var currentThumbnail = $('#currentThumbnailPath').val();
                 
                 console.log('Current thumbnail path:', currentThumbnail);
@@ -377,7 +372,7 @@
                 if (currentThumbnail && currentThumbnail !== '') {
                     console.log('Showing original thumbnail');
                     // Show original thumbnail
-                    $('#thumbnailDisplay').attr('src', '/Resources/' + currentThumbnail).show();
+                    $('#thumbnailDisplay').attr('src', '/Uploads/' + currentThumbnail).show();
                     $('#noThumbnail').hide();
                     $('#btnRemoveThumbnail').show();
                 } else {

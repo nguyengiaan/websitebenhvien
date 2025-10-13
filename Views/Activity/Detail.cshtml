@@ -1,650 +1,287 @@
 @model websitebenhvien.Models.EnitityVM.PostactivityVM
 @{
     ViewData["Title"] = Model.Title;
-    ViewData["Description"] = !string.IsNullOrEmpty(Model.Descriptionshort) ? Model.Descriptionshort : Model.Title;
-    ViewData["Keywords"] = !string.IsNullOrEmpty(Model.Keyword) ? Model.Keyword : Model.Title;
+    ViewData["Image"] = !string.IsNullOrEmpty(Model.Thumbnail) ? "/Uploads/" + Model.Thumbnail : "/Images/Logo-rm.png";
+    ViewData["description"] = Model.Descriptionshort;
+    ViewData["keywords"] = Model.Keyword;
     ViewData["Schema"] = Model.SchemaMakup;
-    ViewData["Image"] = !string.IsNullOrEmpty(Model.Thumbnail) ? $"/Uploads/{Model.Thumbnail}" : "/Images/Logo-rm.png";
 }
 
-<!-- Breadcrumb -->
-<section class="breadcrumb-section bg-light py-3">
-    <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0 bg-transparent">
+<div class="container mt-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-transparent px-0">
+            <li class="breadcrumb-item">
+                <a href="/" class="text-decoration-none">Trang chủ</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="@Url.Action("Index")" class="text-decoration-none">Hoạt động</a>
+            </li>
+            @if (!string.IsNullOrEmpty(Model.CategoryName))
+            {
                 <li class="breadcrumb-item">
-                    <a href="@Url.Action("Index", "Home")" class="text-decoration-none">
-                        <i class="fas fa-home me-1"></i>Trang chủ
-                    </a>
+                    <a href="#" onclick="history.back()" class="text-decoration-none">@Model.CategoryName</a>
                 </li>
-                <li class="breadcrumb-item">
-                    <a href="@Url.Action("Index")" class="text-decoration-none">Hoạt động</a>
-                </li>
-                @if (!string.IsNullOrEmpty(Model.CategoryName))
-                {
-                    <li class="breadcrumb-item">
-                        <a href="#" onclick="history.back()" class="text-decoration-none">@Model.CategoryName</a>
-                    </li>
-                }
-                <li class="breadcrumb-item active fw-bold" aria-current="page">Chi tiết</li>
-            </ol>
-        </nav>
-    </div>
-</section>
+            }
+            <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+        </ol>
+    </nav>
 
-<!-- Article Hero -->
-<section class="article-hero">
-    @if (!string.IsNullOrEmpty(Model.Thumbnail))
-    {
-        <div class="hero-image position-relative">
-            <img src="/Uploads/@Model.Thumbnail" class="w-100" alt="@Model.Title" 
-                 style="height: 400px; object-fit: cover;">
-            <div class="hero-overlay">
-                <div class="container h-100 d-flex align-items-end">
-                    <div class="hero-content text-white py-4">
-                        <div class="mb-2">
-                            <span class="badge bg-primary rounded-pill me-2">
-                                <i class="fas fa-calendar me-1"></i>
-                                @Model.Createat.ToString("dd/MM/yyyy")
-                            </span>
-                            @if (!string.IsNullOrEmpty(Model.CategoryName))
-                            {
-                                <span class="badge bg-secondary rounded-pill">
-                                    <i class="fas fa-tag me-1"></i>
-                                    @Model.CategoryName
-                                </span>
-                            }
-                        </div>
-                        <h1 class="display-6 fw-bold mb-3">@Model.Title</h1>
-                        @if (!string.IsNullOrEmpty(Model.Descriptionshort))
-                        {
-                            <p class="lead mb-0 opacity-90">@Model.Descriptionshort</p>
-                        }
-                    </div>
+    <div class="row mt-4">
+        <!-- Sidebar bên trái -->
+        <aside class="col-lg-3 mb-4">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-gradient text-white d-flex align-items-center" 
+                     style="background: linear-gradient(135deg, #007bff, #0056b3);">
+                    <i class="fas fa-th-large me-2 text-danger fw-bold"></i>
+                    <h6 class="mb-0 text-uppercase text-danger fw-bold">Danh mục hoạt động</h6>
+                </div>
+                <div class="list-group list-group-flush">
+                    @await Component.InvokeAsync("Danhmuchoatdong")
                 </div>
             </div>
-        </div>
-    }
-    else
-    {
-        <div class="hero-no-image bg-gradient-primary text-white py-5">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 text-center">
-                        <div class="mb-3">
-                            <span class="badge bg-white bg-opacity-20 rounded-pill me-2">
-                                <i class="fas fa-calendar me-1"></i>
-                                @Model.Createat.ToString("dd/MM/yyyy")
-                            </span>
-                            @if (!string.IsNullOrEmpty(Model.CategoryName))
-                            {
-                                <span class="badge bg-white bg-opacity-20 rounded-pill">
-                                    <i class="fas fa-tag me-1"></i>
-                                    @Model.CategoryName
-                                </span>
-                            }
-                        </div>
-                        <h1 class="display-5 fw-bold mb-4">@Model.Title</h1>
-                        @if (!string.IsNullOrEmpty(Model.Descriptionshort))
-                        {
-                            <p class="lead opacity-90">@Model.Descriptionshort</p>
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
-</section>
+        </aside>
 
-<div class="container py-5">
-    <div class="row">
-        <!-- Main Content -->
-        <div class="col-lg-8 col-xl-9">
-            <article class="article-content">
-                <!-- Article Meta -->
-                
+        <!-- Nội dung chính -->
+        <div class="col-lg-9">
+            <article class="post-content bg-white p-4 rounded-3 shadow-sm mb-4">
+                <h1 class="post-title fw-bold mb-3">@Model.Title</h1>
 
-                <!-- Article Body -->
-                <div class="article-body">
-                    <div class="content-prose">
-                        @Html.Raw(Model.Description)
-                    </div>
-
-                    @* <!-- Tags -->
-                    @if (!string.IsNullOrEmpty(Model.Keyword))
+                <div class="post-meta mb-4 d-flex align-items-center text-muted small">
+                    <i class="far fa-calendar-alt me-2 text-danger"></i>
+                    <span>@Model.Createat.ToString("dd/MM/yyyy")</span>
+                    @if (!string.IsNullOrEmpty(Model.CategoryName))
                     {
-                        <div class="article-tags mt-5 pt-4 border-top">
-                            <h6 class="text-muted mb-3 d-flex align-items-center">
-                                <i class="fas fa-tags me-2"></i>Từ khóa liên quan:
-                            </h6>
-                            <div class="d-flex flex-wrap gap-2">
-                                @{
-                                    var tags = Model.Keyword.Split(',', StringSplitOptions.RemoveEmptyEntries);
-                                }
-                                @foreach (var tag in tags)
-                                {
-                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2 tag-item">
-                                        #@tag.Trim()
-                                    </span>
-                                }
-                            </div>
-                        </div>
-                    } *@
+                        <span class="mx-2">•</span>
+                        <i class="fas fa-tag me-1 text-danger"></i>
+                        <span>@Model.CategoryName</span>
+                    }
+                </div>
 
-                    <!-- Share Section -->
-                    <div class="article-share mt-5 pt-4 border-top">
-                        <h6 class="text-muted mb-3">
-                            <i class="fas fa-share-alt me-2"></i>Chia sẻ bài viết:
-                        </h6>
-                        <div class="d-flex flex-wrap gap-3">
-                            <a href="https://www.facebook.com/sharer/sharer.php?u=@(Context.Request.Scheme)://@(Context.Request.Host)@(Context.Request.Path)" 
-                               target="_blank" class="btn btn-outline-primary share-btn">
-                                <i class="fab fa-facebook-f me-2"></i>Facebook
-                            </a>
-                            <a href="https://twitter.com/intent/tweet?text=@Model.Title&url=@(Context.Request.Scheme)://@(Context.Request.Host)@(Context.Request.Path)" 
-                               target="_blank" class="btn btn-outline-info share-btn">
-                                <i class="fab fa-twitter me-2"></i>Twitter
-                            </a>
-                       
-                        </div>
-                    </div>
+                <div class="post-body" id="post-body">
+                    @Html.Raw(Model.Description)
                 </div>
             </article>
 
-            <!-- Navigation -->
-            <div class="article-navigation mt-5 pt-4 border-top">
-                <div class="row g-3">
-                    <div class="col-6">
-                        <button class="btn btn-outline-secondary w-100" onclick="history.back()">
-                            <i class="fas fa-arrow-left me-2"></i>Quay lại
-                        </button>
-                    </div>
-                    <div class="col-6">
-                        <a href="@Url.Action("Index")" class="btn btn-primary w-100">
-                            Tất cả hoạt động<i class="fas fa-arrow-right ms-2"></i>
-                        </a>
-                    </div>
-                </div>
+            <!-- Nút chia sẻ -->
+            <div class="share-buttons mb-4 bg-white p-3 rounded-3 shadow-sm text-center">
+                <h6 class="mb-3">Chia sẻ bài viết</h6>
+                <a onclick="shareToFacebook()" class="btn btn-primary me-2">
+                    <i class="fab fa-facebook-f me-1"></i>Facebook
+                </a>
+                <a onclick="shareToTwitter()" class="btn btn-info me-2">
+                    <i class="fab fa-twitter me-1"></i>Twitter
+                </a>
+                <a href="#" class="btn btn-danger">
+                    <i class="fab fa-pinterest me-1"></i>Pinterest
+                </a>
             </div>
-        </div>
 
-        <!-- Sidebar -->
-        <div class="col-lg-4 col-xl-3">
-            <div class="sidebar-sticky">
-                <!-- Article Info Card -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-gradient-primary text-danger border-0">
-                        <h6 class="mb-0 fw-bold ">
-                            <i class="fas fa-info-circle me-2"></i>Thông tin bài viết
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="info-item d-flex justify-content-between align-items-center py-2 border-bottom">
-                            <span class="text-muted small">Ngày đăng:</span>
-                            <strong class="small">@Model.Createat.ToString("dd/MM/yyyy")</strong>
-                        </div>
-                        <div class="info-item d-flex justify-content-between align-items-center py-2 border-bottom">
-                            <span class="text-muted small">Thời gian:</span>
-                            <strong class="small">@Model.Createat.ToString("HH:mm")</strong>
-                        </div>
-                        @if (!string.IsNullOrEmpty(Model.CategoryName))
-                        {
-                            <div class="info-item d-flex justify-content-between align-items-center py-2 border-bottom">
-                                <span class="text-muted small">Danh mục:</span>
-                                <strong class="small">@Model.CategoryName</strong>
-                            </div>
-                        }
-                        <div class="info-item d-flex justify-content-between align-items-center py-2 border-bottom">
-                            <span class="text-muted small">Lượt xem:</span>
-                            <strong class="small text-success" id="viewCount">--</strong>
-                        </div>
-                        <div class="info-item d-flex justify-content-between align-items-center py-2">
-                            <span class="text-muted small">Trạng thái:</span>
-                            <span class="badge bg-success">Đã xuất bản</span>
-                        </div>
-                    </div>
-                </div>
-
-                @* <!-- Related Posts -->
-                <div class="card border-0 shadow-sm mb-4">
-                    <div class="card-header bg-gradient-info text-white border-0">
-                        <h6 class="mb-0 fw-bold">
-                            <i class="fas fa-newspaper me-2"></i>Bài viết liên quan
-                        </h6>
-                    </div>
-                    <div class="card-body p-0">
-                        <div id="relatedPosts">
-                            <!-- Loading state -->
-                            <div class="text-center py-4">
-                                <div class="spinner-border text-primary" role="status" style="width: 2rem; height: 2rem;">
-                                    <span class="visually-hidden">Đang tải...</span>
-                                </div>
-                                <p class="text-muted small mt-2 mb-0">Đang tìm bài viết liên quan...</p>
-                            </div>
-                        </div>
-                    </div>
-                </div> *@
-
-                @* <!-- Quick Contact -->
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-gradient-success text-white border-0">
-                        <h6 class="mb-0 fw-bold">
-                            <i class="fas fa-phone me-2"></i>Liên hệ nhanh
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <a href="tel:0123456789" class="btn btn-outline-success btn-sm">
-                                <i class="fas fa-phone me-2"></i>Hotline: 0123 456 789
-                            </a>
-                            <a href="mailto:info@benhvien.com" class="btn btn-outline-primary btn-sm">
-                                <i class="fas fa-envelope me-2"></i>Email tư vấn
-                            </a>
-                            <button class="btn btn-outline-info btn-sm" onclick="openMessenger()">
-                                <i class="fab fa-facebook-messenger me-2"></i>Chat Messenger
-                            </button>
-                        </div>
-                    </div>
-                </div> *@
-
-                <!-- Quick Actions -->
-                
-            </div>
+           
+           
         </div>
     </div>
 </div>
 
-<style>
-    .breadcrumb-section {
-        border-bottom: 1px solid #e9ecef;
-    }
-    
-    .hero-image {
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .hero-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-    }
-    
-    .hero-no-image {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    .article-meta {
-        border: 1px solid #e9ecef;
-    }
-    
-    .meta-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: rgba(0,123,255,0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .content-prose {
-        font-family: Georgia, serif;
-        font-size: 1.1rem;
-        line-height: 1.8;
-        color: #333;
-    }
-    
-    .content-prose h1, .content-prose h2, .content-prose h3, 
-    .content-prose h4, .content-prose h5, .content-prose h6 {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        font-weight: 600;
-        margin: 2rem 0 1rem;
-        color: #2c3e50;
-    }
-    
-    .content-prose p {
-        margin-bottom: 1.5rem;
-        text-align: justify;
-    }
-    
-    .content-prose img {
-        max-width: 100%;
-        height: auto;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        margin: 1.5rem 0;
-    }
-    
-    .content-prose blockquote {
-        border-left: 4px solid #007bff;
-        background: #f8f9fa;
-        padding: 1rem 1.5rem;
-        margin: 1.5rem 0;
-        border-radius: 0 8px 8px 0;
-        font-style: italic;
-    }
-    
-    .share-btn {
-        transition: all 0.3s ease;
-        border-radius: 25px;
-        padding: 0.5rem 1rem;
-    }
-    
-    .share-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    .tag-item {
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .tag-item:hover {
-        background: var(--bs-primary) !important;
-        color: white !important;
-        border-color: var(--bs-primary) !important;
-        transform: translateY(-1px);
-    }
-    
-    .sidebar-sticky {
-        position: sticky;
-        top: 20px;
-        z-index: 100;
-    }
-    
-    .info-item:last-child {
-        border-bottom: none !important;
-    }
-    
-    .related-post-item {
-        transition: all 0.3s ease;
-        border-radius: 8px;
-        padding: 0.75rem;
-    }
-    
-    .related-post-item:hover {
-        background-color: #f8f9fa;
-        transform: translateX(5px);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .related-post-item img {
-        transition: transform 0.3s ease;
-    }
-
-    .related-post-item:hover img {
-        transform: scale(1.05);
-    }
-
-    .quick-actions {
-        transition: opacity 0.3s ease;
-    }
-
-    .quick-actions .btn {
-        backdrop-filter: blur(10px);
-        background: rgba(255,255,255,0.9);
-        border: 1px solid rgba(0,0,0,0.1);
-    }
-
-    .reading-progress {
-        background: rgba(0,123,255,0.1);
-        backdrop-filter: blur(10px);
-    }
-    
-    @@media (max-width: 768px) {
-        .hero-content {
-            padding: 2rem 0 !important;
+@section Styles
+{
+    <style>
+        .hover-bg:hover {
+            background-color: #f8f9fa;
+            color: #007bff !important;
         }
-        
-        .hero-content h1 {
-            font-size: 1.5rem !important;
+        .post-body img, 
+        .post-body table, 
+        .post-body input[type="image"] {
+            max-width: 100%;
+            height: auto;
         }
-        
-        .content-prose {
-            font-size: 1rem;
+        .post-body table {
+            display: block;
+            overflow-x: auto;
         }
-        
-        .sidebar-sticky {
-            position: relative;
-            top: auto;
-        }
-        
-        .article-meta .row {
-            text-align: center;
-        }
-        
-        .share-btn {
-            width: 100%;
-            margin-bottom: 0.5rem;
-        }
+    </style>
+}
 
-        .quick-actions {
-            right: 10px !important;
-            transform: translateY(-50%) scale(0.9) !important;
-        }
-
-        .related-post-item {
-            padding: 0.5rem;
-        }
-
-        .related-post-item img {
-            width: 50px !important;
-            height: 38px !important;
-        }
-    }
-
-    @@media (max-width: 576px) {
-        .hero-content h1 {
-            font-size: 1.25rem !important;
-        }
-
-        .hero-content .lead {
-            font-size: 0.9rem;
-        }
-
-        .quick-actions {
-            display: none; /* Hide on very small screens */
-        }
-    }
-    
-    @@media print {
-        .sidebar-sticky,
-        .article-navigation,
-        .article-share,
-        .breadcrumb-section,
-        .quick-actions {
-            display: none !important;
-        }
-        
-        .article-content {
-            max-width: 100% !important;
-        }
-
-        .content-prose {
-            color: #000 !important;
-            font-size: 12pt !important;
-            line-height: 1.5 !important;
-        }
-    }
-</style>
-
-@section Scripts {
+@section Scripts{
     <script>
-        $(document).ready(function() {
-            loadRelatedPosts();
-            updateViewCount();
+        $(document).ready(function(){
+            GetActivityByCategory();
+            GetActivityById();
         });
 
-        // Copy to clipboard function
-        function copyToClipboard() {
-            const url = window.location.href;
-            navigator.clipboard.writeText(url).then(function() {
-                showToast('Đã sao chép liên kết vào clipboard!', 'success');
-            }, function(err) {
-                console.error('Không thể sao chép: ', err);
-                showToast('Không thể sao chép liên kết', 'error');
+        function shareToFacebook() {
+            var currentUrl = window.location.href;
+            var facebookShareUrl = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(currentUrl);
+            window.open(facebookShareUrl, '_blank', 'width=600,height=400');
+        }
+
+        function shareToTwitter() {
+            var currentUrl = window.location.href;
+            var twitterShareUrl = 'https://twitter.com/intent/tweet?url=' + encodeURIComponent(currentUrl) + '&text=' + encodeURIComponent('@Model.Title');
+            window.open(twitterShareUrl, '_blank', 'width=600,height=400');
+        }
+
+        function GetActivityById() {
+            $('#post-body').html('@Html.Raw(Model.Description)').css({
+                'font-size': '14px',
+                'padding': '10px', 
+                'word-wrap': 'break-word',
+                'max-width': '100%'
+            }).find('img, table,input[type="image"]').css({
+                'max-width': '100%',
+                'height': 'auto',
+                'object-fit': 'contain'
+            });
+
+            $('#post-body table').css({
+                'display': 'block',
+                'overflow-x': 'auto',
+                'width': '100%'
+            }).find('td').css({
+                'min-width': '120px',
+                'white-space': 'nowrap'
             });
         }
 
-        // Print article
-        function printArticle() {
-            window.print();
-        }
-
-        // Scroll to top
-        function scrollToTop() {
-            $('html, body').animate({
-                scrollTop: 0
-            }, 1000);
-        }
-
-        // Show toast notification
-        function showToast(message, type = 'info') {
-            const toast = $(`
-                <div class="toast-notification position-fixed top-0 end-0 m-3 alert alert-${type === 'success' ? 'success' : 'info'} alert-dismissible" 
-                     style="z-index: 9999;">
-                    ${message}
-                    <button type="button" class="btn-close" onclick="$(this).parent().remove()"></button>
-                </div>
-            `);
-            
-            $('body').append(toast);
-            
-            setTimeout(() => {
-                toast.fadeOut(() => toast.remove());
-            }, 3000);
-        }
-
-        // Load related posts
-        function loadRelatedPosts() {
-            const postId = @Model.Id_Postactivity;
+        function GetActivityByCategory(){
+            var currentUrl = window.location.pathname;
+            var segments = currentUrl.split('/');
+            var alias_url = "/hoat-dong/chi-tiet/" + segments[segments.length - 1];
             
             $.ajax({
-                url: `/api/activity/related/${postId}`,
-                method: 'GET',
-                success: function(data) {
-                    if (data && data.length > 0) {
-                        let html = '<div class="list-group list-group-flush">';
+                url: "/Activity/GetActivityByCategory", 
+                type: "POST",
+                data: { alias_url: alias_url },
+                success: function(response){
+                   if(response.status){
+                        var html = '<div id="relatedActivityCarousel" class="carousel slide" data-bs-ride="carousel">';
+                        html += '<div class="carousel-inner">';
                         
-                        data.forEach(function(post) {
-                            const thumbnail = post.thumbnail 
-                                ? `/Uploads/${post.thumbnail}` 
-                                : '/images/default-thumbnail.jpg';
+                        console.log(response.data);
+                        
+                        // Group activities into sets of 3
+                        for(var i = 0; i < response.data.length; i += 3) {
+                            var isActive = i === 0 ? 'active' : '';
+                            html += `<div class="carousel-item ${isActive}"><div class="row">`;
                             
-                            const shortDesc = post.shortDescription 
-                                ? (post.shortDescription.length > 80 
-                                   ? post.shortDescription.substring(0, 80) + '...' 
-                                   : post.shortDescription)
-                                : '';
-                            
-                            html += `
-                                <a href="/hoat-dong/chi-tiet/${post.alias}" 
-                                   class="list-group-item list-group-item-action border-0 related-post-item text-decoration-none">
-                                    <div class="d-flex align-items-start">
-                                        <div class="me-3 flex-shrink-0">
-                                            <img src="${thumbnail}" 
-                                                 class="rounded" 
-                                                 style="width: 60px; height: 45px; object-fit: cover;" 
-                                                 alt="${post.title}"
-                                                 onerror="this.src='/images/default-thumbnail.jpg'">
-                                        </div>
-                                        <div class="flex-grow-1 min-width-0">
-                                            <h6 class="mb-1 small fw-bold text-dark" style="line-height: 1.3;">
-                                                ${post.title}
-                                            </h6>
-                                            ${shortDesc ? `<p class="mb-1 text-muted" style="font-size: 0.75rem;">${shortDesc}</p>` : ''}
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <small class="text-primary">${post.createAt}</small>
-                                                ${post.categoryName ? `<small class="badge bg-light text-dark">${post.categoryName}</small>` : ''}
-                                            </div>
+                            // Add up to 3 activities per slide
+                            for(var j = i; j < Math.min(i + 3, response.data.length); j++) {
+                                var item = response.data[j];
+                                var activityDate = new Date(item.createat).toLocaleDateString();
+                                var today = new Date().toLocaleDateString();
+                                var isNew = activityDate === today;
+                                
+                                html += `
+                                    <div class="col-md-4">
+                                        <div class="featured-post-item mb-4 bg-white rounded-3 shadow-hover" 
+                                             style="transition: all 0.3s ease;">
+                                            <a href="${item.alias_url}" class="text-decoration-none">
+                                                <div class="position-relative">
+                                                    <img src="/Uploads/${item.thumbnail}" 
+                                                         class="img-fluid w-100 rounded-top" 
+                                                         alt="${item.title}"
+                                                         style="height: 200px; object-fit: cover;">
+                                                    ${isNew ? '<span class="badge bg-danger position-absolute top-0 end-0 m-2">Mới</span>' : ''}
+                                                </div>
+                                                <div class="p-3" style="background: linear-gradient(135deg, #f8f9fa, #e9ecef);">
+                                                    <h6 class="text-dark mb-2 fw-bold" 
+                                                        style="display: -webkit-box;
+                                                               -webkit-line-clamp: 2;
+                                                               -webkit-box-orient: vertical;
+                                                               overflow: hidden;
+                                                               line-height: 1.5;
+                                                               height: 3em;
+                                                               color: #2c3e50;">
+                                                        ${item.title}
+                                                    </h6>
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="far fa-calendar-alt text-danger me-2"></i>
+                                                        <span class="text-muted small" style="color: #6c757d !important;">${item.createat.split('T')[0]}</span>
+                                                    </div>
+                                                </div>
+                                            </a>
                                         </div>
                                     </div>
-                                </a>
-                            `;
-                        });
+                                `;
+                            }
+                            
+                            html += '</div></div>';
+                        }
                         
                         html += '</div>';
-                        $('#relatedPosts').html(html);
-                    } else {
-                        $('#relatedPosts').html(`
-                            <div class="text-center py-4">
-                                <i class="fas fa-newspaper text-muted" style="font-size: 2rem;"></i>
-                                <p class="text-muted small mt-2 mb-0">Chưa có bài viết liên quan</p>
-                            </div>
-                        `);
-                    }
-                },
-                error: function() {
-                    $('#relatedPosts').html(`
-                        <div class="text-center py-4">
-                            <i class="fas fa-exclamation-triangle text-warning" style="font-size: 2rem;"></i>
-                            <p class="text-muted small mt-2 mb-0">Không thể tải bài viết liên quan</p>
-                            <button class="btn btn-sm btn-outline-primary mt-2" onclick="loadRelatedPosts()">
-                                <i class="fas fa-redo me-1"></i>Thử lại
+                        
+                        // Add carousel controls
+                        html += `
+                            <button class="carousel-control-prev" type="button" data-bs-target="#relatedActivityCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
                             </button>
-                        </div>
-                    `);
+                            <button class="carousel-control-next" type="button" data-bs-target="#relatedActivityCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        `;
+                        
+                        html += '</div>';
+
+                        $('#activity-category-news').html(html);
+
+                        // Add hover effects via CSS
+                        $("<style>")
+                            .text(`
+                                .shadow-hover {
+                                    border: 1px solid #e0e0e0;
+                                    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+                                }
+                                .shadow-hover:hover {
+                                    transform: translateY(-5px);
+                                    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+                                    border-color: #007bff;
+                                }
+                                .featured-post-item:hover h6 {
+                                    color: #007bff !important;
+                                    text-shadow: 0 0 1px rgba(0,123,255,0.1);
+                                }
+                                .featured-post-item img {
+                                    transition: all 0.4s ease;
+                                }
+                                .featured-post-item:hover img {
+                                    transform: scale(1.05);
+                                    filter: brightness(1.05);
+                                }
+                                .badge {
+                                    background: linear-gradient(45deg, #dc3545, #ff4d5a) !important;
+                                    box-shadow: 0 2px 4px rgba(220,53,69,0.3);
+                                }
+                                .featured-post-item {
+                                    border-radius: 10px;
+                                    overflow: hidden;
+                                }
+                                .carousel-control-prev,
+                                .carousel-control-next {
+                                    width: 40px;
+                                    height: 40px;
+                                    top: 50%;
+                                    transform: translateY(-50%);
+                                    background: rgba(0,0,0,0.5);
+                                    border-radius: 50%;
+                                    margin: 0 10px;
+                                }
+                                .carousel-control-prev:hover,
+                                .carousel-control-next:hover {
+                                    background: rgba(0,0,0,0.7);
+                                }
+                                .carousel-control-prev-icon,
+                                .carousel-control-next-icon {
+                                    width: 20px;
+                                    height: 20px;
+                                }
+                            `)
+                            .appendTo("head");
+                   }
                 }
             });
         }
-
-        function updateViewCount() {
-            // Simulate view count update
-            const count = Math.floor(Math.random() * 1000) + 100;
-            $('#viewCount').text(count.toLocaleString());
-        }
-
-        // Open messenger chat
-        function openMessenger() {
-            // Replace with actual Facebook Page ID
-            window.open('https://m.me/yourpageid', '_blank');
-        }
-
-        // Enhanced share functions
-        function shareOnFacebook() {
-            const url = encodeURIComponent(window.location.href);
-            const title = encodeURIComponent('@Model.Title');
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&t=${title}`, '_blank', 'width=600,height=400');
-        }
-
-        function shareOnTwitter() {
-            const url = encodeURIComponent(window.location.href);
-            const title = encodeURIComponent('@Model.Title');
-            window.open(`https://twitter.com/intent/tweet?text=${title}&url=${url}`, '_blank', 'width=600,height=400');
-        }
-
-        // Smooth scroll for anchor links
-        $('a[href^="#"]').on('click', function(event) {
-            var target = $($(this).attr('href'));
-            if(target.length) {
-                event.preventDefault();
-                $('html, body').animate({
-                    scrollTop: target.offset().top - 80
-                }, 1000);
-            }
-        });
-
-        // Reading progress bar
-        $(window).scroll(function() {
-            const article = $('.article-content');
-            if (article.length) {
-                const articleTop = article.offset().top;
-                const articleHeight = article.outerHeight();
-                const windowTop = $(window).scrollTop();
-                const windowHeight = $(window).height();
-                
-                const progress = Math.min(100, Math.max(0, 
-                    ((windowTop + windowHeight - articleTop) / articleHeight) * 100
-                ));
-                
-                // Update progress bar if exists
-                $('.reading-progress .progress-bar').css('width', progress + '%');
-            }
-        });
     </script>
 }

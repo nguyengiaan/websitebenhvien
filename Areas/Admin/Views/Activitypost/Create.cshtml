@@ -51,6 +51,11 @@
 
 
                                 </div>
+                                <div class="form-group">
+                                    <label asp-for="Createat" class="control-label">Ngày đăng</label>
+                                    <input asp-for="Createat" class="form-control" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                    <span asp-validation-for="Createat" class="text-danger"></span>
+                                </div>
 
                                 <!-- Nội dung chính với Summernote -->
                                 <div class="form-group">
@@ -173,8 +178,6 @@
 <partial name="_Summernote" model="summenote" />
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    
-    
     <script>
         $(document).ready(function() {
             // Khởi tạo Summernote

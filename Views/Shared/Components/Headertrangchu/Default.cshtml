@@ -51,7 +51,7 @@
              </button>
               </form>
           </div>
-          <div class="col-xl-4 col-md-3 col-8">
+          <div class="col-xl-4 col-md-3 col-8 shadow-sm rounded" >
             @foreach (var a in Model.headers)
             {
               <div class="d-flex align-items-center justify-content-center bg-white rounded-2 shadow-lg-sm px-1 py-1 gap-2 mx-auto" id="hotline">
@@ -82,7 +82,7 @@
             </div>
 
 </div>
-<nav class="navbar navbar-expand-lg navbar-light bg-light " style="background-color: #fcfeff !important;">
+<nav class="navbar navbar-expand-lg navbar-light bg-light  " style="background-color: #fcfeff !important;">
   <div class="container-fluid">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -96,13 +96,13 @@
                       var hasSubMenu = menu.Menu?.Any() == true;
                       @if (!hasSubMenu)
                       {
-                        <li class="nav-item">
+                        <li class="nav-item shadow-sm rounded nav-item-ft"  >
                           <a class="nav-link" href="@menu.Link_menu">@menu.Title_menu</a>
                         </li>
                       }
                       else
                       {
-                        <li class="nav-item dropdown">
+                        <li class="nav-item dropdown shadow-sm rounded nav-item-ft">
                           <a class="nav-link dropdown-toggle" href="@menu.Link_menu" id="menu@(menu.Id_menu)" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             @menu.Title_menu
                           </a>
@@ -140,5 +140,35 @@
    
   }
 
+  /* Chỉ áp dụng hover cho nav-item không có dropdown */
+  .nav-item-ft:not(.dropdown) .nav-link:hover{
+  background: linear-gradient(135deg, #06b6d4, #10b981);
+ !important;
+    border-radius: 5px !important;
+    transition: 0.3s !important;
+    color: black !important;
+    
+  }
+
+  /* Hoặc nếu muốn hover cho cả nav-item nhưng không ảnh hưởng dropdown */
+  .nav-item-ft:not(.dropdown):hover .nav-link{
+    background: linear-gradient(135deg,#edf1f0 ,#06b6d4);
+ !important;
+    border-radius: 5px !important;
+    transition: 0.3s !important;
+    color: white !important;
+  }
+
+  /* Style riêng cho dropdown toggle */
+  .nav-item-ft.dropdown .nav-link:hover{
+      background: linear-gradient(135deg,#edf1f0 ,#06b6d4);
+ !important;
+    border-radius: 5px !important;
+    transition: 0.3s !important;
+    color: white !important;
+  }
+  .nav-item .nav-link :hover{
+     color:black !important;
+  }
  
   </style>
