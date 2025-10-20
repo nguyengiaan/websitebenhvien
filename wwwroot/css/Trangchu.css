@@ -818,3 +818,10 @@ h1 h2 h3 h4 h5 h6{
 #goog-gt-tt{
   display: none !important;
 }
+.text-zinc-400 {
+  display: none !important;
+}
+
+p[data-sentry-component="ChatbotChatbaseBranding"] a {
+  display: none !important;
+}

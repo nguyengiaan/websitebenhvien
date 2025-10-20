@@ -23,6 +23,8 @@ namespace websitebenhvien.Helper
                 .ForMember(dest => dest.formFile, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(dest => dest.TitlemenuList, opt => opt.Ignore());
+
+            CreateMap<News, NewsVM>().ReverseMap();
         }
     }
 }

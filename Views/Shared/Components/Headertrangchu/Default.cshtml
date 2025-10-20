@@ -1,174 +1,394 @@
 ﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+    Tệp View cho phần Header của trang web.
+    Đã được cấu trúc lại hoàn toàn để đáp ứng (responsive) trên mọi thiết bị.
+    - Tự động chuyển đổi giao diện giữa desktop và mobile.
+    - Menu mobile được thiết kế theo dạng trượt toàn màn hình, thân thiện với người dùng.
+    - Tối ưu hóa hiển thị cho iPad và các dòng điện thoại phổ biến.
 *@
-@{
-}
 @model websitebenhvien.Models.EnitityVM.Header_trangchu
- <div class="container-fluid shadow-sm "  id="header_trangchu" >
-        <div class="w-100 d-flex justify-content-xxl-end justify-content-xl-center justify-content-md-start border-bottom border-2 border-secondary mb-2" >
-                <ul class="menu-custom  d-flex flex-row list-unstyled m-0 p-0 w-50 " >
-                   @if (Model.headers != null)
-                   {
-                      @foreach (var item in Model.headers)
-                      {
-                         @foreach (var a in item.titleheader)
-                        {
-                            <li class="nav-item pl-2" style="padding-right: 10px;">
-                             <a class="nav-link d-none d-md-block text-break" href="@a.link"><i class="bi bi-question-circle-fill p-1"></i>@a.title</a>
-                            </li>
-                        }
-                      }
-                   }
-                     <li class="nav-item dropdown"></li>
-                        <a class="nav-link dropdown-toggle clo-text  " href="#"  role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-translate pr-5"></i>Ngôn ngữ
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="languageDropdown"  >
-                            <li onclick="changeLanguage('vi')" ><a class="dropdown-item" href="#">Tiếng Việt</a></li>
-                            <li onclick="changeLanguage('en')"><a class="dropdown-item" href="#">English</a></li>
-                            <li onclick="changeLanguage('zh-CN')"><a class="dropdown-item" href="#">China</a></li>
-                            <li onclick="changeLanguage('ko')"><a class="dropdown-item" href="#">Korean</a></li>
-                             <li onclick="changeLanguage('ja')"><a class="dropdown-item" href="#">Japan</a></li>
-                        </ul>
-                    </li>
-                </ul> 
-        </div>
-        <div class="d-flex flex-column container-xl justify-content-center align-items-center" >
-            <div class="row container-fluid d-flex align-items-center ">
-                <div class="col-xl-2 col-lg-2 col-4" >
-                @foreach (var a in @Model.headers)
-                { 
-                    <a href="/#">
-                        <img src="/Uploads/@a.logo" alt="Logo" class="img-fluid">
-                    </a>
-                }
-                </div>
-          <div class="col-xl-5 col-lg-4 d-none d-lg-block d-hidden" id="search-bar" style=" visibility: hidden;">
-                <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Tìm kiếm..." aria-label="Search">
-                <button id="search" class="btn btn-outline-bg-dark bg-danger" aria-label="Tìm kiếm">
-                <i class="bi bi-search text-white"></i>
-             </button>
-              </form>
-          </div>
-          <div class="col-xl-4 col-md-3 col-8 shadow-sm rounded" >
-            @foreach (var a in Model.headers)
-            {
-              <div class="d-flex align-items-center justify-content-center bg-white rounded-2 shadow-lg-sm px-1 py-1 gap-2 mx-auto" id="hotline">
-                <!-- Icon + label -->
-                <div class="d-flex align-items-center gap-2">
-                  <span style="color: #ec0707; display: flex; align-items: center; font-size: 1.3rem;">
-                    <i class="bi bi-bus-front-fill" "></i>
-                  </span>
-                  <span class="fs-lg-3 fw-bold  fs-md-3 fs-sm-4" style="color: #212529;">CẤP CỨU 24/7:</span>
-                </div>
-                <!-- Phone -->
-                <div class="d-flex align-items-center gap-1">
-                  <span style="color: #ec0707; font-size: 1.3rem;">
-                    <i class="bi bi-telephone-fill"></i>
-                  </span>
-                  <span class="fw-bold  fs-lg-4 fs-md-3 fs-sm-4" style="color: hsl(199, 65%, 51%); ">@a.telephone</span>
-                </div>
-                <!-- 115 -->
-                <div class="d-flex align-items-center gap-1">
-                  <span style="color: #ec0707; font-size: 1.3rem;">
-                    <i class="bi bi-telephone-fill"></i>
-                  </span> 
-                  <span class="fw-bold fs-lg-4 fs-md-3 fs-sm-4" style="color: hsl(199, 65%, 51%); ">115</span>
-                </div>
-              </div>
-            }
-              </div>
-            </div>
 
-</div>
-<nav class="navbar navbar-expand-lg navbar-light bg-light  " style="background-color: #fcfeff !important;">
-  <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse " id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0 w-100 d-flex  justify-content-xl-center justify-content-lg-center  justify-content-md-center ">
-            @if (Model.menus != null)
+@{
+    // Lấy thông tin header đầu tiên từ danh sách để tránh lặp lại.
+    // Dùng FirstOrDefault() để tránh lỗi nếu Model.headers là null hoặc rỗng.
+    var headerInfo = Model.headers?.FirstOrDefault();
+}
+
+<header class="sticky-top shadow-sm">
+    <!-- TOP BAR - Chỉ hiển thị trên Desktop -->
+    <div class="container-fluid border-bottom d-none d-lg-block" id="top-bar">
+        <div class="container d-flex justify-content-end ">
+            <div class="d-flex align-items-center mx-2">
+                @if (headerInfo != null)
+                {
+                    <div class="d-flex align-items-center me-3" id="contact">
+                        <i class="bi bi-bus-front-fill fs-5 text-danger me-2"></i>
+                        <span class="fw-bold text-dark">CẤP CỨU 24/7:</span>
+                    </div>
+                    <div class="d-flex align-items-center me-3">
+                        <i class="bi bi-telephone-fill text-danger me-2"></i>
+                        <span class="fw-bold" style="color: #00aef0;">@headerInfo.telephone</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-telephone-fill text-danger me-2"></i>
+                        <span class="fw-bold" style="color: #00aef0;">115</span>
+                    </div>
+                }
+            </div>
+            <!-- Language Dropdown -->
+            <div class="dropdown d-flex mt-1 ">
+                <a class="nav-link dropdown-toggle " href="#" id="languageDropdownDesktop" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-translate text-danger me-2"></i>
+                    <span class="fw-bold" style="color: #00aef0;">Ngôn ngữ</span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="languageDropdownDesktop">
+                    <li><a class="dropdown-item d-flex align-items-center" href="#" data-language="vi"><img src="https://flagcdn.com/w20/vn.png" srcset="https://flagcdn.com/w40/vn.png 2x" width="20" alt="Tiếng Việt" class="me-2"> Tiếng Việt</a></li>
+                    <li><a class="dropdown-item d-flex align-items-center" href="#" data-language="en"><img src="https://flagcdn.com/w20/gb.png" srcset="https://flagcdn.com/w40/gb.png 2x" width="20" alt="English" class="me-2"> English</a></li>
+                    <li><a class="dropdown-item d-flex align-items-center" href="#" data-language="zh-CN"><img src="https://flagcdn.com/w20/cn.png" srcset="https://flagcdn.com/w40/cn.png 2x" width="20" alt="China" class="me-2"> China</a></li>
+                    <li><a class="dropdown-item d-flex align-items-center" href="#" data-language="ko"><img src="https://flagcdn.com/w20/kr.png" srcset="https://flagcdn.com/w40/kr.png 2x" width="20" alt="Korean" class="me-2"> Korean</a></li>
+                    <li><a class="dropdown-item d-flex align-items-center" href="#" data-language="ja"><img src="https://flagcdn.com/w20/jp.png" srcset="https://flagcdn.com/w40/jp.png 2x" width="20" alt="Japan" class="me-2"> Japan</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN HEADER -->
+    <div class="container-fluid" id="main-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Logo -->
+                <div class="col-6 col-lg-2 py-2">
+                    @if (headerInfo != null)
+                    {
+                        <a href="/#">
+                            <img src="/Uploads/@headerInfo.logo" alt="Logo" class="img-fluid" style="max-height: 50px;">
+                        </a>
+                    }
+                </div>
+
+                <!-- Desktop Content -->
+                <div class="col-lg-10 d-none d-lg-flex align-items-center justify-content-end">
+                    <div class="me-4" style="flex-basis: 300px;">
+                       
+                    </div>
+                    <div class="d-flex align-items-center me-4">
+                         <a href="#" class="text-decoration-none d-flex align-items-center">
+                             <i class="bi bi-clipboard2-pulse text-warning fs-2 me-2"></i>
+                             <span class="fw-bold" style="font-size: 14px; color:#00aef0;">ĐĂNG KÝ<br>KHÁM BỆNH</span>
+                         </a>
+                    </div>
+                    <div class="d-flex align-items-center me-4">
+                         <a href="#" class="text-decoration-none d-flex align-items-center">
+                            <i class="bi bi-file-earmark-text text-warning fs-2 me-2"></i>
+                            <span class="fw-bold" style="font-size: 14px; color:#00aef0;">DOANH NGHIỆP<br>ĐĂNG KÝ</span>
+                        </a>
+                    </div>
+                    <div>
+                        <img src="/images/bcmgr.png" alt="Becamex Group" style="height: 40px;">
+                    </div>
+                </div>
+
+                <!-- Mobile Controls -->
+                <div class="col-6 d-flex d-lg-none align-items-center justify-content-end">
+                    <div class="dropdown me-2">
+                        <button class="btn btn-sm dropdown-toggle p-0 border-0 bg-transparent" type="button" id="languageDropdownMobile" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Ngôn ngữ">
+                            <img src="https://flagcdn.com/w20/vn.png" width="20" alt="Ngôn ngữ" />
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdownMobile">
+                            <li><a class="dropdown-item d-flex align-items-center" href="#" data-language="vi"><img src="https://flagcdn.com/w20/vn.png" width="20" class="me-2" alt="Tiếng Việt"> Tiếng Việt</a></li>
+                            <li><a class="dropdown-item d-flex align-items-center" href="#" data-language="en"><img src="https://flagcdn.com/w20/gb.png" width="20" class="me-2" alt="English"> English</a></li>
+                            <li><a class="dropdown-item d-flex align-items-center" href="#" data-language="zh-CN"><img src="https://flagcdn.com/w20/cn.png" width="20" class="me-2" alt="China"> China</a></li>
+                            <li><a class="dropdown-item d-flex align-items-center" href="#" data-language="ko"><img src="https://flagcdn.com/w20/kr.png" width="20" class="me-2" alt="Korean"> Korean</a></li>
+                            <li><a class="dropdown-item d-flex align-items-center" href="#" data-language="ja"><img src="https://flagcdn.com/w20/jp.png" width="20" class="me-2" alt="Japan"> Japan</a></li>
+                        </ul>
+                    </div>
+                    <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#mobileSearch" aria-expanded="false" aria-controls="mobileSearch"><i class="bi bi-search fs-4"></i></button>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="bi bi-list fs-1" style="color:#00aef0;"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- DESKTOP NAVIGATION -->
+    <nav class="navbar navbar-expand-lg d-sm-none shadow-sm d-none d-lg-block d-flex justify-content-center align-items-center" id="desktop-nav">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav w-100 d-flex justify-content-center align-items-center">
+                    @if (Model.menus != null)
+                    {
+                        @foreach (var menu in Model.menus.Where(m => m.Status == true).OrderBy(m => m.Order_menu))
+                        {
+                            var hasSubMenu = menu.Menu?.Any() == true;
+                            if (!hasSubMenu)
+                            {
+                                <li class="nav-item nav-item-ft">
+                                    <a class="nav-link" href="@menu.Link_menu"><span class="title_menu">@menu.Title_menu</span></a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item dropdown nav-item-ft">
+                                    <a class="nav-link dropdown-toggle" href="@menu.Link_menu" id="menu@(menu.Id_menu)" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="title_menu">@menu.Title_menu</span>
+                                    </a>
+                                    <ul class="dropdown-menu" aria-labelledby="menu@(menu.Id_menu)">
+                                        @foreach (var submenu in menu.Menu.OrderBy(sm => sm.Order_menu))
+                                        {
+                                            <li>
+                                                <a class="dropdown-item" href="@submenu.Link_MenuChild" title="@submenu.Title_MenuChild">
+                                                    @submenu.Title_MenuChild
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="border-sm d-none d-lg-block" style="background-color: #00aef0; height: 4px;"></div>
+</header>
+
+<!-- MOBILE SEARCH BAR -->
+
+
+<!-- MOBILE MENU (Fullscreen Collapse) -->
+<div class="collapse navbar-collapse" id="mobileMenu">
+    <div class="mobile-menu-header d-flex d-lg-none align-items-center justify-content-between p-3 border-bottom">
+        @if (headerInfo != null)
+        {
+            <a href="/#">
+                <img src="/Uploads/@headerInfo.logo" alt="Logo" class="img-fluid" style="max-height: 40px;">
+            </a>
+        }
+        <div>
+             <div class="dropdown d-inline me-2">
+                 <button class="btn btn-sm dropdown-toggle p-0 border-0 bg-transparent" type="button" id="languageDropdownMobileHeader" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Ngôn ngữ">
+                     <img src="https://flagcdn.com/w20/vn.png" width="20" alt="Ngôn ngữ" />
+                 </button>
+                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdownMobileHeader">
+                     <li><a class="dropdown-item d-flex align-items-center" href="#" data-language="vi"><img src="https://flagcdn.com/w20/vn.png" width="20" class="me-2" alt="Tiếng Việt"> Tiếng Việt</a></li>
+                     <li><a class="dropdown-item d-flex align-items-center" href="#" data-language="en"><img src="https://flagcdn.com/w20/gb.png" width="20" class="me-2" alt="English"> English</a></li>
+                     <li><a class="dropdown-item d-flex align-items-center" href="#" data-language="zh-CN"><img src="https://flagcdn.com/w20/cn.png" width="20" class="me-2" alt="China"> China</a></li>
+                     <li><a class="dropdown-item d-flex align-items-center" href="#" data-language="ko"><img src="https://flagcdn.com/w20/kr.png" width="20" class="me-2" alt="Korean"> Korean</a></li>
+                     <li><a class="dropdown-item d-flex align-items-center" href="#" data-language="ja"><img src="https://flagcdn.com/w20/jp.png" width="20" class="me-2" alt="Japan"> Japan</a></li>
+                 </ul>
+             </div>
+             <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#mobileSearch" aria-expanded="false" aria-controls="mobileSearch"><i class="bi bi-search fs-4"></i></button>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu" aria-controls="mobileMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="bi bi-x-lg fs-2" style="color:#00aef0;"></i>
+            </button>
+        </div>
+    </div>
+    
+    <div class="mobile-menu-content">
+        <!-- Mobile CTAs -->
+        <div class="d-lg-none p-3">
+             <a href="#" class="btn btn-cta w-100 mb-2 d-flex align-items-center justify-content-center py-2">
+                 <i class="bi bi-calendar-check fs-4 me-2"></i>
+                 <span class="fw-bold">ĐĂNG KÝ KHÁM BỆNH</span>
+             </a>
+              <a href="#" class="btn btn-cta w-100 d-flex align-items-center justify-content-center py-2">
+                <i class="bi bi-pencil-square fs-4 me-2"></i>
+                <span class="fw-bold">DOANH NGHIỆP ĐĂNG KÝ</span>
+            </a>
+        </div>
+        
+        <!-- Mobile Navigation List -->
+        <ul class="navbar-nav">
+             @if (Model.menus != null)
             {
                 @foreach (var menu in Model.menus.Where(m => m.Status == true).OrderBy(m => m.Order_menu))
                 {
-                      var hasSubMenu = menu.Menu?.Any() == true;
-                      @if (!hasSubMenu)
-                      {
-                        <li class="nav-item shadow-sm rounded nav-item-ft"  >
-                          <a class="nav-link" href="@menu.Link_menu">@menu.Title_menu</a>
+                    var hasSubMenu = menu.Menu?.Any() == true;
+                    if (!hasSubMenu)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@menu.Link_menu"><span>@menu.Title_menu</span></a>
                         </li>
-                      }
-                      else
-                      {
-                        <li class="nav-item dropdown shadow-sm rounded nav-item-ft">
-                          <a class="nav-link dropdown-toggle" href="@menu.Link_menu" id="menu@(menu.Id_menu)" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            @menu.Title_menu
-                          </a>
-                        <ul class="dropdown-menu" aria-labelledby="menu@(menu.Id_menu)" >
-                            @foreach (var submenu in menu.Menu.OrderBy(sm => sm.Order_menu))
-                            {
-                                <li>
-                                    <a class="dropdown-item" href="@submenu.Link_MenuChild" title="@submenu.Title_MenuChild">
-                                        @submenu.Title_MenuChild
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-
+                    }
+                    else
+                    {
+                         <li class="nav-item dropdown">
+                            <a class="nav-link d-flex justify-content-between align-items-center" href="@menu.Link_menu" data-bs-toggle="collapse" data-bs-target="#submenu-@menu.Id_menu" aria-expanded="false">
+                                <span>@menu.Title_menu</span>
+                                <i class="bi bi-chevron-down"></i>
+                            </a>
+                            <div class="collapse" id="submenu-@menu.Id_menu">
+                                <ul class="list-unstyled">
+                                     @foreach (var submenu in menu.Menu.OrderBy(sm => sm.Order_menu))
+                                    {
+                                        <li>
+                                            <a class="nav-link" href="@submenu.Link_MenuChild"><span>@submenu.Title_MenuChild</span></a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
                         </li>
-                      }  
+                    }
                 }
             }
-      </ul>
+        </ul>
     </div>
-  </div>
-</nav>
-<div>
+</div>
+
+
 <style>
-  #header_trangchu a{
-    color: hsl(199, 65%, 51%) !important ;
-  }
-  header{
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 1050 !important;
-    background-color: #fcfeff !important;
+    body {
+        overflow-x: hidden;
+    }
+    header {
+        background-color: #ffffff;
+        /* Ensure sticky works across browsers */
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 1060; /* chọn lớn hơn các phần tử overlay như navbar, mobile menu */
+    }
 
+    /* --- Giao diện Desktop --- */
+    #desktop-nav {
+        background-color: #f7f7f7 !important;
+        height: 35px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
 
-   
-  }
+    .nav-item-ft {
+        padding: 0 10px;
+    }
 
-  /* Chỉ áp dụng hover cho nav-item không có dropdown */
-  .nav-item-ft:not(.dropdown) .nav-link:hover{
-  background: linear-gradient(135deg, #06b6d4, #10b981);
- !important;
-    border-radius: 5px !important;
-    transition: 0.3s !important;
-    color: black !important;
+    .nav-item-ft .title_menu {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        color: #00aef0;
+        transition: color 0.2s ease;
+        text-transform: uppercase;
+    }
     
-  }
+    .nav-item-ft > .nav-link {
+        transition: background-color 0.2s ease, color 0.2s ease;
+        height: 40px;
+        display: flex;
+        align-items: center;
+    }
 
-  /* Hoặc nếu muốn hover cho cả nav-item nhưng không ảnh hưởng dropdown */
-  .nav-item-ft:not(.dropdown):hover .nav-link{
-    background: linear-gradient(135deg,#edf1f0 ,#06b6d4);
- !important;
-    border-radius: 5px !important;
-    transition: 0.3s !important;
-    color: white !important;
-  }
+    .nav-item-ft:hover > .nav-link {
+        background-color: #0095d9 !important;
+    }
 
-  /* Style riêng cho dropdown toggle */
-  .nav-item-ft.dropdown .nav-link:hover{
-      background: linear-gradient(135deg,#edf1f0 ,#06b6d4);
- !important;
-    border-radius: 5px !important;
-    transition: 0.3s !important;
-    color: white !important;
-  }
-  .nav-item .nav-link :hover{
-     color:black !important;
-  }
- 
-  </style>
+    .nav-item-ft:hover .title_menu {
+        color: white !important;
+    }
+    
+    .dropdown-menu {
+        border-radius: 0 !important;
+        margin-top: 0;
+        border: none;
+        background-color: #0095d9e6;
+    }
+    
+    .dropdown-item {
+        color: white !important;
+        transition: background-color 0.2s ease;
+    }
+    
+   
+
+    .dropdown .dropdown-menu {
+        display: block;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    .dropdown:hover .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    /* --- Giao diện Mobile --- */
+    .navbar-toggler {
+        border: none;
+        padding: 0;
+        background: transparent;
+    }
+    .navbar-toggler:focus {
+        box-shadow: none;
+    }
+    .navbar-toggler-icon {
+        display: none;
+    }
+
+    #mobileMenu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #fff;
+        z-index: 1055;
+        transition: transform 0.3s ease-in-out;
+        transform: translateX(100%);
+        overflow-y: auto;
+    }
+    #mobileMenu.show {
+        transform: translateX(0);
+    }
+    
+    .mobile-menu-content .btn-cta {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        color: #005a87;
+    }
+
+    .mobile-menu-content .navbar-nav .nav-link {
+        font-weight: 600;
+        color: #005a87;
+        text-transform: uppercase;
+        border-bottom: 1px solid #f0f0f0;
+        padding: 1rem;
+    }
+    .mobile-menu-content .navbar-nav .nav-item:last-child .nav-link {
+        border-bottom: none;
+    }
+
+    .mobile-menu-content .dropdown .nav-link i {
+         transition: transform 0.3s ease;
+    }
+     .mobile-menu-content .dropdown .nav-link[aria-expanded="true"] i {
+        transform: rotate(180deg);
+    }
+    
+    .mobile-menu-content .collapse .list-unstyled {
+        background-color: #f7f7f7;
+    }
+    
+    .mobile-menu-content .collapse .nav-link {
+        font-weight: normal;
+        color: #333;
+        text-transform: none;
+        padding-left: 2rem;
+        border-bottom: 1px solid #e9e9e9;
+    }
+    .mobile-menu-content .collapse li:last-child .nav-link{
+        border-bottom: none;
+    }
+    /* Hide desktop nav on small screens (phones) */
+    @@media (max-width: 1100px) {
+        #desktop-nav {
+            display: none !important;
+        }
+    }
+</style>
+

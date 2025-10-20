@@ -18,7 +18,7 @@ $(document).ready(function() {
                     <div class="user-info">
                         <div class="user-name">${user.name}</div>
                     </div>
-                    <button class="delete-btn" onclick="deleteUser(${user.id})">
+                    <button class="delete-btn" data-user-id="${user.id}">
                         <i class="fas fa-trash"></i>
                     </button>
                     ${user.unread > 0 ? `
@@ -93,4 +93,20 @@ $(document).ready(function() {
             $('#send-message').click();
         }
     });
+
+    // Delegated handler for delete buttons (replace inline onclick)
+    $('.users-list').on('click', '.delete-btn', function(e) {
+        e.stopPropagation(); // don't trigger user selection
+        const userId = $(this).data('user-id');
+        deleteUser(userId);
+    });
+
+    // Delete user implementation
+    function deleteUser(userId) {
+        const idx = users.findIndex(u => u.id === userId);
+        if (idx !== -1) {
+            users.splice(idx, 1);
+            renderUsers();
+        }
+    }
 });

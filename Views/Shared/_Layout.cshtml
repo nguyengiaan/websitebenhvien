@@ -86,26 +86,26 @@
                         data-bs-placement="left"
                         title="Tôi có thể giúp gì cho bạn?"
                         aria-label="Mở chat hỗ trợ trực tuyến">
-                    <i class="fas fa-comments fa-lg" style="color: white; filter: drop-shadow(0 0 2px rgba(255,255,255,0.5));"></i>
+                    <img src="/Images/icon-chat.png" alt="Chat Icon" style="width: 55px; height: 55px; ">
                     <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
                           style="font-size: 0.6rem;" id="count-notification">
                         <i class="fas fa-bell text-white" id="count-notification"></i>
                     </span>
                     <div class="ripple position-absolute w-100 h-100 rounded-circle" style="animation: ripple 1.5s linear infinite; border: 2px solid #fff; opacity: 0;"></div>
                     <div class="bell-shake"></div>
-                    <div class="position-absolute" style="bottom: 100%; right: 0; margin-bottom: 10px; background: rgba(0,0,0,0.8); color: white; padding: 8px 12px; border-radius: 4px; font-size: 14px; display: none;" id="chatTooltip">
+                    @* <div class="position-absolute" style="bottom: 100%; right: 0; margin-bottom: 10px; background: rgba(0,0,0,0.8); color: white; padding: 8px 12px; border-radius: 4px; font-size: 14px; display: none;" id="chatTooltip">
                         Tôi có thể giúp gì cho bạn?
-                    </div>
+                    </div> *@
                 </button>
 
                 <!-- Chat Window -->
-                <div id="chatWindow" class="card position-absolute bottom-100 mb-2 animate__animated animate__fadeIn" style="width: 300px; display: none; right: 0; transform-origin: bottom right;">
-                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center" style="border-radius: 10px 10px 0 0;">
-                        <h6 class="m-0 new-label">
+                <div id="chatWindow" class="card position-absolute bottom-100 mb-2 animate__animated animate__fadeIn" style="width: 350px; display: none; right: 0; transform-origin: bottom right;">
+                        <div class="card-header  text-white d-flex justify-content-between align-items-center" style="border-radius: 10px 10px 0 0; background:#ffffff">
+                        @* <h6 class="m-0 new-label">
                             <i class="fas fa-circle text-success me-2" style="font-size: 10px;"></i>
                             Chat với chúng tôi
                         </h6>
-                        <button type="button" class="btn-close btn-close-white animate__animated animate__rotateIn" id="closeChatBtn" style="transition: transform 0.3s;" onmouseover="this.style.transform='rotate(90deg)';" onmouseout="this.style.transform='rotate(0deg)';"></button>
+                        <button type="button" class="btn-close btn-close-white animate__animated animate__rotateIn" id="closeChatBtn" style="transition: transform 0.3s;"></button>
                     </div>
                     <div class="card-body" style="height: 300px; overflow-y: auto; scroll-behavior: smooth;" id="chatMessages">
                         <!-- Welcome message -->
@@ -126,7 +126,13 @@
                             <button class="btn btn-primary animate__animated animate__pulse animate__infinite" id="sendMessageBtn" style="border-radius: 0 20px 20px 0; transition: all 0.3s;" aria-label="Gửi tin nhắn">
                                 <i class="fas fa-paper-plane" style="transition: transform 0.3s;"></i>
                             </button>
-                        </div>
+                        </div> *@
+                        <iframe
+    src="https://www.chatbase.co/chatbot-iframe/9j1a4DH2OFK0ZIHslFD3L"
+    width="100%"
+    style="min-height: 500px ;"
+    frameborder="0"
+></iframe>
                     </div>
                 </div>
             </div>
@@ -161,6 +167,7 @@
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true" defer></script>
+<script src="~/js/site-helpers.js" asp-append-version="true" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 
 <!-- CSS -->
@@ -240,6 +247,8 @@ document.addEventListener('click', function() {
                 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
             });
         });
+
+  
     </script>
 
     @await RenderSectionAsync("Styles", required: false)

@@ -156,7 +156,7 @@ function renderSampleQuestions() {
     chatMessages.innerHTML = ''; // Fix: Changed from .html to .innerHTML
     const questionsHtml = sampleQuestions.map(question => `
         <div class="mb-2 animate__animated animate__fadeInLeft">
-            <button class="btn btn-outline-secondary w-100 text-start" onclick="sendSampleQuestion('${question}')">${question}</button>
+            <button class="btn btn-outline-secondary w-100 text-start btn-sample-question" data-question="${encodeURIComponent(question)}">${question}</button>
         </div>
     `).join('');
     chatMessages.innerHTML = questionsHtml; // Fix: Changed from += to = to avoid duplicating

@@ -30,6 +30,33 @@ $(document).ready(function() {
         deleteSchedule(id, id_doctor);
     });
 
+    // Delegated handlers to avoid inline onclick attributes (CSP friendly)
+    $(document).on('click', '.btn-edit-doctor', function (e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        if (id) editDoctor(id);
+    });
+    $(document).on('click', '.btn-delete-doctor', function (e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        if (id) deleteDoctor(id);
+    });
+    $(document).on('click', '.btn-add-schedule', function (e) {
+        e.preventDefault();
+        var id = $(this).data('id');
+        if (id) addWorkSchedule(id);
+    });
+
+    // Pagination links
+    $(document).on('click', '.page-link-number, .page-link-prev, .page-link-next', function (e) {
+        e.preventDefault();
+        var page = parseInt($(this).data('page')) || 1;
+        if (!isNaN(page) && page > 0) {
+            currentPage = page;
+            loadDoctors();
+        }
+    });
+
 });
 
 function loadSpecialties() {
@@ -93,19 +120,19 @@ function renderDoctors(doctors) {
                 </td>
                 <td class="text-center">
                     <div class="btn-group" role="group" aria-label="Doctor actions">
-                        <button type="button" class="btn btn-outline-primary btn-sm rounded-circle me-2" 
-                                onclick="editDoctor(${doctor.id_doctor})"
-                                aria-label="Chỉnh sửa bác sĩ">
+            <button type="button" class="btn btn-outline-primary btn-sm rounded-circle me-2 btn-edit-doctor" 
+                data-id="${doctor.id_doctor}"
+                aria-label="Chỉnh sửa bác sĩ">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button type="button" class="btn btn-outline-danger btn-sm rounded-circle me-2" 
-                                onclick="deleteDoctor(${doctor.id_doctor})"
-                                aria-label="Xóa bác sĩ">
+            <button type="button" class="btn btn-outline-danger btn-sm rounded-circle me-2 btn-delete-doctor" 
+                data-id="${doctor.id_doctor}"
+                aria-label="Xóa bác sĩ">
                             <i class="fas fa-trash"></i>
                         </button>
-                        <button type="button" class="btn btn-outline-success btn-sm rounded-circle"
-                                onclick="addWorkSchedule(${doctor.id_doctor})" 
-                                aria-label="Thêm thời khoá biểu" id="btnsvadd">
+            <button type="button" class="btn btn-outline-success btn-sm rounded-circle btn-add-schedule"
+                data-id="${doctor.id_doctor}"
+                aria-label="Thêm thời khoá biểu" id="btnsvadd">
                             <i class="fas fa-calendar-plus" ></i>
                         </button>
                     </div>
@@ -127,7 +154,7 @@ function renderPagination( totalPages, currentPage) {
         for (let i = 1; i <= totalPages; i++) {
             html += `
                 <li class="page-item ${i === currentPage ? 'active' : ''}">
-                    <a class="page-link" href="#" onclick="loadDoctors(${i}, ${pagesize})">${i}</a>
+                    <a class="page-link page-link-number" href="#" data-page="${i}">${i}</a>
                 </li>
             `;
         }
@@ -135,14 +162,14 @@ function renderPagination( totalPages, currentPage) {
         // Add Previous button
         html += `
             <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-                <a class="page-link" href="#" onclick="loadDoctors(${currentPage - 1}, ${pagesize})">&laquo;</a>
+                <a class="page-link page-link-prev" href="#" data-page="${currentPage - 1}">&laquo;</a>
             </li>
         `;
 
         // Show first page
         html += `
             <li class="page-item ${currentPage === 1 ? 'active' : ''}">
-                <a class="page-link" href="#" onclick="loadDoctors( 1, ${pagesize})">1</a>
+                <a class="page-link page-link-number" href="#" data-page="1">1</a>
             </li>
         `;
 
@@ -155,7 +182,7 @@ function renderPagination( totalPages, currentPage) {
         for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
             html += `
                 <li class="page-item ${i === currentPage ? 'active' : ''}">
-                    <a class="page-link" href="#" onclick="loadDoctors(${i}, ${pagesize})">${i}</a>
+                    <a class="page-link page-link-number" href="#" data-page="${i}">${i}</a>
                 </li>
             `;
         }
@@ -166,16 +193,16 @@ function renderPagination( totalPages, currentPage) {
         }
 
         // Show last page
-        html += `
+            html += `
             <li class="page-item ${currentPage === totalPages ? 'active' : ''}">
-                <a class="page-link" href="#" onclick="loadDoctors( ${totalPages}, ${pagesize})">${totalPages}</a>
+                <a class="page-link page-link-number" href="#" data-page="${totalPages}">${totalPages}</a>
             </li>
         `;
 
         // Add Next button
         html += `
             <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
-                <a class="page-link" href="#" onclick="loadDoctors(${currentPage + 1}, ${pagesize})">&raquo;</a>
+                <a class="page-link page-link-next" href="#" data-page="${currentPage + 1}">&raquo;</a>
             </li>
         `;
     }

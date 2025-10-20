@@ -96,12 +96,13 @@ namespace websitebenhvien.Service.Reponser
             }
         }
         //Thêm tin tức
-        public async Task<bool> AddNews(NewsVM news)
+        public async Task<(string,bool)> AddNews(NewsVM news)
         {
             try
             {
+                
                 News data;
-
+               
                 // Kiểm tra nếu là cập nhật
                 if (news.Id_News != null)
                 {
@@ -109,7 +110,7 @@ namespace websitebenhvien.Service.Reponser
                     data = await _context.News.FindAsync(news.Id_News);
 
                     if (data == null)
-                        return false;
+                        return ("Không tìm thấy bài viết",false);
 
                     // Xử lý tệp tin nếu có
                     if (news.formFile != null)
@@ -121,9 +122,14 @@ namespace websitebenhvien.Service.Reponser
                             data.Url = result.Item2; // Lưu ảnh mới
                         }
                     }
+
                 }
                 else
                 {
+                   if (await _context.News.AnyAsync(n => n.Title == news.Title))
+            {
+                return ("Tiêu đề bài viết này đã tồn tại.", false);
+            }
                     // Tạo mới dữ liệu
                     data = new News();
 
@@ -159,13 +165,12 @@ namespace websitebenhvien.Service.Reponser
                 }
 
                 await _context.SaveChangesAsync();
-                return true;
+                return ("thêm tin tức thành công", true);
             }
             catch (Exception ex)
             {
-                // Lỗi sẽ được ghi log hoặc xử lý phù hợp
-                Console.WriteLine(ex.Message);
-                return false;
+         
+                return ("Có lỗi xảy ra", false);
             }
         }
 

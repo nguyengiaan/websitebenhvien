@@ -11,7 +11,7 @@ namespace websitebenhvien.Service.Interface
 
         public Task<bool>DeleteCatogery(string id);
         //Thêm tin tức
-        public Task<bool> AddNews(NewsVM news);
+        public Task<(string,bool)> AddNews(NewsVM news);
 
         public Task<(int Totalpages, List<NewsVM> ds)>Listnews(string search,int page,int pagesize);
 

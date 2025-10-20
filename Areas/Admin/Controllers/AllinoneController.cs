@@ -82,11 +82,11 @@ namespace websitebenhvien.Areas.Admin.Controllers
                     return Json(new { status = false, message = string.Join(", ", errors), errors });
                 }
                 var data = await _allinone.AddNews(news);
-                if (data)
+                if (data.Item2)
                 {
-                    return Json(new { status = true, message = "Thêm tin tức thành công" });
+                    return Json(new { status = data.Item2, message = data.Item1 });
                 }
-                return Json(new { status = false, message = "Thêm tin tức thất bại" });
+                return Json(new { status = data.Item2, message = data.Item1 });
             }
             catch (Exception ex)
             {

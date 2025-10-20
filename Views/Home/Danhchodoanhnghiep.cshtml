@@ -455,6 +455,21 @@
         margin-bottom: 2rem;
     }
 
+    /* Make long article content scroll inside the card to avoid stretching the page */
+    .content-wrapper {
+        max-height: 600px; /* desktop default */
+        overflow: auto;
+        padding-right: 0.5rem; /* space for scrollbar */
+        -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+    }
+
+    /* Smaller max-height on small screens */
+    @@media (max-width: 768px) {
+        .content-wrapper {
+            max-height: 350px;
+        }
+    }
+
     .content-wrapper h1,
     .content-wrapper h2,
     .content-wrapper h3,
@@ -764,6 +779,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Smooth scroll to card
                     setTimeout(() => {
+                        // ensure the content wrapper is scrolled to the top when opening
+                        const inner = content.querySelector('.content-wrapper');
+                        if (inner) inner.scrollTop = 0;
+
                         card.scrollIntoView({
                             behavior: 'smooth',
                             block: 'center'
@@ -917,7 +936,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initFloatingShapes();
     initParallax();
 
-    console.log('🎉 Dành cho Doanh nghiệp page initialized successfully!');
 });
 </script>
 }

@@ -97,6 +97,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 var app = builder.Build();
 
+
+
 app.UseStatusCodePages(context =>
 {
     if (context.HttpContext.Response.StatusCode == 403)
@@ -115,7 +117,7 @@ else
 {
     app.UseHsts();
 }
-
+app.UseHttpsRedirection();
 
 
 
@@ -135,6 +137,23 @@ app.UseRouting();
 // ✅ Đúng thứ tự: Authentication trước, Authorization sau
 app.UseAuthentication();
 app.UseAuthorization();
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Remove("Content-Security-Policy");
+    context.Response.Headers["Content-Security-Policy"] =
+        "default-src 'self'; " +
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://za.zdn.vn https://sp.zalo.me https://page.widget.zalo.me https://www.youtube.com https://www.chatbase.co; " +
+        "script-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://za.zdn.vn https://sp.zalo.me https://page.widget.zalo.me https://www.youtube.com https://www.chatbase.co; " +
+        "script-src-attr 'self' 'unsafe-inline'; " + // ⚙️ chỉnh chỗ này
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://page.widget.zalo.me https://www.gstatic.com; " +
+        "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://page.widget.zalo.me; " +
+        "img-src 'self' data: blob: https: https://i.ytimg.com https://yt3.ggpht.com https://cdn-icons-png.flaticon.com https://page.widget.zalo.me; " +
+        "connect-src 'self' https://api.widget.zalo.me https://widget.chat.zalo.me https://translate.googleapis.com https://translate-pa.googleapis.com https://www.youtube.com https://play.google.com https://googleads.g.doubleclick.net https://px.dmp.zaloapp.com https://www.chatbase.co wss://myphuochospital.com.vn; " +
+        "frame-src 'self' https://www.youtube.com https://page.widget.zalo.me https://www.chatbase.co; " +
+        "media-src 'self' blob: data:; " +
+        "object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; report-uri /api/csp-violation;";
+    await next();
+});
 
 app.MapBlazorHub();
 app.MapHub<Hubnot>("/friendHub");
