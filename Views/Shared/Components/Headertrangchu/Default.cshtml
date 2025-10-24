@@ -73,13 +73,13 @@
                     <div class="d-flex align-items-center me-4">
                          <a href="#" class="text-decoration-none d-flex align-items-center">
                              <i class="bi bi-clipboard2-pulse text-warning fs-2 me-2"></i>
-                             <span class="fw-bold" style="font-size: 14px; color:#000000;">ĐĂNG KÝ<br>KHÁM BỆNH</span>
+                             <span class="fw-bold" style="font-size: 14px; color:#fd0505;">ĐĂNG KÝ<br>KHÁM BỆNH</span>
                          </a>
                     </div>
                     <div class="d-flex align-items-center me-4">
                          <a href="#" class="text-decoration-none d-flex align-items-center">
                             <i class="bi bi-file-earmark-text text-warning fs-2 me-2"></i>
-                            <span class="fw-bold" style="font-size: 14px; color:#000000;">DOANH NGHIỆP<br>ĐĂNG KÝ</span>
+                            <span class="fw-bold" style="font-size: 14px; color:#fd0505;">DOANH NGHIỆP<br>ĐĂNG KÝ</span>
                         </a>
                     </div>
                     <div>
@@ -120,9 +120,11 @@
                         var currentPath = ViewContext.HttpContext.Request.Path.ToString().ToLower();
                         foreach (var menu in Model.menus.Where(m => m.Status == true).OrderBy(m => m.Order_menu))
                         {
-                            var hasSubMenu = menu.Menu?.Any() == true;
+                            // Only consider visible (Status == true) submenus for display and active calculation
+                            var visibleSubmenus = menu.Menu?.Where(sm => sm.Status == true).OrderBy(sm => sm.Order_menu).ToList();
+                            var hasSubMenu = visibleSubmenus?.Any() == true;
                             var menuLink = menu.Link_menu?.ToLower() ?? "";
-                            var isActive = currentPath == menuLink || (hasSubMenu && menu.Menu.Any(sm => (sm.Link_MenuChild?.ToLower() ?? "") == currentPath));
+                            var isActive = currentPath == menuLink || (hasSubMenu && visibleSubmenus != null && visibleSubmenus.Any(sm => (sm.Link_MenuChild?.ToLower() ?? "") == currentPath));
                             if (!hasSubMenu)
                             {
                                 <li class="nav-item nav-item-ft @(isActive ? "active" : "")">
@@ -136,7 +138,7 @@
                                         <span class="title_menu">@menu.Title_menu</span>
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="menu@(menu.Id_menu)">
-                                        @foreach (var submenu in menu.Menu.OrderBy(sm => sm.Order_menu))
+                                        @foreach (var submenu in visibleSubmenus ?? Enumerable.Empty<dynamic>())
                                         {
                                             var subLink = submenu.Link_MenuChild?.ToLower() ?? "";
                                             var subActive = currentPath == subLink;
@@ -209,7 +211,9 @@
             {
                 @foreach (var menu in Model.menus.Where(m => m.Status == true).OrderBy(m => m.Order_menu))
                 {
-                    var hasSubMenu = menu.Menu?.Any() == true;
+                    // For mobile, only include visible submenus
+                    var visibleSubmenusMobile = menu.Menu?.Where(sm => sm.Status == true).OrderBy(sm => sm.Order_menu).ToList();
+                    var hasSubMenu = visibleSubmenusMobile?.Any() == true;
                     if (!hasSubMenu)
                     {
                         <li class="nav-item">
@@ -225,7 +229,7 @@
                             </a>
                             <div class="collapse" id="submenu-@menu.Id_menu">
                                 <ul class="list-unstyled">
-                                     @foreach (var submenu in menu.Menu.OrderBy(sm => sm.Order_menu))
+                                     @foreach (var submenu in visibleSubmenusMobile ?? Enumerable.Empty<dynamic>())
                                     {
                                         <li>
                                             <a class="nav-link" href="@submenu.Link_MenuChild"><span>@submenu.Title_MenuChild</span></a>

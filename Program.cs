@@ -75,17 +75,17 @@ builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddMemoryCache();
 builder.Services.AddCustomCompression();
 builder.Services.AddServerSideBlazor();
+
 // Configure multipart/form-data upload size limits to avoid buffering extremely large requests
 builder.Services.Configure<FormOptions>(options =>
 {
-    // Allow up to 210 MB for multipart form uploads (adjust if needed).
+    // Allow up to 210 MB for multipart form uploads (adjust if necessary)
     options.MultipartBodyLengthLimit = 210 * 1024 * 1024; // 210 MB
-    // Keep default buffer limits for key/value form data
     options.ValueLengthLimit = int.MaxValue;
     options.MultipartHeadersLengthLimit = 16384;
 });
 
-// Response caching to reduce repeat work for static/short-lived responses
+// Add server-side response caching to reduce repeated work
 builder.Services.AddResponseCaching();
 
 
@@ -142,6 +142,7 @@ app.UseHttpsRedirection();
 
 app.UseSecurityHeaders();
 app.UseResponseCompression();
+app.UseResponseCaching();
 app.UseIpRateLimiting();
 app.UseCustomRateLimit();
 
@@ -149,7 +150,21 @@ app.UseCustomRateLimit();
 // ⚠️ Nếu hosting đã tự HTTPS redirect, comment dòng này lại
 // app.UseCustomHttpsRedirection();
 
-app.UseStaticFiles();
+// Serve static files with long cache headers to reduce repeated load
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        // Cache static files for 7 days
+        var headers = ctx.Context.Response.GetTypedHeaders();
+        headers.CacheControl = new CacheControlHeaderValue
+        {
+            Public = true,
+            MaxAge = TimeSpan.FromDays(7)
+        };
+        ctx.Context.Response.Headers[HeaderNames.Vary] = new[] { "Accept-Encoding" };
+    }
+});
 
 app.UseRouting();
 

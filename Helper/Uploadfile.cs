@@ -35,14 +35,8 @@ namespace websitebenhvien.Helper
 
         private readonly string _uploadsPath;
         
-    // Ngưỡng 2MB (tính bằng bytes)
-    private const long MaxImageSizeBeforeCompression = 2 * 1024 * 1024; // 2MB
-
-    // Giới hạn tải lên để tránh tiêu thụ bộ nhớ quá lớn (tùy chỉnh nếu cần)
-    // Image: 20 MB, Video: 200 MB, Document: 50 MB
-    private const long MaxImageUploadBytes = 20 * 1024 * 1024; // 20MB
-    private const long MaxVideoUploadBytes = 200 * 1024 * 1024; // 200MB
-    private const long MaxDocumentUploadBytes = 50 * 1024 * 1024; // 50MB
+        // Ngưỡng 2MB (tính bằng bytes)
+        private const long MaxImageSizeBeforeCompression = 2 * 1024 * 1024; // 2MB
 
         public Uploadfile(IWebHostEnvironment hostingEnvironment)
         {
@@ -68,22 +62,6 @@ namespace websitebenhvien.Helper
                 if (string.IsNullOrEmpty(ext) || !AllowedExtensions.Contains(ext))
                 {
                     return (0, $"Only the following formats are allowed: {string.Join(", ", AllowedExtensions)}");
-                }
-
-                // Early size checks to avoid buffering huge uploads into memory
-                if (AllowedImageExtensions.Contains(ext) && file.Length > MaxImageUploadBytes)
-                {
-                    return (0, $"Image exceeds maximum allowed size of {MaxImageUploadBytes / (1024 * 1024)} MB.");
-                }
-
-                if (AllowedVideoExtensions.Contains(ext) && file.Length > MaxVideoUploadBytes)
-                {
-                    return (0, $"Video exceeds maximum allowed size of {MaxVideoUploadBytes / (1024 * 1024)} MB.");
-                }
-
-                if (AllowedDocumentExtensions.Contains(ext) && file.Length > MaxDocumentUploadBytes)
-                {
-                    return (0, $"Document exceeds maximum allowed size of {MaxDocumentUploadBytes / (1024 * 1024)} MB.");
                 }
 
                 var newFileName = $"{Guid.NewGuid():N}{ext}";
