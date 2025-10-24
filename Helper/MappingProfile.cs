@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using websitebenhvien.Models.Enitity;
 using websitebenhvien.Models.EnitityVM;
+using Websitebenhvien.Models.Enitity;
 
 
 namespace websitebenhvien.Helper
@@ -25,6 +26,12 @@ namespace websitebenhvien.Helper
                 .ForMember(dest => dest.TitlemenuList, opt => opt.Ignore());
 
             CreateMap<News, NewsVM>().ReverseMap();
+
+            CreateMap<Pricelist, PricelistVM>().ReverseMap();
+
+            CreateMap<Catogeryguider,CatogeryguiderVM>().ReverseMap();
+
+            CreateMap<Customerguide, CustomerguideVM>().ReverseMap();
         }
     }
 }

@@ -16,6 +16,8 @@ using websitebenhvien.Helper;
 using AspNetCoreRateLimit;
 using elFinder.NetCore;
 using websitebenhvien.Middleware;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Net.Http.Headers;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,6 +55,9 @@ builder.Services.AddScoped<IMenuUserService, MenuUserService>();
 builder.Services.AddScoped<IActivity, ActivityResponsive>();
 builder.Services.AddScoped<IActivitypost, ActivitypostReponsive>();
 builder.Services.AddScoped<ITitlemenu, TitlemenuReponser>();
+builder.Services.AddScoped<IPricelist, PricelistResponsive>();
+builder.Services.AddScoped<ICatogeryguide, CatogeryguideResponsive>();
+builder.Services.AddScoped<ICustomeguider, CustomerguiderResponsive>();
 builder.Services.AddScoped<EmailSender>();
 builder.Services.AddScoped<Hubnot>();
 builder.Services.AddScoped<Uploadfile>();
@@ -70,6 +75,20 @@ builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddMemoryCache();
 builder.Services.AddCustomCompression();
 builder.Services.AddServerSideBlazor();
+// Configure multipart/form-data upload size limits to avoid buffering extremely large requests
+builder.Services.Configure<FormOptions>(options =>
+{
+    // Allow up to 210 MB for multipart form uploads (adjust if needed).
+    options.MultipartBodyLengthLimit = 210 * 1024 * 1024; // 210 MB
+    // Keep default buffer limits for key/value form data
+    options.ValueLengthLimit = int.MaxValue;
+    options.MultipartHeadersLengthLimit = 16384;
+});
+
+// Response caching to reduce repeat work for static/short-lived responses
+builder.Services.AddResponseCaching();
+
+
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("user", policy => policy.RequireRole("user"));
@@ -142,18 +161,49 @@ app.Use(async (context, next) =>
     context.Response.Headers.Remove("Content-Security-Policy");
     context.Response.Headers["Content-Security-Policy"] =
         "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://za.zdn.vn https://sp.zalo.me https://page.widget.zalo.me https://www.youtube.com https://www.chatbase.co; " +
-        "script-src-elem 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com https://za.zdn.vn https://sp.zalo.me https://page.widget.zalo.me https://www.youtube.com https://www.chatbase.co; " +
-        "script-src-attr 'self' 'unsafe-inline'; " + // ⚙️ chỉnh chỗ này
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://page.widget.zalo.me https://www.gstatic.com; " +
+        // --- SCRIPT ---
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' " +
+        "https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com " +
+        "https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com " +
+        "https://za.zdn.vn https://sp.zalo.me https://page.widget.zalo.me " +
+        "https://www.youtube.com https://www.chatbase.co; " +
+
+        "script-src-elem 'self' 'unsafe-inline' " +
+        "https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.gstatic.com " +
+        "https://translate.google.com https://translate.googleapis.com https://translate-pa.googleapis.com " +
+        "https://za.zdn.vn https://sp.zalo.me https://page.widget.zalo.me " +
+        "https://www.youtube.com https://www.chatbase.co; " +
+
+        "script-src-attr 'self' 'unsafe-inline'; " +
+
+        // --- STYLE & FONT ---
+        "style-src 'self' 'unsafe-inline' " +
+        "https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com " +
+        "https://page.widget.zalo.me https://www.gstatic.com; " +
+
         "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://page.widget.zalo.me; " +
-        "img-src 'self' data: blob: https: https://i.ytimg.com https://yt3.ggpht.com https://cdn-icons-png.flaticon.com https://page.widget.zalo.me; " +
-        "connect-src 'self' https://api.widget.zalo.me https://widget.chat.zalo.me https://translate.googleapis.com https://translate-pa.googleapis.com https://www.youtube.com https://play.google.com https://googleads.g.doubleclick.net https://px.dmp.zaloapp.com https://www.chatbase.co wss://myphuochospital.com.vn; " +
+
+        // --- IMAGES ---
+        "img-src 'self' data: blob: https: " +
+        "https://i.ytimg.com https://yt3.ggpht.com https://cdn-icons-png.flaticon.com https://page.widget.zalo.me; " +
+
+        // --- CONNECT ---
+        "connect-src 'self' " +
+        "https://cdn.jsdelivr.net https://cdnjs.cloudflare.com " + // ✅ Thêm dòng này để fix lỗi
+        "https://api.widget.zalo.me https://widget.chat.zalo.me " +
+        "https://translate.googleapis.com https://translate-pa.googleapis.com " +
+        "https://www.youtube.com https://play.google.com https://googleads.g.doubleclick.net " +
+        "https://px.dmp.zaloapp.com https://www.chatbase.co wss://myphuochospital.com.vn; " +
+
+        // --- FRAME, MEDIA ---
         "frame-src 'self' https://www.youtube.com https://page.widget.zalo.me https://www.chatbase.co; " +
         "media-src 'self' blob: data:; " +
+
+        // --- BẢO MẬT CƠ BẢN ---
         "object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; report-uri /api/csp-violation;";
     await next();
 });
+
 
 app.MapBlazorHub();
 app.MapHub<Hubnot>("/friendHub");

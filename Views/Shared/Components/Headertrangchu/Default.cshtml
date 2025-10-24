@@ -24,13 +24,13 @@
                         <i class="bi bi-bus-front-fill fs-5 text-danger me-2"></i>
                         <span class="fw-bold text-dark">CẤP CỨU 24/7:</span>
                     </div>
-                    <div class="d-flex align-items-center me-3">
+                    <div class="d-flex align-items-center me-3 " id="hotline">
                         <i class="bi bi-telephone-fill text-danger me-2"></i>
-                        <span class="fw-bold" style="color: #00aef0;">@headerInfo.telephone</span>
+                        <span class="fw-bold  bg-danger p-1 rounded shadow-lg" style="color: #ffffff;">@headerInfo.telephone</span>
                     </div>
-                    <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center ">
                         <i class="bi bi-telephone-fill text-danger me-2"></i>
-                        <span class="fw-bold" style="color: #00aef0;">115</span>
+                        <span class="fw-bold bg-danger p-1 rounded shadow-lg" style="color: #ffffff; ">115</span>
                     </div>
                 }
             </div>
@@ -73,13 +73,13 @@
                     <div class="d-flex align-items-center me-4">
                          <a href="#" class="text-decoration-none d-flex align-items-center">
                              <i class="bi bi-clipboard2-pulse text-warning fs-2 me-2"></i>
-                             <span class="fw-bold" style="font-size: 14px; color:#00aef0;">ĐĂNG KÝ<br>KHÁM BỆNH</span>
+                             <span class="fw-bold" style="font-size: 14px; color:#000000;">ĐĂNG KÝ<br>KHÁM BỆNH</span>
                          </a>
                     </div>
                     <div class="d-flex align-items-center me-4">
                          <a href="#" class="text-decoration-none d-flex align-items-center">
                             <i class="bi bi-file-earmark-text text-warning fs-2 me-2"></i>
-                            <span class="fw-bold" style="font-size: 14px; color:#00aef0;">DOANH NGHIỆP<br>ĐĂNG KÝ</span>
+                            <span class="fw-bold" style="font-size: 14px; color:#000000;">DOANH NGHIỆP<br>ĐĂNG KÝ</span>
                         </a>
                     </div>
                     <div>
@@ -117,26 +117,31 @@
                 <ul class="navbar-nav w-100 d-flex justify-content-center align-items-center">
                     @if (Model.menus != null)
                     {
-                        @foreach (var menu in Model.menus.Where(m => m.Status == true).OrderBy(m => m.Order_menu))
+                        var currentPath = ViewContext.HttpContext.Request.Path.ToString().ToLower();
+                        foreach (var menu in Model.menus.Where(m => m.Status == true).OrderBy(m => m.Order_menu))
                         {
                             var hasSubMenu = menu.Menu?.Any() == true;
+                            var menuLink = menu.Link_menu?.ToLower() ?? "";
+                            var isActive = currentPath == menuLink || (hasSubMenu && menu.Menu.Any(sm => (sm.Link_MenuChild?.ToLower() ?? "") == currentPath));
                             if (!hasSubMenu)
                             {
-                                <li class="nav-item nav-item-ft">
-                                    <a class="nav-link" href="@menu.Link_menu"><span class="title_menu">@menu.Title_menu</span></a>
+                                <li class="nav-item nav-item-ft @(isActive ? "active" : "")">
+                                    <a class="nav-link @(isActive ? "active" : "")" href="@menu.Link_menu"><span class="title_menu">@menu.Title_menu</span></a>
                                 </li>
                             }
                             else
                             {
-                                <li class="nav-item dropdown nav-item-ft">
-                                    <a class="nav-link dropdown-toggle" href="@menu.Link_menu" id="menu@(menu.Id_menu)" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <li class="nav-item dropdown nav-item-ft @(isActive ? "active" : "")">
+                                    <a class="nav-link dropdown-toggle @(isActive ? "active" : "")" href="@menu.Link_menu" id="menu@(menu.Id_menu)" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span class="title_menu">@menu.Title_menu</span>
                                     </a>
                                     <ul class="dropdown-menu" aria-labelledby="menu@(menu.Id_menu)">
                                         @foreach (var submenu in menu.Menu.OrderBy(sm => sm.Order_menu))
                                         {
+                                            var subLink = submenu.Link_MenuChild?.ToLower() ?? "";
+                                            var subActive = currentPath == subLink;
                                             <li>
-                                                <a class="dropdown-item" href="@submenu.Link_MenuChild" title="@submenu.Title_MenuChild">
+                                                <a class="dropdown-item @(subActive ? "active" : "")" href="@submenu.Link_MenuChild" title="@submenu.Title_MenuChild">
                                                     @submenu.Title_MenuChild
                                                 </a>
                                             </li>
@@ -281,12 +286,18 @@
         align-items: center;
     }
 
-    .nav-item-ft:hover > .nav-link {
+    .nav-item-ft.active > .nav-link,
+    .nav-item-ft > .nav-link.active {
         background-color: #0095d9 !important;
+        color: #fff !important;
     }
-
-    .nav-item-ft:hover .title_menu {
-        color: white !important;
+    .nav-item-ft.active .title_menu,
+    .nav-item-ft > .nav-link.active .title_menu {
+        color: #fff !important;
+    }
+    .dropdown-item.active {
+        background-color: #00aef0 !important;
+        color: #fff !important;
     }
     
     .dropdown-menu {

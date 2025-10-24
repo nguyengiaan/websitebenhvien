@@ -155,6 +155,54 @@ namespace websitebenhvien.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Websitebenhvien.Models.Enitity.Customerguide", b =>
+                {
+                    b.Property<int>("Id_Customerguide")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_Customerguide"));
+
+                    b.Property<string>("Alias_url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Createat")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Descriptionshort")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Id_Catogeryguider")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Keyword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SchemaMakup")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id_Customerguide");
+
+                    b.HasIndex("Id_Catogeryguider");
+
+                    b.ToTable("Customerguide", (string)null);
+                });
+
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Activitycategory", b =>
                 {
                     b.Property<int>("Id_activitycategory")
@@ -326,6 +374,33 @@ namespace websitebenhvien.Migrations
                     b.HasKey("Id_Categoryproduct");
 
                     b.ToTable("Categoryproduct", (string)null);
+                });
+
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Catogeryguider", b =>
+                {
+                    b.Property<int>("Id_Catogeryguider")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_Catogeryguider"));
+
+                    b.Property<string>("Alias_url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Createat")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id_Catogeryguider");
+
+                    b.ToTable("Catogeryguider", (string)null);
                 });
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Chat", b =>
@@ -1140,6 +1215,35 @@ namespace websitebenhvien.Migrations
                     b.ToTable("Postrelate", (string)null);
                 });
 
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Pricelist", b =>
+                {
+                    b.Property<int>("Id_pricelist")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_pricelist"));
+
+                    b.Property<DateTime>("Created_At")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2147483647)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id_pricelist");
+
+                    b.ToTable("Pricelist", (string)null);
+                });
+
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Product", b =>
                 {
                     b.Property<string>("Id_product")
@@ -1611,6 +1715,17 @@ namespace websitebenhvien.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Websitebenhvien.Models.Enitity.Customerguide", b =>
+                {
+                    b.HasOne("websitebenhvien.Models.Enitity.Catogeryguider", "Catogeryguider")
+                        .WithMany("Customerguide")
+                        .HasForeignKey("Id_Catogeryguider")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Catogeryguider");
+                });
+
             modelBuilder.Entity("websitebenhvien.Models.Enitity.ButtonSample", b =>
                 {
                     b.HasOne("websitebenhvien.Models.Enitity.SampleMessage", "SampleMessage")
@@ -1834,6 +1949,11 @@ namespace websitebenhvien.Migrations
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Categoryproduct", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("websitebenhvien.Models.Enitity.Catogeryguider", b =>
+                {
+                    b.Navigation("Customerguide");
                 });
 
             modelBuilder.Entity("websitebenhvien.Models.Enitity.Doctor", b =>

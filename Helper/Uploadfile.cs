@@ -1,13 +1,16 @@
-﻿﻿﻿﻿using System.IO;
+﻿﻿using System; // Thêm
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png; 
+using SixLabors.ImageSharp.Formats.Gif; 
 using SixLabors.ImageSharp.Processing;
-
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics; 
 
 namespace websitebenhvien.Helper
 {
@@ -31,6 +34,15 @@ namespace websitebenhvien.Helper
         );
 
         private readonly string _uploadsPath;
+        
+    // Ngưỡng 2MB (tính bằng bytes)
+    private const long MaxImageSizeBeforeCompression = 2 * 1024 * 1024; // 2MB
+
+    // Giới hạn tải lên để tránh tiêu thụ bộ nhớ quá lớn (tùy chỉnh nếu cần)
+    // Image: 20 MB, Video: 200 MB, Document: 50 MB
+    private const long MaxImageUploadBytes = 20 * 1024 * 1024; // 20MB
+    private const long MaxVideoUploadBytes = 200 * 1024 * 1024; // 200MB
+    private const long MaxDocumentUploadBytes = 50 * 1024 * 1024; // 50MB
 
         public Uploadfile(IWebHostEnvironment hostingEnvironment)
         {
@@ -47,15 +59,31 @@ namespace websitebenhvien.Helper
             IFormFile file,
             bool compressImages = true,
             bool compressVideos = true,
-            int imageQuality = 75,
+            int imageQuality = 80, 
             int videoCrf = 28)
         {
             try
             {
                 var ext = Path.GetExtension(file.FileName);
-                if (!AllowedExtensions.Contains(ext))
+                if (string.IsNullOrEmpty(ext) || !AllowedExtensions.Contains(ext))
                 {
                     return (0, $"Only the following formats are allowed: {string.Join(", ", AllowedExtensions)}");
+                }
+
+                // Early size checks to avoid buffering huge uploads into memory
+                if (AllowedImageExtensions.Contains(ext) && file.Length > MaxImageUploadBytes)
+                {
+                    return (0, $"Image exceeds maximum allowed size of {MaxImageUploadBytes / (1024 * 1024)} MB.");
+                }
+
+                if (AllowedVideoExtensions.Contains(ext) && file.Length > MaxVideoUploadBytes)
+                {
+                    return (0, $"Video exceeds maximum allowed size of {MaxVideoUploadBytes / (1024 * 1024)} MB.");
+                }
+
+                if (AllowedDocumentExtensions.Contains(ext) && file.Length > MaxDocumentUploadBytes)
+                {
+                    return (0, $"Document exceeds maximum allowed size of {MaxDocumentUploadBytes / (1024 * 1024)} MB.");
                 }
 
                 var newFileName = $"{Guid.NewGuid():N}{ext}";
@@ -63,15 +91,28 @@ namespace websitebenhvien.Helper
 
                 if (AllowedImageExtensions.Contains(ext) && compressImages)
                 {
-                    await using var output = new FileStream(filePath, FileMode.Create);
-                    await CompressImageAsync(file.OpenReadStream(), output, imageQuality);
+                    // *** LOGIC MỚI: Chỉ nén nếu file LỚN HƠN 2MB ***
+                    if (file.Length > MaxImageSizeBeforeCompression)
+                    {
+                        // File lớn, tiến hành nén
+                        await using var output = new FileStream(filePath, FileMode.Create);
+                        await CompressImageAsync(file.OpenReadStream(), output, imageQuality, ext);
+                    }
+                    else
+                    {
+                        // File nhỏ (<= 2MB), chỉ copy, không nén
+                        await using var output = new FileStream(filePath, FileMode.Create);
+                        await file.CopyToAsync(output);
+                    }
                 }
                 else if (AllowedVideoExtensions.Contains(ext) && compressVideos)
                 {
+                    // (Bạn có thể áp dụng logic tương tự cho video nếu muốn)
                     await CompressVideoAsync(file, filePath, videoCrf);
                 }
                 else
                 {
+                    // Lưu trực tiếp (cho .pdf, .docx hoặc khi không nén)
                     await using var output = new FileStream(filePath, FileMode.Create);
                     await file.CopyToAsync(output);
                 }
@@ -80,32 +121,96 @@ namespace websitebenhvien.Helper
             }
             catch (Exception ex)
             {
+                // Ghi log chi tiết hơn
+                // Log.Error(ex, "Error saving media file.");
                 return (0, $"Error: {ex.Message}");
             }
         }
 
-        private static async Task CompressImageAsync(Stream inputStream, Stream outputStream, int quality)
+        private static async Task CompressImageAsync(Stream inputStream, Stream outputStream, int quality, string originalExtension)
         {
             using var image = await Image.LoadAsync(inputStream);
 
+            // 1. Resize
             image.Mutate(x => x.Resize(new ResizeOptions
             {
                 Mode = ResizeMode.Max,
-                Size = new Size(1024) // Chiều dài tối đa
+                Size = new Size(1024) // Chiều lớn nhất 1024px
             }));
 
-            await image.SaveAsync(outputStream, new JpegEncoder
+            // 2. Xóa metadata
+            image.Metadata.ExifProfile = null;
+
+            // 3. Lưu theo định dạng gốc
+            if (originalExtension.Equals(".png", StringComparison.OrdinalIgnoreCase))
             {
-                Quality = quality
-            });
+                await image.SaveAsPngAsync(outputStream, new PngEncoder
+                {
+                    CompressionLevel = PngCompressionLevel.BestCompression
+                });
+            }
+            else if (originalExtension.Equals(".gif", StringComparison.OrdinalIgnoreCase))
+            {
+                await image.SaveAsGifAsync(outputStream, new GifEncoder());
+            }
+            else
+            {
+                // Mặc định là JPEG
+                await image.SaveAsJpegAsync(outputStream, new JpegEncoder
+                {
+                    Quality = quality,
+             
+                });
+            }
         }
 
         private static async Task CompressVideoAsync(IFormFile videoFile, string outputPath, int crf)
         {
-            // Lưu video trực tiếp vào outputPath (chưa nén, chỉ copy file)
-            await using (var outputStream = new FileStream(outputPath, FileMode.Create))
+            // CẢNH BÁO: Yêu cầu cài đặt FFmpeg trên máy chủ và cấu hình PATH
+
+            // 1. Lưu file tạm
+            var tempFileName = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}{Path.GetExtension(videoFile.FileName)}");
+            await using (var tempStream = new FileStream(tempFileName, FileMode.Create))
             {
-                await videoFile.CopyToAsync(outputStream);
+                await videoFile.CopyToAsync(tempStream);
+            }
+
+            try
+            {
+                // 2. Chạy FFmpeg
+                var arguments = $"-i \"{tempFileName}\" -vcodec libx264 -crf {crf} \"{outputPath}\"";
+                var processInfo = new ProcessStartInfo
+                {
+                    FileName = "ffmpeg", 
+                    Arguments = arguments,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                };
+
+                using var process = new Process { StartInfo = processInfo };
+                process.Start();
+                string error = await process.StandardError.ReadToEndAsync();
+                await process.WaitForExitAsync();
+
+                if (process.ExitCode != 0)
+                {
+                    // Ném lỗi nếu FFmpeg thất bại
+                    throw new Exception($"FFmpeg failed with exit code {process.ExitCode}: {error}");
+                }
+            }
+            finally
+            {
+                // 3. Luôn xóa file tạm dù thành công hay thất bại
+                if (File.Exists(tempFileName))
+                {
+                    File.Delete(tempFileName);
+                }
+            }
+           
+            if (!File.Exists(outputPath))
+            {
+                throw new Exception("Video compression failed. Output file not created.");
             }
         }
 
@@ -113,15 +218,22 @@ namespace websitebenhvien.Helper
         {
             try
             {
-                // Đảm bảo xóa file trong wwwroot/Uploads
-                var filePath = Path.Combine(_hostingEnvironment.WebRootPath, "Uploads", fileName);
+                // Đảm bảo tên file không chứa các ký tự điều hướng (path traversal)
+                if (string.IsNullOrWhiteSpace(fileName) || fileName.Contains(".."))
+                {
+                    return false;
+                }
+
+                var filePath = Path.Combine(_uploadsPath, fileName);
+                
                 if (!File.Exists(filePath)) return false;
 
                 File.Delete(filePath);
                 return true;
             }
-            catch
+            catch (Exception)
             {
+                // Nên log lỗi
                 return false;
             }
         }

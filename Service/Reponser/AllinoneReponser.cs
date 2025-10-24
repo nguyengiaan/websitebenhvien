@@ -652,20 +652,24 @@ namespace websitebenhvien.Service.Reponser
     {
         try
         {
-        return await _context.News
-            .Where(n => n.Categorynews.Title == "Tin tức và sự kiện")
-            .Select(n => new NewsVM
-            {
-                Id_News = n.Id_News,
-                Title = n.Title,
-                Url = n.Url,
-                Alias_url = n.Alias_url,
-                Createat = n.Createat,
-                Status = n.Status,
-                Descriptionshort = n.Descriptionshort,
-             
-            })
-            .ToListAsync();
+            // Return the 15 most recent active news items.
+            // Order before projection and use AsNoTracking for a lighter query.
+            return await _context.News
+                .AsNoTracking()
+                .Where(n => n.Status == true)
+                .OrderByDescending(n => n.Createat)
+                .Take(15)
+                .Select(n => new NewsVM
+                {
+                    Id_News = n.Id_News,
+                    Title = n.Title,
+                    Url = n.Url,
+                    Alias_url = n.Alias_url,
+                    Createat = n.Createat,
+                    Status = n.Status,
+                    Descriptionshort = n.Descriptionshort,
+                })
+                .ToListAsync();
          }
         catch (Exception ex)
          {

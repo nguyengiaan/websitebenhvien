@@ -42,6 +42,7 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Data\" />
     <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="Views\Chat\" />
     <Folder Include="wwwroot\Files\" />
   </ItemGroup>
 

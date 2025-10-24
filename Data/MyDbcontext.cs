@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using websitebenhvien.Models.Enitity;
+using Websitebenhvien.Models.Enitity;
 
 namespace websitebenhvien.Data
 {
@@ -98,6 +99,14 @@ namespace websitebenhvien.Data
         
 
         public DbSet<Feedback> Feedbacks { get; set; }
+
+        public DbSet<Pricelist> Pricelists { get; set; }
+
+
+        // hướng dẫn khách hàng 
+        public DbSet<Catogeryguider> Catogeryguiders { get; set; }
+
+        public DbSet<Customerguide> Customerguides { get; set; }
 
 
 
@@ -290,7 +299,22 @@ namespace websitebenhvien.Data
             modelBuilder.Entity<Feedback>().Property(x => x.Id).ValueGeneratedOnAdd();
             modelBuilder.Entity<Feedback>().Property(x => x.Title_Name).HasMaxLength(200);
             modelBuilder.Entity<Feedback>().Property(x => x.Content).HasMaxLength(int.MaxValue);
-            modelBuilder.Entity<Feedback>().Property(x => x.Thumnail).HasMaxLength(200);    
+            modelBuilder.Entity<Feedback>().Property(x => x.Thumnail).HasMaxLength(200);
+            // Bảng giá 
+            modelBuilder.Entity<Pricelist>().ToTable("Pricelist");
+            modelBuilder.Entity<Pricelist>().HasKey(x => x.Id_pricelist);
+            modelBuilder.Entity<Pricelist>().Property(x => x.Id_pricelist).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Pricelist>().Property(x => x.Title).HasMaxLength(200);
+            modelBuilder.Entity<Pricelist>().Property(x => x.Description).HasMaxLength(int.MaxValue);
+            //Hướng dẫn danh mục khách hàng
+            modelBuilder.Entity<Catogeryguider>().ToTable("Catogeryguider");
+            modelBuilder.Entity<Catogeryguider>().HasKey(x => x.Id_Catogeryguider);
+            modelBuilder.Entity<Catogeryguider>().Property(x => x.Id_Catogeryguider).ValueGeneratedOnAdd();
+            // Hướng dẫn khách hàng
+            modelBuilder.Entity<Customerguide>().ToTable("Customerguide");
+            modelBuilder.Entity<Customerguide>().HasKey(x => x.Id_Customerguide);
+            modelBuilder.Entity<Customerguide>().Property(x => x.Id_Customerguide).ValueGeneratedOnAdd();
+            modelBuilder.Entity<Customerguide>().HasOne(x => x.Catogeryguider).WithMany(x => x.Customerguide).HasForeignKey(x => x.Id_Catogeryguider);
 
 
 
